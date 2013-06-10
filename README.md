@@ -33,8 +33,7 @@ For fluid animations, see http://vimeo.com/mkmi/videos
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
-    See licence.txt or <http://www.gnu.org/licenses/> for a copy of the 
-    GNU General Public License.
+    See licence.txt for a copy of the GNU General Public License.
   
 ---
 ### Contact information
