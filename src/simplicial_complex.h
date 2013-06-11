@@ -1448,55 +1448,31 @@ private:
     }
     
     /**
-     * Find the largest face in a tetrahedron spanned by points in verts.
-     * Permute the nodes and the vertices so that the vertex opposite to that face is on the last position.
+     * Find the largest face spanned by the nodes and permute the nodes such that the one opposite the largest face (the "apex") is the last one in the array.
      */
-    typename MT::real_type permute_nodes(std::vector<node_key_type> & nodes, std::vector<V> & verts)
+    T permute_nodes(std::vector<node_key_type> & nodes)
     {
-        int i = -1;
-        T max_area = -1.0, a;
+        T max_a = -INFINITY;
+        int max_i;
         
-        a = Util::area<MT>(verts, 0, 1, 2);
-        if (a > max_area)
+        for(int i = 0; i < 4; i++)
         {
-            max_area = a;
-            i = 3;
-        }
-        
-        a = Util::area<MT>(verts, 0, 1, 3);
-        if (a > max_area)
-        {
-            max_area = a;
-            i = 2;
+            T a = Util::area<MT>(get_pos(nodes[(i+1)%4]), get_pos(nodes[(i+2)%4]), get_pos(nodes[(i+3)%4]));
+            if(a > max_a)
+            {
+                max_a = a;
+                max_i = i;
+            }
         }
         
-        a = Util::area<MT>(verts, 0, 3, 2);
-        if (a > max_area)
+        if (max_i != 3)
         {
-            max_area = a;
-            i = 1;
+            node_key_type itemp = nodes[max_i];
+            nodes[max_i] = nodes[3];
+            nodes[3] = itemp;
         }
         
-        a = Util::area<MT>(verts, 3, 1, 2);
-        if (a > max_area)
-        {
-            max_area = a;
-            i = 0;
-        }
-        }
-        if (i != 3)
-x_i != 3)
-            int itemp = nodes[i];
-            nodes[i] = nodes[3];
-nodes[3];
-            nodes[3]            
-            V vtemp = verts[i];
-            verts[i] = verts[3];
-            verts[3] = vtemp;
- = itemp;
-        }
-        return max_area;
-rn max_a;
+        return max_a;
     }
     
     /**
@@ -1505,19 +1481,17 @@ rn max_a;
      * and selects appropriate degeneracy removal routine.
      */
     inline void remove_degenerate_tet(const tetrahedron_key_type & t)
-            std::vector<node_key_type> nodes(4);
-);
+    {        
+        std::vector<node_key_type> nodes;
+        get_nodes(t, nodes);
+        permute_nodes(nodes); // Permute the nodes such that the one opposite the largest face (the "apex") is the last one in the array.
         
-        std::vector<T> barycentric_coords(3);
-        std::vector<T>        mesh.vertices(t, nodes);
         std::vector<V> verts;
         get_pos(t, verts);
         
-        // Find the largest face and permute the vertices so that the one opposite the largest face (the "apex") is the last one in arrays.
-        
-        permute_nodes(nodes, verts);
-        
-            
+        std::vector<T> barycentric_coords(3);
+        std::vector<T> cosines(6);
+                
         V normal = Util::normal_direction<MT>(verts[0], verts[1], verts[2]);
         
         V v = verts[3] - normal * MT::dot(verts[3]-verts[0], normal);
@@ -1527,25 +1501,26 @@ rn max_a;
         
         std::vector<int> inside(3);
         
-        // Determine the position of the apex with regard to the edges of the biggest fac        for (int j = 0; j < 3; ++j)
- i < 3; i++            int k = (j+1)%3;
-            if (barycentric_coords[j] > 1e-6)
-] > EPSILON)
-                 if (cosines[2*k] > MAX_COS || cosines[2*k+1] > MAX_COS)
-                    inside[k] = 0;
-side[i] = 0;
-                            inside[k] = 1;
-side[i] = 1;
-             else if (barycentric_coords[j] < -1e-6)
- < -EPSILON)
-                 if (cosines[2*k] > MAX_COS || cosines[2*k+1] > MAX_COS)
-                    inside[k] = 0;
-side[i] = 0;
-                            inside[k] = -1;
-ide[i] = -1;
+        // Determine the position of the apex with regard to the edges of the biggest face.
+        
+        for (int i = 0; i < 3; i++)
+        {
+            if (barycentric_coords[i] > EPSILON)
+            {
+                if (cosines[2*i] > MAX_COS || cosines[2*i+1] > MAX_COS)
+                    inside[i] = 0;
+                else
+                    inside[i] = 1;
             }
-                    inside[k] = 0;
-side[i] = 0;
+            else if (barycentric_coords[i] < -EPSILON)
+            {
+                if (cosines[2*i] > MAX_COS || cosines[2*i+1] > MAX_COS)
+                    inside[i] = 0;
+                else
+                    inside[i] = -1;
+            }
+            else
+                inside[i] = 0;
         }
         
         // Select appropriate degeneracy removal routine based on the location of the apex with regard to the largest face.

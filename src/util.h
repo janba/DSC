@@ -236,8 +236,8 @@ namespace Util
         
         for (int i = 0; i < 3; ++i)
         {
-            int k = (i+1)%3;
-            int l = (i+2)%3;
+            int k = i;
+            int l = (i+1)%3;
             V p, q;
             
             p = v - verts[k];
