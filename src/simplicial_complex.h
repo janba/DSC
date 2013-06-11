@@ -95,7 +95,6 @@ private:
     
 #define MAX_COS_FACE_ANGLE 0.996
 #define MAX_COS 0.998
-#define MIN_QUALITY 0.005
     
     int step_no;
     
@@ -1132,7 +1131,7 @@ private:
             {
                 if (!smart_laplacian(nit.key()))
                 {
-                    if (min_quality(nit.key()) < MIN_QUALITY)
+                    if (min_quality(nit.key()) < MIN_TET_QUALITY)
                     {
                         freitag_smoothing(nit.key());
                     }
@@ -1354,7 +1353,7 @@ private:
      * Remove a degenerate tetrahedron of a type "cap" by splitting the face opposite cap's apex and collapsing cap's apex with the newly created vertex.
      * Return true if successful.
      */
-    bool remove_degeneracy_type2(const tetrahedron_key_type & t, std::vector<node_key_type> & nodes, std::vector<V> & verts, std::vector<T> & b_coords, V & projection, int j)
+    bool remove_cap(const tetrahedron_key_type & t, std::vector<node_key_type> & nodes, std::vector<V> & verts, std::vector<T> & b_coords, V & projection, int j)
     {
         face_key_type f_split = -1;
         simplex_set bnd_t;
@@ -1398,7 +1397,7 @@ private:
      * Remove a degenerate tetrahedron of a type "wedge" by collapsing the shortest edge.
      * Return true if successful.
      */
-    bool remove_degeneracy_type3(const tetrahedron_key_type & t, std::vector<node_key_type> & nodes, std::vector<V> & verts, int i, int j, int k)
+    bool remove_wedge(const tetrahedron_key_type & t, std::vector<node_key_type> & nodes, std::vector<V> & verts, int i, int j, int k)
     {
         simplex_set si, sj;
         star(nodes[i], si);
@@ -1484,19 +1483,20 @@ private:
             max_area = a;
             i = 0;
         }
-        
+        }
         if (i != 3)
-        {
+x_i != 3)
             int itemp = nodes[i];
             nodes[i] = nodes[3];
-            nodes[3] = itemp;
-            
+nodes[3];
+            nodes[3]            
             V vtemp = verts[i];
             verts[i] = verts[3];
             verts[3] = vtemp;
+ = itemp;
         }
-        
         return max_area;
+rn max_a;
     }
     
     /**
@@ -1504,12 +1504,12 @@ private:
      * This function detects what type of degeneracy tetrahedron t is (sliver, cap or wedge)
      * and selects appropriate degeneracy removal routine.
      */
-    inline void remove_degeneracies_helper(const tetrahedron_key_type & t)
-    {        
-        std::vector<node_key_type> nodes(4);
+    inline void remove_degenerate_tet(const tetrahedron_key_type & t)
+            std::vector<node_key_type> nodes(4);
+);
+        
         std::vector<T> barycentric_coords(3);
-        std::vector<T> cosines(6);
-        mesh.vertices(t, nodes);
+        std::vector<T>        mesh.vertices(t, nodes);
         std::vector<V> verts;
         get_pos(t, verts);
         
@@ -1517,6 +1517,7 @@ private:
         
         permute_nodes(nodes, verts);
         
+            
         V normal = Util::normal_direction<MT>(verts[0], verts[1], verts[2]);
         
         V v = verts[3] - normal * MT::dot(verts[3]-verts[0], normal);
@@ -1526,33 +1527,31 @@ private:
         
         std::vector<int> inside(3);
         
-        // Determine the position of the apex with regard to the edges of the biggest face.
-        
-        for (int j = 0; j < 3; ++j)
-        {
-            int k = (j+1)%3;
+        // Determine the position of the apex with regard to the edges of the biggest fac        for (int j = 0; j < 3; ++j)
+ i < 3; i++            int k = (j+1)%3;
             if (barycentric_coords[j] > 1e-6)
-            {
-                if (cosines[2*k] > MAX_COS || cosines[2*k+1] > MAX_COS)
+] > EPSILON)
+                 if (cosines[2*k] > MAX_COS || cosines[2*k+1] > MAX_COS)
                     inside[k] = 0;
-                else
-                    inside[k] = 1;
-            }
-            else if (barycentric_coords[j] < -1e-6)
-            {
-                if (cosines[2*k] > MAX_COS || cosines[2*k+1] > MAX_COS)
+side[i] = 0;
+                            inside[k] = 1;
+side[i] = 1;
+             else if (barycentric_coords[j] < -1e-6)
+ < -EPSILON)
+                 if (cosines[2*k] > MAX_COS || cosines[2*k+1] > MAX_COS)
                     inside[k] = 0;
-                else
-                    inside[k] = -1;
+side[i] = 0;
+                            inside[k] = -1;
+ide[i] = -1;
             }
-            else
-                inside[k] = 0;
+                    inside[k] = 0;
+side[i] = 0;
         }
         
         // Select appropriate degeneracy removal routine based on the location of the apex with regard to the largest face.
         
         if (inside[0] == 1 && inside[1] == 1 && inside[2] == 1)
-            remove_degeneracy_type2(t, nodes, verts, barycentric_coords, v, 3);
+            remove_cap(t, nodes, verts, barycentric_coords, v, 3);
         else if (inside[0] == -1 && inside[1] ==  1 && inside[2] ==  1)
             remove_sliver(t, nodes, verts, 0, 1, 2, 3);
         else if (inside[0] ==  1 && inside[1] == -1 && inside[2] ==  1)
@@ -1560,45 +1559,43 @@ private:
         else if (inside[0] ==  1 && inside[1] ==  1 && inside[2] == -1)
             remove_sliver(t, nodes, verts, 2, 0, 1, 3);
         else if (inside[0] ==  1 && inside[1] == -1 && inside[2] == -1)
-            remove_degeneracy_type2(t, nodes, verts, barycentric_coords, v, 2);
+            remove_cap(t, nodes, verts, barycentric_coords, v, 2);
         else if (inside[0] == -1 && inside[1] ==  1 && inside[2] == -1)
-            remove_degeneracy_type2(t, nodes, verts, barycentric_coords, v, 0);
+            remove_cap(t, nodes, verts, barycentric_coords, v, 0);
         else if (inside[0] == -1 && inside[1] == -1 && inside[2] ==  1)
-            remove_degeneracy_type2(t, nodes, verts, barycentric_coords, v, 1);
+            remove_cap(t, nodes, verts, barycentric_coords, v, 1);
         else if (inside[0] ==  0 && inside[1] ==  1 && inside[2] ==  1)
-            remove_degeneracy_type3(t, nodes, verts, 0, 1, 3);
+            remove_wedge(t, nodes, verts, 0, 1, 3);
         else if (inside[0] ==  1 && inside[1] ==  0 && inside[2] ==  1)
-            remove_degeneracy_type3(t, nodes, verts, 1, 2, 3);
+            remove_wedge(t, nodes, verts, 1, 2, 3);
         else if (inside[0] ==  1 && inside[1] ==  1 && inside[2] ==  0)
-            remove_degeneracy_type3(t, nodes, verts, 2, 0, 3);
+            remove_wedge(t, nodes, verts, 2, 0, 3);
     }
     
     /**
      * Attempt to remove tetrahedra with quality lower than MIN_QUALITY.
      */
-    bool remove_degenerate_tets()
+    void remove_degenerate_tets()
     {
         std::vector<tetrahedron_key_type> degenerated_tets;
-        bool degenerated_tets_left = false;
         
         for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
         {
-            if (quality(tit.key()) <= MIN_QUALITY)
+            if (quality(tit.key()) <= DEG_TET_QUALITY)
             {
-                degenerated_tets_left = true;
                 degenerated_tets.push_back(tit.key());
             }
         }
         
-        for (unsigned int i = 0; i < degenerated_tets.size(); ++i)
+        for (auto &tet : degenerated_tets)
         {
-            int k = i;
-            if (mesh.exists(degenerated_tets[k]) && quality(degenerated_tets[k]) <= MIN_QUALITY)
-                remove_degeneracies_helper(degenerated_tets[k]);
+            if (mesh.exists(tet) && quality(tet) <= DEG_TET_QUALITY)
+            {
+                remove_degenerate_tet(tet);
+            }
         }
         
         mesh.garbage_collect();
-        return degenerated_tets_left;
     }
     
     void fix_complex()
@@ -1624,6 +1621,7 @@ private:
         
         print_out("Smooth.");
         smooth();
+        validity_check();
         
         print_out("Relabel tets.");
         bool relabeled = relabel_tets();
@@ -2333,6 +2331,9 @@ private:
         return true;
     }
     
+    /**
+     * Returns the increase (positive) or decrease in quality if the edge e is collapsed and the resulting node is moved to v_new.
+     */
     T quality_improvement(const edge_key_type& e, const V& v_new)
     {
         std::vector<node_key_type> nodes;
@@ -2373,9 +2374,9 @@ private:
         bool editable1 = !get(n1).is_interface() && !get(n1).is_boundary();
         bool editable2 = !get(n2).is_interface() && !get(n2).is_boundary();
         
-        V p;
         if(editable1 || editable2)
         {
+            V p;
             if (editable1 && editable2)
             {
                 p = Util::barycenter<MT>(get_pos(n1), get_pos(n2));
