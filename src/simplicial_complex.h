@@ -1482,17 +1482,17 @@ private:
         {
             if (barycentric_coords[i] > EPSILON)
             {
-                if (cosines[2*i] > MAX_COS || cosines[2*i+1] > MAX_COS)
-                    inside[i] = 0;
-                else
+                if (cosines[2*i] <= MAX_COS && cosines[2*i+1] <= MAX_COS)
+                {
                     inside[i] = 1;
+                }
             }
             else if (barycentric_coords[i] < -EPSILON)
             {
-                if (cosines[2*i] > MAX_COS || cosines[2*i+1] > MAX_COS)
-                    inside[i] = 0;
-                else
+                if (cosines[2*i] <= MAX_COS && cosines[2*i+1] <= MAX_COS)
+                {
                     inside[i] = -1;
+                }
             }
             else
                 inside[i] = 0;
@@ -1513,12 +1513,6 @@ private:
             remove_sliver(t, nodes, verts, 1, 2, 0, 3);
         else if (inside[0] ==  1 && inside[1] ==  1 && inside[2] == -1)
             remove_sliver(t, nodes, verts, 2, 0, 1, 3);
-        else if (inside[0] ==  1 && inside[1] == -1 && inside[2] == -1)
-            remove_cap(t, nodes, verts, barycentric_coords, proj_apex, 2);
-        else if (inside[0] == -1 && inside[1] ==  1 && inside[2] == -1)
-            remove_cap(t, nodes, verts, barycentric_coords, proj_apex, 0);
-        else if (inside[0] == -1 && inside[1] == -1 && inside[2] ==  1)
-            remove_cap(t, nodes, verts, barycentric_coords, proj_apex, 1);
         else if (inside[0] ==  0 && inside[1] ==  1 && inside[2] ==  1)
             remove_wedge(t, nodes, verts, 0, 1, 3);
         else if (inside[0] ==  1 && inside[1] ==  0 && inside[2] ==  1)
