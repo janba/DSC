@@ -1347,7 +1347,30 @@ private:
             update(interface_set);
             return true;
         }
-n != NULL_NODE;
+    }
+    
+    /**
+     * Remove a degenerate tetrahedron of a type "sliver" by splitting the two longest edges
+     * and collapsing the newly created vertices together. Return true if successful.
+     */
+    bool remove_sliver(const tetrahedron_key_type & t)
+    {
+        simplex_set cl_t;
+        closure(t, cl_t);
+        edge_key_type e1 = longest_edge(cl_t);
+        cl_t.erase(e1);
+        edge_key_type e2 = longest_edge(cl_t);
+        
+        node_key_type n1 = split_edge(e1);
+        node_key_type n2 = split_edge(e2);
+        
+        edge_key_type e = get_edge(n1, n2);
+        node_key_type new_n = safe_collapse(e);
+        if(new_n == NULL_NODE)
+        {
+            new_n = unsafe_collapse(n1, n2);
+        }
+        return new_n != NULL_NODE;
     }
     
     /**
@@ -1395,13 +1418,19 @@ n != NULL_NODE;
     }
     
     /**
-     * Remove a degenerate tetrahedron of a type "cap" by splitting the face opposite cap's apex and collapsing cap's apex with the newly  if succe    void remove_cap(const tetrahedron_key_type & t, const face_key_type & f, const node_key_type& apex)
-key_typ        node_key_type n1 = split_face(f);
-        node_key_type n2 = safe_collapse(get_edge(n1, apex));
-        if(n2 == NULL_NODE)
-w_n == NULL            unsafe_collapse(n1, apex);
+     * Remove a degenerate tetrahedron of a type "cap" by splitting the face opposite cap's apex and collapsing cap's apex with the newly created vertex.
+     * Return true if successful.
+     */
+    bool remove_cap(const tetrahedron_key_type & t, const face_key_type & f, const node_key_type& apex)
+    {
+        node_key_type n1 = split_face(f);
+        edge_key_type e = get_edge(n1, apex);
+        node_key_type new_n = safe_collapse(e);
+        if(new_n == NULL_NODE)
+        {
+            new_n = unsafe_collapse(n1, apex);
         }
-ew_n != NULL_NODE;
+        return new_n != NULL_NODE;
     }
     
     /**
@@ -1543,8 +1572,8 @@ dge(t, nodes, verts, 2, 0, 3);
         {
             if (quality(tit.key()) <= DEG_TET_QUALITY)
             {
-                degenerated_tets.push_back(tit.key        
-
+                degenerated_tets.push_back(tit.key());
+            }
         }
         int i = 0;
         for (auto &tet : degenerated_tets)
