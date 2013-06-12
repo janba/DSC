@@ -1553,10 +1553,15 @@ private:
         int i = 0;
         for (auto &tet : degenerated_tets)
         {
-            if (mesh.exists(tet) && quality(tet) <= D                remove_degenerate_tet(tet);
-tet))
-                           
- degenerate tets" << std::endl;
+            if (mesh.exists(tet) && quality(tet) <= DEG_TET_QUALITY)
+            {
+                if(remove_degenerate_tet(tet))
+                {
+                    i++;
+                }
+            }
+        }
+        std::cout << "Removed " << i << " degenerate tets" << std::endl;
         mesh.garbage_collect();
     }
     
@@ -2358,9 +2363,8 @@ private:
             {
                 return collapse_edge(e, n1, n2, p);
             }
-     t edge_key_type& e)
-    {
-        
+        }
+        return NULL_NODE;
     }
     
     /**
