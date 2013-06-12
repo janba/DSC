@@ -1355,7 +1355,7 @@ private:
     
     /**
      * Destroy degenerate (nearly flat) tetrahedron t by splits and collapses.
-     * This function detects what type of degeneracy tetrahedron t is (sliver, cap or wedge)
+     * This function detects what type of degeneracy tetrahedron t is (sliver, cap, needle or wedge)
      * and selects appropriate degeneracy removal routine.
      */
     bool remove_degenerate_tet(const tetrahedron_key_type & t)
@@ -1376,9 +1376,9 @@ private:
         // Project the apex
         V proj_apex = Util::project<MT>(get_pos(apex), verts);
         
+        // Find barycentric coordinates
         std::vector<T> barycentric_coords(3);
         Util::get_barycentric_coords<MT>(proj_apex, verts[0], verts[1], verts[2], barycentric_coords);
-        
         
         if(barycentric_coords[0] > 0.2 && barycentric_coords[1] > 0.2 && barycentric_coords[2] > 0.2) // The tetrahedron is a cap
         {
