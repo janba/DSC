@@ -1490,8 +1490,9 @@ private:
     /**
      * Destroy degenerate (nearly flat) tetrahedron t by splits and collapses.
      * This function detects what type of degeneracy tetrahedron t is (sliver, cap or wedge)
-     * and selects appropriate degeneracy removal    inline void remove_degenerate_tet(const tetrahedron_key_type & t)
-dron_key_type & t)
+     * and selects appropriate degeneracy removal routine.
+     */
+    bool remove_degenerate_tet(const tetrahedron_key_type & t)
     {
         // Find the largest face
         simplex_set cl_t;
@@ -1510,55 +1511,29 @@ dron_key_type & t)
         V proj_apex = Util::project<MT>(get_pos(apex), verts);
         
         std::vector<T> barycentric_coords(3);
-        Util::get_barycentric_coords<MT>(proj_apex, verts[0], verts[1], verts[2], barycentric_        std::vector<T> cosines(6);
-        Util::get_cosines<MT>(proj_apex, vert, apex);
-        }
+        Util::get_barycentric_coords<MT>(proj_apex, verts[0], verts[1], verts[2], barycentric_coords);
         
-        // Determine the position of the apex with regard to the edges of the biggest face.
-        std::vector<int> inside(3);
-        for (int i = 0; i < 3; i++)
+        
+        if(barycentric_coords[0] > 0.2 && barycentric_coords[1] > 0.2 && barycentric_coords[2] > 0.2) // The tetrahedron is a cap
         {
-            if (barycentric_coords[i] > EPSILON)
-            {
-                if (cosines[2*i] <= MAX_COS && cosines[2*i+1] <= MAX_COS)
-                {
-                    inside[i] = 1;
-                }
-            }
-            else if (barycentric_coords[i] < -EPSILON)
-            {
-                if (cosines[2*i] <= MAX_COS && cosines[2*i+1] <= MAX_COS)
-                {
-                    inside[i] = -1;
-                }
-            }
-            else
-                inside[i] = 0;
+            return remove_cap(t, f, apex);
+        }
+        else if(barycentric_coords[0] < -0.2 || barycentric_coords[1] < -0.2 || barycentric_coords[2] < -0.2) // The tetrahedron is a sliver
+        {
+            return remove_sliver(t);
         }
         
-        // Select appropriate degeneracy removal routine based on the location of the apex        
-        std::vector<node_key_type> nodes;
-        get_nodes(f, nodes);
-        nodes.push_back(apex);
-        verts.push_back(get_pos(apex));
-ard to the largest face.
+        edge_key_type e = shortest_edge(cl_t);
         
+        node_key_type new_n = safe_collapse(e);
+        if(new_n == NULL_NODE)
+        {
+            std::vector<node_key_type> nodes;
+            get_nodes(e, nodes);
+            new_n = unsafe_collapse(nodes[0], nodes[1]);
+        }
         
-        if (inside[0] == 1 && inside[1] == 1 && inside[2] == 1)
-            remove_cap(t, nodes, verts, barycentric_coords, proj_apex, 3);
-        else if (inside[0] == -1 && inside[1] ==  1 && inside[2] ==  1)
-            remove_sliver(t, nodes, verts, 0, 1, 2, 3);
-        else if (inside[0] ==  1 && inside[1] == -1 && inside[2] ==  1)
-            remove_sliver(t, nodes, verts, 1, 2, 0, 3);
-        else if (inside[0] ==  1 && inside[1] ==  1 && inside[2] == -1)
-            remove_sliver(t, nodes, verts, 2, 0, 1, 3);
-        else if (inside[0] ==  0 && inside[1] ==  1 && inside[2] ==  1)
-            remove_wedge(t, nodes, verts, 0, 1, 3);
-        else if (inside[0] ==  1 && inside[1] ==  0 && inside[2] ==  1)
-            remove_wedge(t, nodes, verts, 1, 2, 3);
-        else if (inside[0] ==  1 && inside[1] ==  1 && inside[2] ==  0)
-            remove_wedge(t, nodes, verts, 2, 0, 3);
-dge(t, nodes, verts, 2, 0, 3);
+        return new_n != NULL_NODE;
     }
     
     /**
