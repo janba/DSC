@@ -1394,6 +1394,19 @@ private:
     }
     
     /**
+     * Remove a degenerate tetrahedron of a type "cap" by splitting the face opposite cap's apex and collapsing cap's apex with the newly created vertex.
+     */
+    void remove_cap(const tetrahedron_key_type & t, const face_key_type & f, const node_key_type& apex)
+    {
+        node_key_type n1 = split_face(f);
+        node_key_type n2 = safe_collapse(get_edge(n1, apex));
+        if(n2 == NULL_NODE)
+        {
+            unsafe_collapse(n1, apex);
+        }
+    }
+    
+    /**
      * Remove a degenerate tetrahedron of a type "wedge" by collapsing the shortest edge.
      * Return true if successful.
      */
@@ -1472,9 +1485,10 @@ private:
         
         std::vector<T> barycentric_coords(3);
         Util::get_barycentric_coords<MT>(proj_apex, verts[0], verts[1], verts[2], barycentric_coords);
-
+        
         std::vector<T> cosines(6);
-        Util::get_cosines<MT>(proj_apex, verts, cosines);
+        Util::get_cosines<MT>(proj_apex, vert, apex);
+        }
         
         // Determine the position of the apex with regard to the edges of the biggest face.
         std::vector<int> inside(3);
@@ -1498,12 +1512,13 @@ private:
                 inside[i] = 0;
         }
         
-        // Select appropriate degeneracy removal routine based on the location of the apex with regard to the largest face.
-        
+        // Select appropriate degeneracy removal routine based on the location of the apex        
         std::vector<node_key_type> nodes;
         get_nodes(f, nodes);
         nodes.push_back(apex);
         verts.push_back(get_pos(apex));
+ard to the largest face.
+        
         
         if (inside[0] == 1 && inside[1] == 1 && inside[2] == 1)
             remove_cap(t, nodes, verts, barycentric_coords, proj_apex, 3);
