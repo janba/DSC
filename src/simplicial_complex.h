@@ -1365,12 +1365,7 @@ private:
         node_key_type n2 = split_edge(e2);
         
         edge_key_type e = get_edge(n1, n2);
-        node_key_type new_n = safe_collapse(e);
-        if(new_n == NULL_NODE)
-        {
-            new_n = unsafe_collapse(n1, n2);
-        }
-        return new_n != NULL_NODE;
+        return unsafe_collapse(e) != NULL_NODE;
     }
     
     /**
@@ -1425,12 +1420,19 @@ private:
     {
         node_key_type n1 = split_face(f);
         edge_key_type e = get_edge(n1, apex);
-        node_key_type new_n = safe_collapse(e);
-        if(new_n == NULL_NODE)
-        {
-            new_n = unsafe_collapse(n1, apex);
-        }
-        return new_n != NULL_NODE;
+        return unsafe_collapse(e) != NULL_NODE;
+    }
+    
+    /**
+     * Remove a degenerate tetrahedron of a type "wedge" or "needle" by collapsing the shortest edge.
+     * Return true if successful.
+     */
+    bool remove_wedge_or_needle(const tetrahedron_key_type & t)
+    {
+        simplex_set cl_t;
+        closure(t, cl_t);
+        edge_key_type e = shortest_edge(cl_t);
+        return unsafe_collapse(e) != NULL_NODE;
     }
     
     /**
@@ -1523,17 +1525,8 @@ private:
             return remove_sliver(t);
         }
         
-        edge_key_type e = shortest_edge(cl_t);
-        
-        node_key_type new_n = safe_collapse(e);
-        if(new_n == NULL_NODE)
-        {
-            std::vector<node_key_type> nodes;
-            get_nodes(e, nodes);
-            new_n = unsafe_collapse(nodes[0], nodes[1]);
-        }
-        
-        return new_n != NULL_NODE;
+        // The tetrahedron is a wedge or a needle
+        return remove_wedge_or_needle(t);
     }
     
     /**
@@ -2365,6 +2358,22 @@ private:
             }
         }
         return NULL_NODE;
+    }
+    
+    /**
+     * Collapses the edge e by trying to collapse it safely before collapsing it unsafely. Returns the resulting node or NULL_NODE if unsuccessful.
+     */
+    node_key_type unsafe_collapse(edge_key_type& e)
+    {
+        node_key_type new_n = safe_collapse(e);
+        if(new_n == NULL_NODE)
+        {
+            std::vector<node_key_type> nodes;
+            get_nodes(e, nodes);
+            new_n = unsafe_collapse(nodes[0], nodes[1]);
+        }
+        
+        return new_n;
     }
     
     /**
