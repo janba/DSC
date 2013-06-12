@@ -1454,34 +1454,30 @@ private:
      */
     inline void remove_degenerate_tet(const tetrahedron_key_type & t)
     {
-        
+        // Find the largest face
         simplex_set cl_t;
         closure(t, cl_t);
         face_key_type f = largest_face(cl_t);
-        
-        simplex_set cl_f;
-        closure(f, cl_f);
-        cl_t.difference(cl_f);
-        assert(cl_t.size_nodes() == 1);
-        
-        node_key_type apex = *cl_t.nodes_begin();
-        V pos_apex = get_pos(apex);
-        
         std::vector<V> verts;
         get_pos(f, verts);
         
-        std::vector<T> barycentric_coords(3);
-        std::vector<T> cosines(6);
+        // Find the apex
+        simplex_set cl_f;
+        closure(f, cl_f);
+        cl_t.difference(cl_f);
+        node_key_type apex = *cl_t.nodes_begin();
         
+        // Project the apex
         V proj_apex = Util::project<MT>(get_pos(apex), verts);
         
+        std::vector<T> barycentric_coords(3);
         Util::get_barycentric_coords<MT>(proj_apex, verts[0], verts[1], verts[2], barycentric_coords);
+
+        std::vector<T> cosines(6);
         Util::get_cosines<MT>(proj_apex, verts, cosines);
         
-        std::vector<int> inside(3);
-        
         // Determine the position of the apex with regard to the edges of the biggest face.
-        
+        std::vector<int> inside(3);
         for (int i = 0; i < 3; i++)
         {
             if (barycentric_coords[i] > EPSILON)
@@ -1507,7 +1503,7 @@ private:
         std::vector<node_key_type> nodes;
         get_nodes(f, nodes);
         nodes.push_back(apex);
-        verts.push_back(pos_apex);
+        verts.push_back(get_pos(apex));
         
         if (inside[0] == 1 && inside[1] == 1 && inside[2] == 1)
             remove_cap(t, nodes, verts, barycentric_coords, proj_apex, 3);
