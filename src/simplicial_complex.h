@@ -1312,44 +1312,6 @@ private:
     }
     
     /**
-     * Remove a degenerate tetrahedron of a type "sliver" by splitting the longest edges at their projected intersection point
-     * and collapsing the newly created vertices together. Return true if successful.
-     */
-    bool remove_sliver(tetrahedron_key_type const & t, std::vector<node_key_type> & nodes, std::vector<V> & verts, int i, int j, int k, int l)
-    {
-        
-        edge_key_type e1 = get_edge(nodes[i], nodes[j]);
-        edge_key_type e2 = get_edge(nodes[k], nodes[l]);
-        assert(e1 != NULL_EDGE);
-        assert(e2 != NULL_EDGE);
-        
-        simplex_set st_e1, st_e2, interface_set;
-        star(e1, st_e1);
-        star(e2, st_e2);
-        st_e2.add(st_e1);
-        mesh.closure(st_e2, interface_set);
-        
-        mesh.set_undo_mark(interface_set);
-        node_key_type n1 = mesh.split_edge(e1);
-        node_key_type n2 = mesh.split_edge(e2);
-        assert(n1 != NULL_NODE);
-        assert(n2 != NULL_NODE);
-        node_key_type result = unsafe_collapse(n1, n2);
-        if (result == NULL_NODE)
-        {
-            mesh.undo();
-            return false;
-        }
-        else
-        {
-            mesh.commit();
-            cleanup_set(interface_set);
-            update(interface_set);
-            return true;
-        }
-    }
-    
-    /**
      * Remove a degenerate tetrahedron of a type "sliver" by splitting the two longest edges
      * and collapsing the newly created vertices together. Return true if successful.
      */
@@ -1366,50 +1328,6 @@ private:
         
         edge_key_type e = get_edge(n1, n2);
         return unsafe_collapse(e) != NULL_NODE;
-    }
-    
-    /**
-     * Remove a degenerate tetrahedron of a type "cap" by splitting the face opposite cap's apex and collapsing cap's apex with the newly created vertex.
-     * Return true if successful.
-     */
-    bool remove_cap(const tetrahedron_key_type & t, std::vector<node_key_type> & nodes, std::vector<V> & verts, std::vector<T> & b_coords, V & projection, int j)
-    {
-        face_key_type f_split = -1;
-        simplex_set bnd_t;
-        mesh.boundary(t, bnd_t);
-        for (auto fit = bnd_t.faces_begin(); fit != bnd_t.faces_end(); fit++)
-        {
-            simplex_set bnd_f;
-            mesh.boundary(*fit, bnd_f);
-            if (!(bnd_f.contains(nodes[j])))
-                f_split = *fit;
-        }
-        
-        //TODO: Possibly replace with exact collision point computation
-        //    bool collision = false;
-        //    if (mesh.find_face(f_split).is_interface() && mesh.find_node(nodes[j]).is_interface())
-        //        collision = true;
-        
-        assert (mesh.exists(f_split));
-        simplex_set st_f, interface_set;
-        mesh.star(f_split, st_f);
-        st_f.insert(f_split);
-        mesh.closure(st_f, interface_set);
-        mesh.set_undo_mark(interface_set);
-        node_key_type nn = split_face(f_split);
-        node_key_type result = unsafe_collapse(nodes[j], nn);
-        if (result == NULL_NODE)
-        {
-            mesh.undo();
-            return false;
-        }
-        else
-        {
-            mesh.commit();
-            cleanup_set(interface_set);
-            update(interface_set);
-            return true;
-        }
     }
     
     /**
@@ -1433,60 +1351,6 @@ private:
         closure(t, cl_t);
         edge_key_type e = shortest_edge(cl_t);
         return unsafe_collapse(e) != NULL_NODE;
-    }
-    
-    /**
-     * Remove a degenerate tetrahedron of a type "wedge" by collapsing the shortest edge.
-     * Return true if successful.
-     */
-    bool remove_wedge(const tetrahedron_key_type & t, std::vector<node_key_type> & nodes, std::vector<V> & verts, int i, int j, int k)
-    {
-        simplex_set si, sj;
-        star(nodes[i], si);
-        star(nodes[j], sj);
-        si.intersection(sj);
-        assert (si.size_edges() == 1);
-        simplex_set st_e, interface_set;
-        star(*(si.edges_begin()), st_e);
-        st_e.insert(*(si.edges_begin()));
-        mesh.closure(st_e, interface_set);
-        mesh.set_undo_mark(interface_set);
-        
-        //    bool collision = false;
-        //    if (mesh.find_edge(*(si.edges_begin())).is_interface() && mesh.find_node(nodes[k]).is_interface())
-        //        collision = true;
-        
-        V vij = verts[j]-verts[i];
-        double p1 = vij.length();
-        vij.normalize();
-        double p2 = dot(vij, verts[k]-verts[i]);
-        node_key_type result;
-        if (p2 < 0)
-        {
-            result = unsafe_collapse(nodes[k], nodes[i]);
-        }
-        else if (p2 > p1)
-        {
-            result = unsafe_collapse(nodes[k], nodes[j]);
-        }
-        else
-        {
-            node_key_type nn = split_edge(*(si.edges_begin()));
-            result = unsafe_collapse(nodes[k], nn);
-        }
-        
-        if (result == NULL_NODE)
-        {
-            mesh.undo();
-            return false;
-        }
-        else
-        {
-            mesh.commit();
-            cleanup_set(interface_set);
-            update(interface_set);
-            return true;
-        }
     }
     
     /**
