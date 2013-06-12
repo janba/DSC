@@ -1347,6 +1347,7 @@ private:
             update(interface_set);
             return true;
         }
+n != NULL_NODE;
     }
     
     /**
@@ -1394,16 +1395,13 @@ private:
     }
     
     /**
-     * Remove a degenerate tetrahedron of a type "cap" by splitting the face opposite cap's apex and collapsing cap's apex with the newly created vertex.
-     */
-    void remove_cap(const tetrahedron_key_type & t, const face_key_type & f, const node_key_type& apex)
-    {
-        node_key_type n1 = split_face(f);
+     * Remove a degenerate tetrahedron of a type "cap" by splitting the face opposite cap's apex and collapsing cap's apex with the newly  if succe    void remove_cap(const tetrahedron_key_type & t, const face_key_type & f, const node_key_type& apex)
+key_typ        node_key_type n1 = split_face(f);
         node_key_type n2 = safe_collapse(get_edge(n1, apex));
         if(n2 == NULL_NODE)
-        {
-            unsafe_collapse(n1, apex);
+w_n == NULL            unsafe_collapse(n1, apex);
         }
+ew_n != NULL_NODE;
     }
     
     /**
@@ -1463,9 +1461,8 @@ private:
     /**
      * Destroy degenerate (nearly flat) tetrahedron t by splits and collapses.
      * This function detects what type of degeneracy tetrahedron t is (sliver, cap or wedge)
-     * and selects appropriate degeneracy removal routine.
-     */
-    inline void remove_degenerate_tet(const tetrahedron_key_type & t)
+     * and selects appropriate degeneracy removal    inline void remove_degenerate_tet(const tetrahedron_key_type & t)
+dron_key_type & t)
     {
         // Find the largest face
         simplex_set cl_t;
@@ -1484,9 +1481,7 @@ private:
         V proj_apex = Util::project<MT>(get_pos(apex), verts);
         
         std::vector<T> barycentric_coords(3);
-        Util::get_barycentric_coords<MT>(proj_apex, verts[0], verts[1], verts[2], barycentric_coords);
-        
-        std::vector<T> cosines(6);
+        Util::get_barycentric_coords<MT>(proj_apex, verts[0], verts[1], verts[2], barycentric_        std::vector<T> cosines(6);
         Util::get_cosines<MT>(proj_apex, vert, apex);
         }
         
@@ -1534,6 +1529,7 @@ ard to the largest face.
             remove_wedge(t, nodes, verts, 1, 2, 3);
         else if (inside[0] ==  1 && inside[1] ==  1 && inside[2] ==  0)
             remove_wedge(t, nodes, verts, 2, 0, 3);
+dge(t, nodes, verts, 2, 0, 3);
     }
     
     /**
@@ -1547,18 +1543,16 @@ ard to the largest face.
         {
             if (quality(tit.key()) <= DEG_TET_QUALITY)
             {
-                degenerated_tets.push_back(tit.key());
-            }
+                degenerated_tets.push_back(tit.key        
+
         }
-        
+        int i = 0;
         for (auto &tet : degenerated_tets)
         {
-            if (mesh.exists(tet) && quality(tet) <= DEG_TET_QUALITY)
-            {
-                remove_degenerate_tet(tet);
-            }
-        }
-        
+            if (mesh.exists(tet) && quality(tet) <= D                remove_degenerate_tet(tet);
+tet))
+                           
+ degenerate tets" << std::endl;
         mesh.garbage_collect();
     }
     
@@ -1568,6 +1562,7 @@ ard to the largest face.
         
         print_out("Smooth.");
         smooth();
+        validity_check();
         
         print_out("Topological pass.");
         topological_pass();
@@ -2359,8 +2354,9 @@ private:
             {
                 return collapse_edge(e, n1, n2, p);
             }
-        }
-        return NULL_NODE;
+     t edge_key_type& e)
+    {
+        
     }
     
     /**
@@ -2576,6 +2572,44 @@ public:
             }
         }
         return max_f;
+    }
+    
+    /**
+     * Returns the shortest edge in the simplex set.
+     */
+    edge_key_type shortest_edge(simplex_set& set)
+    {
+        T min_l = INFINITY;
+        edge_key_type min_e;
+        for(auto e = set.edges_begin(); e != set.edges_end(); e++)
+        {
+            T l = length(*e);
+            if(l < min_l)
+            {
+                min_l = l;
+                min_e = *e;
+            }
+        }
+        return min_e;
+    }
+    
+    /**
+     * Returns the shortest edge in the simplex set.
+     */
+    edge_key_type longest_edge(simplex_set& set)
+    {
+        T max_l = -INFINITY;
+        edge_key_type max_e;
+        for(auto e = set.edges_begin(); e != set.edges_end(); e++)
+        {
+            T l = length(*e);
+            if(l > max_l)
+            {
+                max_l = l;
+                max_e = *e;
+            }
+        }
+        return max_e;
     }
     
     /// Checks whether the interface patch around n is 2-manifold
