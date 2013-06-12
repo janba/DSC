@@ -940,6 +940,16 @@ namespace Util
             return -n;
     }
     
+    /**
+     * Project the point v onto the plane spanned by the three points in verts.
+     */
+    template<typename MT>
+    inline typename MT::vector3_type project(typename MT::vector3_type const & v, const std::vector<typename MT::vector3_type>& verts)
+    {
+        typename MT::vector3_type normal = Util::normal_direction<MT>(verts[0], verts[1], verts[2]);
+        return v - normal * MT::dot(v - verts[0], normal);
+    }
+    
     template <typename MT>
     inline typename MT::real_type calc_flatness(typename MT::vector3_type const & a,
                                                 typename MT::vector3_type const & b,
