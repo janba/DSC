@@ -1448,56 +1448,35 @@ private:
     }
     
     /**
-     * Find the largest face spanned by the nodes and permute the nodes such that the one opposite the largest face (the "apex") is the last one in the array.
-     */
-    T permute_nodes(std::vector<node_key_type> & nodes)
-    {
-        T max_a = -INFINITY;
-        int max_i;
-        
-        for(int i = 0; i < 4; i++)
-        {
-            T a = Util::area<MT>(get_pos(nodes[(i+1)%4]), get_pos(nodes[(i+2)%4]), get_pos(nodes[(i+3)%4]));
-            if(a > max_a)
-            {
-                max_a = a;
-                max_i = i;
-            }
-        }
-        
-        if (max_i != 3)
-        {
-            node_key_type itemp = nodes[max_i];
-            nodes[max_i] = nodes[3];
-            nodes[3] = itemp;
-        }
-        
-        return max_a;
-    }
-    
-    /**
      * Destroy degenerate (nearly flat) tetrahedron t by splits and collapses.
      * This function detects what type of degeneracy tetrahedron t is (sliver, cap or wedge)
      * and selects appropriate degeneracy removal routine.
      */
     inline void remove_degenerate_tet(const tetrahedron_key_type & t)
-    {        
-        std::vector<node_key_type> nodes;
-        get_nodes(t, nodes);
-        permute_nodes(nodes); // Permute the nodes such that the one opposite the largest face (the "apex") is the last one in the array.
+    {
+        
+        simplex_set cl_t;
+        closure(t, cl_t);
+        face_key_type f = largest_face(cl_t);
+        
+        simplex_set cl_f;
+        closure(f, cl_f);
+        cl_t.difference(cl_f);
+        assert(cl_t.size_nodes() == 1);
+        
+        node_key_type apex = *cl_t.nodes_begin();
+        V pos_apex = get_pos(apex);
         
         std::vector<V> verts;
-        get_pos(t, verts);
+        get_pos(f, verts);
         
         std::vector<T> barycentric_coords(3);
         std::vector<T> cosines(6);
-                
-        V normal = Util::normal_direction<MT>(verts[0], verts[1], verts[2]);
         
-        V v = verts[3] - normal * MT::dot(verts[3]-verts[0], normal);
+        V proj_apex = Util::project<MT>(get_pos(apex), verts);
         
-        Util::get_barycentric_coords<MT>(v, verts[0], verts[1], verts[2], barycentric_coords);
-        Util::get_cosines<MT>(v, verts, cosines);
+        Util::get_barycentric_coords<MT>(proj_apex, verts[0], verts[1], verts[2], barycentric_coords);
+        Util::get_cosines<MT>(proj_apex, verts, cosines);
         
         std::vector<int> inside(3);
         
@@ -1525,8 +1504,13 @@ private:
         
         // Select appropriate degeneracy removal routine based on the location of the apex with regard to the largest face.
         
+        std::vector<node_key_type> nodes;
+        get_nodes(f, nodes);
+        nodes.push_back(apex);
+        verts.push_back(pos_apex);
+        
         if (inside[0] == 1 && inside[1] == 1 && inside[2] == 1)
-            remove_cap(t, nodes, verts, barycentric_coords, v, 3);
+            remove_cap(t, nodes, verts, barycentric_coords, proj_apex, 3);
         else if (inside[0] == -1 && inside[1] ==  1 && inside[2] ==  1)
             remove_sliver(t, nodes, verts, 0, 1, 2, 3);
         else if (inside[0] ==  1 && inside[1] == -1 && inside[2] ==  1)
@@ -1534,11 +1518,11 @@ private:
         else if (inside[0] ==  1 && inside[1] ==  1 && inside[2] == -1)
             remove_sliver(t, nodes, verts, 2, 0, 1, 3);
         else if (inside[0] ==  1 && inside[1] == -1 && inside[2] == -1)
-            remove_cap(t, nodes, verts, barycentric_coords, v, 2);
+            remove_cap(t, nodes, verts, barycentric_coords, proj_apex, 2);
         else if (inside[0] == -1 && inside[1] ==  1 && inside[2] == -1)
-            remove_cap(t, nodes, verts, barycentric_coords, v, 0);
+            remove_cap(t, nodes, verts, barycentric_coords, proj_apex, 0);
         else if (inside[0] == -1 && inside[1] == -1 && inside[2] ==  1)
-            remove_cap(t, nodes, verts, barycentric_coords, v, 1);
+            remove_cap(t, nodes, verts, barycentric_coords, proj_apex, 1);
         else if (inside[0] ==  0 && inside[1] ==  1 && inside[2] ==  1)
             remove_wedge(t, nodes, verts, 0, 1, 3);
         else if (inside[0] ==  1 && inside[1] ==  0 && inside[2] ==  1)
@@ -2568,6 +2552,25 @@ public:
         std::vector<V> verts;
         get_pos(t, verts);
         return Util::quality<MT>(verts[0], verts[1], verts[2], verts[3]);
+    }
+    
+    /**
+     * Returns the largest face in the simplex set.
+     */
+    face_key_type largest_face(simplex_set& set)
+    {
+        T max_a = -INFINITY;
+        face_key_type max_f;
+        for(auto f = set.faces_begin(); f != set.faces_end(); f++)
+        {
+            T a = area(*f);
+            if(a > max_a)
+            {
+                max_a = a;
+                max_f = *f;
+            }
+        }
+        return max_f;
     }
     
     /// Checks whether the interface patch around n is 2-manifold
