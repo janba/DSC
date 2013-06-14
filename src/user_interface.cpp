@@ -108,8 +108,8 @@ UI::UI(int &argc, char** argv)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
         
-    vel_fun = (VelocityFunc<GELTypes>*) NULL;
-    dsc = (DeformableSimplicialComplex<GELTypes>*) NULL;
+    vel_fun = nullptr;
+    dsc = nullptr;
     
     if(argc > 1)
     {
@@ -363,8 +363,8 @@ void UI::stop()
         delete dsc;
         delete basic_log;
         delete view_ctrl;
-        vel_fun = (VelocityFunc<GELTypes>*) NULL;
-        dsc = (DeformableSimplicialComplex<GELTypes>*) NULL;
+        vel_fun = nullptr;
+        dsc = nullptr;
     }
 }
 
