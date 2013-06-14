@@ -112,16 +112,6 @@ public:
         return total_compute_time;
     }
     
-private:
-    /**
-     Set the timings to zero.
-     */
-    void reset_times()
-    {
-        compute_time = 0.;
-        deform_time = 0.;
-    }
-    
 protected:
     /**
      Updates the time it took to compute new positions for the interface vertices.
@@ -181,7 +171,9 @@ public:
      */
     bool take_time_step()
     {
-        reset_times();
+        compute_time = 0.;
+        deform_time = 0.;
+        
         deform();
         
         time_step++;
