@@ -38,7 +38,7 @@ protected:
         //import_tet_mesh(get_data_file_path("bunny.dsc").data(), points, tets, tet_labels);
         build_tetrahedralization<GELTypes>(get_data_file_path("blob.obj"), points, tets, tet_labels, pts_inside);
         
-        SimplicialComplex<GELTypes> *complex = new SimplicialComplex<GELTypes>(points, tets, tet_labels);
+        DeformableSimplicialComplex<GELTypes> *complex = new DeformableSimplicialComplex<GELTypes>(points, tets, tet_labels);
         
         VelocityFunc<GELTypes> *vel_fun = new RotateFunc<GELTypes>(VELOCITY, ACCURACY);
         Log *log = new Log(create_log_path());
@@ -64,7 +64,7 @@ protected:
         //import_tet_mesh(get_data_file_path("bunny.dsc").data(), points, tets, tet_labels);
         build_tetrahedralization<GELTypes>(get_data_file_path("blob.obj"), points, tets, tet_labels, pts_inside);
         
-        SimplicialComplex<GELTypes> *complex = new SimplicialComplex<GELTypes>(points, tets, tet_labels);
+        DeformableSimplicialComplex<GELTypes> *complex = new DeformableSimplicialComplex<GELTypes>(points, tets, tet_labels);
         
         VelocityFunc<GELTypes> *vel_fun = new AverageFunc<GELTypes>(VELOCITY, ACCURACY);
         Log *log = new Log(create_log_path());
@@ -90,7 +90,7 @@ protected:
         //import_tet_mesh(get_data_file_path("bunny.dsc").data(), points, tets, tet_labels);
         build_tetrahedralization<GELTypes>(get_data_file_path("armadillo-very-simple.obj"), points, tets, tet_labels, pts_inside);
         
-        SimplicialComplex<GELTypes> *complex = new SimplicialComplex<GELTypes>(points, tets, tet_labels);
+        DeformableSimplicialComplex<GELTypes> *complex = new DeformableSimplicialComplex<GELTypes>(points, tets, tet_labels);
         
         VelocityFunc<GELTypes> *vel_fun = new NormalFunc<GELTypes>(VELOCITY, ACCURACY);
         Log *log = new Log(create_log_path());

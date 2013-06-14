@@ -37,7 +37,7 @@ public:
     /**
      Computes the motion of each interface vertex and stores the new position in new_pos in the simplicial complex class.
      */
-    virtual void deform(SimplicialComplex<MT> *complex)
+    virtual void deform(DeformableSimplicialComplex<MT> *complex)
     {
         typedef typename MT::vector3_type V;
         clock_t init_time = clock();

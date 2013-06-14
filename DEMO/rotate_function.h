@@ -38,7 +38,7 @@ public:
     /**
      Computes the motion of each interface vertex and stores the new position in new_pos in the simplicial complex class.
      */
-    virtual void deform(SimplicialComplex<MT> *complex)
+    virtual void deform(DeformableSimplicialComplex<MT> *complex)
     {
         typedef typename MT::vector3_type V;
         clock_t init_time = clock();
@@ -66,14 +66,14 @@ public:
     /**
      Returns wether the motion has finished.
      */
-    virtual bool is_motion_finished(SimplicialComplex<MT> *complex)
+    virtual bool is_motion_finished(DeformableSimplicialComplex<MT> *complex)
     {
         return false;
     }
     
-    virtual void test(SimplicialComplex<MT> *complex)
+    virtual void test(DeformableSimplicialComplex<MT> *complex)
     {
-        std::vector<typename SimplicialComplex<MT>::edge_key_type> edges;
+        std::vector<typename DeformableSimplicialComplex<MT>::edge_key_type> edges;
         for (auto eit = complex->edges_begin(); eit != complex->edges_end(); eit++)
         {
             if (eit->is_interface())

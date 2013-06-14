@@ -37,7 +37,7 @@ struct quality_struct
 };
 
 template <typename MT>
-class SimplicialComplex
+class DeformableSimplicialComplex
 {
     typedef typename MT::real_type      T;
     typedef typename MT::vector3_type   V;
@@ -105,7 +105,7 @@ private:
 public:
     
     /// SimplicialComplex constructor.
-    SimplicialComplex(std::vector<T> & points, std::vector<int> & tets, std::vector<int> & tet_labels):
+    DeformableSimplicialComplex(std::vector<T> & points, std::vector<int> & tets, std::vector<int> & tet_labels):
     NULL_NODE(-1), NULL_EDGE(-1), NULL_FACE(-1), NULL_TETRAHEDRON(-1)
     {
         vectors_read(points, tets, mesh);
@@ -133,7 +133,7 @@ public:
         check_validity();
     }
     
-    SimplicialComplex() {}
+    DeformableSimplicialComplex() {}
     
 private:    
     
@@ -176,7 +176,7 @@ private:
         }
         
         // Update all edges
-        for (auto eit = edges_begin(); eit != SimplicialComplex<MT>::edges_end(); eit++)
+        for (auto eit = edges_begin(); eit != edges_end(); eit++)
         {
             update_flag(eit.key());
         }
@@ -231,7 +231,7 @@ private:
         get(f).set_locked(false);
         
         simplex_set st_f;
-        SimplicialComplex<MT>::star(f, st_f);
+        star(f, st_f);
         if (st_f.size_tetrahedra() == 1)
         {
             // On the boundary
@@ -263,7 +263,7 @@ private:
         get(e).set_locked(false);
         
         simplex_set ste;
-        SimplicialComplex<MT>::star(e, ste);
+        star(e, ste);
         
         for (auto efit = ste.faces_begin(); efit != ste.faces_end(); efit++)
         {
@@ -290,7 +290,7 @@ private:
         get(n).set_locked(false);
         
         simplex_set st_n;
-        SimplicialComplex<MT>::star(n, st_n);
+        star(n, st_n);
         for (auto neit = st_n.edges_begin(); neit != st_n.edges_end(); neit++)
         {
             if (mesh.exists(*neit))
@@ -869,7 +869,7 @@ private:
                             {
                                 if (mf_subsets[j][l])
                                 {
-                                    typename SimplicialComplex<MT>::edge_key_type ek;
+                                    edge_key_type ek;
                                     if (mesh.get_intersection(faces[k], faces[l], ek))
                                         connected = true;
                                 }
@@ -1103,7 +1103,7 @@ private:
     bool relabel_tets()
     {
         int counter = 0;
-        for (auto tit = SimplicialComplex<MT>::tetrahedra_begin(); tit != SimplicialComplex<MT>::tetrahedra_end(); tit++)
+        for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
         {
             if(relabel_tet(tit.key()))
             {
@@ -2996,7 +2996,7 @@ public:
         }
         
         // Extract faces
-        for (auto fit = SimplicialComplex<MT>::faces_begin(); fit != SimplicialComplex<MT>::faces_end(); fit++)
+        for (auto fit = faces_begin(); fit != faces_end(); fit++)
         {
             if (fit->is_interface())
             {

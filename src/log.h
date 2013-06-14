@@ -78,7 +78,7 @@ public:
      Write the time step number, timings and additional time step information to the log.
      */
     template<class MT>
-    void write_timestep(int time_step, const VelocityFunc<MT> *vel_fun, SimplicialComplex<MT> *complex)
+    void write_timestep(int time_step, const VelocityFunc<MT> *vel_fun, DeformableSimplicialComplex<MT> *complex)
     {
         //    std::cout << "\n\n*** Time step #" << vel_fun->get_time_step() << " ***" << std::endl;
         log << std::endl << "*** Time step #" << time_step << " ***" << std::endl;
@@ -101,7 +101,7 @@ public:
      Writes simplicial complex information to the log.
      */
     template<class MT>
-    void write_log(SimplicialComplex<MT> *complex)
+    void write_log(DeformableSimplicialComplex<MT> *complex)
     {
         write_message("SIMPLICIAL COMPLEX INFO");
 //        write_variable("Size X\t", complex->get_size_x());

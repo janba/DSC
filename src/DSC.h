@@ -19,7 +19,7 @@ template<class MT>
 class DSC {
     
     VelocityFunc<MT> *vel_fun;
-    SimplicialComplex<MT> *complex;
+    DeformableSimplicialComplex<MT> *complex;
     Log *basic_log;
     
     int time_step;
@@ -27,7 +27,7 @@ class DSC {
     
 public:
     
-    DSC(VelocityFunc<MT> *vel_fun_, SimplicialComplex<MT> *complex_, Log *log_, int max_time_steps = 500):
+    DSC(VelocityFunc<MT> *vel_fun_, DeformableSimplicialComplex<MT> *complex_, Log *log_, int max_time_steps = 500):
         vel_fun(vel_fun_), complex(complex_), basic_log(log_), time_step(0), MAX_TIME_STEPS(max_time_steps)
     {
         basic_log->write_message(vel_fun->get_name().c_str());
@@ -49,7 +49,7 @@ public:
     /**
      Returns the simplicial complex. Primarily used to be able to draw the simplicial complex.
      */
-    SimplicialComplex<MT>* get_complex()
+    DeformableSimplicialComplex<MT>* get_complex()
     {
         return complex;
     }

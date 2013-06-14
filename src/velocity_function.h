@@ -133,12 +133,12 @@ public:
     /**
      Computes the motion of each interface vertex and stores the new position in new_pos in the simplicial complex class.
      */
-    virtual void deform(SimplicialComplex<MT> *complex) = 0;
+    virtual void deform(DeformableSimplicialComplex<MT> *complex) = 0;
     
     /**
      Returns wether the motion has finished.
      */
-    virtual bool is_motion_finished(SimplicialComplex<MT> *complex)
+    virtual bool is_motion_finished(DeformableSimplicialComplex<MT> *complex)
     {
 //        std::vector<typename MT::vector3_type> pos = complex->get_design_variable_positions();
 //        for (auto p = pos.begin(); p != pos.end(); p++)
@@ -166,7 +166,7 @@ public:
     /**
      An optional test function which can be used to test some aspect of the velocity function.
      */
-    virtual void test(SimplicialComplex<MT> *complex)
+    virtual void test(DeformableSimplicialComplex<MT> *complex)
     {
         
     }

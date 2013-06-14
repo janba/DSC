@@ -337,7 +337,7 @@ void UI::draw()
     {
         view_ctrl->set_gl_modelview();
         
-        SimplicialComplex<GELTypes> *complex = dsc->get_complex();
+        DeformableSimplicialComplex<GELTypes> *complex = dsc->get_complex();
         Painter<GELTypes>::draw_complex(complex);
         if(RECORD && CONTINUOUS)
         {

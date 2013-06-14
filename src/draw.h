@@ -103,7 +103,7 @@ public:
     /**
      Draws the simplicial complex.
      */
-    static void draw_complex(SimplicialComplex<MT> *complex)
+    static void draw_complex(DeformableSimplicialComplex<MT> *complex)
     {
         draw_faces(complex);
 //        draw_nodes(complex);
@@ -116,7 +116,7 @@ public:
     /**
      Draws the bad tetrahedra.
      */
-    static void draw_bad_tetrahedra(SimplicialComplex<MT> *complex)
+    static void draw_bad_tetrahedra(DeformableSimplicialComplex<MT> *complex)
     {
         bool low_quality, small_angle;
         std::vector<V> verts;
@@ -139,7 +139,7 @@ public:
                     glColor4fv(&GREEN[0]);
                 }
                 
-                typename SimplicialComplex<MT>::simplex_set cl_t;
+                typename DeformableSimplicialComplex<MT>::simplex_set cl_t;
                 complex->closure(tit.key(), cl_t);
                 
                 for (auto fit = cl_t.faces_begin(); fit != cl_t.faces_end(); fit++)
@@ -160,7 +160,7 @@ public:
     /**
      Draws the faces with the colors defined by the get_face_colors function in the simplicial complex.
      */
-    static void draw_faces(SimplicialComplex<MT> *complex, const float color[] = GRAY)
+    static void draw_faces(DeformableSimplicialComplex<MT> *complex, const float color[] = GRAY)
     {
         glColor3fv(&color[0]);
         glBegin(GL_TRIANGLES);
@@ -183,7 +183,7 @@ public:
         glEnd();
     }
     
-    static void draw_edges(SimplicialComplex<MT> *complex, const float color[] = BLACK)
+    static void draw_edges(DeformableSimplicialComplex<MT> *complex, const float color[] = BLACK)
     {
         glColor3fv(&color[0]);
         glLineWidth(LINE_WIDTH);
@@ -202,7 +202,7 @@ public:
         glEnd();
     }
 
-    static void draw_nodes(SimplicialComplex<MT> *complex, const float color[] = BLACK)
+    static void draw_nodes(DeformableSimplicialComplex<MT> *complex, const float color[] = BLACK)
     {
         glColor3fv(&color[0]);
         glPointSize(POINT_SIZE);
