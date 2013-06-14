@@ -10,12 +10,17 @@ developing a new method, the DSC method. The purpose of the DSC method is to be 
 model the deformations of objects which are represented by an explicit representation of the interface. 
 Furthermore, it is able to model large deformations and handle topology changes.
 
+__If you want news about the development and use of the DSC method, please apply for membership of the mailing list at__
+https://groups.google.com/forum/#!forum/dsc-development
+
 ---
 ### References
 
 For a list of publications, see http://www2.imm.dtu.dk/~janba/DSC-webpage/
 
 For fluid animations, see http://vimeo.com/mkmi/videos
+
+For topology optimization animations, see http://www2.imm.dtu.dk/~asny/Publications.html
 
 ---
 ### Licence
