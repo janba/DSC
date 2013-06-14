@@ -28,11 +28,17 @@ public:
     
     typedef typename Mesh::simplex_set_type simplex_set;
     
+    
+    const node_key_type NULL_NODE;
+    const edge_key_type NULL_EDGE;
+    const face_key_type NULL_FACE;
+    const tetrahedron_key_type NULL_TETRAHEDRON;
+    
 private:
     Mesh mesh;
     
 public:
-    ISMesh(std::vector<typename MT::real_type> & points, std::vector<int> & tets)
+    ISMesh(std::vector<typename MT::real_type> & points, std::vector<int> & tets): NULL_NODE(-1), NULL_EDGE(-1), NULL_FACE(-1), NULL_TETRAHEDRON(-1)
     {
         vectors_read(points, tets, mesh);
         
@@ -125,6 +131,45 @@ public:
     {
         nodes = std::vector<node_key_type>(4);
         mesh.vertices(t, nodes);
+    }
+    
+    edge_key_type get_edge(const node_key_type& n1, const node_key_type& n2)
+    {
+        simplex_set st1, st2;
+        star(n1, st1);
+        star(n2, st2);
+        st1.intersection(st2);
+        
+        if (st1.size_edges() != 1)
+        {
+            return NULL_EDGE;
+        }
+        return *(st1.edges_begin());
+    }
+    
+    edge_key_type get_edge(const face_key_type& f1, const face_key_type& f2)
+    {
+        simplex_set cl1, cl2;
+        closure(f1, cl1);
+        closure(f2, cl2);
+        cl1.intersection(cl2);
+        
+        if (cl1.size_edges() != 1)
+        {
+            return NULL_EDGE;
+        }
+        return *(cl1.edges_begin());
+    }
+    
+    void get_apices(const face_key_type& f, std::vector<node_key_type>& apices)
+    {
+        apices = std::vector<node_key_type>(0);
+        simplex_set lk_f;
+        link(f, lk_f);
+        for(auto nit = lk_f.nodes_begin(); nit != lk_f.nodes_end(); nit++)
+        {
+            apices.push_back(*nit);
+        }
     }
     
     ////////////////////

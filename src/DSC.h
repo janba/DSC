@@ -43,16 +43,11 @@ class DeformableSimplicialComplex : public ISMesh<MT>
     typedef ISMesh<MT> Complex;
 public:
     
-    typedef typename Complex::node_key_type    node_key_type;
-    typedef typename Complex::edge_key_type    edge_key_type;
-    typedef typename Complex::face_key_type    face_key_type;
-    typedef typename Complex::tetrahedron_key_type tetrahedron_key_type;
-    typedef typename Complex::simplex_set simplex_set;
-    
-    const node_key_type NULL_NODE;
-    const edge_key_type NULL_EDGE;
-    const face_key_type NULL_FACE;
-    const tetrahedron_key_type NULL_TETRAHEDRON;
+    typedef typename Complex::node_key_type         node_key_type;
+    typedef typename Complex::edge_key_type         edge_key_type;
+    typedef typename Complex::face_key_type         face_key_type;
+    typedef typename Complex::tetrahedron_key_type  tetrahedron_key_type;
+    typedef typename Complex::simplex_set           simplex_set;
     
 private:
     
@@ -93,7 +88,7 @@ public:
     
     /// SimplicialComplex constructor.
     DeformableSimplicialComplex(std::vector<T> & points, std::vector<int> & tets, std::vector<int> & tet_labels):
-        ISMesh<MT>(points, tets), NULL_NODE(-1), NULL_EDGE(-1), NULL_FACE(-1), NULL_TETRAHEDRON(-1)
+        ISMesh<MT>(points, tets)
     {
         init(tet_labels);
         step_no = 0;
@@ -290,51 +285,6 @@ private:
                     Complex::get(n).set_locked(true);
                 }
             }
-        }
-    } // update_flag(node_key_type)
-    
-    ////////////////////
-    // MESH FUNCTIONS //
-    ////////////////////
-public:
-    
-    edge_key_type get_edge(const node_key_type& n1, const node_key_type& n2)
-    {
-        simplex_set st1, st2;
-        Complex::star(n1, st1);
-        Complex::star(n2, st2);
-        st1.intersection(st2);
-        
-        if (st1.size_edges() != 1)
-        {
-            return NULL_EDGE;
-        }
-        return *(st1.edges_begin());
-    }
-    
-    edge_key_type get_edge(const face_key_type& f1, const face_key_type& f2)
-    {
-        simplex_set cl1, cl2;
-        Complex::closure(f1, cl1);
-        Complex::closure(f2, cl2);
-        cl1.intersection(cl2);
-        
-        if (cl1.size_edges() != 1)
-        {
-            return NULL_EDGE;
-        }
-        return *(cl1.edges_begin());
-    }
-    
-    void get_apices(const face_key_type& f, std::vector<node_key_type>& apices)
-    {
-        apices = std::vector<node_key_type>(0);
-        simplex_set lk_f;
-        Complex::link(f, lk_f);
-        assert(lk_f.size_nodes() == 2);
-        for(auto nit = lk_f.nodes_begin(); nit != lk_f.nodes_end(); nit++)
-        {
-            apices.push_back(*nit);
         }
     }
     
@@ -556,8 +506,8 @@ private:
         {
             if(Complex::exists(*fit) && candidate.contains(*fit) && !cc.contains(*fit) && !Complex::get(*fit).is_interface())
             {
-                edge_key_type e = get_edge(*fit, f);
-                if(e != NULL_EDGE && Complex::exists(e) && !Complex::get(e).is_interface())
+                edge_key_type e = Complex::get_edge(*fit, f);
+                if(e != Complex::NULL_EDGE && Complex::exists(e) && !Complex::get(e).is_interface())
                 {
                     connected_component(*fit, candidate, cc);
                 }
@@ -571,7 +521,7 @@ private:
     void removable_multi_face(const face_key_type& f, simplex_set& multi_face)
     {
         std::vector<node_key_type> apices;
-        get_apices(f, apices);
+        Complex::get_apices(f, apices);
         
         simplex_set link0, link1;
         Complex::link(apices[0], link0);
@@ -605,7 +555,7 @@ private:
         if (multi_face.size_faces() > 1)
         {
             std::vector<node_key_type> apices;
-            get_apices(f, apices);
+            Complex::get_apices(f, apices);
             
             std::vector<V> verts(2);
             verts[0] = get_pos(apices[0]);
@@ -666,7 +616,7 @@ private:
     void optimal_multi_face_removal(const face_key_type& f, simplex_set& new_simplices)
     {
         std::vector<node_key_type> apices;
-        get_apices(f, apices);
+        Complex::get_apices(f, apices);
         
         simplex_set multi_face;
         removable_multi_face(f, multi_face);
@@ -959,7 +909,7 @@ private:
             if (Complex::exists(e) && length(e) < MIN_EDGE_LENGTH)
             {
                 node_key_type n = safe_collapse(e);
-                if (n != NULL_NODE)
+                if (n != Complex::NULL_NODE)
                 {
                     freitag_smoothing(n);
                 }
@@ -1203,8 +1153,8 @@ private:
         node_key_type n1 = split_edge(e1);
         node_key_type n2 = split_edge(e2);
         
-        edge_key_type e = get_edge(n1, n2);
-        return unsafe_collapse(e) != NULL_NODE;
+        edge_key_type e = Complex::get_edge(n1, n2);
+        return unsafe_collapse(e) != Complex::NULL_NODE;
     }
     
     /**
@@ -1214,8 +1164,8 @@ private:
     bool remove_cap(const tetrahedron_key_type & t, const face_key_type & f, const node_key_type& apex)
     {
         node_key_type n1 = split_face(f);
-        edge_key_type e = get_edge(n1, apex);
-        return unsafe_collapse(e) != NULL_NODE;
+        edge_key_type e = Complex::get_edge(n1, apex);
+        return unsafe_collapse(e) != Complex::NULL_NODE;
     }
     
     /**
@@ -1227,7 +1177,7 @@ private:
         simplex_set cl_t;
         Complex::closure(t, cl_t);
         edge_key_type e = shortest_edge(cl_t);
-        return unsafe_collapse(e) != NULL_NODE;
+        return unsafe_collapse(e) != Complex::NULL_NODE;
     }
     
     /**
@@ -1850,23 +1800,23 @@ private:
         }
         
         assert(nodes.size() == 2);
-        if(get_edge(nodes[0], nodes[1]) == NULL_EDGE) // Check that there does not already exist an edge between the pair of nodes.
+        if(Complex::get_edge(nodes[0], nodes[1]) == Complex::NULL_EDGE) // Check that there does not already exist an edge between the pair of nodes.
         {
             return;
         }
         
         node_key_type n_new = split_edge(e);
-        if (n_new == NULL_NODE) {
+        if (n_new == Complex::NULL_NODE) {
             return;
         }
         
-        edge_key_type e_c = get_edge(nodes[0], n_new);
-        assert(e_c != NULL_EDGE);
+        edge_key_type e_c = Complex::get_edge(nodes[0], n_new);
+        assert(e_c != Complex::NULL_EDGE);
         V p = get_pos(nodes[0]);
         V p_new = Complex::get(nodes[0]).get_destination();
         
         node_key_type n = collapse_edge(e_c , nodes[0], n_new, p);
-        if(n != NULL_NODE)
+        if(n != Complex::NULL_NODE)
         {
             set_destination(n, p_new);
         }
@@ -1955,7 +1905,7 @@ private:
     {
         node_key_type n_new = Complex::collapse(e, n1, n2);
         
-        if (n_new != NULL_NODE)
+        if (n_new != Complex::NULL_NODE)
         {
             set_pos(n_new, p);
             set_destination(n_new, p);
@@ -1974,7 +1924,7 @@ private:
      */
     bool precond_collapse(const edge_key_type& e, const V& v_new)
     {
-        if (e == NULL_EDGE)
+        if (e == Complex::NULL_EDGE)
         {
             return false;
         }
@@ -2068,7 +2018,7 @@ private:
                 return collapse_edge(e, n1, n2, p);
             }
         }
-        return NULL_NODE;
+        return Complex::NULL_NODE;
     }
     
     /**
@@ -2077,7 +2027,7 @@ private:
     node_key_type unsafe_collapse(edge_key_type& e)
     {
         node_key_type new_n = safe_collapse(e);
-        if(new_n == NULL_NODE)
+        if(new_n == Complex::NULL_NODE)
         {
             std::vector<node_key_type> nodes;
             Complex::get_nodes(e, nodes);
@@ -2093,7 +2043,7 @@ private:
      */
     node_key_type unsafe_collapse(const node_key_type & n1, const node_key_type & n2)
     {
-        edge_key_type e = get_edge(n1, n2);
+        edge_key_type e = Complex::get_edge(n1, n2);
         
         V p = Util::barycenter<MT>(get_pos(n1), get_pos(n2));
         V p_new = Util::barycenter<MT>(Complex::get(n1).get_destination(), Complex::get(n2).get_destination());
@@ -2101,13 +2051,13 @@ private:
         if (precond_collapse(e, p))
         {
             node_key_type n_new = collapse_edge(e, n1, n2, p);
-            if (n_new != NULL_NODE)
+            if (n_new != Complex::NULL_NODE)
             {
                 set_destination(n_new, p_new);
             }
             return n_new;
         }
-        return NULL_NODE;
+        return Complex::NULL_NODE;
     }
     
     
