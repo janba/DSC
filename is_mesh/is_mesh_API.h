@@ -261,11 +261,6 @@ public:
         }
     }
     
-    node_key_type split(tetrahedron_key_type & t)
-    {
-        return mesh.split_tetrahedron(t);
-    }
-    
     node_key_type split(const edge_key_type & e)
     {
         std::map<tetrahedron_key_type, int> tt;
@@ -304,6 +299,21 @@ public:
         for(auto it = new_tets.begin(); it != new_tets.end(); it++)
         {
             get(it->first).label = tt[it->second];
+        }
+        return n;
+    }
+    
+    node_key_type split(tetrahedron_key_type & t)
+    {
+        int label = get(t).label;
+        
+        node_key_type n = mesh.split_tetrahedron(t);
+        
+        simplex_set st_n;
+        star(n, st_n);
+        for (auto tit = st_n.tetrahedra_begin(); tit != st_n.tetrahedra_end(); tit++)
+        {
+            get(*tit).label = label;
         }
         return n;
     }

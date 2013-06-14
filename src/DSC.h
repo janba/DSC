@@ -1833,7 +1833,6 @@ public:
     {
         std::vector<V> verts;
         get_pos(t, verts);
-        int label = Complex::get(t).label;
         V p = Util::barycenter<MT>(verts[0], verts[1], verts[2], verts[3]);
         
         node_key_type n = Complex::split(t);
@@ -1844,10 +1843,6 @@ public:
         Complex::star(n, st_n);
         st_n.insert(n);
         
-        for (auto tit = st_n.tetrahedra_begin(); tit != st_n.tetrahedra_end(); tit++)
-        {
-            Complex::get(*tit).label = label;
-        }
         update(st_n);
         return n;
     }
