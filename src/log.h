@@ -10,7 +10,7 @@
 #define LOG_h
 
 #include "util.h"
-#include "simplicial_complex.h"
+#include "DSC.h"
 #include "velocity_function.h"
 
 #include <fstream>

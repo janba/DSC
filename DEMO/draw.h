@@ -9,8 +9,7 @@
 #ifndef ___D_DSC__draw__
 #define ___D_DSC__draw__
 
-#include "simplicial_complex.h"
-#include "velocity_function.h"
+#include "DSC.h"
 
 
 #ifdef WIN32

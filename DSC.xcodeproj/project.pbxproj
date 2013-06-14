@@ -30,6 +30,7 @@
 		7AE27B1A17675DA6000F8238 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AFB17675B70000F8238 /* OpenGL.framework */; };
 		7AF7E9BA176B402200F43714 /* user_interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF7E9B8176B402200F43714 /* user_interface.cpp */; };
 		7AF7E9BD176B412900F43714 /* draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF7E9BB176B412900F43714 /* draw.cpp */; };
+		7AF7E9BF176B4FE400F43714 /* DSC.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AF7E9BE176B4FE400F43714 /* DSC.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -73,6 +74,7 @@
 		7AF7E9B9176B402200F43714 /* user_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = user_interface.h; sourceTree = "<group>"; };
 		7AF7E9BB176B412900F43714 /* draw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = draw.cpp; sourceTree = "<group>"; };
 		7AF7E9BC176B412900F43714 /* draw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = draw.h; sourceTree = "<group>"; };
+		7AF7E9BE176B4FE400F43714 /* DSC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DSC.h; path = src/DSC.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +153,7 @@
 				7AE27AE817675B04000F8238 /* util.h */,
 				7AE27AE517675B04000F8238 /* tetrahedralize.h */,
 				7AE27AE917675B04000F8238 /* velocity_function.h */,
+				7AF7E9BE176B4FE400F43714 /* DSC.h */,
 			);
 			path = DSC;
 			sourceTree = "<group>";
@@ -205,6 +208,7 @@
 				7AE27AF517675B04000F8238 /* tetrahedralize.h in Headers */,
 				7AE27AF817675B04000F8238 /* util.h in Headers */,
 				7AE27AF917675B04000F8238 /* velocity_function.h in Headers */,
+				7AF7E9BF176B4FE400F43714 /* DSC.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

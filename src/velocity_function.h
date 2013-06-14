@@ -9,7 +9,7 @@
 #ifndef _DDSC_velocity_func_h
 #define _DDSC_velocity_func_h
 
-#include "simplicial_complex.h"
+#include "DSC.h"
 #include "ctime"
 
 /**

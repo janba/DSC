@@ -11,7 +11,7 @@
 
 #include "GEL_types.h"
 //#include "OTB_types.h"
-#include "simplicial_complex.h"
+#include "DSC.h"
 #include "log.h"
 #include "velocity_function.h"
 #include "draw.h"
