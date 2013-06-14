@@ -697,7 +697,7 @@ private:
                             {
                                 if (mf_subsets[j][l])
                                 {
-                                    if (Complex::is_connected(faces[k], faces[l]))
+                                    if (Complex::get_edge(faces[k], faces[l]) != Complex::NULL_EDGE)
                                         connected = true;
                                 }
                             }

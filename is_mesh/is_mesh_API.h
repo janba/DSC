@@ -353,12 +353,6 @@ public:
         mesh.boundary_2manifold(faces, result_set);
     }
     
-    bool is_connected(const face_key_type& f1, const face_key_type& f2)
-    {
-        edge_key_type e;
-        return mesh.get_intersection(f1, f2, e);
-    }
-    
     ///////////////////////
     // UTILITY FUNCTIONS //
     ///////////////////////
