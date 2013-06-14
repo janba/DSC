@@ -21,7 +21,8 @@ public:
     /**
      Creates a velocity function which smooths the interface.
      */
-    AverageFunc(double velocity, double accuracy): VelocityFunc<MT>(velocity/100., accuracy/100.)
+    AverageFunc(DeformableSimplicialComplex<MT> *dsc_, double velocity, double accuracy, int max_time_steps = 500):
+        VelocityFunc<MT>(dsc_, velocity/100., accuracy/100., max_time_steps)
     {
         
     }
@@ -37,23 +38,23 @@ public:
     /**
      Computes the motion of each interface vertex and stores the new position in new_pos in the simplicial complex class.
      */
-    virtual void deform(DeformableSimplicialComplex<MT> *complex)
+    virtual void deform()
     {
         typedef typename MT::vector3_type V;
         clock_t init_time = clock();
-        for(auto nit = complex->nodes_begin(); nit != complex->nodes_end(); nit++)
+        for(auto nit = VelocityFunc<MT>::dsc->nodes_begin(); nit != VelocityFunc<MT>::dsc->nodes_end(); nit++)
         {
             if(nit->is_interface())
             {
-                V p = complex->get_pos(nit.key());
-                V p_new = p + VelocityFunc<MT>::VELOCITY * (complex->get_barycenter(nit.key(), true) - p);
-                complex->set_destination(nit.key(), p_new);
+                V p = VelocityFunc<MT>::dsc->get_pos(nit.key());
+                V p_new = p + VelocityFunc<MT>::VELOCITY * (VelocityFunc<MT>::dsc->get_barycenter(nit.key(), true) - p);
+                VelocityFunc<MT>::dsc->set_destination(nit.key(), p_new);
             }
         }
         VelocityFunc<MT>::update_compute_time(clock() - init_time);
         init_time = clock();
         
-        complex->deform();
+        VelocityFunc<MT>::dsc->deform();
         
         VelocityFunc<MT>::update_deform_time(clock() - init_time);
     }

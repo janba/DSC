@@ -38,13 +38,16 @@ protected:
         //import_tet_mesh(get_data_file_path("bunny.dsc").data(), points, tets, tet_labels);
         build_tetrahedralization<GELTypes>(get_data_file_path("blob.obj"), points, tets, tet_labels, pts_inside);
         
-        DeformableSimplicialComplex<GELTypes> *complex = new DeformableSimplicialComplex<GELTypes>(points, tets, tet_labels);
+        dsc = new DeformableSimplicialComplex<GELTypes>(points, tets, tet_labels);
+        vel_fun = new RotateFunc<GELTypes>(dsc, VELOCITY, ACCURACY);
         
-        VelocityFunc<GELTypes> *vel_fun = new RotateFunc<GELTypes>(VELOCITY, ACCURACY);
-        Log *log = new Log(create_log_path());
-        dsc = new DSC<GELTypes>(vel_fun, complex, log);
+        basic_log = new Log(create_log_path());
         
-        view_ctrl = new GLGraphics::GLViewController(WIN_SIZE_X, WIN_SIZE_Y, (CGLA::Vec3f)complex->get_center(), r);
+        basic_log->write_message(vel_fun->get_name().c_str());
+        basic_log->write_log(dsc);
+        basic_log->write_log(vel_fun);
+        
+        view_ctrl = new GLGraphics::GLViewController(WIN_SIZE_X, WIN_SIZE_Y, (CGLA::Vec3f)dsc->get_center(), r);
         
         update_title();
         reshape(WIN_SIZE_X, WIN_SIZE_Y);
@@ -64,13 +67,16 @@ protected:
         //import_tet_mesh(get_data_file_path("bunny.dsc").data(), points, tets, tet_labels);
         build_tetrahedralization<GELTypes>(get_data_file_path("blob.obj"), points, tets, tet_labels, pts_inside);
         
-        DeformableSimplicialComplex<GELTypes> *complex = new DeformableSimplicialComplex<GELTypes>(points, tets, tet_labels);
+        dsc = new DeformableSimplicialComplex<GELTypes>(points, tets, tet_labels);
+        vel_fun = new AverageFunc<GELTypes>(dsc, VELOCITY, ACCURACY);
         
-        VelocityFunc<GELTypes> *vel_fun = new AverageFunc<GELTypes>(VELOCITY, ACCURACY);
-        Log *log = new Log(create_log_path());
-        dsc = new DSC<GELTypes>(vel_fun, complex, log);
+        basic_log = new Log(create_log_path());
         
-        view_ctrl = new GLGraphics::GLViewController(WIN_SIZE_X, WIN_SIZE_Y, (CGLA::Vec3f)complex->get_center(), r);
+        basic_log->write_message(vel_fun->get_name().c_str());
+        basic_log->write_log(dsc);
+        basic_log->write_log(vel_fun);
+        
+        view_ctrl = new GLGraphics::GLViewController(WIN_SIZE_X, WIN_SIZE_Y, (CGLA::Vec3f)dsc->get_center(), r);
         
         update_title();
         reshape(WIN_SIZE_X, WIN_SIZE_Y);
@@ -90,14 +96,17 @@ protected:
         //import_tet_mesh(get_data_file_path("bunny.dsc").data(), points, tets, tet_labels);
         build_tetrahedralization<GELTypes>(get_data_file_path("armadillo-very-simple.obj"), points, tets, tet_labels, pts_inside);
         
-        DeformableSimplicialComplex<GELTypes> *complex = new DeformableSimplicialComplex<GELTypes>(points, tets, tet_labels);
+        dsc = new DeformableSimplicialComplex<GELTypes>(points, tets, tet_labels);
+        vel_fun = new NormalFunc<GELTypes>(dsc, VELOCITY, ACCURACY);
         
-        VelocityFunc<GELTypes> *vel_fun = new NormalFunc<GELTypes>(VELOCITY, ACCURACY);
-        Log *log = new Log(create_log_path());
-        dsc = new DSC<GELTypes>(vel_fun, complex, log);
+        basic_log = new Log(create_log_path());
         
-        view_ctrl = new GLGraphics::GLViewController(WIN_SIZE_X, WIN_SIZE_Y, (CGLA::Vec3f)complex->get_center(), r);
-        view_ctrl->set_view_param(CGLA::Vec3f(0.,0., -r), (CGLA::Vec3f)complex->get_center(), CGLA::Vec3f(0.,1.,0.));
+        basic_log->write_message(vel_fun->get_name().c_str());
+        basic_log->write_log(dsc);
+        basic_log->write_log(vel_fun);
+        
+        view_ctrl = new GLGraphics::GLViewController(WIN_SIZE_X, WIN_SIZE_Y, (CGLA::Vec3f)dsc->get_center(), r);
+        view_ctrl->set_view_param(CGLA::Vec3f(0.,0., -r), (CGLA::Vec3f)dsc->get_center(), CGLA::Vec3f(0.,1.,0.));
         
         update_title();
         reshape(WIN_SIZE_X, WIN_SIZE_Y);
