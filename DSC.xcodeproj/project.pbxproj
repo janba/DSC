@@ -11,9 +11,6 @@
 		7A07B9AF176B17A0006589A4 /* tetgen.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 7A07B9AC176B17A0006589A4 /* tetgen.cxx */; };
 		7A07B9B0176B17A0006589A4 /* tetgen.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A07B9AD176B17A0006589A4 /* tetgen.h */; };
 		7AE27AEA17675B04000F8238 /* attributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27ADA17675B04000F8238 /* attributes.h */; };
-		7AE27AEB17675B04000F8238 /* draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AE27ADB17675B04000F8238 /* draw.cpp */; };
-		7AE27AEC17675B04000F8238 /* draw.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27ADC17675B04000F8238 /* draw.h */; };
-		7AE27AED17675B04000F8238 /* DSC.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27ADD17675B04000F8238 /* DSC.h */; };
 		7AE27AEE17675B04000F8238 /* GEL_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27ADE17675B04000F8238 /* GEL_types.h */; };
 		7AE27AEF17675B04000F8238 /* log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AE27ADF17675B04000F8238 /* log.cpp */; };
 		7AE27AF017675B04000F8238 /* log.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE017675B04000F8238 /* log.h */; };
@@ -22,19 +19,17 @@
 		7AE27AF317675B04000F8238 /* printing.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE317675B04000F8238 /* printing.h */; };
 		7AE27AF417675B04000F8238 /* simplicial_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE417675B04000F8238 /* simplicial_complex.h */; };
 		7AE27AF517675B04000F8238 /* tetrahedralize.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE517675B04000F8238 /* tetrahedralize.h */; };
-		7AE27AF617675B04000F8238 /* user_interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AE27AE617675B04000F8238 /* user_interface.cpp */; };
-		7AE27AF717675B04000F8238 /* user_interface.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE717675B04000F8238 /* user_interface.h */; };
 		7AE27AF817675B04000F8238 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE817675B04000F8238 /* util.h */; };
 		7AE27AF917675B04000F8238 /* velocity_function.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE917675B04000F8238 /* velocity_function.h */; };
 		7AE27AFA17675B65000F8238 /* libTetgen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AC717675AAA000F8238 /* libTetgen.a */; };
-		7AE27AFC17675B70000F8238 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AFB17675B70000F8238 /* OpenGL.framework */; };
-		7AE27AFE17675B78000F8238 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AFD17675B78000F8238 /* GLUT.framework */; };
 		7AE27B0017675B9C000F8238 /* GEL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AFF17675B9C000F8238 /* GEL.framework */; };
 		7AE27B1517675CEA000F8238 /* demo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AE27B1117675CEA000F8238 /* demo.cpp */; };
 		7AE27B1717675D34000F8238 /* libDSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AD617675AE8000F8238 /* libDSC.a */; };
 		7AE27B1817675D3D000F8238 /* GEL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AFF17675B9C000F8238 /* GEL.framework */; };
 		7AE27B1917675DA2000F8238 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AFD17675B78000F8238 /* GLUT.framework */; };
 		7AE27B1A17675DA6000F8238 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AFB17675B70000F8238 /* OpenGL.framework */; };
+		7AF7E9BA176B402200F43714 /* user_interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF7E9B8176B402200F43714 /* user_interface.cpp */; };
+		7AF7E9BD176B412900F43714 /* draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF7E9BB176B412900F43714 /* draw.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -56,9 +51,6 @@
 		7AE27AC717675AAA000F8238 /* libTetgen.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTetgen.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AE27AD617675AE8000F8238 /* libDSC.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDSC.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AE27ADA17675B04000F8238 /* attributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = attributes.h; path = src/attributes.h; sourceTree = SOURCE_ROOT; };
-		7AE27ADB17675B04000F8238 /* draw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = draw.cpp; path = src/draw.cpp; sourceTree = SOURCE_ROOT; };
-		7AE27ADC17675B04000F8238 /* draw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = draw.h; path = src/draw.h; sourceTree = SOURCE_ROOT; };
-		7AE27ADD17675B04000F8238 /* DSC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DSC.h; path = src/DSC.h; sourceTree = SOURCE_ROOT; };
 		7AE27ADE17675B04000F8238 /* GEL_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GEL_types.h; path = src/GEL_types.h; sourceTree = SOURCE_ROOT; };
 		7AE27ADF17675B04000F8238 /* log.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = log.cpp; path = src/log.cpp; sourceTree = SOURCE_ROOT; };
 		7AE27AE017675B04000F8238 /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = log.h; path = src/log.h; sourceTree = SOURCE_ROOT; };
@@ -67,8 +59,6 @@
 		7AE27AE317675B04000F8238 /* printing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = printing.h; path = src/printing.h; sourceTree = SOURCE_ROOT; };
 		7AE27AE417675B04000F8238 /* simplicial_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simplicial_complex.h; path = src/simplicial_complex.h; sourceTree = SOURCE_ROOT; };
 		7AE27AE517675B04000F8238 /* tetrahedralize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tetrahedralize.h; path = src/tetrahedralize.h; sourceTree = SOURCE_ROOT; };
-		7AE27AE617675B04000F8238 /* user_interface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = user_interface.cpp; path = src/user_interface.cpp; sourceTree = SOURCE_ROOT; };
-		7AE27AE717675B04000F8238 /* user_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = user_interface.h; path = src/user_interface.h; sourceTree = SOURCE_ROOT; };
 		7AE27AE817675B04000F8238 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = src/util.h; sourceTree = SOURCE_ROOT; };
 		7AE27AE917675B04000F8238 /* velocity_function.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = velocity_function.h; path = src/velocity_function.h; sourceTree = SOURCE_ROOT; };
 		7AE27AFB17675B70000F8238 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -79,6 +69,10 @@
 		7AE27B1117675CEA000F8238 /* demo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = demo.cpp; sourceTree = "<group>"; };
 		7AE27B1317675CEA000F8238 /* normal_function.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normal_function.h; sourceTree = "<group>"; };
 		7AE27B1417675CEA000F8238 /* rotate_function.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rotate_function.h; sourceTree = "<group>"; };
+		7AF7E9B8176B402200F43714 /* user_interface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = user_interface.cpp; sourceTree = "<group>"; };
+		7AF7E9B9176B402200F43714 /* user_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = user_interface.h; sourceTree = "<group>"; };
+		7AF7E9BB176B412900F43714 /* draw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = draw.cpp; sourceTree = "<group>"; };
+		7AF7E9BC176B412900F43714 /* draw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = draw.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,8 +87,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7AE27AFE17675B78000F8238 /* GLUT.framework in Frameworks */,
-				7AE27AFC17675B70000F8238 /* OpenGL.framework in Frameworks */,
 				7AE27AFA17675B65000F8238 /* libTetgen.a in Frameworks */,
 				7AE27B0017675B9C000F8238 /* GEL.framework in Frameworks */,
 			);
@@ -114,6 +106,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7A07B9B1176B23A8006589A4 /* SimplicialComplex */ = {
+			isa = PBXGroup;
+			children = (
+				7AE27AE417675B04000F8238 /* simplicial_complex.h */,
+			);
+			name = SimplicialComplex;
+			sourceTree = "<group>";
+		};
 		7AE27AAE17675A1E000F8238 = {
 			isa = PBXGroup;
 			children = (
@@ -121,6 +121,7 @@
 				7AE27AFD17675B78000F8238 /* GLUT.framework */,
 				7AE27AFB17675B70000F8238 /* OpenGL.framework */,
 				7AE27ACB17675AB3000F8238 /* Tetgen */,
+				7A07B9B1176B23A8006589A4 /* SimplicialComplex */,
 				7AE27AB917675A1E000F8238 /* DSC */,
 				7AE27B0E17675CEA000F8238 /* DEMO */,
 				7AE27AB817675A1E000F8238 /* Products */,
@@ -141,20 +142,14 @@
 			isa = PBXGroup;
 			children = (
 				7AE27ADA17675B04000F8238 /* attributes.h */,
-				7AE27ADB17675B04000F8238 /* draw.cpp */,
-				7AE27ADC17675B04000F8238 /* draw.h */,
-				7AE27ADD17675B04000F8238 /* DSC.h */,
 				7AE27ADE17675B04000F8238 /* GEL_types.h */,
+				7AE27AE217675B04000F8238 /* OTB_types.h */,
 				7AE27ADF17675B04000F8238 /* log.cpp */,
 				7AE27AE017675B04000F8238 /* log.h */,
 				7AE27AE117675B04000F8238 /* mesh_io.h */,
-				7AE27AE217675B04000F8238 /* OTB_types.h */,
 				7AE27AE317675B04000F8238 /* printing.h */,
-				7AE27AE417675B04000F8238 /* simplicial_complex.h */,
-				7AE27AE517675B04000F8238 /* tetrahedralize.h */,
-				7AE27AE617675B04000F8238 /* user_interface.cpp */,
-				7AE27AE717675B04000F8238 /* user_interface.h */,
 				7AE27AE817675B04000F8238 /* util.h */,
+				7AE27AE517675B04000F8238 /* tetrahedralize.h */,
 				7AE27AE917675B04000F8238 /* velocity_function.h */,
 			);
 			path = DSC;
@@ -173,6 +168,10 @@
 		7AE27B0E17675CEA000F8238 /* DEMO */ = {
 			isa = PBXGroup;
 			children = (
+				7AF7E9BB176B412900F43714 /* draw.cpp */,
+				7AF7E9BC176B412900F43714 /* draw.h */,
+				7AF7E9B8176B402200F43714 /* user_interface.cpp */,
+				7AF7E9B9176B402200F43714 /* user_interface.h */,
 				7AE27B0F17675CEA000F8238 /* average_function.h */,
 				7AE27B1117675CEA000F8238 /* demo.cpp */,
 				7AE27B1317675CEA000F8238 /* normal_function.h */,
@@ -197,8 +196,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7AE27AEA17675B04000F8238 /* attributes.h in Headers */,
-				7AE27AEC17675B04000F8238 /* draw.h in Headers */,
-				7AE27AED17675B04000F8238 /* DSC.h in Headers */,
 				7AE27AEE17675B04000F8238 /* GEL_types.h in Headers */,
 				7AE27AF017675B04000F8238 /* log.h in Headers */,
 				7AE27AF117675B04000F8238 /* mesh_io.h in Headers */,
@@ -206,7 +203,6 @@
 				7AE27AF317675B04000F8238 /* printing.h in Headers */,
 				7AE27AF417675B04000F8238 /* simplicial_complex.h in Headers */,
 				7AE27AF517675B04000F8238 /* tetrahedralize.h in Headers */,
-				7AE27AF717675B04000F8238 /* user_interface.h in Headers */,
 				7AE27AF817675B04000F8238 /* util.h in Headers */,
 				7AE27AF917675B04000F8238 /* velocity_function.h in Headers */,
 			);
@@ -308,9 +304,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7AE27AEB17675B04000F8238 /* draw.cpp in Sources */,
 				7AE27AEF17675B04000F8238 /* log.cpp in Sources */,
-				7AE27AF617675B04000F8238 /* user_interface.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,6 +313,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				7AE27B1517675CEA000F8238 /* demo.cpp in Sources */,
+				7AF7E9BA176B402200F43714 /* user_interface.cpp in Sources */,
+				7AF7E9BD176B412900F43714 /* draw.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
