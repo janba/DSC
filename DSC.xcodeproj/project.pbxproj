@@ -168,12 +168,12 @@
 		7AE27B0E17675CEA000F8238 /* DEMO */ = {
 			isa = PBXGroup;
 			children = (
+				7AE27B1117675CEA000F8238 /* demo.cpp */,
 				7AF7E9BB176B412900F43714 /* draw.cpp */,
 				7AF7E9BC176B412900F43714 /* draw.h */,
 				7AF7E9B8176B402200F43714 /* user_interface.cpp */,
 				7AF7E9B9176B402200F43714 /* user_interface.h */,
 				7AE27B0F17675CEA000F8238 /* average_function.h */,
-				7AE27B1117675CEA000F8238 /* demo.cpp */,
 				7AE27B1317675CEA000F8238 /* normal_function.h */,
 				7AE27B1417675CEA000F8238 /* rotate_function.h */,
 			);
