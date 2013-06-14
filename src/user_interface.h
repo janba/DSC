@@ -11,7 +11,9 @@
 
 #include "GEL_types.h"
 //#include "OTB_types.h"
-#include "DSC.h"
+#include "simplicial_complex.h"
+#include "log.h"
+#include "velocity_function.h"
 #include "draw.h"
 
 #ifdef WIN32
@@ -34,7 +36,10 @@ protected:
     float r = 1.5;
     GLGraphics::GLViewController * view_ctrl;
     
-    DSC<GELTypes> *dsc;
+    VelocityFunc<GELTypes> *vel_fun;
+    DeformableSimplicialComplex<GELTypes> *dsc;
+    
+    Log *basic_log;
     
     int WIN_SIZE_X;
     int WIN_SIZE_Y;

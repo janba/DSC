@@ -108,7 +108,8 @@ UI::UI(int &argc, char** argv)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
         
-    dsc = (DSC<GELTypes>*) NULL;
+    vel_fun = (VelocityFunc<GELTypes>*) NULL;
+    dsc = (DeformableSimplicialComplex<GELTypes>*) NULL;
     
     if(argc > 1)
     {
@@ -138,9 +139,10 @@ void UI::update_title()
 {
     std::ostringstream oss;
     oss << "3D DSC\t";
-    if(dsc)
+    if(vel_fun)
     {
-        oss << dsc->get_title();
+        oss << vel_fun->get_name();
+        oss << ", Time step " << vel_fun->get_time_step();
     }
     oss << " (Nu = " << VELOCITY << ", Delta = " << DISCRETIZATION << ", Alpha = " << ACCURACY << ")";
     std::string str(oss.str());
@@ -155,9 +157,10 @@ void UI::display()
     draw();
     update_title();
     
-    if(dsc && CONTINUOUS)
+    if(vel_fun && CONTINUOUS)
     {
-        bool finished = dsc->take_time_step();
+        bool finished = vel_fun->take_time_step();
+        basic_log->write_timestep(vel_fun, dsc);
         if (finished)
         {
             stop();
@@ -177,7 +180,7 @@ void UI::reshape(int width, int height)
     WIN_SIZE_X = width;
     WIN_SIZE_Y = height;
     
-    if (dsc) {
+    if (vel_fun) {
         view_ctrl->reshape(WIN_SIZE_X,WIN_SIZE_Y);
     }
 }
@@ -251,17 +254,17 @@ void UI::keyboard(unsigned char key, int x, int y) {
             CONTINUOUS = !CONTINUOUS;
             break;
         case 'm':
-            if(dsc)
+            if(vel_fun)
             {
                 std::cout << "MOVE" << std::endl;
-                dsc->take_time_step();
+                vel_fun->take_time_step();
             }
             break;
         case 't':
-            if(dsc)
+            if(vel_fun)
             {
                 std::cout << "TEST" << std::endl;
-                dsc->test();
+                vel_fun->test();
             }
             break;
         case '\t':
@@ -278,42 +281,42 @@ void UI::keyboard(unsigned char key, int x, int y) {
             }
             break;
         case '+':
-            if(!dsc)
+            if(!vel_fun)
             {
                 VELOCITY = std::min(VELOCITY + 1., 100.);
                 update_title();
             }
             break;
         case '-':
-            if(!dsc)
+            if(!vel_fun)
             {
                 VELOCITY = std::max(VELOCITY - 1., 0.);
                 update_title();
             }
             break;
         case '.':
-            if(!dsc)
+            if(!vel_fun)
             {
                 DISCRETIZATION = std::min(DISCRETIZATION + 0.5, 100.);
                 update_title();
             }
             break;
         case ',':
-            if(!dsc)
+            if(!vel_fun)
             {
                 DISCRETIZATION = std::max(DISCRETIZATION - 0.5, 1.);
                 update_title();
             }
             break;
         case '<':
-            if(!dsc)
+            if(!vel_fun)
             {
                 ACCURACY = std::min(ACCURACY + 1., 100.);
                 update_title();
             }
             break;
         case '>':
-            if(!dsc)
+            if(!vel_fun)
             {
                 ACCURACY = std::max(ACCURACY - 1., 1.);
                 update_title();
@@ -337,11 +340,10 @@ void UI::draw()
     {
         view_ctrl->set_gl_modelview();
         
-        DeformableSimplicialComplex<GELTypes> *complex = dsc->get_complex();
-        Painter<GELTypes>::draw_complex(complex);
-        if(RECORD && CONTINUOUS)
+        Painter<GELTypes>::draw_complex(dsc);
+        if(vel_fun && RECORD && CONTINUOUS)
         {
-            Painter<GELTypes>::save_painting(WIN_SIZE_X, WIN_SIZE_Y, dsc->get_log_path(), dsc->get_time_step());
+            Painter<GELTypes>::save_painting(WIN_SIZE_X, WIN_SIZE_Y, basic_log->get_path(), vel_fun->get_time_step());
         }
     }
     Painter<GELTypes>::end();
@@ -349,12 +351,20 @@ void UI::draw()
 
 void UI::stop()
 {
-    if(dsc)
+    if(vel_fun)
     {
         draw();
+        basic_log->write_message("MOTION STOPPED");
+        basic_log->write_log(dsc);
+        basic_log->write_log(vel_fun);
+        basic_log->write_timings(vel_fun);
+
+        delete vel_fun;
         delete dsc;
+        delete basic_log;
         delete view_ctrl;
-        dsc = (DSC<GELTypes>*) NULL;
+        vel_fun = (VelocityFunc<GELTypes>*) NULL;
+        dsc = (DeformableSimplicialComplex<GELTypes>*) NULL;
     }
 }
 

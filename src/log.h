@@ -78,10 +78,10 @@ public:
      Write the time step number, timings and additional time step information to the log.
      */
     template<class MT>
-    void write_timestep(int time_step, const VelocityFunc<MT> *vel_fun, DeformableSimplicialComplex<MT> *complex)
+    void write_timestep(const VelocityFunc<MT> *vel_fun, DeformableSimplicialComplex<MT> *complex)
     {
         //    std::cout << "\n\n*** Time step #" << vel_fun->get_time_step() << " ***" << std::endl;
-        log << std::endl << "*** Time step #" << time_step << " ***" << std::endl;
+        log << std::endl << "*** Time step #" << vel_fun->get_time_step() << " ***" << std::endl;
         log << std::endl;
         write_variable("Compute time", vel_fun->get_compute_time(), "s");
         write_variable("Deform time", vel_fun->get_deform_time(), "s");

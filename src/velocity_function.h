@@ -18,6 +18,8 @@
 template<class MT>
 class VelocityFunc
 {
+    int time_step;
+    int MAX_TIME_STEPS;
     
     double compute_time;
     double deform_time;
@@ -26,6 +28,8 @@ class VelocityFunc
     double total_deform_time;
     
 protected:
+    DeformableSimplicialComplex<MT> *dsc;
+    
     double VELOCITY; // Determines the distance each interface vertex moves at each iteration.
     double ACCURACY; // Determines the accuracy of the final result.
     
@@ -34,8 +38,8 @@ protected:
     /**
      Creates a velocity function which is applied to the simplicial complex defined by the first input parameter. The velocity parameter determines the velocity of the function.
      */
-    VelocityFunc(double velocity, double accuracy):
-        VELOCITY(velocity), ACCURACY(accuracy),
+    VelocityFunc(DeformableSimplicialComplex<MT> *dsc_, double velocity, double accuracy, int max_time_steps):
+        dsc(dsc_), time_step(0), MAX_TIME_STEPS(max_time_steps), VELOCITY(velocity), ACCURACY(accuracy),
         compute_time(0.), deform_time(0.), total_compute_time(0.), total_deform_time(0.)
     {
         
@@ -51,6 +55,14 @@ public:
      Returns the name of the velocity function.
      */
     virtual std::string get_name() const = 0;
+    
+    /**
+     Returns the current time step.
+     */
+    int get_time_step() const
+    {
+        return time_step;
+    }
     
     /**
      Returns the velocity.
@@ -100,6 +112,7 @@ public:
         return total_compute_time;
     }
     
+private:
     /**
      Set the timings to zero.
      */
@@ -133,12 +146,12 @@ public:
     /**
      Computes the motion of each interface vertex and stores the new position in new_pos in the simplicial complex class.
      */
-    virtual void deform(DeformableSimplicialComplex<MT> *complex) = 0;
+    virtual void deform() = 0;
     
     /**
      Returns wether the motion has finished.
      */
-    virtual bool is_motion_finished(DeformableSimplicialComplex<MT> *complex)
+    virtual bool is_motion_finished()
     {
 //        std::vector<typename MT::vector3_type> pos = complex->get_design_variable_positions();
 //        for (auto p = pos.begin(); p != pos.end(); p++)
@@ -164,9 +177,22 @@ public:
     }
     
     /**
+     Takes one time step thereby deforming the simplicial complex according to the velocity function.
+     */
+    bool take_time_step()
+    {
+        reset_times();
+        deform();
+        
+        time_step++;
+        
+        return (time_step == MAX_TIME_STEPS) | is_motion_finished();
+    }
+    
+    /**
      An optional test function which can be used to test some aspect of the velocity function.
      */
-    virtual void test(DeformableSimplicialComplex<MT> *complex)
+    virtual void test()
     {
         
     }
