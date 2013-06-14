@@ -4,6 +4,8 @@
 #include <is_mesh/is_mesh.h>
 #include <is_mesh/io/is_mesh_lists_read.h>
 
+#include "simplicial_complex.h"
+
 #include "attributes.h"
 #include "util.h"
 
