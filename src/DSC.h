@@ -1678,7 +1678,7 @@ private:
         V p = Complex::get_pos(nodes[0]);
         V p_new = Complex::get_destination(nodes[0]);
         
-        node_key n = collapse_edge(e_c , nodes[0], n_new, p);
+        node_key n = collapse_edge(e_c, p);
         if(n != Complex::NULL_NODE)
         {
             Complex::set_destination(n, p_new);
@@ -1757,11 +1757,11 @@ public:
     ///////////////
 private:
     /**
-     * Collapses the edge e by moving the node n2 to n1. Returns n1 if successful, otherwise NULL_NODE.
+     * Collapses the edge e and moves the resulting node to the position p. Returns the new node if successful, otherwise NULL_NODE.
      */
-    node_key collapse_edge(edge_key& e, node_key const & n1, node_key const & n2, const V& p)
+    node_key collapse_edge(edge_key& e, const V& p)
     {
-        node_key n_new = Complex::collapse(e, n1, n2);
+        node_key n_new = Complex::collapse(e);
         
         if (n_new != Complex::NULL_NODE)
         {
@@ -1873,7 +1873,7 @@ private:
             
             if (precond_collapse(e, p) && quality_improvement(e, p) > 0.)
             {
-                return collapse_edge(e, n1, n2, p);
+                return collapse_edge(e, p);
             }
         }
         return Complex::NULL_NODE;
@@ -1908,7 +1908,7 @@ private:
         
         if (precond_collapse(e, p))
         {
-            node_key n_new = collapse_edge(e, n1, n2, p);
+            node_key n_new = collapse_edge(e, p);
             if (n_new != Complex::NULL_NODE)
             {
                 Complex::set_destination(n_new, p_new);

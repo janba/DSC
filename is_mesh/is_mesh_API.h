@@ -564,9 +564,15 @@ public:
         return n;
     }
     
-    node_key collapse(edge_key & e, node_key const & n1, node_key const & n2)
+    node_key collapse(edge_key& e)
     {
-        return mesh.edge_collapse_helper(e, n1, n2);
+        std::vector<node_key> nodes;
+        get_nodes(e, nodes);
+        node_key res = mesh.edge_collapse_helper(e, nodes[0], nodes[1]);
+        if (res == (node_key)-1) {
+            return NULL_NODE;
+        }
+        return res;
     }
     
     ///////////////////////////////////
