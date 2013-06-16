@@ -9,7 +9,6 @@
 #ifndef DSC_is_mesh_API_h
 #define DSC_is_mesh_API_h
 
-#include "simplicial_complex.h"
 #include <is_mesh/is_mesh.h>
 #include <is_mesh/io/is_mesh_lists_read.h>
 

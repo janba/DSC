@@ -17,7 +17,6 @@
 		7AE27AF117675B04000F8238 /* mesh_io.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE117675B04000F8238 /* mesh_io.h */; };
 		7AE27AF217675B04000F8238 /* OTB_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE217675B04000F8238 /* OTB_types.h */; };
 		7AE27AF317675B04000F8238 /* printing.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE317675B04000F8238 /* printing.h */; };
-		7AE27AF417675B04000F8238 /* simplicial_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE417675B04000F8238 /* simplicial_complex.h */; };
 		7AE27AF517675B04000F8238 /* tetrahedralize.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE517675B04000F8238 /* tetrahedralize.h */; };
 		7AE27AF817675B04000F8238 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE817675B04000F8238 /* util.h */; };
 		7AE27AF917675B04000F8238 /* velocity_function.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE917675B04000F8238 /* velocity_function.h */; };
@@ -59,7 +58,6 @@
 		7AE27AE117675B04000F8238 /* mesh_io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mesh_io.h; path = src/mesh_io.h; sourceTree = SOURCE_ROOT; };
 		7AE27AE217675B04000F8238 /* OTB_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTB_types.h; path = src/OTB_types.h; sourceTree = SOURCE_ROOT; };
 		7AE27AE317675B04000F8238 /* printing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = printing.h; path = src/printing.h; sourceTree = SOURCE_ROOT; };
-		7AE27AE417675B04000F8238 /* simplicial_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simplicial_complex.h; path = src/simplicial_complex.h; sourceTree = SOURCE_ROOT; };
 		7AE27AE517675B04000F8238 /* tetrahedralize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tetrahedralize.h; path = src/tetrahedralize.h; sourceTree = SOURCE_ROOT; };
 		7AE27AE817675B04000F8238 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = src/util.h; sourceTree = SOURCE_ROOT; };
 		7AE27AE917675B04000F8238 /* velocity_function.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = velocity_function.h; path = src/velocity_function.h; sourceTree = SOURCE_ROOT; };
@@ -145,7 +143,6 @@
 		7AE27AB917675A1E000F8238 /* DSC */ = {
 			isa = PBXGroup;
 			children = (
-				7AE27AE417675B04000F8238 /* simplicial_complex.h */,
 				7AE27ADA17675B04000F8238 /* attributes.h */,
 				7AE27ADE17675B04000F8238 /* GEL_types.h */,
 				7AE27AE217675B04000F8238 /* OTB_types.h */,
@@ -207,7 +204,6 @@
 				7AE27AF117675B04000F8238 /* mesh_io.h in Headers */,
 				7AE27AF217675B04000F8238 /* OTB_types.h in Headers */,
 				7AE27AF317675B04000F8238 /* printing.h in Headers */,
-				7AE27AF417675B04000F8238 /* simplicial_complex.h in Headers */,
 				7AE27AF517675B04000F8238 /* tetrahedralize.h in Headers */,
 				7AE27AF817675B04000F8238 /* util.h in Headers */,
 				7AE27AF917675B04000F8238 /* velocity_function.h in Headers */,
