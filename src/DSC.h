@@ -292,7 +292,7 @@ private:
             
             for (auto tit = new_simplices.tetrahedra_begin(); tit != new_simplices.tetrahedra_end(); tit++)
             {
-                Complex::get(*tit).label = label;
+                Complex::set_label(*tit, label);
             }
             
             simplex_set cl_ns;
@@ -462,7 +462,7 @@ private:
         
         for (auto tit = new_simplices.tetrahedra_begin(); tit != new_simplices.tetrahedra_end(); tit++)
         {
-            Complex::get(*tit).label = label;
+            Complex::set_label(*tit, label);
         }
         
         simplex_set ns_cl;
@@ -613,7 +613,7 @@ private:
         
         for (auto tit = new_simplices.tetrahedra_begin(); tit != new_simplices.tetrahedra_end(); tit++)
         {
-            Complex::get(*tit).label = label;
+            Complex::set_label(*tit, label);
         }
         
         simplex_set ns_cl;
@@ -1588,7 +1588,7 @@ private:
             
             if (label != -1 && label != Complex::get_label(t))
             {
-                Complex::get(t).label = label;
+                Complex::set_label(t, label);
                 simplex_set cl_t;
                 Complex::closure(t, cl_t);
                 Complex::update(cl_t);

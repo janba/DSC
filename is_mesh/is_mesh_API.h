@@ -248,6 +248,16 @@ public:
         get(n).set_destination(p);
     }
     
+    /////////////////////
+    // LABEL FUNCTIONS //
+    /////////////////////
+public:
+    template<typename Key>
+    bool exists(const Key& k)
+    {
+        return mesh.exists(k);
+    }
+    
     bool is_interface(const node_key& n)
     {
         return get(n).is_interface();
@@ -281,6 +291,11 @@ public:
     int get_label(const tet_key& t)
     {
         return get(t).label;
+    }
+    
+    void set_label(const tet_key& t, int label)
+    {
+        get(t).label = label;
     }
     
     //////////////////////
@@ -422,11 +437,6 @@ private:
     // MESH FUNCTIONS //
     ////////////////////
 public:
-    template<typename Key>
-    bool exists(const Key& k)
-    {
-        return mesh.exists(k);
-    }
     
     void star(const node_key &n, simplex_set& set)
     {
