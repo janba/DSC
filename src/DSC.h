@@ -1988,8 +1988,8 @@ private:
         node_key n1 = nodes[0];
         node_key n2 = nodes[1];
         
-        bool editable1 = !Complex::get(n1).is_interface() && !Complex::get(n1).is_boundary();
-        bool editable2 = !Complex::get(n2).is_interface() && !Complex::get(n2).is_boundary();
+        bool editable1 = !Complex::is_interface(n1) && !Complex::is_boundary(n1);
+        bool editable2 = !Complex::is_interface(n2) && !Complex::is_boundary(n2);
         
         if(editable1 || editable2)
         {

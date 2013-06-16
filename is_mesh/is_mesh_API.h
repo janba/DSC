@@ -258,6 +258,21 @@ public:
         return get(f).is_interface();
     }
     
+    bool is_boundary(const node_key& n)
+    {
+        return get(n).is_boundary();
+    }
+    
+    bool is_boundary(const edge_key& e)
+    {
+        return get(e).is_boundary();
+    }
+    
+    bool is_boundary(const face_key& f)
+    {
+        return get(f).is_boundary();
+    }
+    
     ////////////////////
     // MESH FUNCTIONS //
     ////////////////////
