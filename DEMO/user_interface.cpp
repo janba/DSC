@@ -163,7 +163,7 @@ void UI::display()
     
     if(vel_fun && CONTINUOUS)
     {
-        bool finished = vel_fun->take_time_step();
+        bool finished = vel_fun->take_time_step(*dsc);
         basic_log->write_timestep(vel_fun, dsc);
         if (finished)
         {
@@ -252,14 +252,14 @@ void UI::keyboard(unsigned char key, int x, int y) {
             if(vel_fun)
             {
                 std::cout << "MOVE" << std::endl;
-                vel_fun->take_time_step();
+                vel_fun->take_time_step(*dsc);
             }
             break;
         case 't':
             if(vel_fun)
             {
                 std::cout << "TEST" << std::endl;
-                vel_fun->test();
+                vel_fun->test(*dsc);
             }
             break;
         case '\t':
@@ -378,7 +378,7 @@ void UI::motion1()
     build_tetrahedralization<GELTypes>(get_data_file_path("blob.obj"), points, tets, tet_labels, pts_inside);
     
     dsc = new DeformableSimplicialComplex<GELTypes>(points, tets, tet_labels);
-    vel_fun = new RotateFunc<GELTypes>(dsc, VELOCITY, ACCURACY);
+    vel_fun = new RotateFunc<GELTypes>(VELOCITY, ACCURACY);
     
     basic_log = new Log(create_log_path());
     
@@ -407,7 +407,7 @@ void UI::motion2()
     build_tetrahedralization<GELTypes>(get_data_file_path("blob.obj"), points, tets, tet_labels, pts_inside);
     
     dsc = new DeformableSimplicialComplex<GELTypes>(points, tets, tet_labels);
-    vel_fun = new AverageFunc<GELTypes>(dsc, VELOCITY, ACCURACY);
+    vel_fun = new AverageFunc<GELTypes>(VELOCITY, ACCURACY);
     
     basic_log = new Log(create_log_path());
     
@@ -436,7 +436,7 @@ void UI::motion3()
     build_tetrahedralization<GELTypes>(get_data_file_path("armadillo-very-simple.obj"), points, tets, tet_labels, pts_inside);
     
     dsc = new DeformableSimplicialComplex<GELTypes>(points, tets, tet_labels);
-    vel_fun = new NormalFunc<GELTypes>(dsc, VELOCITY, ACCURACY);
+    vel_fun = new NormalFunc<GELTypes>(VELOCITY, ACCURACY);
     
     basic_log = new Log(create_log_path());
     

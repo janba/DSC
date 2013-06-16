@@ -22,8 +22,8 @@ public:
     /**
      Creates a velocity function which moves the interface vertices in the normal direction.
      */
-    NormalFunc(DeformableSimplicialComplex<MT> *dsc_, double velocity, double accuracy, int max_time_steps = 500):
-        VelocityFunc<MT>(dsc_, velocity/100., accuracy/100., max_time_steps)
+    NormalFunc(double velocity, double accuracy, int max_time_steps = 500):
+        VelocityFunc<MT>(velocity/100., accuracy/100., max_time_steps)
     {
         
     }
@@ -39,23 +39,23 @@ public:
     /**
      Computes the motion of each interface vertex and stores the new position in new_pos in the simplicial complex class.
      */
-    virtual void deform()
+    virtual void deform(DeformableSimplicialComplex<MT>& dsc)
     {
         typedef typename MT::vector3_type V;
         clock_t init_time = clock();
-        for(auto nit = VelocityFunc<MT>::dsc->nodes_begin(); nit != VelocityFunc<MT>::dsc->nodes_end(); nit++)
+        for(auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
         {
             if(nit->is_interface())
             {
-                V p = VelocityFunc<MT>::dsc->get_pos(nit.key());
-                V p_new = p + VelocityFunc<MT>::VELOCITY * VelocityFunc<MT>::dsc->get_normal(nit.key());
-                VelocityFunc<MT>::dsc->set_destination(nit.key(), p_new);
+                V p = dsc.get_pos(nit.key());
+                V p_new = p + VelocityFunc<MT>::VELOCITY * dsc.get_normal(nit.key());
+                dsc.set_destination(nit.key(), p_new);
             }
         }
         VelocityFunc<MT>::update_compute_time(clock() - init_time);
         init_time = clock();
         
-        VelocityFunc<MT>::dsc->deform();
+        dsc.deform();
         
         VelocityFunc<MT>::update_deform_time(clock() - init_time);
     }

@@ -28,8 +28,6 @@ class VelocityFunc
     double total_deform_time;
     
 protected:
-    DeformableSimplicialComplex<MT> *dsc;
-    
     double VELOCITY; // Determines the distance each interface vertex moves at each iteration.
     double ACCURACY; // Determines the accuracy of the final result.
     
@@ -38,8 +36,8 @@ protected:
     /**
      Creates a velocity function which is applied to the simplicial complex defined by the first input parameter. The velocity parameter determines the velocity of the function.
      */
-    VelocityFunc(DeformableSimplicialComplex<MT> *dsc_, double velocity, double accuracy, int max_time_steps):
-        dsc(dsc_), time_step(0), MAX_TIME_STEPS(max_time_steps), VELOCITY(velocity), ACCURACY(accuracy),
+    VelocityFunc(double velocity, double accuracy, int max_time_steps):
+        time_step(0), MAX_TIME_STEPS(max_time_steps), VELOCITY(velocity), ACCURACY(accuracy),
         compute_time(0.), deform_time(0.), total_compute_time(0.), total_deform_time(0.)
     {
         
@@ -136,12 +134,12 @@ public:
     /**
      Computes the motion of each interface vertex and stores the new position in new_pos in the simplicial complex class.
      */
-    virtual void deform() = 0;
+    virtual void deform(DeformableSimplicialComplex<MT>& dsc) = 0;
     
     /**
      Returns wether the motion has finished.
      */
-    virtual bool is_motion_finished()
+    virtual bool is_motion_finished(const DeformableSimplicialComplex<MT>& dsc)
     {
 //        std::vector<typename MT::vector3_type> pos = complex->get_design_variable_positions();
 //        for (auto p = pos.begin(); p != pos.end(); p++)
@@ -169,22 +167,22 @@ public:
     /**
      Takes one time step thereby deforming the simplicial complex according to the velocity function.
      */
-    bool take_time_step()
+    bool take_time_step(DeformableSimplicialComplex<MT>& dsc)
     {
         compute_time = 0.;
         deform_time = 0.;
         
-        deform();
+        deform(dsc);
         
         time_step++;
         
-        return (time_step == MAX_TIME_STEPS) | is_motion_finished();
+        return (time_step == MAX_TIME_STEPS) | is_motion_finished(dsc);
     }
     
     /**
      An optional test function which can be used to test some aspect of the velocity function.
      */
-    virtual void test()
+    virtual void test(DeformableSimplicialComplex<MT>& dsc)
     {
         
     }
