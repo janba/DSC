@@ -2041,7 +2041,7 @@ private:
         edge_key e = Complex::get_edge(n1, n2);
         
         V p = Util::barycenter<MT>(Complex::get_pos(n1), Complex::get_pos(n2));
-        V p_new = Util::barycenter<MT>(Complex::get(n1).get_destination(), Complex::get(n2).get_destination());
+        V p_new = Util::barycenter<MT>(Complex::get_destination(n1), Complex::get_destination(n2));
         
         if (precond_collapse(e, p))
         {
@@ -2082,7 +2082,7 @@ public:
         V result(0.);
         for (auto fit = st.faces_begin(); fit != st.faces_end(); fit++)
         {
-            if (Complex::get(*fit).is_interface())
+            if (Complex::is_interface(*fit))
             {
                 result += get_normal(*fit);
             }
@@ -2109,7 +2109,7 @@ public:
         int i = 0;
         for (auto nit = lk_n.nodes_begin(); nit != lk_n.nodes_end(); nit++)
         {
-            if (!interface || Complex::get(*nit).is_interface())
+            if (!interface || Complex::is_interface(*nit))
             {
                 avg_pos += Complex::get_pos(*nit);
                 i++;
@@ -2366,14 +2366,14 @@ public:
         
         for (auto fit = st_u.faces_begin(); fit != st_u.faces_end(); fit++)
         {
-            if (Complex::get(e).is_interface())
+            if (Complex::is_interface(e))
             {
-                if (Complex::get(*fit).is_interface())
+                if (Complex::is_interface(*fit))
                     patch.insert(*fit);
             }
-            else if (Complex::get(e).is_boundary())
+            else if (Complex::is_boundary(e))
             {
-                if (Complex::get(*fit).is_boundary())
+                if (Complex::is_boundary(*fit))
                     patch.insert(*fit);
             }
         }

@@ -235,6 +235,11 @@ protected:
     }
     
 public:
+    V get_destination(const node_key& n)
+    {
+        return get(n).get_destination();
+    }
+    
     /**
      * Sets the destination where the node n is moved to when deform() is called.
      */
