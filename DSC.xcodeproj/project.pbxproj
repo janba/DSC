@@ -7,10 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7A07B9AE176B17A0006589A4 /* predicates.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 7A07B9AB176B17A0006589A4 /* predicates.cxx */; };
-		7A07B9AF176B17A0006589A4 /* tetgen.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 7A07B9AC176B17A0006589A4 /* tetgen.cxx */; };
-		7A07B9B0176B17A0006589A4 /* tetgen.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A07B9AD176B17A0006589A4 /* tetgen.h */; };
-		7AE27AEA17675B04000F8238 /* attributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27ADA17675B04000F8238 /* attributes.h */; };
+		7A45DB87176E120A00B9B388 /* attributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB86176E120A00B9B388 /* attributes.h */; };
+		7A45DB96176E122100B9B388 /* configuration.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB88176E122100B9B388 /* configuration.h */; };
+		7A45DB97176E122100B9B388 /* is_mesh_lists_read.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8A176E122100B9B388 /* is_mesh_lists_read.h */; };
+		7A45DB98176E122100B9B388 /* is_mesh_lists_write.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8B176E122100B9B388 /* is_mesh_lists_write.h */; };
+		7A45DB99176E122100B9B388 /* is_mesh_xml_read.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8C176E122100B9B388 /* is_mesh_xml_read.h */; };
+		7A45DB9A176E122100B9B388 /* is_mesh_xml_write.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8D176E122100B9B388 /* is_mesh_xml_write.h */; };
+		7A45DB9B176E122100B9B388 /* is_mesh_default_traits.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8E176E122100B9B388 /* is_mesh_default_traits.h */; };
+		7A45DB9C176E122100B9B388 /* is_mesh_key_type.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8F176E122100B9B388 /* is_mesh_key_type.h */; };
+		7A45DB9D176E122100B9B388 /* is_mesh_simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB90176E122100B9B388 /* is_mesh_simplex.h */; };
+		7A45DB9E176E122100B9B388 /* is_mesh_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB91176E122100B9B388 /* is_mesh_utils.h */; };
+		7A45DB9F176E122100B9B388 /* is_mesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB92176E122100B9B388 /* is_mesh.h */; };
+		7A45DBA0176E122100B9B388 /* kernel_iterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB93176E122100B9B388 /* kernel_iterator.h */; };
+		7A45DBA1176E122100B9B388 /* kernel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB94176E122100B9B388 /* kernel.h */; };
+		7A45DBA2176E122100B9B388 /* simplex_set.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB95176E122100B9B388 /* simplex_set.h */; };
+		7A45DBA9176E138A00B9B388 /* libTetgen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AC717675AAA000F8238 /* libTetgen.a */; };
+		7A45DBB3176E177100B9B388 /* predicates.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 7A45DBB0176E177100B9B388 /* predicates.cxx */; };
+		7A45DBB4176E177100B9B388 /* tetgen.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 7A45DBB1176E177100B9B388 /* tetgen.cxx */; };
+		7A45DBB5176E177100B9B388 /* tetgen.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DBB2176E177100B9B388 /* tetgen.h */; };
 		7AE27AEE17675B04000F8238 /* GEL_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27ADE17675B04000F8238 /* GEL_types.h */; };
 		7AE27AEF17675B04000F8238 /* log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AE27ADF17675B04000F8238 /* log.cpp */; };
 		7AE27AF017675B04000F8238 /* log.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE017675B04000F8238 /* log.h */; };
@@ -20,7 +34,6 @@
 		7AE27AF517675B04000F8238 /* tetrahedralize.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE517675B04000F8238 /* tetrahedralize.h */; };
 		7AE27AF817675B04000F8238 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE817675B04000F8238 /* util.h */; };
 		7AE27AF917675B04000F8238 /* velocity_function.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE917675B04000F8238 /* velocity_function.h */; };
-		7AE27AFA17675B65000F8238 /* libTetgen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AC717675AAA000F8238 /* libTetgen.a */; };
 		7AE27B0017675B9C000F8238 /* GEL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AFF17675B9C000F8238 /* GEL.framework */; };
 		7AE27B1517675CEA000F8238 /* demo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AE27B1117675CEA000F8238 /* demo.cpp */; };
 		7AE27B1717675D34000F8238 /* libDSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AD617675AE8000F8238 /* libDSC.a */; };
@@ -46,12 +59,25 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		7A07B9AB176B17A0006589A4 /* predicates.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = predicates.cxx; path = Tetgen/predicates.cxx; sourceTree = "<group>"; };
-		7A07B9AC176B17A0006589A4 /* tetgen.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tetgen.cxx; path = Tetgen/tetgen.cxx; sourceTree = "<group>"; };
-		7A07B9AD176B17A0006589A4 /* tetgen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tetgen.h; path = Tetgen/tetgen.h; sourceTree = "<group>"; };
+		7A45DB86176E120A00B9B388 /* attributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = attributes.h; path = is_mesh/attributes.h; sourceTree = "<group>"; };
+		7A45DB88176E122100B9B388 /* configuration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = configuration.h; path = is_mesh/configuration.h; sourceTree = "<group>"; };
+		7A45DB8A176E122100B9B388 /* is_mesh_lists_read.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = is_mesh_lists_read.h; sourceTree = "<group>"; };
+		7A45DB8B176E122100B9B388 /* is_mesh_lists_write.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = is_mesh_lists_write.h; sourceTree = "<group>"; };
+		7A45DB8C176E122100B9B388 /* is_mesh_xml_read.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = is_mesh_xml_read.h; sourceTree = "<group>"; };
+		7A45DB8D176E122100B9B388 /* is_mesh_xml_write.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = is_mesh_xml_write.h; sourceTree = "<group>"; };
+		7A45DB8E176E122100B9B388 /* is_mesh_default_traits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh_default_traits.h; path = is_mesh/is_mesh_default_traits.h; sourceTree = "<group>"; };
+		7A45DB8F176E122100B9B388 /* is_mesh_key_type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh_key_type.h; path = is_mesh/is_mesh_key_type.h; sourceTree = "<group>"; };
+		7A45DB90176E122100B9B388 /* is_mesh_simplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh_simplex.h; path = is_mesh/is_mesh_simplex.h; sourceTree = "<group>"; };
+		7A45DB91176E122100B9B388 /* is_mesh_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh_utils.h; path = is_mesh/is_mesh_utils.h; sourceTree = "<group>"; };
+		7A45DB92176E122100B9B388 /* is_mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh.h; path = is_mesh/is_mesh.h; sourceTree = "<group>"; };
+		7A45DB93176E122100B9B388 /* kernel_iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = kernel_iterator.h; path = is_mesh/kernel_iterator.h; sourceTree = "<group>"; };
+		7A45DB94176E122100B9B388 /* kernel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = kernel.h; path = is_mesh/kernel.h; sourceTree = "<group>"; };
+		7A45DB95176E122100B9B388 /* simplex_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simplex_set.h; path = is_mesh/simplex_set.h; sourceTree = "<group>"; };
+		7A45DBB0176E177100B9B388 /* predicates.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = predicates.cxx; path = Tetgen/predicates.cxx; sourceTree = "<group>"; };
+		7A45DBB1176E177100B9B388 /* tetgen.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tetgen.cxx; path = Tetgen/tetgen.cxx; sourceTree = "<group>"; };
+		7A45DBB2176E177100B9B388 /* tetgen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tetgen.h; path = Tetgen/tetgen.h; sourceTree = "<group>"; };
 		7AE27AC717675AAA000F8238 /* libTetgen.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTetgen.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AE27AD617675AE8000F8238 /* libDSC.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDSC.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		7AE27ADA17675B04000F8238 /* attributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = attributes.h; path = src/attributes.h; sourceTree = SOURCE_ROOT; };
 		7AE27ADE17675B04000F8238 /* GEL_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GEL_types.h; path = src/GEL_types.h; sourceTree = SOURCE_ROOT; };
 		7AE27ADF17675B04000F8238 /* log.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = log.cpp; path = src/log.cpp; sourceTree = SOURCE_ROOT; };
 		7AE27AE017675B04000F8238 /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = log.h; path = src/log.h; sourceTree = SOURCE_ROOT; };
@@ -89,7 +115,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7AE27AFA17675B65000F8238 /* libTetgen.a in Frameworks */,
+				7A45DBA9176E138A00B9B388 /* libTetgen.a in Frameworks */,
 				7AE27B0017675B9C000F8238 /* GEL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -111,10 +137,32 @@
 		7A07B9B1176B23A8006589A4 /* ISMesh */ = {
 			isa = PBXGroup;
 			children = (
+				7A45DB88176E122100B9B388 /* configuration.h */,
+				7A45DB89176E122100B9B388 /* io */,
+				7A45DB8E176E122100B9B388 /* is_mesh_default_traits.h */,
+				7A45DB8F176E122100B9B388 /* is_mesh_key_type.h */,
+				7A45DB90176E122100B9B388 /* is_mesh_simplex.h */,
+				7A45DB91176E122100B9B388 /* is_mesh_utils.h */,
+				7A45DB92176E122100B9B388 /* is_mesh.h */,
+				7A45DB93176E122100B9B388 /* kernel_iterator.h */,
+				7A45DB94176E122100B9B388 /* kernel.h */,
+				7A45DB95176E122100B9B388 /* simplex_set.h */,
+				7A45DB86176E120A00B9B388 /* attributes.h */,
 				7AF7E9C0176B524700F43714 /* is_mesh_API.h */,
-				7AE27ADA17675B04000F8238 /* attributes.h */,
 			);
 			name = ISMesh;
+			sourceTree = "<group>";
+		};
+		7A45DB89176E122100B9B388 /* io */ = {
+			isa = PBXGroup;
+			children = (
+				7A45DB8A176E122100B9B388 /* is_mesh_lists_read.h */,
+				7A45DB8B176E122100B9B388 /* is_mesh_lists_write.h */,
+				7A45DB8C176E122100B9B388 /* is_mesh_xml_read.h */,
+				7A45DB8D176E122100B9B388 /* is_mesh_xml_write.h */,
+			);
+			name = io;
+			path = is_mesh/io;
 			sourceTree = "<group>";
 		};
 		7AE27AAE17675A1E000F8238 = {
@@ -161,9 +209,9 @@
 		7AE27ACB17675AB3000F8238 /* Tetgen */ = {
 			isa = PBXGroup;
 			children = (
-				7A07B9AB176B17A0006589A4 /* predicates.cxx */,
-				7A07B9AC176B17A0006589A4 /* tetgen.cxx */,
-				7A07B9AD176B17A0006589A4 /* tetgen.h */,
+				7A45DBB0176E177100B9B388 /* predicates.cxx */,
+				7A45DBB1176E177100B9B388 /* tetgen.cxx */,
+				7A45DBB2176E177100B9B388 /* tetgen.h */,
 			);
 			name = Tetgen;
 			sourceTree = "<group>";
@@ -190,7 +238,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A07B9B0176B17A0006589A4 /* tetgen.h in Headers */,
+				7A45DBB5176E177100B9B388 /* tetgen.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,7 +246,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7AE27AEA17675B04000F8238 /* attributes.h in Headers */,
 				7AE27AEE17675B04000F8238 /* GEL_types.h in Headers */,
 				7AE27AF017675B04000F8238 /* log.h in Headers */,
 				7AE27AF117675B04000F8238 /* mesh_io.h in Headers */,
@@ -209,6 +256,20 @@
 				7AE27AF917675B04000F8238 /* velocity_function.h in Headers */,
 				7AF7E9BF176B4FE400F43714 /* DSC.h in Headers */,
 				7AF7E9C1176B524700F43714 /* is_mesh_API.h in Headers */,
+				7A45DB87176E120A00B9B388 /* attributes.h in Headers */,
+				7A45DB96176E122100B9B388 /* configuration.h in Headers */,
+				7A45DB97176E122100B9B388 /* is_mesh_lists_read.h in Headers */,
+				7A45DB98176E122100B9B388 /* is_mesh_lists_write.h in Headers */,
+				7A45DB99176E122100B9B388 /* is_mesh_xml_read.h in Headers */,
+				7A45DB9A176E122100B9B388 /* is_mesh_xml_write.h in Headers */,
+				7A45DB9B176E122100B9B388 /* is_mesh_default_traits.h in Headers */,
+				7A45DB9C176E122100B9B388 /* is_mesh_key_type.h in Headers */,
+				7A45DB9D176E122100B9B388 /* is_mesh_simplex.h in Headers */,
+				7A45DB9E176E122100B9B388 /* is_mesh_utils.h in Headers */,
+				7A45DB9F176E122100B9B388 /* is_mesh.h in Headers */,
+				7A45DBA0176E122100B9B388 /* kernel_iterator.h in Headers */,
+				7A45DBA1176E122100B9B388 /* kernel.h in Headers */,
+				7A45DBA2176E122100B9B388 /* simplex_set.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -299,8 +360,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A07B9AE176B17A0006589A4 /* predicates.cxx in Sources */,
-				7A07B9AF176B17A0006589A4 /* tetgen.cxx in Sources */,
+				7A45DBB3176E177100B9B388 /* predicates.cxx in Sources */,
+				7A45DBB4176E177100B9B388 /* tetgen.cxx in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -431,8 +492,8 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
 				HEADER_SEARCH_PATHS = (
-					.,
 					/Library/Frameworks/GEL.framework/Headers/,
+					.,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -443,8 +504,8 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
 				HEADER_SEARCH_PATHS = (
-					.,
 					/Library/Frameworks/GEL.framework/Headers/,
+					.,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
