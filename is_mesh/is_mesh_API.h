@@ -278,6 +278,10 @@ public:
         return get(f).is_boundary();
     }
     
+    int get_label(const tet_key& t)
+    {
+        return get(t).label;
+    }
     ////////////////////
     // MESH FUNCTIONS //
     ////////////////////
