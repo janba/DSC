@@ -160,22 +160,6 @@ void UI::display()
     }
     draw();
     update_title();
-    
-    if(vel_fun && CONTINUOUS)
-    {
-        bool finished = vel_fun->take_time_step(*dsc);
-        basic_log->write_timestep(vel_fun, dsc);
-        if (finished)
-        {
-            stop();
-            if (QUIT_ON_COMPLETION) {
-                exit(0);
-            }
-        }
-    }
-    
-    draw();
-    update_title();
     check_gl_error();
 }
 
@@ -191,6 +175,18 @@ void UI::reshape(int width, int height)
 
 void UI::animate()
 {
+    if(vel_fun && CONTINUOUS)
+    {
+        vel_fun->take_time_step(*dsc);
+        basic_log->write_timestep(vel_fun, dsc);
+        if (vel_fun->is_motion_finished(*dsc))
+        {
+            stop();
+            if (QUIT_ON_COMPLETION) {
+                exit(0);
+            }
+        }
+    }
     glutPostRedisplay();
 }
 

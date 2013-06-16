@@ -130,12 +130,12 @@ protected:
         total_deform_time += t;
     }
     
-public:
     /**
      Computes the motion of each interface vertex and stores the new position in new_pos in the simplicial complex class.
      */
     virtual void deform(DeformableSimplicialComplex<MT>& dsc) = 0;
     
+public:
     /**
      Returns wether the motion has finished.
      */
@@ -161,13 +161,13 @@ public:
 //        }
 //        pos_old = complex->get_interface_edge_positions();
 //        return true;
-        return false;
+        return time_step == MAX_TIME_STEPS;
     }
     
     /**
      Takes one time step thereby deforming the simplicial complex according to the velocity function.
      */
-    bool take_time_step(DeformableSimplicialComplex<MT>& dsc)
+    void take_time_step(DeformableSimplicialComplex<MT>& dsc)
     {
         compute_time = 0.;
         deform_time = 0.;
@@ -175,8 +175,6 @@ public:
         deform(dsc);
         
         time_step++;
-        
-        return (time_step == MAX_TIME_STEPS) | is_motion_finished(dsc);
     }
     
     /**
