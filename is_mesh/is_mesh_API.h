@@ -282,10 +282,146 @@ public:
     {
         return get(t).label;
     }
+    
+    //////////////////////
+    // UPDATE FUNCTIONS //
+    //////////////////////
+    
+    void update()
+    {
+        // Update all faces
+        for (auto fit = faces_begin(); fit != faces_end(); fit++)
+        {
+            update_flag(fit.key());
+        }
+        
+        // Update all edges
+        for (auto eit = edges_begin(); eit != edges_end(); eit++)
+        {
+            update_flag(eit.key());
+        }
+        
+        // Update all nodes
+        for (auto nit = nodes_begin(); nit != nodes_end(); nit++)
+        {
+            update_flag(nit.key());
+        }
+    }
+    
+    /**
+     * Updates the flags (is interface, is boundary, is locked) of simplices in set.
+     */
+    void update(simplex_set & set)
+    {
+        // Update faces
+        for (auto fit = set.faces_begin(); fit != set.faces_end(); fit++)
+        {
+            if (exists(*fit))
+            {
+                update_flag(*fit);
+            }
+        }
+        
+        // Update edges
+        for (auto eit = set.edges_begin(); eit != set.edges_end(); eit++)
+        {
+            if (exists(*eit))
+            {
+                update_flag(*eit);
+            }
+        }
+        
+        // Update nodes
+        for (auto nit = set.nodes_begin(); nit != set.nodes_end(); nit++)
+        {
+            if (exists(*nit))
+            {
+                update_flag(*nit);
+            }
+        }
+    }
+    
+private:
+    void update_flag(const face_key & f)
+    {
+        get(f).set_interface(false);
+        get(f).set_boundary(false);
+        
+        simplex_set st_f;
+        star(f, st_f);
+        if (st_f.size_tetrahedra() == 1)
+        {
+            // On the boundary
+            get(f).set_boundary(true);
+            if (get(*(st_f.tetrahedra_begin())).label != 0)
+            {
+                get(f).set_interface(true);
+            }
+        }
+        else if(st_f.size_tetrahedra() == 2)
+        {
+            auto tit = st_f.tetrahedra_begin();
+            int label0 = get_label(*tit);   ++tit;
+            int label1 = get_label(*tit);
+            if (label0 != label1)
+            {
+                // On the interface
+                get(f).set_interface(true);
+            }
+        }
+    }
+    
+    void update_flag(const edge_key & e)
+    {
+        get(e).set_boundary(false);
+        get(e).set_interface(false);
+        
+        simplex_set ste;
+        star(e, ste);
+        
+        for (auto efit = ste.faces_begin(); efit != ste.faces_end(); efit++)
+        {
+            if (exists(*efit))
+            {
+                if (is_boundary(*efit))
+                {
+                    get(e).set_boundary(true);
+                }
+                else if (is_interface(*efit))
+                {
+                    get(e).set_interface(true);
+                }
+            }
+        }
+    }
+    
+    void update_flag(const node_key & n)
+    {
+        get(n).set_interface(false);
+        get(n).set_boundary(false);
+        
+        simplex_set st_n;
+        star(n, st_n);
+        for (auto neit = st_n.edges_begin(); neit != st_n.edges_end(); neit++)
+        {
+            if (exists(*neit))
+            {
+                if (is_interface(*neit))
+                {
+                    get(n).set_interface(true);
+                }
+                if (is_boundary(*neit))
+                {
+                    get(n).set_boundary(true);
+                }
+            }
+        }
+    }
+    
     ////////////////////
     // MESH FUNCTIONS //
     ////////////////////
-    
+public:
     template<typename Key>
     bool exists(const Key& k)
     {
