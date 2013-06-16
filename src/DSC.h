@@ -268,7 +268,7 @@ private:
         Complex::star(e, st_e);
         
         T min_q = min_quality(st_e);
-        int label = Complex::get(*(st_e.tetrahedra_begin())).label;
+        int label = Complex::get_label(*(st_e.tetrahedra_begin()));
         
         std::vector<V> vv;
         Complex::get_pos(e, vv);
@@ -367,10 +367,10 @@ private:
         
         for (auto fit = st_cl_f.faces_begin(); fit != st_cl_f.faces_end(); fit++)
         {
-            if(Complex::exists(*fit) && candidate.contains(*fit) && !cc.contains(*fit) && !Complex::get(*fit).is_interface())
+            if(Complex::exists(*fit) && candidate.contains(*fit) && !cc.contains(*fit) && !Complex::is_interface(*fit))
             {
                 edge_key e = Complex::get_edge(*fit, f);
-                if(e != Complex::NULL_EDGE && Complex::exists(e) && !Complex::get(e).is_interface())
+                if(e != Complex::NULL_EDGE && Complex::exists(e) && !Complex::is_interface(e))
                 {
                     connected_component(*fit, candidate, cc);
                 }
@@ -454,7 +454,7 @@ private:
     {
         simplex_set st_f;
         Complex::star(f, st_f);
-        int label = Complex::get(*st_f.tetrahedra_begin()).label;
+        int label = Complex::get_label(*st_f.tetrahedra_begin());
         
         // Attempt to remove the multi-face by multi-face retriangulation
         simplex_set new_simplices;
@@ -606,7 +606,7 @@ private:
     {
         simplex_set st_f;
         Complex::star(f, st_f);
-        int label = Complex::get(*st_f.tetrahedra_begin()).label;
+        int label = Complex::get_label(*st_f.tetrahedra_begin());
         
         simplex_set new_simplices;
         optimal_multi_face_removal(f, new_simplices);
@@ -646,7 +646,7 @@ private:
                 
                 for (auto eit = cl_t.edges_begin(); eit != cl_t.edges_end(); eit++)
                 {
-                    if (Complex::exists(*eit) && !Complex::get(*eit).is_interface() && !Complex::get(*eit).is_boundary())
+                    if (Complex::exists(*eit) && !Complex::is_interface(*eit) && !Complex::is_boundary(*eit))
                     {
                         edge_removal(*eit);
                     }
@@ -665,7 +665,7 @@ private:
                 
                 for (auto fit = cl_t.faces_begin(); fit != cl_t.faces_end(); fit++)
                 {
-                    if (Complex::exists(*fit) && !Complex::get(*fit).is_interface() && !Complex::get(*fit).is_boundary())
+                    if (Complex::exists(*fit) && !Complex::is_interface(*fit) && !Complex::is_boundary(*fit))
                     {
                         multi_face_retriangulation(*fit);
                     }
@@ -684,7 +684,7 @@ private:
                 
                 for (auto fit = cl_t.faces_begin(); fit != cl_t.faces_end(); fit++)
                 {
-                    if (Complex::exists(*fit) && !Complex::get(*fit).is_interface() && !Complex::get(*fit).is_boundary())
+                    if (Complex::exists(*fit) && !Complex::is_interface(*fit) && !Complex::is_boundary(*fit))
                     {
                         multi_face_removal(*fit);
                     }
@@ -817,7 +817,7 @@ private:
     {
         for (auto nit = Complex::nodes_begin(); nit != Complex::nodes_end(); nit++)
         {
-            if (!Complex::get(nit.key()).is_boundary() && !Complex::get(nit.key()).is_interface())
+            if (!Complex::is_boundary(nit.key()) && !Complex::is_interface(nit.key()))
             {
                 if (!smart_laplacian(nit.key()))
                 {
@@ -861,7 +861,7 @@ private:
             if (Complex::exists(*eit))
             {
                 T l = length(*eit);
-                if (Complex::get(*eit).is_interface() && l < MIN_EDGE_LENGTH)
+                if (Complex::is_interface(*eit) && l < MIN_EDGE_LENGTH)
                 {
                     simplex_set st_e;
                     Complex::star(*eit, st_e);
@@ -870,7 +870,7 @@ private:
                     bool removable = false;
                     for (auto tit = st_e.tetrahedra_begin(); tit != st_e.tetrahedra_end(); tit++)
                     {
-                        if (Complex::get(*tit).label > 0)
+                        if (Complex::get_label(*tit) > 0)
                             removable = true;
                     }
                     
@@ -896,7 +896,7 @@ private:
                             unsafe_collapse(n1, n0);
                     }
                 }
-                else if (Complex::get(*eit).is_boundary() && l < bnd_threshold)
+                else if (Complex::is_boundary(*eit) && l < bnd_threshold)
                 {
                     node_key n0, n1;
                     auto bnd_e = Complex::get(*eit).get_boundary();
@@ -957,7 +957,7 @@ private:
         
         if ((l1 < ratio * l2) && (l2 < ratio * l1))
         {
-            if (!(Complex::get(n2).is_interface()))
+            if (!(Complex::is_interface(n2)))
             {
                 unsafe_collapse(n2,n1);
             }
@@ -1538,7 +1538,7 @@ private:
             T a = area(*fit);
             total_area += a;
             
-            if (Complex::get(*fit).is_interface() && !Complex::get(*fit).is_boundary() && a > max_area)
+            if (Complex::is_interface(*fit) && !Complex::is_boundary(*fit) && a > max_area)
             {
                 max_area = a;
                 f = *fit;
@@ -1556,7 +1556,7 @@ private:
             Complex::link(f, lk_f);
             for(auto nit = lk_f.nodes_begin(); nit != lk_f.nodes_end(); nit++)
             {
-                if (cl_t.contains(*nit) && Complex::get(*nit).is_interface() &&
+                if (cl_t.contains(*nit) && Complex::is_interface(*nit) &&
                     Util::distance<MT>(Complex::get_pos(*nit), verts[0], verts[1], verts[2]) < MIN_EDGE_LENGTH)
                 {
                     return true;
@@ -1582,11 +1582,11 @@ private:
             {
                 if(*tit != t)
                 {
-                    label = Complex::get(*tit).label;
+                    label = Complex::get_label(*tit);
                 }
             }
             
-            if (label != -1 && label != Complex::get(t).label)
+            if (label != -1 && label != Complex::get_label(t))
             {
                 Complex::get(t).label = label;
                 simplex_set cl_t;
@@ -1616,7 +1616,7 @@ private:
         Complex::link(e, ln_e);
         for (auto nit = ln_e.nodes_begin(); nit != ln_e.nodes_end(); nit++)
         {
-            if (Complex::get(*nit).is_interface())
+            if (Complex::is_interface(*nit))
             {
                 verts.push_back(Complex::get_pos(*nit));
             }
@@ -1657,7 +1657,7 @@ private:
         std::vector<node_key> nodes;
         for (auto nit = lk_e.nodes_begin(); nit != lk_e.nodes_end(); nit++)
         {
-            if (Complex::get(*nit).is_interface() || Complex::get(*nit).is_boundary()) {
+            if (Complex::is_interface(*nit) || Complex::is_boundary(*nit)) {
                 nodes.push_back(*nit);
             }
         }
@@ -1676,7 +1676,7 @@ private:
         edge_key e_c = Complex::get_edge(nodes[0], n_new);
         assert(e_c != Complex::NULL_EDGE);
         V p = Complex::get_pos(nodes[0]);
-        V p_new = Complex::get(nodes[0]).get_destination();
+        V p_new = Complex::get_destination(nodes[0]);
         
         node_key n = collapse_edge(e_c , nodes[0], n_new, p);
         if(n != Complex::NULL_NODE)
