@@ -43,11 +43,11 @@ class DeformableSimplicialComplex : public ISMesh<MT>
     typedef ISMesh<MT> Complex;
 public:
     
-    typedef typename Complex::node_key_type         node_key_type;
-    typedef typename Complex::edge_key_type         edge_key_type;
-    typedef typename Complex::face_key_type         face_key_type;
-    typedef typename Complex::tetrahedron_key_type  tetrahedron_key_type;
-    typedef typename Complex::simplex_set           simplex_set;
+    typedef typename Complex::node_key      node_key;
+    typedef typename Complex::edge_key      edge_key;
+    typedef typename Complex::face_key      face_key;
+    typedef typename Complex::tet_key       tet_key;
+    typedef typename Complex::simplex_set   simplex_set;
     
 private:
     
@@ -203,7 +203,7 @@ private:
         }
     } // update
     
-    void update_flag(const face_key_type & f)
+    void update_flag(const face_key & f)
     {
         Complex::get(f).set_interface(false);
         Complex::get(f).set_boundary(false);
@@ -233,9 +233,9 @@ private:
                 Complex::get(f).set_locked(true);
             }
         }
-    } // update_flag(face_key_type)
+    } // update_flag(face_key)
     
-    void update_flag(const edge_key_type & e)
+    void update_flag(const edge_key & e)
     {
         Complex::get(e).set_boundary(false);
         Complex::get(e).set_interface(false);
@@ -260,9 +260,9 @@ private:
                 }
             }
         }
-    } // update_flage(edge_key_type)
+    } // update_flage(edge_key)
     
-    void update_flag(const node_key_type & n)
+    void update_flag(const node_key & n)
     {
         Complex::get(n).set_interface(false);
         Complex::get(n).set_boundary(false);
@@ -326,7 +326,7 @@ private:
      * Finds the triangulation of the input polygon "sandwiched" between two vertices in vv,
      * which maximizes the worst tetrahedron's quality (using dynamic programming -- Klincsek's algorithm).
      */
-    T klincsek_triangulation(const std::vector<node_key_type>& polygon, std::vector<node_key_type>& new_edges, std::vector<V>& vv)
+    T klincsek_triangulation(const std::vector<node_key>& polygon, std::vector<node_key>& new_edges, std::vector<V>& vv)
     {
         // Build an array for the dynamic programming method
         T max_double = INFINITY;
@@ -399,7 +399,7 @@ private:
     /**
      * Attempt to remove edge e (the topological operation -- mesh reconnection).
      */
-    void edge_removal(edge_key_type const & e)
+    void edge_removal(edge_key const & e)
     {
         simplex_set st_e;
         Complex::star(e, st_e);
@@ -415,7 +415,7 @@ private:
         
         simplex_set lk_e;
         Complex::link(e, lk_e);
-        std::vector<node_key_type> polygon, new_edges;
+        std::vector<node_key> polygon, new_edges;
         
         sort_vertices(lk_e, polygon);
         check_consistency(e, polygon);
@@ -442,7 +442,7 @@ private:
      * The helper function for optimal_multi_face_remove().
      * TODO: Sanity check.
      */
-    T omfr_quality_helper(int n, std::vector<face_key_type> & faces, std::map<face_key_type, T> & face_quality_values, std::vector<bool> & subset, std::vector<V> & vv)
+    T omfr_quality_helper(int n, std::vector<face_key> & faces, std::map<face_key, T> & face_quality_values, std::vector<bool> & subset, std::vector<V> & vv)
     {
         T quality = 1e99;
         simplex_set multi_face, mf_boundary;
@@ -495,7 +495,7 @@ private:
     /**
      * Returns the faces in the set candidate which is connected to the face f. Connected means there is no interface simplices between f and the candidate face and all faces between f and the candidate face is in the candidate set.
      */
-    void connected_component(const face_key_type& f, simplex_set& candidate, simplex_set& cc)
+    void connected_component(const face_key& f, simplex_set& candidate, simplex_set& cc)
     {
         cc.insert(f);
         simplex_set cl_f, st_cl_f;
@@ -506,7 +506,7 @@ private:
         {
             if(Complex::exists(*fit) && candidate.contains(*fit) && !cc.contains(*fit) && !Complex::get(*fit).is_interface())
             {
-                edge_key_type e = Complex::get_edge(*fit, f);
+                edge_key e = Complex::get_edge(*fit, f);
                 if(e != Complex::NULL_EDGE && Complex::exists(e) && !Complex::get(e).is_interface())
                 {
                     connected_component(*fit, candidate, cc);
@@ -518,9 +518,9 @@ private:
     /**
      * Finds the biggest multi-face containing f, which can be removed.
      */
-    void removable_multi_face(const face_key_type& f, simplex_set& multi_face)
+    void removable_multi_face(const face_key& f, simplex_set& multi_face)
     {
-        std::vector<node_key_type> apices;
+        std::vector<node_key> apices;
         Complex::get_apices(f, apices);
         
         simplex_set link0, link1;
@@ -534,7 +534,7 @@ private:
     /**
      * Attempt multi-face retriangulation on the initial set given in removed-faces.
      */
-    void optimal_multi_face_retriangulation(const face_key_type& f, simplex_set & new_simplices)
+    void optimal_multi_face_retriangulation(const face_key& f, simplex_set & new_simplices)
     {
         simplex_set multi_face;
         removable_multi_face(f, multi_face);
@@ -554,7 +554,7 @@ private:
         
         if (multi_face.size_faces() > 1)
         {
-            std::vector<node_key_type> apices;
+            std::vector<node_key> apices;
             Complex::get_apices(f, apices);
             
             std::vector<V> verts(2);
@@ -566,7 +566,7 @@ private:
             T q_old = min_quality(st_mf);
             T q = -1.;
             
-            std::vector<node_key_type> polygon, new_edges;
+            std::vector<node_key> polygon, new_edges;
             sort_vertices(mf_boundary, polygon);
             check_consistency(verts, polygon);
             
@@ -587,7 +587,7 @@ private:
     /**
      * Attempt to remove face f using multi-face retriangulation.
      */
-    void multi_face_retriangulation(const face_key_type& f)
+    void multi_face_retriangulation(const face_key& f)
     {
         simplex_set st_f;
         Complex::star(f, st_f);
@@ -613,9 +613,9 @@ private:
      * of the multi-face to be swapped for an edge connecting the apices (in vv).
      * TODO: Sanity-check
      */
-    void optimal_multi_face_removal(const face_key_type& f, simplex_set& new_simplices)
+    void optimal_multi_face_removal(const face_key& f, simplex_set& new_simplices)
     {
-        std::vector<node_key_type> apices;
+        std::vector<node_key> apices;
         Complex::get_apices(f, apices);
         
         simplex_set multi_face;
@@ -635,11 +635,11 @@ private:
         verts[1] = get_pos(apices[1]);
         
         unsigned int n = static_cast<unsigned int>(multi_face.size_faces());
-        std::map<face_key_type, double> face_quality_values;
-        std::vector<face_key_type> faces(n);
+        std::map<face_key, double> face_quality_values;
+        std::vector<face_key> faces(n);
         
         int i = 0;
-        face_key_type seed_face;
+        face_key seed_face;
         bool seeded = false;
         int seed_index = -1;
         
@@ -739,7 +739,7 @@ private:
     /**
      * Attempt to remove face f using multi-face removal.
      */
-    void multi_face_removal(const face_key_type& f)
+    void multi_face_removal(const face_key& f)
     {
         simplex_set st_f;
         Complex::star(f, st_f);
@@ -764,7 +764,7 @@ private:
      */
     void topological_pass()
     {
-        std::vector<tetrahedron_key_type> tets;
+        std::vector<tet_key> tets;
         for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
         {
             if (quality(tit.key()) < MIN_TET_QUALITY)
@@ -838,7 +838,7 @@ private:
     
     void interface_edge_flip_pass()
     {
-        std::vector<edge_key_type> flippable_edges;
+        std::vector<edge_key> flippable_edges;
         
         for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
         {
@@ -868,7 +868,7 @@ private:
      */
     void thickening_pass()
     {
-        std::vector<tetrahedron_key_type> tetrahedra;
+        std::vector<tet_key> tetrahedra;
         for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
         {
             if (volume(tit.key()) > MAX_TET_VOLUME)
@@ -894,7 +894,7 @@ private:
      */
     void thinning_pass()
     {
-        std::vector<edge_key_type> edges;
+        std::vector<edge_key> edges;
         for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
         {
             if (!eit->is_interface() && !eit->is_boundary())
@@ -903,12 +903,12 @@ private:
             }
         }
         
-        std::vector<node_key_type> nodes;
+        std::vector<node_key> nodes;
         for (auto &e : edges)
         {
             if (Complex::exists(e) && length(e) < MIN_EDGE_LENGTH)
             {
-                node_key_type n = safe_collapse(e);
+                node_key n = safe_collapse(e);
                 if (n != Complex::NULL_NODE)
                 {
                     freitag_smoothing(n);
@@ -976,7 +976,7 @@ private:
      */
     void remove_degenerate_edges()
     {
-        std::list<edge_key_type> edge_list;
+        std::list<edge_key> edge_list;
         T bnd_threshold = 0.25;
         T volume_int_threshold = 0.0025 * MIN_EDGE_LENGTH * MIN_EDGE_LENGTH * MIN_EDGE_LENGTH;
         T volume_bnd_threshold = 0.0025 * bnd_threshold * bnd_threshold * bnd_threshold;
@@ -1013,7 +1013,7 @@ private:
                     
                     if (!removable) continue;
                     
-                    node_key_type n0, n1;
+                    node_key n0, n1;
                     auto bnd_e = Complex::get(*eit).get_boundary();
                     auto beit = bnd_e->begin();
                     n0 = *beit; ++beit;
@@ -1035,7 +1035,7 @@ private:
                 }
                 else if (Complex::get(*eit).is_boundary() && l < bnd_threshold)
                 {
-                    node_key_type n0, n1;
+                    node_key n0, n1;
                     auto bnd_e = Complex::get(*eit).get_boundary();
                     auto beit = bnd_e->begin();
                     n0 = *beit; ++beit;
@@ -1065,14 +1065,14 @@ private:
      * Attempt to remove the face f by first determining whether it's a cap and, if that's the case
      * splitting the longest edge at the projection of the opposite vertex and collapsing it with cap's apex.
      */
-    void remove_degenerate_face(face_key_type const & f, std::vector<node_key_type> & nodes, std::vector<V> & verts, int i)
+    void remove_degenerate_face(face_key const & f, std::vector<node_key> & nodes, std::vector<V> & verts, int i)
     {
         T ratio = 1.03; // if the ratio between the lengths of two longest edges of f is less than this, it's treated as a needle.
         
         V d1 = verts[(i+1)%3] - verts[i];
         V d2 = verts[(i+2)%3] - verts[i];
-        node_key_type n1 = nodes[(i+1)%3];
-        node_key_type n2 = nodes[(i+2)%3];
+        node_key n1 = nodes[(i+1)%3];
+        node_key n2 = nodes[(i+2)%3];
         double l1 = d1.length(),
         l2 = d2.length();
         
@@ -1110,7 +1110,7 @@ private:
      */
     void remove_degenerate_faces()
     {
-        std::list<face_key_type> face_list;
+        std::list<face_key> face_list;
         
         for (auto fit = Complex::faces_begin(); fit != Complex::faces_end(); fit++)
             face_list.push_back(fit.key());
@@ -1119,7 +1119,7 @@ private:
         {
             if (Complex::exists(*it))
             {
-                std::vector<node_key_type> nodes(3);
+                std::vector<node_key> nodes(3);
                 Complex::get_nodes(*it, nodes);
                 std::vector<V> verts(3);
                 get_pos(*it, verts);
@@ -1142,18 +1142,18 @@ private:
      * Remove a degenerate tetrahedron of a type "sliver" by splitting the two longest edges
      * and collapsing the newly created vertices together. Return true if successful.
      */
-    bool remove_sliver(const tetrahedron_key_type & t)
+    bool remove_sliver(const tet_key & t)
     {
         simplex_set cl_t;
         Complex::closure(t, cl_t);
-        edge_key_type e1 = longest_edge(cl_t);
+        edge_key e1 = longest_edge(cl_t);
         cl_t.erase(e1);
-        edge_key_type e2 = longest_edge(cl_t);
+        edge_key e2 = longest_edge(cl_t);
         
-        node_key_type n1 = split_edge(e1);
-        node_key_type n2 = split_edge(e2);
+        node_key n1 = split_edge(e1);
+        node_key n2 = split_edge(e2);
         
-        edge_key_type e = Complex::get_edge(n1, n2);
+        edge_key e = Complex::get_edge(n1, n2);
         return unsafe_collapse(e) != Complex::NULL_NODE;
     }
     
@@ -1161,10 +1161,10 @@ private:
      * Remove a degenerate tetrahedron of a type "cap" by splitting the face opposite cap's apex and collapsing cap's apex with the newly created vertex.
      * Return true if successful.
      */
-    bool remove_cap(const tetrahedron_key_type & t, const face_key_type & f, const node_key_type& apex)
+    bool remove_cap(const tet_key & t, const face_key & f, const node_key& apex)
     {
-        node_key_type n1 = split_face(f);
-        edge_key_type e = Complex::get_edge(n1, apex);
+        node_key n1 = split_face(f);
+        edge_key e = Complex::get_edge(n1, apex);
         return unsafe_collapse(e) != Complex::NULL_NODE;
     }
     
@@ -1172,11 +1172,11 @@ private:
      * Remove a degenerate tetrahedron of a type "wedge" or "needle" by collapsing the shortest edge.
      * Return true if successful.
      */
-    bool remove_wedge_or_needle(const tetrahedron_key_type & t)
+    bool remove_wedge_or_needle(const tet_key & t)
     {
         simplex_set cl_t;
         Complex::closure(t, cl_t);
-        edge_key_type e = shortest_edge(cl_t);
+        edge_key e = shortest_edge(cl_t);
         return unsafe_collapse(e) != Complex::NULL_NODE;
     }
     
@@ -1185,12 +1185,12 @@ private:
      * This function detects what type of degeneracy tetrahedron t is (sliver, cap, needle or wedge)
      * and selects appropriate degeneracy removal routine.
      */
-    bool remove_degenerate_tet(const tetrahedron_key_type & t)
+    bool remove_degenerate_tet(const tet_key & t)
     {
         // Find the largest face
         simplex_set cl_t;
         Complex::closure(t, cl_t);
-        face_key_type f = largest_face(cl_t);
+        face_key f = largest_face(cl_t);
         std::vector<V> verts;
         get_pos(f, verts);
         
@@ -1198,7 +1198,7 @@ private:
         simplex_set cl_f;
         Complex::closure(f, cl_f);
         cl_t.difference(cl_f);
-        node_key_type apex = *cl_t.nodes_begin();
+        node_key apex = *cl_t.nodes_begin();
         
         // Project the apex
         V proj_apex = Util::project<MT>(get_pos(apex), verts);
@@ -1225,7 +1225,7 @@ private:
      */
     void remove_degenerate_tets()
     {
-        std::vector<tetrahedron_key_type> degenerated_tets;
+        std::vector<tet_key> degenerated_tets;
         
         for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
         {
@@ -1339,7 +1339,7 @@ private:
     /**
      * Tries moving the node n to the new position new_pos. Returns true if it succeeds.
      */
-    bool move_vertex(const node_key_type & n, const typename MT::vector3_type & new_pos)
+    bool move_vertex(const node_key & n, const typename MT::vector3_type & new_pos)
     {
         V pos = get_pos(n);
         T l = MT::length(new_pos - pos);
@@ -1366,7 +1366,7 @@ private:
      * Returns the intersection point (= pos + t*(new_pos-pos)) with the link of the node n and
      * when moving the node n to the new position new_pos.
      */
-    T intersection_with_link(const node_key_type & n, const V& new_pos)
+    T intersection_with_link(const node_key & n, const V& new_pos)
     {
         V pos = get_pos(n);
         simplex_set ln;
@@ -1395,7 +1395,7 @@ private:
     /**
      * Performs Laplacian smoothing if it improves the minimum tetrahedron quality locally.
      */
-    bool smart_laplacian(const node_key_type& n, T alpha = 1.)
+    bool smart_laplacian(const node_key& n, T alpha = 1.)
     {
         T q_old = min_quality(n);
         V old_pos = get_pos(n);
@@ -1412,7 +1412,7 @@ private:
     }
     
     /// Find the active set for Freitag smoothing.
-    T get_quality_info(const node_key_type & n, std::vector<quality_struct<MT>> & full_quality_info, std::list<quality_struct<MT>> & active)
+    T get_quality_info(const node_key & n, std::vector<quality_struct<MT>> & full_quality_info, std::list<quality_struct<MT>> & active)
     {
         simplex_set st_n;
         Complex::star(n, st_n);
@@ -1423,7 +1423,7 @@ private:
         {
             quality_struct<MT> quality_info;
             
-            std::vector<node_key_type> nodes;
+            std::vector<node_key> nodes;
             Complex::get_nodes(*tit, nodes);
             
             int alpha = 0;
@@ -1520,7 +1520,7 @@ private:
         return *(x_values.begin());
     }
     
-    T calc_step_length(const node_key_type &n, T init_alpha, V s, T min_q_old, T min_q, T min_q_pre, T min_step)
+    T calc_step_length(const node_key &n, T init_alpha, V s, T min_q_old, T min_q, T min_q_pre, T min_step)
     {
         T alpha = init_alpha;
         
@@ -1578,7 +1578,7 @@ private:
     }
     
 public:
-    void freitag_smoothing(node_key_type const & n, T min_step = 1e-4, T min_improvement = 1e-5, int max_iter = 3)
+    void freitag_smoothing(node_key const & n, T min_step = 1e-4, T min_improvement = 1e-5, int max_iter = 3)
     {
         std::list<quality_struct<MT>> active_set = std::list<quality_struct<MT>>();
         std::vector<quality_struct<MT>> full_quality_info = std::vector<quality_struct<MT>>();
@@ -1657,7 +1657,7 @@ private:
      * c) the area of f is at least 0.48 of the total area of all the faces of t.
      * d) the vertex opposite to f lies on the interface.
      */
-    bool precond_relabel(const tetrahedron_key_type& t, face_key_type & f)
+    bool precond_relabel(const tet_key& t, face_key & f)
     {
         if (quality(t) > DEG_TET_QUALITY)
         {
@@ -1706,9 +1706,9 @@ private:
     /**
      * Relabels tetrahedron t if precond_relabel() returns true.
      */
-    bool relabel_tet(const tetrahedron_key_type& t)
+    bool relabel_tet(const tet_key& t)
     {
-        face_key_type f;
+        face_key f;
         
         if (precond_relabel(t, f))
         {
@@ -1744,7 +1744,7 @@ private:
      * Returns whether it is possible to flip the edge e or not, i.e.: whether the edge does not fulfill Delaunay criterion, and whether
      * it is not a feature edge (it is not a feature edge if its neighborhood is sufficiently flat).
      */
-    bool is_flippable(const edge_key_type & e)
+    bool is_flippable(const edge_key & e)
     {
         std::vector<V> verts;
         get_pos(e, verts);
@@ -1786,12 +1786,12 @@ private:
      * Flips the edge e (which is a special case of the edge remove operation in the embedding mesh).
      * Relabels the tetrahedra accordingly so that the interface mesh geometry does not change.
      */
-    void flip(const edge_key_type & e)
+    void flip(const edge_key & e)
     {
         // Find the pair of nodes to be connected by a new edge as a result of edge flip.
         simplex_set lk_e;
         Complex::link(e, lk_e);
-        std::vector<node_key_type> nodes;
+        std::vector<node_key> nodes;
         for (auto nit = lk_e.nodes_begin(); nit != lk_e.nodes_end(); nit++)
         {
             if (Complex::get(*nit).is_interface() || Complex::get(*nit).is_boundary()) {
@@ -1805,17 +1805,17 @@ private:
             return;
         }
         
-        node_key_type n_new = split_edge(e);
+        node_key n_new = split_edge(e);
         if (n_new == Complex::NULL_NODE) {
             return;
         }
         
-        edge_key_type e_c = Complex::get_edge(nodes[0], n_new);
+        edge_key e_c = Complex::get_edge(nodes[0], n_new);
         assert(e_c != Complex::NULL_EDGE);
         V p = get_pos(nodes[0]);
         V p_new = Complex::get(nodes[0]).get_destination();
         
-        node_key_type n = collapse_edge(e_c , nodes[0], n_new, p);
+        node_key n = collapse_edge(e_c , nodes[0], n_new, p);
         if(n != Complex::NULL_NODE)
         {
             set_destination(n, p_new);
@@ -1829,13 +1829,13 @@ public:
     /**
      * Split a tetrahedron t and returns the new node which is positioned at the barycenter of the vertices of t.
      */
-    node_key_type split_tetrahedron(tetrahedron_key_type& t)
+    node_key split_tetrahedron(tet_key& t)
     {
         std::vector<V> verts;
         get_pos(t, verts);
         V p = Util::barycenter<MT>(verts[0], verts[1], verts[2], verts[3]);
         
-        node_key_type n = Complex::split(t);
+        node_key n = Complex::split(t);
         set_pos(n, p);
         set_destination(n, p);
         
@@ -1850,13 +1850,13 @@ public:
     /**
      * Split a face f and returns the new node which is positioned at the barycenter of the vertices of f.
      */
-    node_key_type split_face(const face_key_type & f)
+    node_key split_face(const face_key & f)
     {   
         std::vector<V> verts;
         get_pos(f, verts);
         V p = Util::barycenter<MT>(verts[0], verts[1], verts[2]);
         
-        node_key_type n = Complex::split(f);
+        node_key n = Complex::split(f);
         set_pos(n, p);
         set_destination(n, p);
         
@@ -1871,13 +1871,13 @@ public:
     /**
      * Split an edge e and returns the new node which is placed at the middle of e.
      */
-    node_key_type split_edge(const edge_key_type & e)
+    node_key split_edge(const edge_key & e)
     {
         std::vector<V> verts;
         get_pos(e, verts);
         V p = Util::barycenter<MT>(verts[0], verts[1]);
         
-        node_key_type n = Complex::split(e);
+        node_key n = Complex::split(e);
         set_pos(n, p);
         set_destination(n, p);
         
@@ -1896,9 +1896,9 @@ private:
     /**
      * Collapses the edge e by moving the node n2 to n1. Returns n1 if successful, otherwise NULL_NODE.
      */
-    node_key_type collapse_edge(edge_key_type& e, node_key_type const & n1, node_key_type const & n2, const V& p)
+    node_key collapse_edge(edge_key& e, node_key const & n1, node_key const & n2, const V& p)
     {
-        node_key_type n_new = Complex::collapse(e, n1, n2);
+        node_key n_new = Complex::collapse(e, n1, n2);
         
         if (n_new != Complex::NULL_NODE)
         {
@@ -1917,13 +1917,13 @@ private:
      * Returns true if the collapse of the edge e results in a minimum tetrahedron quality above MIN_TET_QUALITY or in an improvement of the minimum tetrahedron quality.
      * The merged nodes are assumed moved to v_new after the collapse.
      */
-    bool precond_collapse(const edge_key_type& e, const V& v_new)
+    bool precond_collapse(const edge_key& e, const V& v_new)
     {
         if (e == Complex::NULL_EDGE)
         {
             return false;
         }
-        std::vector<node_key_type> nodes;
+        std::vector<node_key> nodes;
         Complex::get_nodes(e, nodes);
         
         if(inverted(nodes[0]) || inverted(nodes[1])) // Should not be necessary!
@@ -1951,9 +1951,9 @@ private:
     /**
      * Returns the increase (positive) or decrease in quality if the edge e is collapsed and the resulting node is moved to v_new.
      */
-    T quality_improvement(const edge_key_type& e, const V& v_new)
+    T quality_improvement(const edge_key& e, const V& v_new)
     {
-        std::vector<node_key_type> nodes;
+        std::vector<node_key> nodes;
         Complex::get_nodes(e, nodes);
         
         simplex_set lk_n0, lk_n1, lk_e;
@@ -1981,12 +1981,12 @@ private:
      * If one is editable then this node is moved to the other if precond_collapse returns true.
      * If non of the nodes are editable or precond_collapse returns false, the method returns NULL_NODE.
      */
-    node_key_type safe_collapse(edge_key_type& e)
+    node_key safe_collapse(edge_key& e)
     {
-        std::vector<node_key_type> nodes;
+        std::vector<node_key> nodes;
         Complex::get_nodes(e, nodes);
-        node_key_type n1 = nodes[0];
-        node_key_type n2 = nodes[1];
+        node_key n1 = nodes[0];
+        node_key n2 = nodes[1];
         
         bool editable1 = !Complex::get(n1).is_interface() && !Complex::get(n1).is_boundary();
         bool editable2 = !Complex::get(n2).is_interface() && !Complex::get(n2).is_boundary();
@@ -2019,12 +2019,12 @@ private:
     /**
      * Collapses the edge e by trying to collapse it safely before collapsing it unsafely. Returns the resulting node or NULL_NODE if unsuccessful.
      */
-    node_key_type unsafe_collapse(edge_key_type& e)
+    node_key unsafe_collapse(edge_key& e)
     {
-        node_key_type new_n = safe_collapse(e);
+        node_key new_n = safe_collapse(e);
         if(new_n == Complex::NULL_NODE)
         {
-            std::vector<node_key_type> nodes;
+            std::vector<node_key> nodes;
             Complex::get_nodes(e, nodes);
             new_n = unsafe_collapse(nodes[0], nodes[1]);
         }
@@ -2036,16 +2036,16 @@ private:
      * n1 and n2 are moved to the barycenter of their positions and the edge between them are collapsed if precond_collapse returns true.
      * NOTE: This method allows to move interface vertices. Use safe_collapse to make sure the interface is not changed.
      */
-    node_key_type unsafe_collapse(const node_key_type & n1, const node_key_type & n2)
+    node_key unsafe_collapse(const node_key & n1, const node_key & n2)
     {
-        edge_key_type e = Complex::get_edge(n1, n2);
+        edge_key e = Complex::get_edge(n1, n2);
         
         V p = Util::barycenter<MT>(get_pos(n1), get_pos(n2));
         V p_new = Util::barycenter<MT>(Complex::get(n1).get_destination(), Complex::get(n2).get_destination());
         
         if (precond_collapse(e, p))
         {
-            node_key_type n_new = collapse_edge(e, n1, n2, p);
+            node_key n_new = collapse_edge(e, n1, n2, p);
             if (n_new != Complex::NULL_NODE)
             {
                 set_destination(n_new, p_new);
@@ -2064,7 +2064,7 @@ public:
     /**
      Returns the normal to interface face f.
      */
-    V get_normal(const face_key_type & f)
+    V get_normal(const face_key & f)
     {
         std::vector<V> verts;
         get_pos(f, verts);
@@ -2074,7 +2074,7 @@ public:
     /**
      Returns the normal to interface node n.
      */
-    V get_normal(const node_key_type & n)
+    V get_normal(const node_key & n)
     {
         simplex_set st;
         Complex::star(n, st);
@@ -2100,7 +2100,7 @@ public:
      * Calculates the average position of the neighbouring nodes to node n.
      * If interface is true, the average position is only calculated among the neighbouring nodes which are interface.
      */
-    V get_barycenter(const node_key_type& n, bool interface = false)
+    V get_barycenter(const node_key& n, bool interface = false)
     {
         simplex_set lk_n;
         Complex::link(n, lk_n);
@@ -2122,7 +2122,7 @@ public:
     /**
      * Returns the position of node n.
      */
-    V get_pos(const node_key_type& n)
+    V get_pos(const node_key& n)
     {
         V p = Complex::get(n).get_pos();
         assert(!MT::is_nan(p[0]) && !MT::is_nan(p[1]) && !MT::is_nan(p[2]));
@@ -2130,10 +2130,10 @@ public:
     }
     
     /// Returns the positions of the nodes of edge e in verts.
-    void get_pos(const edge_key_type & e, std::vector<V>& verts)
+    void get_pos(const edge_key & e, std::vector<V>& verts)
     {
         verts = std::vector<V>(2);
-        std::vector<node_key_type> nodes(2);
+        std::vector<node_key> nodes(2);
         Complex::get_nodes(e, nodes);
         for (int k = 0; k < 2; ++k)
         {
@@ -2142,11 +2142,11 @@ public:
     }
     
     /// Returns the positions of the nodes of face f in verts.
-    void get_pos(const face_key_type & f, std::vector<V>& verts)
+    void get_pos(const face_key & f, std::vector<V>& verts)
     {
         verts = std::vector<V>(3);
         Complex::orient_face(f);
-        std::vector<node_key_type> nodes(3);
+        std::vector<node_key> nodes(3);
         Complex::get_nodes(f, nodes);
         for (int k = 0; k < 3; ++k)
         {
@@ -2155,10 +2155,10 @@ public:
     }
     
     /// Returns the positions of the nodes of tetrahedron t in verts.
-    void get_pos(const tetrahedron_key_type& t, std::vector<V>& verts)
+    void get_pos(const tet_key& t, std::vector<V>& verts)
     {
         verts = std::vector<V>(4);
-        std::vector<node_key_type> nodes(4);
+        std::vector<node_key> nodes(4);
         Complex::get_nodes(t, nodes);
         for (int k = 0; k < 4; ++k)
         {
@@ -2173,7 +2173,7 @@ private:
     /**
      * Sets the position of node n.
      */
-    void set_pos(const node_key_type& n, V p)
+    void set_pos(const node_key& n, V p)
     {
         Complex::get(n).set_pos(p);
     }
@@ -2182,7 +2182,7 @@ public:
     /**
      * Sets the destination where the node n is moved to when deform() is called.
      */
-    void set_destination(const node_key_type& n, V p)
+    void set_destination(const node_key& n, V p)
     {
         Complex::get(n).set_destination(p);
     }
@@ -2193,35 +2193,35 @@ public:
     
 public:
     
-    T length(const edge_key_type& e)
+    T length(const edge_key& e)
     {
         std::vector<V> verts;
         get_pos(e,verts);
         return MT::length(verts[0] - verts[1]);
     }
     
-    T area(const face_key_type& f)
+    T area(const face_key& f)
     {
         std::vector<V> verts;
         get_pos(f,verts);
         return Util::area<MT>(verts);
     }
     
-    T volume(const tetrahedron_key_type& t)
+    T volume(const tet_key& t)
     {
         std::vector<V> verts;
         get_pos(t,verts);
         return Util::volume<MT>(verts[0], verts[1], verts[2], verts[3]);
     }
     
-    T signed_volume(const tetrahedron_key_type& t)
+    T signed_volume(const tet_key& t)
     {
         std::vector<V> verts;
         get_pos(t,verts);
         return Util::signed_volume<MT>(verts[0], verts[1], verts[2], verts[3]);
     }
     
-    T quality(const tetrahedron_key_type& t)
+    T quality(const tet_key& t)
     {
         std::vector<V> verts;
         get_pos(t, verts);
@@ -2231,10 +2231,10 @@ public:
     /**
      * Returns the largest face in the simplex set.
      */
-    face_key_type largest_face(simplex_set& set)
+    face_key largest_face(simplex_set& set)
     {
         T max_a = -INFINITY;
-        face_key_type max_f;
+        face_key max_f;
         for(auto f = set.faces_begin(); f != set.faces_end(); f++)
         {
             T a = area(*f);
@@ -2250,10 +2250,10 @@ public:
     /**
      * Returns the shortest edge in the simplex set.
      */
-    edge_key_type shortest_edge(simplex_set& set)
+    edge_key shortest_edge(simplex_set& set)
     {
         T min_l = INFINITY;
-        edge_key_type min_e;
+        edge_key min_e;
         for(auto e = set.edges_begin(); e != set.edges_end(); e++)
         {
             T l = length(*e);
@@ -2269,10 +2269,10 @@ public:
     /**
      * Returns the shortest edge in the simplex set.
      */
-    edge_key_type longest_edge(simplex_set& set)
+    edge_key longest_edge(simplex_set& set)
     {
         T max_l = -INFINITY;
-        edge_key_type max_e;
+        edge_key max_e;
         for(auto e = set.edges_begin(); e != set.edges_end(); e++)
         {
             T l = length(*e);
@@ -2286,7 +2286,7 @@ public:
     }
     
     /// Checks whether the interface patch around n is 2-manifold
-    //    bool is_2manifold(const node_key_type & n)
+    //    bool is_2manifold(const node_key & n)
     //    {
     //        typename SimplicialComplex<MT>::simplex_set_type st_n, interface_simplices;
     //        SimplicialComplex<MT>::star(n, st_n);
@@ -2320,11 +2320,11 @@ public:
     //            ++fit;
     //        }
     //
-    //        typename SimplicialComplex<MT>::face_key_type f = *(interface_simplices.faces_begin());
+    //        typename SimplicialComplex<MT>::face_key f = *(interface_simplices.faces_begin());
     //        do
     //        {
     //            interface_simplices.erase(f);
-    //            typename SimplicialComplex<MT>::edge_key_type e;
+    //            typename SimplicialComplex<MT>::edge_key e;
     //            typename SimplicialComplex<MT>::simplex_set_type::face_set_iterator fit = interface_simplices.faces_begin();
     //            while (fit != interface_simplices.faces_end())
     //            {
@@ -2378,7 +2378,7 @@ public:
     /**
      * Returns the minimum quality among tetrahedra in the star of n.
      */
-    T min_quality(const node_key_type& n)
+    T min_quality(const node_key& n)
     {
         simplex_set st_n;
         Complex::star(n, st_n);
@@ -2388,7 +2388,7 @@ public:
     /**
      * Returns minimum quality among the tetrahedra adjacent to face f.
      */
-    T min_quality(const face_key_type& f)
+    T min_quality(const face_key& f)
     {
         simplex_set st_f;
         Complex::star(f, st_f);
@@ -2403,7 +2403,7 @@ public:
         
         assert ( n > 2 || !"Too few vertices in the multi-face boundary!" );
         
-        std::vector<node_key_type> polygon(n);
+        std::vector<node_key> polygon(n);
         
         sort_vertices(mf_boundary, polygon);
         check_consistency(apices, polygon);
@@ -2418,7 +2418,7 @@ public:
     }
     
     /// Computes the difference in the volume enclosed by the interface after collapsing edge e.
-    T volume_difference(edge_key_type & e, node_key_type & n0, node_key_type & n1)
+    T volume_difference(edge_key & e, node_key & n0, node_key & n1)
     {
         T result = 0.0;
         simplex_set st0, st1, lk0, st_u, patch, cl_patch;
@@ -2466,7 +2466,7 @@ private:
      * Check if the sequence of vertices in polygon is consistent with positive orientation of tetrahedra in the mesh
      * with respect to the ordered pair of vertices in vv. If not, reverse the order of vertices in polygon.
      */
-    void check_consistency(std::vector<V> & vv, std::vector<node_key_type> & polygon)
+    void check_consistency(std::vector<V> & vv, std::vector<node_key> & polygon)
     {
         unsigned int n = static_cast<unsigned int>(polygon.size());
         std::vector<V> vp(n);
@@ -2486,7 +2486,7 @@ private:
         {
             for (unsigned int i = 0; i < n/2; ++i)
             {
-                node_key_type temp = polygon[i];
+                node_key temp = polygon[i];
                 polygon[i] = polygon[n-1-i];
                 polygon[n-1-i] = temp;
             }
@@ -2497,7 +2497,7 @@ private:
      * Check if the sequence of vertices in polygon is consistent with positive orientation of tetrahedra in the mesh
      * with respect to edge. If not, reverse the order of vertices in polygon.
      */
-    void check_consistency(edge_key_type const & e, std::vector<node_key_type> & polygon)
+    void check_consistency(edge_key const & e, std::vector<node_key> & polygon)
     {
         std::vector<V> verts;
         get_pos(e, verts);
@@ -2540,7 +2540,7 @@ private:
     /**
      * Returns whether any of the tetrahedra in the star of n is inverted.
      */
-    bool inverted(const node_key_type& n)
+    bool inverted(const node_key& n)
     {
         simplex_set st_n;
         Complex::star(n, st_n);
@@ -2550,7 +2550,7 @@ private:
     /**
      * Returns whether any of the tetrahedra in the simplex set will invert if node n is moved to p_new.
      */
-    bool will_invert(const node_key_type& n, const V p_new, simplex_set& set)
+    bool will_invert(const node_key& n, const V p_new, simplex_set& set)
     {
         V p = get_pos(n);
         std::vector<V> verts;
@@ -2570,7 +2570,7 @@ private:
     /**
      * Returns whether any of the tetrahedra in the star of n will invert if node n is moved to p_new.
      */
-    bool will_invert(const node_key_type& n, const V p_new)
+    bool will_invert(const node_key& n, const V p_new)
     {
         simplex_set st_n;
         star(n);
@@ -2644,12 +2644,12 @@ private:
     /**
      * Sort the vertices from set according to their connectivity and returned the sorted vertices in sorted_vertices.
      */
-    void sort_vertices(simplex_set& set, std::vector<node_key_type>& sorted_vertices)
+    void sort_vertices(simplex_set& set, std::vector<node_key>& sorted_vertices)
     {
-        sorted_vertices = std::vector<node_key_type>();
+        sorted_vertices = std::vector<node_key>();
         sorted_vertices.push_back(*(set.nodes_begin()));
         
-        std::map<edge_key_type, bool> edge_used;
+        std::map<edge_key, bool> edge_used;
         for(auto eit = set.edges_begin(); eit != set.edges_end(); eit++)
         {
             edge_used[*eit] = false;
@@ -2661,7 +2661,7 @@ private:
             {
                 if(!edge_used[*eit])
                 {
-                    std::vector<node_key_type> nodes;
+                    std::vector<node_key> nodes;
                     Complex::get_nodes(*eit, nodes);
                     
                     if (nodes[0] == sorted_vertices.back())
@@ -2688,7 +2688,7 @@ public:
     ///
     void extract_interface(std::vector<typename MT::vector3_type> & verts, std::vector<int> & indices)
     {
-        std::map<node_key_type, int> vert_index;
+        std::map<node_key, int> vert_index;
         
         // Extract vertices
         for (auto nit = Complex::nodes_begin(); nit != Complex::nodes_end(); nit++)
@@ -2705,7 +2705,7 @@ public:
         {
             if (fit->is_interface())
             {
-                std::vector<node_key_type> nodes(3);
+                std::vector<node_key> nodes(3);
                 Complex::get(fit.key(), nodes);
                 
                 indices.push_back(vert_index[nodes[0]]);
@@ -2717,7 +2717,7 @@ public:
     
     void extract_tet_mesh(std::vector<typename MT::vector3_type> & points, std::vector< std::vector<int> > & tets)
     {
-        std::map<node_key_type, int> indices;
+        std::map<node_key, int> indices;
         Complex::garbage_collect();
         
         int counter = 0;
@@ -2730,7 +2730,7 @@ public:
         
         for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
         {
-            std::vector<node_key_type> nodes(4);
+            std::vector<node_key> nodes(4);
             std::vector<int> tet;
             Complex::get(tit.key(), nodes);
             
@@ -2745,7 +2745,7 @@ public:
     /**
      * Returns the cosine to the dihedral angle between face f1 and face f2.
      */
-    T cos_dihedral_angle(const face_key_type& f1, const face_key_type& f2)
+    T cos_dihedral_angle(const face_key& f1, const face_key& f2)
     {
         V n0 = get_normal(f1);
         V n1 = get_normal(f2);
@@ -2758,7 +2758,7 @@ public:
     /**
      * Returns the dihedral angle between face f1 and face f2.
      */
-    T dihedral_angle(const face_key_type& f1, const face_key_type& f2)
+    T dihedral_angle(const face_key& f1, const face_key& f2)
     {
         return acos(cos_dihedral_angle(f1, f2));
     }
@@ -2766,7 +2766,7 @@ public:
     /**
      * Returns the minimum dihedral angle between the faces of tetrahedron t.
      */
-    T min_cos_dihedral_angle(const tetrahedron_key_type& t)
+    T min_cos_dihedral_angle(const tet_key& t)
     {
         T min_angle = -1.;
         simplex_set cl_t;
@@ -2784,7 +2784,7 @@ public:
         return min_angle;
     }
     
-    T min_dihedral_angle(const tetrahedron_key_type& t)
+    T min_dihedral_angle(const tet_key& t)
     {
         return acos(min_cos_dihedral_angle(t));
     }

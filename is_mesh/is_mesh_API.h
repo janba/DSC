@@ -20,18 +20,17 @@ class ISMesh
     typedef typename OpenTissue::is_mesh::t4mesh< default_node_traits<MT>, default_tetrahedron_traits<MT>, default_edge_traits<MT>, default_face_traits<MT> > Mesh;
     
 public:
-    typedef typename Mesh::node_key_type    node_key_type;
-    typedef typename Mesh::edge_key_type    edge_key_type;
-    typedef typename Mesh::face_key_type    face_key_type;
-    typedef typename Mesh::tetrahedron_key_type tetrahedron_key_type;
+    typedef typename Mesh::node_key_type            node_key;
+    typedef typename Mesh::edge_key_type            edge_key;
+    typedef typename Mesh::face_key_type            face_key;
+    typedef typename Mesh::tetrahedron_key_type     tet_key;
+    typedef typename Mesh::simplex_set_type         simplex_set;
     
-    typedef typename Mesh::simplex_set_type simplex_set;
     
-    
-    const node_key_type NULL_NODE;
-    const edge_key_type NULL_EDGE;
-    const face_key_type NULL_FACE;
-    const tetrahedron_key_type NULL_TETRAHEDRON;
+    const node_key NULL_NODE;
+    const edge_key NULL_EDGE;
+    const face_key NULL_FACE;
+    const tet_key NULL_TETRAHEDRON;
     
 private:
     Mesh mesh;
@@ -94,45 +93,45 @@ public:
     // GETTER FUNCTIONS //
     //////////////////////
     
-    typename Mesh::node_type & get(const node_key_type& k)
+    typename Mesh::node_type & get(const node_key& k)
     {
         return mesh.find_node(k);
     }
     
-    typename Mesh::edge_type & get(const edge_key_type& k)
+    typename Mesh::edge_type & get(const edge_key& k)
     {
         return mesh.find_edge(k);
     }
     
-    typename Mesh::face_type & get(const face_key_type& k)
+    typename Mesh::face_type & get(const face_key& k)
     {
         return mesh.find_face(k);
     }
     
-    typename Mesh::tetrahedron_type & get(const tetrahedron_key_type& k)
+    typename Mesh::tetrahedron_type & get(const tet_key& k)
     {
         return mesh.find_tetrahedron(k);
     }
     
-    void get_nodes(const edge_key_type& e, std::vector<node_key_type>& nodes)
+    void get_nodes(const edge_key& e, std::vector<node_key>& nodes)
     {
-        nodes = std::vector<node_key_type>(2);
+        nodes = std::vector<node_key>(2);
         mesh.vertices(e, nodes);
     }
     
-    void get_nodes(const face_key_type& f, std::vector<node_key_type>& nodes)
+    void get_nodes(const face_key& f, std::vector<node_key>& nodes)
     {
-        nodes = std::vector<node_key_type>(3);
+        nodes = std::vector<node_key>(3);
         mesh.vertices(f, nodes);
     }
     
-    void get_nodes(const tetrahedron_key_type& t, std::vector<node_key_type>& nodes)
+    void get_nodes(const tet_key& t, std::vector<node_key>& nodes)
     {
-        nodes = std::vector<node_key_type>(4);
+        nodes = std::vector<node_key>(4);
         mesh.vertices(t, nodes);
     }
     
-    edge_key_type get_edge(const node_key_type& n1, const node_key_type& n2)
+    edge_key get_edge(const node_key& n1, const node_key& n2)
     {
         simplex_set st1, st2;
         star(n1, st1);
@@ -146,7 +145,7 @@ public:
         return *(st1.edges_begin());
     }
     
-    edge_key_type get_edge(const face_key_type& f1, const face_key_type& f2)
+    edge_key get_edge(const face_key& f1, const face_key& f2)
     {
         simplex_set cl1, cl2;
         closure(f1, cl1);
@@ -160,9 +159,9 @@ public:
         return *(cl1.edges_begin());
     }
     
-    void get_apices(const face_key_type& f, std::vector<node_key_type>& apices)
+    void get_apices(const face_key& f, std::vector<node_key>& apices)
     {
-        apices = std::vector<node_key_type>(0);
+        apices = std::vector<node_key>(0);
         simplex_set lk_f;
         link(f, lk_f);
         for(auto nit = lk_f.nodes_begin(); nit != lk_f.nodes_end(); nit++)
@@ -181,22 +180,22 @@ public:
         return mesh.exists(k);
     }
     
-    void star(const node_key_type &n, simplex_set& set)
+    void star(const node_key &n, simplex_set& set)
     {
         mesh.star(n, set);
     }
     
-    void star(const edge_key_type &e, simplex_set& set)
+    void star(const edge_key &e, simplex_set& set)
     {
         mesh.star(e, set);
     }
     
-    void star(const face_key_type &f, simplex_set& set)
+    void star(const face_key &f, simplex_set& set)
     {
         mesh.star(f, set);
     }
     
-    void star(const tetrahedron_key_type &t, simplex_set& set)
+    void star(const tet_key &t, simplex_set& set)
     {
         mesh.star(t, set);
     }
@@ -206,22 +205,22 @@ public:
         mesh.star(set_, set);
     }
     
-    void closure(const node_key_type &n, simplex_set& set)
+    void closure(const node_key &n, simplex_set& set)
     {
         mesh.closure(n, set);
     }
     
-    void closure(const edge_key_type &e, simplex_set& set)
+    void closure(const edge_key &e, simplex_set& set)
     {
         mesh.closure(e, set);
     }
     
-    void closure(const face_key_type &f, simplex_set& set)
+    void closure(const face_key &f, simplex_set& set)
     {
         mesh.closure(f, set);
     }
     
-    void closure(const tetrahedron_key_type &t, simplex_set& set)
+    void closure(const tet_key &t, simplex_set& set)
     {
         mesh.closure(t, set);
     }
@@ -240,7 +239,7 @@ public:
     /**
      * Ensures consistent orientation of all faces to the two tetrahedra which are in the star of f.
      */
-    void orient_face(const face_key_type& f)
+    void orient_face(const face_key& f)
     {
         if (get(f).is_interface())
         {
@@ -260,9 +259,9 @@ public:
         }
     }
     
-    node_key_type split(const edge_key_type & e)
+    node_key split(const edge_key & e)
     {
-        std::map<tetrahedron_key_type, int> tt;
+        std::map<tet_key, int> tt;
         simplex_set st_e;
         star(e, st_e);
         
@@ -271,8 +270,8 @@ public:
             tt[*tit] = get(*tit).label;
         }
         
-        std::map<tetrahedron_key_type, tetrahedron_key_type> new_tets;
-        node_key_type n = mesh.split_edge_helper(e, new_tets);
+        std::map<tet_key, tet_key> new_tets;
+        node_key n = mesh.split_edge_helper(e, new_tets);
         
         for (auto it = new_tets.begin(); it != new_tets.end(); it++)
         {
@@ -281,9 +280,9 @@ public:
         return n;
     }
     
-    node_key_type split(const face_key_type& f)
+    node_key split(const face_key& f)
     {
-        std::map<tetrahedron_key_type, int> tt;
+        std::map<tet_key, int> tt;
         simplex_set st_f;
         star(f, st_f);
         
@@ -292,8 +291,8 @@ public:
             tt[*tit] = get(*tit).label;
         }
         
-        std::map<tetrahedron_key_type, tetrahedron_key_type> new_tets;
-        node_key_type n = mesh.split_face_helper(f, new_tets);
+        std::map<tet_key, tet_key> new_tets;
+        node_key n = mesh.split_face_helper(f, new_tets);
         
         for(auto it = new_tets.begin(); it != new_tets.end(); it++)
         {
@@ -302,11 +301,11 @@ public:
         return n;
     }
     
-    node_key_type split(tetrahedron_key_type & t)
+    node_key split(tet_key & t)
     {
         int label = get(t).label;
         
-        node_key_type n = mesh.split_tetrahedron(t);
+        node_key n = mesh.split_tetrahedron(t);
         
         simplex_set st_n;
         star(n, st_n);
@@ -317,7 +316,7 @@ public:
         return n;
     }
     
-    node_key_type collapse(edge_key_type & e, node_key_type const & n1, node_key_type const & n2)
+    node_key collapse(edge_key & e, node_key const & n1, node_key const & n2)
     {
         return mesh.edge_collapse_helper(e, n1, n2);
     }
@@ -326,17 +325,17 @@ public:
     // SHOULD BE REMOVED OR REPLACED //
     ///////////////////////////////////
     
-    void remove_edge(const edge_key_type& e, std::vector<node_key_type> & new_edges, simplex_set& new_simplices)
+    void remove_edge(const edge_key& e, std::vector<node_key> & new_edges, simplex_set& new_simplices)
     {
         mesh.remove_edge(e, new_edges, new_simplices);
     }
     
-    void find_min_multi_face(const face_key_type& f, simplex_set & multi_face, simplex_set & min_multi_face)
+    void find_min_multi_face(const face_key& f, simplex_set & multi_face, simplex_set & min_multi_face)
     {
         mesh.find_min_multi_face(f, multi_face, min_multi_face);
     }
     
-    void multi_face_retriangulation(simplex_set & removed_faces, std::vector<node_key_type> & new_edges_desc,
+    void multi_face_retriangulation(simplex_set & removed_faces, std::vector<node_key> & new_edges_desc,
                                     simplex_set & new_faces, simplex_set & new_simplices)
     {
         mesh.multi_face_retriangulation(removed_faces, new_edges_desc, new_faces, new_simplices);
@@ -374,7 +373,7 @@ private:
             mesh.star(fit.key(), st_f);
             if (st_f.size_tetrahedra() > 2)
             {
-                std::map<tetrahedron_key_type, simplex_set> t_bnds;
+                std::map<tet_key, simplex_set> t_bnds;
                 
                 std::cout << fit.key() << ": " << std::endl;
                 auto tit = st_f.tetrahedra_begin();
@@ -396,9 +395,9 @@ private:
                 
                 while (!t_bnds.empty())
                 {
-                    typename std::map<tetrahedron_key_type, simplex_set>::iterator it;
+                    typename std::map<tet_key, simplex_set>::iterator it;
                     it = t_bnds.begin();
-                    tetrahedron_key_type t = it->first;
+                    tet_key t = it->first;
                     simplex_set bnd0;
                     bnd0.add(it->second);
                     ++it;

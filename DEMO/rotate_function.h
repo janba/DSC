@@ -76,7 +76,7 @@ public:
     
     virtual void test()
     {
-        std::vector<typename DeformableSimplicialComplex<MT>::edge_key_type> edges;
+        std::vector<typename DeformableSimplicialComplex<MT>::edge_key> edges;
         for (auto eit = VelocityFunc<MT>::dsc->edges_begin(); eit != VelocityFunc<MT>::dsc->edges_end(); eit++)
         {
             if (eit->is_interface())
