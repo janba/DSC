@@ -127,48 +127,21 @@ public:
      */
     virtual void keyboard(unsigned char key, int x, int y);
     
+    void motion1();
     
-protected:
-    virtual void motion1()
-    {
-		
-    }
+    void motion2();
     
-    virtual void motion2()
-    {
-        
-    }
-    
-    virtual void motion3()
-    {
-        
-    }
-    
-    virtual void motion4()
-    {
-        
-    }
-    
-    virtual void motion5()
-    {
-        
-    }
-    
-    virtual void motion6()
-    {
-        
-    }
-    
+    void motion3();
     
     /**
      Updates the window title.
      */
-    virtual void update_title();
+    void update_title();
     
     /**
      Switches between different types of display if implemented.
      */
-    virtual void switch_display_type()
+    void switch_display_type()
     {
         
     }
