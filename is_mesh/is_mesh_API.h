@@ -50,7 +50,7 @@ public:
     ///////////////
     // ITERATIRS //
     ///////////////
-    
+public:
     typename Mesh::node_iterator nodes_begin()
     {
         return mesh.nodes_begin();
@@ -95,7 +95,7 @@ public:
     //////////////////////
     // GETTER FUNCTIONS //
     //////////////////////
-    
+protected:
     typename Mesh::node_type & get(const node_key& k)
     {
         return mesh.find_node(k);
@@ -116,6 +116,7 @@ public:
         return mesh.find_tetrahedron(k);
     }
     
+public:
     void get_nodes(const edge_key& e, std::vector<node_key>& nodes)
     {
         nodes = std::vector<node_key>(2);
@@ -173,10 +174,10 @@ public:
         }
     }
     
-    ///////////////////////
-    // ATTRIBUTE GETTERS //
-    ///////////////////////
-    
+    /////////////////////////
+    // ATTRIBUTE FUNCTIONS //
+    /////////////////////////
+public:
     /**
      * Returns the position of node n.
      */
@@ -222,6 +223,24 @@ public:
         {
             verts[k] = get_pos(nodes[k]);
         }
+    }
+    
+protected:
+    /**
+     * Sets the position of node n.
+     */
+    void set_pos(const node_key& n, V p)
+    {
+        get(n).set_pos(p);
+    }
+    
+public:
+    /**
+     * Sets the destination where the node n is moved to when deform() is called.
+     */
+    void set_destination(const node_key& n, V p)
+    {
+        get(n).set_destination(p);
     }
     
     bool is_interface(const node_key& n)

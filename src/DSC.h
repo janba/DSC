@@ -1352,7 +1352,7 @@ private:
         T t = intersection_with_link(n, new_pos);
         
         l = std::max(std::min(l*t - l*MIN_DEFORMATION, l), 0.);
-        set_pos(n, pos + l*normalize(new_pos - pos));
+        Complex::set_pos(n, pos + l*normalize(new_pos - pos));
         
         if (MT::length(new_pos - pos) < EPSILON)
         {
@@ -1400,12 +1400,12 @@ private:
         T q_old = min_quality(n);
         V old_pos = Complex::get_pos(n);
         V avg_pos = get_barycenter(n);
-        set_pos(n, old_pos + alpha * (avg_pos - old_pos));
+        Complex::set_pos(n, old_pos + alpha * (avg_pos - old_pos));
         
         T q_new = min_quality(n);
         if (q_new < q_old)
         {
-            set_pos(n, old_pos);
+            Complex::set_pos(n, old_pos);
             return false;
         }
         return true;
@@ -1529,7 +1529,7 @@ private:
         int i = 0;
         while (abs(alpha) > min_step)
         {
-            set_pos(n, pos + alpha * s);
+            Complex::set_pos(n, pos + alpha * s);
             min_q = min_quality(n);
             if (min_q < quality_prev)
             {
@@ -1560,7 +1560,7 @@ private:
             
             while (abs(alpha) > min_step)
             {
-                set_pos(n, pos + alpha * s);
+                Complex::set_pos(n, pos + alpha * s);
                 min_q = min_quality(n);
                 if (min_q < quality_prev)
                 {
@@ -1632,12 +1632,12 @@ public:
                 return;
             }
             V pos = Complex::get_pos(n);
-            set_pos(n, pos + alpha * s);
+            Complex::set_pos(n, pos + alpha * s);
             min_q = min_quality(n);
             
             if (min_q < min_q_old)
             {
-                set_pos(n, pos);
+                Complex::set_pos(n, pos);
                 break;
             }
             ++iter;
@@ -1818,7 +1818,7 @@ private:
         node_key n = collapse_edge(e_c , nodes[0], n_new, p);
         if(n != Complex::NULL_NODE)
         {
-            set_destination(n, p_new);
+            Complex::set_destination(n, p_new);
         }
     }
     
@@ -1836,8 +1836,8 @@ public:
         V p = Util::barycenter<MT>(verts[0], verts[1], verts[2], verts[3]);
         
         node_key n = Complex::split(t);
-        set_pos(n, p);
-        set_destination(n, p);
+        Complex::set_pos(n, p);
+        Complex::set_destination(n, p);
         
         simplex_set st_n;
         Complex::star(n, st_n);
@@ -1857,8 +1857,8 @@ public:
         V p = Util::barycenter<MT>(verts[0], verts[1], verts[2]);
         
         node_key n = Complex::split(f);
-        set_pos(n, p);
-        set_destination(n, p);
+        Complex::set_pos(n, p);
+        Complex::set_destination(n, p);
         
         simplex_set st_n;
         Complex::star(n, st_n);
@@ -1878,8 +1878,8 @@ public:
         V p = Util::barycenter<MT>(verts[0], verts[1]);
         
         node_key n = Complex::split(e);
-        set_pos(n, p);
-        set_destination(n, p);
+        Complex::set_pos(n, p);
+        Complex::set_destination(n, p);
         
         simplex_set st_n;
         Complex::star(n, st_n);
@@ -1902,8 +1902,8 @@ private:
         
         if (n_new != Complex::NULL_NODE)
         {
-            set_pos(n_new, p);
-            set_destination(n_new, p);
+            Complex::set_pos(n_new, p);
+            Complex::set_destination(n_new, p);
             
             simplex_set st, st_cl;
             Complex::star(n_new, st);
@@ -2048,7 +2048,7 @@ private:
             node_key n_new = collapse_edge(e, n1, n2, p);
             if (n_new != Complex::NULL_NODE)
             {
-                set_destination(n_new, p_new);
+                Complex::set_destination(n_new, p_new);
             }
             return n_new;
         }
@@ -2117,29 +2117,6 @@ public:
         }
         assert(i != 0);
         return avg_pos / static_cast<T>(i);
-    }
-    
-    
-    
-    //////////////////////
-    // SETTER FUNCTIONS //
-    //////////////////////
-private:
-    /**
-     * Sets the position of node n.
-     */
-    void set_pos(const node_key& n, V p)
-    {
-        Complex::get(n).set_pos(p);
-    }
-    
-public:
-    /**
-     * Sets the destination where the node n is moved to when deform() is called.
-     */
-    void set_destination(const node_key& n, V p)
-    {
-        Complex::get(n).set_destination(p);
     }
     
     ///////////////////////
