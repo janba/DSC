@@ -95,7 +95,7 @@ public:
     //////////////////////
     // GETTER FUNCTIONS //
     //////////////////////
-protected:
+private:
     typename Mesh::node_type & get(const node_key& k)
     {
         return mesh.find_node(k);

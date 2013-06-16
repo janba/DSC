@@ -876,46 +876,40 @@ private:
                     
                     if (!removable) continue;
                     
-                    node_key n0, n1;
-                    auto bnd_e = Complex::get(*eit).get_boundary();
-                    auto beit = bnd_e->begin();
-                    n0 = *beit; ++beit;
-                    n1 = *beit;
+                    std::vector<node_key> nodes;
+                    Complex::get_nodes(*eit, nodes);
                     
-                    T v0 = volume_difference(*eit, n0, n1);
-                    T v1 = volume_difference(*eit, n1, n0);
+                    T v0 = volume_difference(*eit, nodes[0], nodes[1]);
+                    T v1 = volume_difference(*eit, nodes[1], nodes[0]);
                     
                     if (v0 < v1)
                     {
                         if (v0 < volume_int_threshold)
-                            unsafe_collapse(n0, n1);
+                            unsafe_collapse(nodes[0], nodes[1]);
                     }
                     else
                     {
                         if (v1 < volume_int_threshold)
-                            unsafe_collapse(n1, n0);
+                            unsafe_collapse(nodes[1], nodes[0]);
                     }
                 }
                 else if (Complex::is_boundary(*eit) && l < bnd_threshold)
                 {
-                    node_key n0, n1;
-                    auto bnd_e = Complex::get(*eit).get_boundary();
-                    auto beit = bnd_e->begin();
-                    n0 = *beit; ++beit;
-                    n1 = *beit;
+                    std::vector<node_key> nodes;
+                    Complex::get_nodes(*eit, nodes);
                     
-                    T v0 = volume_difference(*eit, n0, n1);
-                    T v1 = volume_difference(*eit, n1, n0);
+                    T v0 = volume_difference(*eit, nodes[0], nodes[1]);
+                    T v1 = volume_difference(*eit, nodes[1], nodes[0]);
                     
                     if (v0 < v1)
                     {
                         if (v0 < volume_bnd_threshold)
-                            unsafe_collapse(n0, n1);
+                            unsafe_collapse(nodes[0], nodes[1]);
                     }
                     else
                     {
                         if (v1 < volume_bnd_threshold)
-                            unsafe_collapse(n1, n0);
+                            unsafe_collapse(nodes[1], nodes[0]);
                     }
                 }
             }
