@@ -224,6 +224,21 @@ public:
         }
     }
     
+    bool is_interface(const node_key& n)
+    {
+        return get(n).is_interface();
+    }
+    
+    bool is_interface(const edge_key& e)
+    {
+        return get(e).is_interface();
+    }
+    
+    bool is_interface(const face_key& f)
+    {
+        return get(f).is_interface();
+    }
+    
     ////////////////////
     // MESH FUNCTIONS //
     ////////////////////
