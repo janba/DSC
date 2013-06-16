@@ -350,7 +350,7 @@ private:
             {
                 for (int k=i+1; k<j; ++k)
                 {
-                    q = Util::quality<MT>(get_pos(polygon[i]), get_pos(polygon[k]), get_pos(polygon[j]), vv[0], vv[1]);
+                    q = Util::quality<MT>(Complex::get_pos(polygon[i]), Complex::get_pos(polygon[k]), Complex::get_pos(polygon[j]), vv[0], vv[1]);
                     if (k<j-1)
                     {
                         q = std::min(q, kt_array[k][j].quality);
@@ -408,7 +408,7 @@ private:
         int label = Complex::get(*(st_e.tetrahedra_begin())).label;
         
         std::vector<V> vv;
-        get_pos(e, vv);
+        Complex::get_pos(e, vv);
         std::vector<V> verts(2);
         verts[0] = vv[1];// VERTEX FLIP (due to strange choice in vertices())
         verts[1] = vv[0];
@@ -558,8 +558,8 @@ private:
             Complex::get_apices(f, apices);
             
             std::vector<V> verts(2);
-            verts[0] = get_pos(apices[0]);
-            verts[1] = get_pos(apices[1]);
+            verts[0] = Complex::get_pos(apices[0]);
+            verts[1] = Complex::get_pos(apices[1]);
             
             simplex_set st_mf;
             Complex::star(multi_face, st_mf);
@@ -631,8 +631,8 @@ private:
         T q_old = min_quality(st_mf);
         
         std::vector<V> verts(2);
-        verts[0] = get_pos(apices[0]);
-        verts[1] = get_pos(apices[1]);
+        verts[0] = Complex::get_pos(apices[0]);
+        verts[1] = Complex::get_pos(apices[1]);
         
         unsigned int n = static_cast<unsigned int>(multi_face.size_faces());
         std::map<face_key, double> face_quality_values;
@@ -1122,7 +1122,7 @@ private:
                 std::vector<node_key> nodes(3);
                 Complex::get_nodes(*it, nodes);
                 std::vector<V> verts(3);
-                get_pos(*it, verts);
+                Complex::get_pos(*it, verts);
                 
                 bool added = false;
                 for (int i = 0; i < 3; ++i)
@@ -1192,7 +1192,7 @@ private:
         Complex::closure(t, cl_t);
         face_key f = largest_face(cl_t);
         std::vector<V> verts;
-        get_pos(f, verts);
+        Complex::get_pos(f, verts);
         
         // Find the apex
         simplex_set cl_f;
@@ -1201,7 +1201,7 @@ private:
         node_key apex = *cl_t.nodes_begin();
         
         // Project the apex
-        V proj_apex = Util::project<MT>(get_pos(apex), verts);
+        V proj_apex = Util::project<MT>(Complex::get_pos(apex), verts);
         
         // Find barycentric coordinates
         std::vector<T> barycentric_coords(3);
@@ -1341,7 +1341,7 @@ private:
      */
     bool move_vertex(const node_key & n, const typename MT::vector3_type & new_pos)
     {
-        V pos = get_pos(n);
+        V pos = Complex::get_pos(n);
         T l = MT::length(new_pos - pos);
         
         if (l < EPSILON) // The vertex is not moved
@@ -1368,14 +1368,14 @@ private:
      */
     T intersection_with_link(const node_key & n, const V& new_pos)
     {
-        V pos = get_pos(n);
+        V pos = Complex::get_pos(n);
         simplex_set ln;
         Complex::link(n,ln);
         T min_t = INFINITY;
         std::vector<V> face_pos;
         for(auto fit = ln.faces_begin(); fit != ln.faces_end(); fit++)
         {
-            get_pos(*fit, face_pos);
+            Complex::get_pos(*fit, face_pos);
             T t = Util::intersection<MT>(pos, new_pos, face_pos);
             if (0. <= t)
             {
@@ -1398,7 +1398,7 @@ private:
     bool smart_laplacian(const node_key& n, T alpha = 1.)
     {
         T q_old = min_quality(n);
-        V old_pos = get_pos(n);
+        V old_pos = Complex::get_pos(n);
         V avg_pos = get_barycenter(n);
         set_pos(n, old_pos + alpha * (avg_pos - old_pos));
         
@@ -1438,7 +1438,7 @@ private:
             assert(alpha != -1 || !"n is not a vertex of t");
             
             std::vector<V> verts;
-            get_pos(*tit, verts);
+            Complex::get_pos(*tit, verts);
             quality_info.quality = quality(*tit);
             quality_info.grad_quality = Util::grad_rms_length<MT>(verts, alpha);
             
@@ -1525,7 +1525,7 @@ private:
         T alpha = init_alpha;
         
         T quality_prev = min_q_old;
-        V pos = get_pos(n);
+        V pos = Complex::get_pos(n);
         int i = 0;
         while (abs(alpha) > min_step)
         {
@@ -1631,7 +1631,7 @@ public:
             {
                 return;
             }
-            V pos = get_pos(n);
+            V pos = Complex::get_pos(n);
             set_pos(n, pos + alpha * s);
             min_q = min_quality(n);
             
@@ -1687,14 +1687,14 @@ private:
         if (max_area > 0.48*total_area)
         {
             std::vector<V> verts;
-            get_pos(f, verts);
+            Complex::get_pos(f, verts);
             
             simplex_set lk_f;
             Complex::link(f, lk_f);
             for(auto nit = lk_f.nodes_begin(); nit != lk_f.nodes_end(); nit++)
             {
                 if (cl_t.contains(*nit) && Complex::get(*nit).is_interface() &&
-                    Util::distance<MT>(get_pos(*nit), verts[0], verts[1], verts[2]) < MIN_EDGE_LENGTH)
+                    Util::distance<MT>(Complex::get_pos(*nit), verts[0], verts[1], verts[2]) < MIN_EDGE_LENGTH)
                 {
                     return true;
                 }
@@ -1747,7 +1747,7 @@ private:
     bool is_flippable(const edge_key & e)
     {
         std::vector<V> verts;
-        get_pos(e, verts);
+        Complex::get_pos(e, verts);
         
         simplex_set ln_e;
         Complex::link(e, ln_e);
@@ -1755,7 +1755,7 @@ private:
         {
             if (Complex::get(*nit).is_interface())
             {
-                verts.push_back(get_pos(*nit));
+                verts.push_back(Complex::get_pos(*nit));
             }
         }
         
@@ -1812,7 +1812,7 @@ private:
         
         edge_key e_c = Complex::get_edge(nodes[0], n_new);
         assert(e_c != Complex::NULL_EDGE);
-        V p = get_pos(nodes[0]);
+        V p = Complex::get_pos(nodes[0]);
         V p_new = Complex::get(nodes[0]).get_destination();
         
         node_key n = collapse_edge(e_c , nodes[0], n_new, p);
@@ -1832,7 +1832,7 @@ public:
     node_key split_tetrahedron(tet_key& t)
     {
         std::vector<V> verts;
-        get_pos(t, verts);
+        Complex::get_pos(t, verts);
         V p = Util::barycenter<MT>(verts[0], verts[1], verts[2], verts[3]);
         
         node_key n = Complex::split(t);
@@ -1853,7 +1853,7 @@ public:
     node_key split_face(const face_key & f)
     {   
         std::vector<V> verts;
-        get_pos(f, verts);
+        Complex::get_pos(f, verts);
         V p = Util::barycenter<MT>(verts[0], verts[1], verts[2]);
         
         node_key n = Complex::split(f);
@@ -1874,7 +1874,7 @@ public:
     node_key split_edge(const edge_key & e)
     {
         std::vector<V> verts;
-        get_pos(e, verts);
+        Complex::get_pos(e, verts);
         V p = Util::barycenter<MT>(verts[0], verts[1]);
         
         node_key n = Complex::split(e);
@@ -1996,16 +1996,16 @@ private:
             V p;
             if (editable1 && editable2)
             {
-                p = Util::barycenter<MT>(get_pos(n1), get_pos(n2));
+                p = Util::barycenter<MT>(Complex::get_pos(n1), Complex::get_pos(n2));
                 
             }
             else if (editable1)
             {
-                p = get_pos(n2);
+                p = Complex::get_pos(n2);
             }
             else if (editable2)
             {
-                p = get_pos(n1);
+                p = Complex::get_pos(n1);
             }
             
             if (precond_collapse(e, p) && quality_improvement(e, p) > 0.)
@@ -2040,7 +2040,7 @@ private:
     {
         edge_key e = Complex::get_edge(n1, n2);
         
-        V p = Util::barycenter<MT>(get_pos(n1), get_pos(n2));
+        V p = Util::barycenter<MT>(Complex::get_pos(n1), Complex::get_pos(n2));
         V p_new = Util::barycenter<MT>(Complex::get(n1).get_destination(), Complex::get(n2).get_destination());
         
         if (precond_collapse(e, p))
@@ -2067,7 +2067,7 @@ public:
     V get_normal(const face_key & f)
     {
         std::vector<V> verts;
-        get_pos(f, verts);
+        Complex::get_pos(f, verts);
         return Util::normal_direction<MT>(verts[0], verts[1], verts[2]);
     }
     
@@ -2111,7 +2111,7 @@ public:
         {
             if (!interface || Complex::get(*nit).is_interface())
             {
-                avg_pos += get_pos(*nit);
+                avg_pos += Complex::get_pos(*nit);
                 i++;
             }
         }
@@ -2119,52 +2119,7 @@ public:
         return avg_pos / static_cast<T>(i);
     }
     
-    /**
-     * Returns the position of node n.
-     */
-    V get_pos(const node_key& n)
-    {
-        V p = Complex::get(n).get_pos();
-        assert(!MT::is_nan(p[0]) && !MT::is_nan(p[1]) && !MT::is_nan(p[2]));
-        return p;
-    }
     
-    /// Returns the positions of the nodes of edge e in verts.
-    void get_pos(const edge_key & e, std::vector<V>& verts)
-    {
-        verts = std::vector<V>(2);
-        std::vector<node_key> nodes(2);
-        Complex::get_nodes(e, nodes);
-        for (int k = 0; k < 2; ++k)
-        {
-            verts[k] = get_pos(nodes[k]);
-        }
-    }
-    
-    /// Returns the positions of the nodes of face f in verts.
-    void get_pos(const face_key & f, std::vector<V>& verts)
-    {
-        verts = std::vector<V>(3);
-        Complex::orient_face(f);
-        std::vector<node_key> nodes(3);
-        Complex::get_nodes(f, nodes);
-        for (int k = 0; k < 3; ++k)
-        {
-            verts[k] = get_pos(nodes[k]);
-        }
-    }
-    
-    /// Returns the positions of the nodes of tetrahedron t in verts.
-    void get_pos(const tet_key& t, std::vector<V>& verts)
-    {
-        verts = std::vector<V>(4);
-        std::vector<node_key> nodes(4);
-        Complex::get_nodes(t, nodes);
-        for (int k = 0; k < 4; ++k)
-        {
-            verts[k] = get_pos(nodes[k]);
-        }
-    }
     
     //////////////////////
     // SETTER FUNCTIONS //
@@ -2196,35 +2151,35 @@ public:
     T length(const edge_key& e)
     {
         std::vector<V> verts;
-        get_pos(e,verts);
+        Complex::get_pos(e,verts);
         return MT::length(verts[0] - verts[1]);
     }
     
     T area(const face_key& f)
     {
         std::vector<V> verts;
-        get_pos(f,verts);
+        Complex::get_pos(f,verts);
         return Util::area<MT>(verts);
     }
     
     T volume(const tet_key& t)
     {
         std::vector<V> verts;
-        get_pos(t,verts);
+        Complex::get_pos(t,verts);
         return Util::volume<MT>(verts[0], verts[1], verts[2], verts[3]);
     }
     
     T signed_volume(const tet_key& t)
     {
         std::vector<V> verts;
-        get_pos(t,verts);
+        Complex::get_pos(t,verts);
         return Util::signed_volume<MT>(verts[0], verts[1], verts[2], verts[3]);
     }
     
     T quality(const tet_key& t)
     {
         std::vector<V> verts;
-        get_pos(t, verts);
+        Complex::get_pos(t, verts);
         return Util::quality<MT>(verts[0], verts[1], verts[2], verts[3]);
     }
     
@@ -2369,7 +2324,7 @@ public:
         std::vector<V> verts;
         for(auto fit = set.faces_begin(); fit != set.faces_end(); fit++)
         {
-            get_pos(*fit, verts);
+            Complex::get_pos(*fit, verts);
             min_q = std::min(min_q, std::abs(Util::quality<MT>(verts[0], verts[1], verts[2], pos)));
         }
         return min_q;
@@ -2410,7 +2365,7 @@ public:
         
         for (unsigned int i = 0; i < n; ++i)
         {
-            T q = Util::quality<MT>(apices[1], apices[0], get_pos(polygon[i]), get_pos(polygon[(i+1)%n]));
+            T q = Util::quality<MT>(apices[1], apices[0], Complex::get_pos(polygon[i]), Complex::get_pos(polygon[(i+1)%n]));
             if (q < q_min) q_min = q;
         }
         
@@ -2453,8 +2408,8 @@ public:
         std::vector<V> pos;
         for (auto eit = cl_patch.edges_begin(); eit != cl_patch.edges_end(); eit++)
         {
-            get_pos(*eit, pos);
-            result += Util::volume<MT>(get_pos(n0), get_pos(n1), pos[0], pos[1]);
+            Complex::get_pos(*eit, pos);
+            result += Util::volume<MT>(Complex::get_pos(n0), Complex::get_pos(n1), pos[0], pos[1]);
         }
         
         return result;
@@ -2473,7 +2428,7 @@ private:
         
         for (unsigned int i = 0; i < n; ++i)
         {
-            vp[i] = get_pos(polygon[i]);
+            vp[i] = Complex::get_pos(polygon[i]);
         }
         
         T sum = 0;
@@ -2500,7 +2455,7 @@ private:
     void check_consistency(edge_key const & e, std::vector<node_key> & polygon)
     {
         std::vector<V> verts;
-        get_pos(e, verts);
+        Complex::get_pos(e, verts);
         std::vector<V> vv(2);
         vv[1] = verts[0]; // VERTEX FLIP
         vv[0] = verts[1];
@@ -2552,11 +2507,11 @@ private:
      */
     bool will_invert(const node_key& n, const V p_new, simplex_set& set)
     {
-        V p = get_pos(n);
+        V p = Complex::get_pos(n);
         std::vector<V> verts;
         for(auto fit = set.faces_begin(); fit != set.faces_end(); fit++)
         {
-            get_pos(*fit, verts);
+            Complex::get_pos(*fit, verts);
             T vol1 = Util::signed_volume<MT>(verts[0], verts[1], verts[2], p);
             T vol2 = Util::signed_volume<MT>(verts[0], verts[1], verts[2], p_new);
             if(Util::sgn<MT>(vol1) !=  Util::sgn<MT>(vol2))

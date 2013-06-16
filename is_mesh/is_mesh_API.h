@@ -19,6 +19,9 @@ class ISMesh
 {
     typedef typename OpenTissue::is_mesh::t4mesh< default_node_traits<MT>, default_tetrahedron_traits<MT>, default_edge_traits<MT>, default_face_traits<MT> > Mesh;
     
+    typedef typename MT::real_type      T;
+    typedef typename MT::vector3_type   V;
+    
 public:
     typedef typename Mesh::node_key_type            node_key;
     typedef typename Mesh::edge_key_type            edge_key;
@@ -167,6 +170,57 @@ public:
         for(auto nit = lk_f.nodes_begin(); nit != lk_f.nodes_end(); nit++)
         {
             apices.push_back(*nit);
+        }
+    }
+    
+    ///////////////////////
+    // ATTRIBUTE GETTERS //
+    ///////////////////////
+    
+    /**
+     * Returns the position of node n.
+     */
+    V get_pos(const node_key& n)
+    {
+        V p = get(n).get_pos();
+        assert(!MT::is_nan(p[0]) && !MT::is_nan(p[1]) && !MT::is_nan(p[2]));
+        return p;
+    }
+    
+    /// Returns the positions of the nodes of edge e in verts.
+    void get_pos(const edge_key & e, std::vector<V>& verts)
+    {
+        verts = std::vector<V>(2);
+        std::vector<node_key> nodes(2);
+        get_nodes(e, nodes);
+        for (int k = 0; k < 2; ++k)
+        {
+            verts[k] = get_pos(nodes[k]);
+        }
+    }
+    
+    /// Returns the positions of the nodes of face f in verts.
+    void get_pos(const face_key & f, std::vector<V>& verts)
+    {
+        verts = std::vector<V>(3);
+        orient_face(f);
+        std::vector<node_key> nodes(3);
+        get_nodes(f, nodes);
+        for (int k = 0; k < 3; ++k)
+        {
+            verts[k] = get_pos(nodes[k]);
+        }
+    }
+    
+    /// Returns the positions of the nodes of tetrahedron t in verts.
+    void get_pos(const tet_key& t, std::vector<V>& verts)
+    {
+        verts = std::vector<V>(4);
+        std::vector<node_key> nodes(4);
+        get_nodes(t, nodes);
+        for (int k = 0; k < 4; ++k)
+        {
+            verts[k] = get_pos(nodes[k]);
         }
     }
     

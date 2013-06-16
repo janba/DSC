@@ -112,6 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				7AF7E9C0176B524700F43714 /* is_mesh_API.h */,
+				7AE27ADA17675B04000F8238 /* attributes.h */,
 			);
 			name = ISMesh;
 			sourceTree = "<group>";
@@ -143,7 +144,6 @@
 		7AE27AB917675A1E000F8238 /* DSC */ = {
 			isa = PBXGroup;
 			children = (
-				7AE27ADA17675B04000F8238 /* attributes.h */,
 				7AE27ADE17675B04000F8238 /* GEL_types.h */,
 				7AE27AE217675B04000F8238 /* OTB_types.h */,
 				7AE27ADF17675B04000F8238 /* log.cpp */,
