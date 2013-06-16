@@ -207,7 +207,6 @@ private:
     {
         Complex::get(f).set_interface(false);
         Complex::get(f).set_boundary(false);
-        Complex::get(f).set_locked(false);
         
         simplex_set st_f;
         Complex::star(f, st_f);
@@ -215,7 +214,6 @@ private:
         {
             // On the boundary
             Complex::get(f).set_boundary(true);
-            Complex::get(f).set_locked(true);
             if (Complex::get(*(st_f.tetrahedra_begin())).label != 0)
             {
                 Complex::get(f).set_interface(true);
@@ -230,7 +228,6 @@ private:
             {
                 // On the interface
                 Complex::get(f).set_interface(true);
-                Complex::get(f).set_locked(true);
             }
         }
     } // update_flag(face_key)
@@ -239,7 +236,6 @@ private:
     {
         Complex::get(e).set_boundary(false);
         Complex::get(e).set_interface(false);
-        Complex::get(e).set_locked(false);
         
         simplex_set ste;
         Complex::star(e, ste);
@@ -251,12 +247,10 @@ private:
                 if (Complex::get(*efit).is_boundary())
                 {
                     Complex::get(e).set_boundary(true);
-                    Complex::get(e).set_locked(true);
                 }
                 else if (Complex::get(*efit).is_interface())
                 {
                     Complex::get(e).set_interface(true);
-                    Complex::get(e).set_locked(true);
                 }
             }
         }
@@ -266,7 +260,6 @@ private:
     {
         Complex::get(n).set_interface(false);
         Complex::get(n).set_boundary(false);
-        Complex::get(n).set_locked(false);
         
         simplex_set st_n;
         Complex::star(n, st_n);
@@ -277,12 +270,10 @@ private:
                 if (Complex::get(*neit).is_interface())
                 {
                     Complex::get(n).set_interface(true);
-                    Complex::get(n).set_locked(true);
                 }
                 if (Complex::get(*neit).is_boundary())
                 {
                     Complex::get(n).set_boundary(true);
-                    Complex::get(n).set_locked(true);
                 }
             }
         }
