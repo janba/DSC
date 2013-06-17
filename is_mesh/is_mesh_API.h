@@ -95,7 +95,7 @@ public:
     //////////////////////
     // GETTER FUNCTIONS //
     //////////////////////
-private:
+
     typename Mesh::node_type & get(const node_key& k)
     {
         return mesh.find_node(k);
@@ -116,7 +116,7 @@ private:
         return mesh.find_tetrahedron(k);
     }
     
-public:
+
     void get_nodes(const edge_key& e, std::vector<node_key>& nodes)
     {
         nodes = std::vector<node_key>(2);
@@ -174,269 +174,16 @@ public:
         }
     }
     
-    /////////////////////////
-    // ATTRIBUTE FUNCTIONS //
-    /////////////////////////
+    ////////////////////
+    // MESH FUNCTIONS //
+    ////////////////////
 public:
-    /**
-     * Returns the position of node n.
-     */
-    V get_pos(const node_key& n)
-    {
-        V p = get(n).get_pos();
-        assert(!MT::is_nan(p[0]) && !MT::is_nan(p[1]) && !MT::is_nan(p[2]));
-        return p;
-    }
     
-    /// Returns the positions of the nodes of edge e in verts.
-    void get_pos(const edge_key & e, std::vector<V>& verts)
-    {
-        verts = std::vector<V>(2);
-        std::vector<node_key> nodes(2);
-        get_nodes(e, nodes);
-        for (int k = 0; k < 2; ++k)
-        {
-            verts[k] = get_pos(nodes[k]);
-        }
-    }
-    
-    /// Returns the positions of the nodes of face f in verts.
-    void get_pos(const face_key & f, std::vector<V>& verts)
-    {
-        verts = std::vector<V>(3);
-        orient_face(f);
-        std::vector<node_key> nodes(3);
-        get_nodes(f, nodes);
-        for (int k = 0; k < 3; ++k)
-        {
-            verts[k] = get_pos(nodes[k]);
-        }
-    }
-    
-    /// Returns the positions of the nodes of tetrahedron t in verts.
-    void get_pos(const tet_key& t, std::vector<V>& verts)
-    {
-        verts = std::vector<V>(4);
-        std::vector<node_key> nodes(4);
-        get_nodes(t, nodes);
-        for (int k = 0; k < 4; ++k)
-        {
-            verts[k] = get_pos(nodes[k]);
-        }
-    }
-    
-protected:
-    /**
-     * Sets the position of node n.
-     */
-    void set_pos(const node_key& n, V p)
-    {
-        get(n).set_pos(p);
-    }
-    
-public:
-    V get_destination(const node_key& n)
-    {
-        return get(n).get_destination();
-    }
-    
-    /**
-     * Sets the destination where the node n is moved to when deform() is called.
-     */
-    void set_destination(const node_key& n, V p)
-    {
-        get(n).set_destination(p);
-    }
-    
-    /////////////////////
-    // LABEL FUNCTIONS //
-    /////////////////////
-public:
     template<typename Key>
     bool exists(const Key& k)
     {
         return mesh.exists(k);
     }
-    
-    bool is_interface(const node_key& n)
-    {
-        return get(n).is_interface();
-    }
-    
-    bool is_interface(const edge_key& e)
-    {
-        return get(e).is_interface();
-    }
-    
-    bool is_interface(const face_key& f)
-    {
-        return get(f).is_interface();
-    }
-    
-    bool is_boundary(const node_key& n)
-    {
-        return get(n).is_boundary();
-    }
-    
-    bool is_boundary(const edge_key& e)
-    {
-        return get(e).is_boundary();
-    }
-    
-    bool is_boundary(const face_key& f)
-    {
-        return get(f).is_boundary();
-    }
-    
-    int get_label(const tet_key& t)
-    {
-        return get(t).label;
-    }
-    
-    void set_label(const tet_key& t, int label)
-    {
-        get(t).label = label;
-    }
-    
-    //////////////////////
-    // UPDATE FUNCTIONS //
-    //////////////////////
-    
-    void update()
-    {
-        // Update all faces
-        for (auto fit = faces_begin(); fit != faces_end(); fit++)
-        {
-            update_flag(fit.key());
-        }
-        
-        // Update all edges
-        for (auto eit = edges_begin(); eit != edges_end(); eit++)
-        {
-            update_flag(eit.key());
-        }
-        
-        // Update all nodes
-        for (auto nit = nodes_begin(); nit != nodes_end(); nit++)
-        {
-            update_flag(nit.key());
-        }
-    }
-    
-    /**
-     * Updates the flags (is interface, is boundary, is locked) of simplices in set.
-     */
-    void update(simplex_set & set)
-    {
-        // Update faces
-        for (auto fit = set.faces_begin(); fit != set.faces_end(); fit++)
-        {
-            if (exists(*fit))
-            {
-                update_flag(*fit);
-            }
-        }
-        
-        // Update edges
-        for (auto eit = set.edges_begin(); eit != set.edges_end(); eit++)
-        {
-            if (exists(*eit))
-            {
-                update_flag(*eit);
-            }
-        }
-        
-        // Update nodes
-        for (auto nit = set.nodes_begin(); nit != set.nodes_end(); nit++)
-        {
-            if (exists(*nit))
-            {
-                update_flag(*nit);
-            }
-        }
-    }
-    
-private:
-    void update_flag(const face_key & f)
-    {
-        get(f).set_interface(false);
-        get(f).set_boundary(false);
-        
-        simplex_set st_f;
-        star(f, st_f);
-        if (st_f.size_tetrahedra() == 1)
-        {
-            // On the boundary
-            get(f).set_boundary(true);
-            if (get(*(st_f.tetrahedra_begin())).label != 0)
-            {
-                get(f).set_interface(true);
-            }
-        }
-        else if(st_f.size_tetrahedra() == 2)
-        {
-            auto tit = st_f.tetrahedra_begin();
-            int label0 = get_label(*tit);   ++tit;
-            int label1 = get_label(*tit);
-            if (label0 != label1)
-            {
-                // On the interface
-                get(f).set_interface(true);
-            }
-        }
-    }
-    
-    void update_flag(const edge_key & e)
-    {
-        get(e).set_boundary(false);
-        get(e).set_interface(false);
-        
-        simplex_set ste;
-        star(e, ste);
-        
-        for (auto efit = ste.faces_begin(); efit != ste.faces_end(); efit++)
-        {
-            if (exists(*efit))
-            {
-                if (is_boundary(*efit))
-                {
-                    get(e).set_boundary(true);
-                }
-                else if (is_interface(*efit))
-                {
-                    get(e).set_interface(true);
-                }
-            }
-        }
-    }
-    
-    void update_flag(const node_key & n)
-    {
-        get(n).set_interface(false);
-        get(n).set_boundary(false);
-        
-        simplex_set st_n;
-        star(n, st_n);
-        for (auto neit = st_n.edges_begin(); neit != st_n.edges_end(); neit++)
-        {
-            if (exists(*neit))
-            {
-                if (is_interface(*neit))
-                {
-                    get(n).set_interface(true);
-                }
-                if (is_boundary(*neit))
-                {
-                    get(n).set_boundary(true);
-                }
-            }
-        }
-    }
-    
-    ////////////////////
-    // MESH FUNCTIONS //
-    ////////////////////
-public:
     
     void star(const node_key &n, simplex_set& set)
     {
