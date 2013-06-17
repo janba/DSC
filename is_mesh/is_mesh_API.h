@@ -48,7 +48,7 @@ public:
     }
     
     ///////////////
-    // ITERATIRS //
+    // ITERATORS //
     ///////////////
 public:
     typename Mesh::node_iterator nodes_begin()
