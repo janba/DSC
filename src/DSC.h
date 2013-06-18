@@ -1877,7 +1877,7 @@ private:
         Complex::link(e, ln_e);
         for (auto nit = ln_e.nodes_begin(); nit != ln_e.nodes_end(); nit++)
         {
-            if (is_interface(*nit))
+            if (is_interface(*nit) || is_boundary(*nit))
             {
                 verts.push_back(get_pos(*nit));
             }
@@ -1924,25 +1924,25 @@ private:
         }
         
         assert(nodes.size() == 2);
-        if(Complex::get_edge(nodes[0], nodes[1]) == Complex::NULL_EDGE) // Check that there does not already exist an edge between the pair of nodes.
+        if(Complex::get_edge(nodes[0], nodes[1]) != Complex::NULL_EDGE) // Check that there does not already exist an edge between the pair of nodes.
         {
             return;
         }
         
         node_key n_new = split_edge(e);
-        if (n_new == Complex::NULL_NODE) {
-            return;
-        }
         
         edge_key e_c = Complex::get_edge(nodes[0], n_new);
         assert(e_c != Complex::NULL_EDGE);
         V p = get_pos(nodes[0]);
         V p_new = get_destination(nodes[0]);
         
-        node_key n = collapse_edge(e_c, p);
-        if(n != Complex::NULL_NODE)
+        if(precond_collapse(e_c, p))
         {
-            set_destination(n, p_new);
+            node_key n = collapse_edge(e_c, p);
+            if(n != Complex::NULL_NODE)
+            {
+                set_destination(n, p_new);
+            }
         }
     }
     
