@@ -1139,81 +1139,93 @@ private:
     }
     
     /**
-     * Attempt to remove the face f by first determining whether it's a cap and, if that's the case
-     * splitting the longest edge at the projection of the opposite vertex and collapsing it with cap's apex.
+     * Attempt to remove the cap f by splitting the longest edge and collapsing it with cap's apex.
      */
-    void remove_degenerate_face(face_key const & f, std::vector<node_key> & nodes, std::vector<V> & verts, int i)
+    bool remove_cap(face_key const & f)
     {
-        T ratio = 1.03; // if the ratio between the lengths of two longest edges of f is less than this, it's treated as a needle.
+        // Find longest edge
+        simplex_set cl_f;
+        Complex::closure(f, cl_f);
+        edge_key e = longest_edge(cl_f);
         
-        V d1 = verts[(i+1)%3] - verts[i];
-        V d2 = verts[(i+2)%3] - verts[i];
-        node_key n1 = nodes[(i+1)%3];
-        node_key n2 = nodes[(i+2)%3];
-        double l1 = d1.length(),
-        l2 = d2.length();
+        // Find apex
+        simplex_set cl_e;
+        Complex::closure(e, cl_e);
+        cl_f.difference(cl_e);
+        node_key apex = *cl_f.nodes_begin();
         
-        //    int cap_tip;
-        V cap_projection;
+        // Find the projected position of the apex
+        std::vector<V> verts;
+        get_pos(e, verts);
+        V p = Util::project<MT>(get_pos(apex), verts[0], verts[1]);
         
-        if (l1 > l2)
+        // Split longest edge
+        node_key n = split_edge(e);
+        set_pos(n, p);
+        
+        // Collapse new edge if short
+        edge_key e_rem = Complex::get_edge(apex, n);
+        if(length(e_rem) < DEG_EDGE_LENGTH)
         {
-            //        cap_tip = (i+2)%3;
-            d1.normalize();
-            cap_projection = verts[i] + d1 * MT::dot(d1, d2);
+            return remove_degenerate_edge(e);
         }
-        else
-        {
-            //        cap_tip = (i+1)%3;
-            d2.normalize();
-            cap_projection = verts[i] + d2 * MT::dot(d1, d2);
-        }
-        
-        if ((l1 < ratio * l2) && (l2 < ratio * l1))
-        {
-            edge_key e = Complex::get_edge(n2,n1);
-            if (!(is_interface(n2)))
-            {
-                unsafe_collapse(e);
-            }
-            else
-            {
-                unsafe_collapse(e);
-            }
-        }
+        return true;
     }
     
     /**
-     * Attempt to remove faces with at least one angle whose cosine is greater than MAX_COS_FACE_ANGLE.
+     * Attempt to remove the cap f by splitting the longest edge and collapsing it with cap's apex.
+     */
+    bool remove_needle(const face_key& f)
+    {
+        // Find shortest edge
+        simplex_set cl_f;
+        Complex::closure(f, cl_f);
+        edge_key e = shortest_edge(cl_f);
+        
+        // Remove edge
+        return remove_degenerate_edge(e);
+    }
+    
+    /**
+     * Attempt to remove the face f by first determining whether it's a cap or a needle.
+     */
+    bool remove_degenerate_face(const face_key& f)
+    {
+        if(max_angle(f) > M_PI - MIN_ANGLE)
+        {
+            return remove_cap(f);
+        }
+        return remove_needle(f);
+    }
+    
+    /**
+     * Attempts to remove degenerate faces (faces with a minimum angle smaller than DEG_ANGLE).
      */
     void remove_degenerate_faces()
     {
-        std::list<face_key> face_list;
+        std::list<face_key> degenerate_faces;
         
         for (auto fit = Complex::faces_begin(); fit != Complex::faces_end(); fit++)
-            face_list.push_back(fit.key());
-        
-        for (auto it = face_list.begin(); it != face_list.end(); it++)
         {
-            if (Complex::exists(*it))
+            if(min_angle(fit.key()) < DEG_ANGLE)
             {
-                std::vector<node_key> nodes(3);
-                Complex::get_nodes(*it, nodes);
-                std::vector<V> verts(3);
-                get_pos(*it, verts);
-                
-                bool added = false;
-                for (int i = 0; i < 3; ++i)
-                {
-                    V d1 = verts[(i+1)%3] - verts[i];
-                    V d2 = verts[(i+2)%3] - verts[i];
-                    d1.normalize();
-                    d2.normalize();
-                    if (MT::dot(d1, d2) > MAX_COS_FACE_ANGLE && (!added))
-                        remove_degenerate_face(*it, nodes, verts, i);
-                }
+               degenerate_faces.push_back(fit.key());
             }
         }
+        
+        int i = 0, j = 0;
+        for (auto &f : degenerate_faces)
+        {
+            if (Complex::exists(f) && min_angle(f) < DEG_ANGLE)
+            {
+                if(remove_degenerate_face(f))
+                {
+                    i++;
+                }
+                j++;
+            }
+        }
+        std::cout << "Removed " << i <<"/"<< j << " degenerate faces" << std::endl;
     }
     
     /**
