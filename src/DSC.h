@@ -99,6 +99,9 @@ public:
         
         MIN_EDGE_LENGTH = 0.5 * AVG_EDGE_LENGTH;
         
+        DEG_ANGLE = 5.*M_PI/180.;
+        MIN_ANGLE = 10.*M_PI/180.;
+        
         MIN_DEFORMATION = 0.25 * AVG_EDGE_LENGTH;
         
         MIN_DIHEDRAL_ANGLE = 5.*M_PI/180.;
