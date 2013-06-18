@@ -1134,12 +1134,12 @@ private:
                     if (v0 < v1)
                     {
                         if (v0 < volume_int_threshold)
-                            unsafe_collapse(nodes[0], nodes[1]);
+                            unsafe_collapse(*eit);
                     }
                     else
                     {
                         if (v1 < volume_int_threshold)
-                            unsafe_collapse(nodes[1], nodes[0]);
+                            unsafe_collapse(*eit);
                     }
                 }
                 else if (is_boundary(*eit) && l < bnd_threshold)
@@ -1153,12 +1153,12 @@ private:
                     if (v0 < v1)
                     {
                         if (v0 < volume_bnd_threshold)
-                            unsafe_collapse(nodes[0], nodes[1]);
+                            unsafe_collapse(*eit);
                     }
                     else
                     {
                         if (v1 < volume_bnd_threshold)
-                            unsafe_collapse(nodes[1], nodes[0]);
+                            unsafe_collapse(*eit);
                     }
                 }
             }
@@ -1200,13 +1200,14 @@ private:
         
         if ((l1 < ratio * l2) && (l2 < ratio * l1))
         {
+            edge_key e = Complex::get_edge(n2,n1);
             if (!(is_interface(n2)))
             {
-                unsafe_collapse(n2,n1);
+                unsafe_collapse(e);
             }
             else
             {
-                unsafe_collapse(n1,n2);
+                unsafe_collapse(e);
             }
         }
     }
@@ -1260,7 +1261,12 @@ private:
         node_key n2 = split_edge(e2);
         
         edge_key e = Complex::get_edge(n1, n2);
-        return unsafe_collapse(e) != Complex::NULL_NODE;
+        node_key new_n = safe_collapse(e);
+        if(new_n == Complex::NULL_NODE)
+        {
+            new_n = unsafe_collapse(e);
+        }
+        return new_n != Complex::NULL_NODE;
     }
     
     /**
@@ -1271,7 +1277,12 @@ private:
     {
         node_key n1 = split_face(f);
         edge_key e = Complex::get_edge(n1, apex);
-        return unsafe_collapse(e) != Complex::NULL_NODE;
+        node_key new_n = safe_collapse(e);
+        if(new_n == Complex::NULL_NODE)
+        {
+            new_n = unsafe_collapse(e);
+        }
+        return new_n != Complex::NULL_NODE;
     }
     
     /**
@@ -1283,7 +1294,12 @@ private:
         simplex_set cl_t;
         Complex::closure(t, cl_t);
         edge_key e = shortest_edge(cl_t);
-        return unsafe_collapse(e) != Complex::NULL_NODE;
+        node_key new_n = safe_collapse(e);
+        if(new_n == Complex::NULL_NODE)
+        {
+            new_n = unsafe_collapse(e);
+        }
+        return new_n != Complex::NULL_NODE;
     }
     
     /**
@@ -2125,31 +2141,15 @@ private:
     }
     
     /**
-     * Collapses the edge e by trying to collapse it safely before collapsing it unsafely. Returns the resulting node or NULL_NODE if unsuccessful.
+     * Collapses the edge e by moving its two nodes to the barycenter of their positions if precond_collapse returns true.
+     * NOTE: This method allows to move interface vertices. Use safe_collapse to make sure the interface is not changed.
      */
     node_key unsafe_collapse(edge_key& e)
     {
-        node_key new_n = safe_collapse(e);
-        if(new_n == Complex::NULL_NODE)
-        {
-            std::vector<node_key> nodes;
-            Complex::get_nodes(e, nodes);
-            new_n = unsafe_collapse(nodes[0], nodes[1]);
-        }
-        
-        return new_n;
-    }
-    
-    /**
-     * n1 and n2 are moved to the barycenter of their positions and the edge between them are collapsed if precond_collapse returns true.
-     * NOTE: This method allows to move interface vertices. Use safe_collapse to make sure the interface is not changed.
-     */
-    node_key unsafe_collapse(const node_key & n1, const node_key & n2)
-    {
-        edge_key e = Complex::get_edge(n1, n2);
-        
-        V p = Util::barycenter<MT>(get_pos(n1), get_pos(n2));
-        V p_new = Util::barycenter<MT>(get_destination(n1), get_destination(n2));
+        std::vector<node_key> nodes;
+        Complex::get_nodes(e, nodes);
+        V p = Util::barycenter<MT>(get_pos(nodes[0]), get_pos(nodes[1]));
+        V p_new = Util::barycenter<MT>(get_destination(nodes[0]), get_destination(nodes[1]));
         
         if (precond_collapse(e, p))
         {
