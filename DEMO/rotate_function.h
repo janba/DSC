@@ -84,14 +84,26 @@ public:
                 edges.push_back(eit.key());
             }
         }
+                
+//        for (auto e : edges) {
+//            dsc.split_edge(e);
+//        }
+//        
+//        for (auto e : edges) {
+//            if(dsc.exists(e))
+//            {
+//                dsc.collapse(e);
+//                break;
+//            }
+//        }
         
-        //        std::vector<typename SimplicialComplex<MT>::node_key_type> nodes;
-        //        complex->get_nodes(edges[0], nodes);
-        //        complex->collapse_edge(edges[0], nodes[0], nodes[1]);
-        
-        for (auto e : edges) {
-            dsc.split_edge(e);
-        }
+//        for (auto e : edges) {
+//            if(dsc.exists(e) && dsc.is_flippable(e))
+//            {
+//                dsc.flip(e);
+//            }
+//        }
+//        dsc.validity_check();
     }
     
 };
