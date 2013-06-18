@@ -199,6 +199,36 @@ namespace Util
         return cosines;
     }
     
+    template<typename MT>
+    inline typename MT::real_type min_angle(typename MT::vector3_type const & a,
+                                            typename MT::vector3_type const & b,
+                                            typename MT::vector3_type const & c)
+    {
+        typedef typename MT::real_type T;
+        std::vector<T> cosines = cos_angles<MT>(a, b, c);
+        double max_cos = -1.;
+        for(auto cos : cosines)
+        {
+            max_cos = std::max(cos, max_cos);
+        }
+        return acos(max_cos);
+    }
+    
+    template<typename MT>
+    inline typename MT::real_type max_angle(typename MT::vector3_type const & a,
+                                            typename MT::vector3_type const & b,
+                                            typename MT::vector3_type const & c)
+    {
+        typedef typename MT::real_type T;
+        std::vector<T> cosines = cos_angles<MT>(a, b, c);
+        double min_cos = 1.;
+        for(auto cos : cosines)
+        {
+            min_cos = std::min(cos, min_cos);
+        }
+        return acos(min_cos);
+    }
+    
     /**
      * Calculate the maximum cosine of angles in the triangle defined by the a, b and c. The index parameter tells which angle (a, b or c) is maximal.
      */
@@ -938,6 +968,18 @@ namespace Util
             return n;
         else
             return -n;
+    }
+    
+    /**
+     Returns v projected onto the line spanned by the two points v1 and v2.
+     */
+    template <typename MT>
+    inline typename MT::vector3_type project(typename MT::vector3_type const & v, typename MT::vector3_type const & v1,typename MT::vector3_type const & v2)
+    {
+        typedef typename MT::vector3_type V;
+        V a = v - v1;
+        V b = v2 - v1;
+        return v1 + b * MT::dot(a,b)/MT::dot(b, b);
     }
     
     /**
