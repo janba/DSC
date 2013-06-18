@@ -1340,7 +1340,7 @@ private:
                 degenerated_tets.push_back(tit.key());
             }
         }
-        int i = 0;
+        int i = 0, j=0;
         for (auto &tet : degenerated_tets)
         {
             if (Complex::exists(tet) && quality(tet) <= DEG_TET_QUALITY)
@@ -1349,9 +1349,10 @@ private:
                 {
                     i++;
                 }
+                j++;
             }
         }
-        std::cout << "Removed " << i << " degenerate tets" << std::endl;
+        std::cout << "Removed " << i <<"/"<< j << " degenerate tets" << std::endl;
         Complex::garbage_collect();
     }
     
