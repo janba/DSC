@@ -1066,7 +1066,7 @@ private:
     {
         for (auto nit = Complex::nodes_begin(); nit != Complex::nodes_end(); nit++)
         {
-            if (!is_boundary(nit.key()) && !is_interface(nit.key()))
+            if (Complex::exists(nit.key()) && !is_boundary(nit.key()) && !is_interface(nit.key()))
             {
                 if (!smart_laplacian(nit.key()))
                 {
@@ -1425,6 +1425,7 @@ public:
                     finished = finished & move_vertex(nit.key(), nit->get_destination());
                 }
             }
+            validity_check();
             
             fix_complex();
             
