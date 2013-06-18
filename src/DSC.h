@@ -1092,6 +1092,19 @@ private:
         if(new_n == Complex::NULL_NODE)
         {
             new_n = unsafe_collapse(e);
+            if(new_n == Complex::NULL_NODE)
+            {
+                std::vector<V> verts;
+                get_pos(e, verts);
+                if(precond_collapse(e, verts[0]))
+                {
+                    new_n = collapse_edge(e, verts[0]);
+                }
+                else if(precond_collapse(e, verts[1]))
+                {
+                    new_n = collapse_edge(e, verts[1]);
+                }
+            }
         }
         return new_n != Complex::NULL_NODE;
     }
@@ -1101,16 +1114,16 @@ private:
      */
     void remove_degenerate_edges()
     {
-        std::list<edge_key> degenerated_edges;
+        std::list<edge_key> degenerate_edges;
         for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
         {
             if (length(eit.key()) < DEG_EDGE_LENGTH)
             {
-                degenerated_edges.push_back(eit.key());
+                degenerate_edges.push_back(eit.key());
             }
         }
         int i = 0, j=0;
-        for(auto e : degenerated_edges)
+        for(auto e : degenerate_edges)
         {
             if(Complex::exists(e) && length(e) < DEG_EDGE_LENGTH)
             {
