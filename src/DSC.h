@@ -2239,6 +2239,20 @@ public:
         return Util::quality<MT>(verts[0], verts[1], verts[2], verts[3]);
     }
     
+    T min_angle(const face_key& f)
+    {
+        std::vector<V> verts;
+        get_pos(f, verts);
+        return Util::min_angle<MT>(verts[0], verts[1], verts[2]);
+    }
+    
+    T max_angle(const face_key& f)
+    {
+        std::vector<V> verts;
+        get_pos(f, verts);
+        return Util::max_angle<MT>(verts[0], verts[1], verts[2]);
+    }
+    
     /**
      * Returns the largest face in the simplex set.
      */
