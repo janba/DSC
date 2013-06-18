@@ -962,7 +962,7 @@ private:
         
         for (auto e : flippable_edges)
         {
-            if (is_flippable(e))
+            if (Complex::exists(e) && is_flippable(e))
             {
                 flip(e);
             }
