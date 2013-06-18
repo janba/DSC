@@ -1083,87 +1083,42 @@ private:
     // REMOVE DEGENERACIES PASS //
     //////////////////////////////
     
+    bool remove_degenerate_edge(edge_key& e)
+    {
+        node_key new_n = safe_collapse(e);
+        if(new_n == Complex::NULL_NODE)
+        {
+            new_n = unsafe_collapse(e);
+        }
+        return new_n != Complex::NULL_NODE;
+    }
+    
     /**
-     * Attempt to remove edges shorter than threshold, provided that the volume enclosed by the interface changes within 0.0025 * threshold^3 tolerance
+     * Attempt to remove edges shorter than DEG_EDGE_LENGTH by collapsing them.
      */
     void remove_degenerate_edges()
     {
-        std::list<edge_key> edge_list;
-        T bnd_threshold = 0.25;
-        T volume_int_threshold = 0.0025 * MIN_EDGE_LENGTH * MIN_EDGE_LENGTH * MIN_EDGE_LENGTH;
-        T volume_bnd_threshold = 0.0025 * bnd_threshold * bnd_threshold * bnd_threshold;
-        
+        std::list<edge_key> degenerated_edges;
         for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
         {
-            if (eit->is_interface() && length(eit.key()) < MIN_EDGE_LENGTH)
+            if (length(eit.key()) < DEG_EDGE_LENGTH)
             {
-                edge_list.push_back(eit.key());
-            }
-            else if (eit->is_boundary() && !eit->is_interface() && length(eit.key()) < bnd_threshold)
-            {
-                edge_list.push_back(eit.key());
+                degenerated_edges.push_back(eit.key());
             }
         }
-        
-        for (auto eit = edge_list.begin(); eit != edge_list.end(); eit++)
+        int i = 0, j=0;
+        for(auto e : degenerated_edges)
         {
-            if (Complex::exists(*eit))
+            if(Complex::exists(e) && length(e) < DEG_EDGE_LENGTH)
             {
-                T l = length(*eit);
-                if (is_interface(*eit) && l < MIN_EDGE_LENGTH)
+                if(remove_degenerate_edge(e))
                 {
-                    simplex_set st_e;
-                    Complex::star(*eit, st_e);
-                    
-                    
-                    bool removable = false;
-                    for (auto tit = st_e.tetrahedra_begin(); tit != st_e.tetrahedra_end(); tit++)
-                    {
-                        if (get_label(*tit) > 0)
-                            removable = true;
-                    }
-                    
-                    if (!removable) continue;
-                    
-                    std::vector<node_key> nodes;
-                    Complex::get_nodes(*eit, nodes);
-                    
-                    T v0 = volume_difference(*eit, nodes[0], nodes[1]);
-                    T v1 = volume_difference(*eit, nodes[1], nodes[0]);
-                    
-                    if (v0 < v1)
-                    {
-                        if (v0 < volume_int_threshold)
-                            unsafe_collapse(*eit);
-                    }
-                    else
-                    {
-                        if (v1 < volume_int_threshold)
-                            unsafe_collapse(*eit);
-                    }
+                    i++;
                 }
-                else if (is_boundary(*eit) && l < bnd_threshold)
-                {
-                    std::vector<node_key> nodes;
-                    Complex::get_nodes(*eit, nodes);
-                    
-                    T v0 = volume_difference(*eit, nodes[0], nodes[1]);
-                    T v1 = volume_difference(*eit, nodes[1], nodes[0]);
-                    
-                    if (v0 < v1)
-                    {
-                        if (v0 < volume_bnd_threshold)
-                            unsafe_collapse(*eit);
-                    }
-                    else
-                    {
-                        if (v1 < volume_bnd_threshold)
-                            unsafe_collapse(*eit);
-                    }
-                }
+                j++;
             }
         }
-        
+        std::cout << "Removed " << i <<"/"<< j << " degenerate edges" << std::endl;
         Complex::garbage_collect();
     }
     
