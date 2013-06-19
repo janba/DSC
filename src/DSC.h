@@ -1356,7 +1356,9 @@ private:
         
         print_out("Remove degeneracies.");
         remove_degenerate_tets();
+        validity_check();
         remove_degenerate_faces();
+        validity_check();
         remove_degenerate_edges();
         validity_check();
         
@@ -1364,13 +1366,13 @@ private:
         smooth();
         validity_check();
         
-        print_out("Relabel tets.");
-        bool relabeled = relabel_tets();
-        validity_check();
-        
-        if (relabeled) {
-            smooth();
-        }
+//        print_out("Relabel tets.");
+//        bool relabeled = relabel_tets();
+//        validity_check();
+//        
+//        if (relabeled) {
+//            smooth();
+//        }
     }
     
     void resize_complex()
