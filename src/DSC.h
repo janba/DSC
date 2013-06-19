@@ -2106,19 +2106,32 @@ private:
      */
     node_key unsafe_collapse(edge_key& e)
     {
+        if (!Complex::exists(e) || e == Complex::NULL_EDGE)
+        {
+            return Complex::NULL_NODE;
+        }
         std::vector<node_key> nodes;
         Complex::get_nodes(e, nodes);
-        V p = Util::barycenter<MT>(get_pos(nodes[0]), get_pos(nodes[1]));
-        V p_new = Util::barycenter<MT>(get_destination(nodes[0]), get_destination(nodes[1]));
         
+        V p = Util::barycenter<MT>(get_pos(nodes[0]), get_pos(nodes[1]));
         if (precond_collapse(e, p))
         {
-            node_key n_new = collapse_edge(e, p);
-            if (n_new != Complex::NULL_NODE)
-            {
-                set_destination(n_new, p_new);
-            }
-            return n_new;
+            V p_new = Util::barycenter<MT>(get_destination(nodes[0]), get_destination(nodes[1]));
+            return collapse_edge(e, p, p_new);
+        }
+        
+        p = get_pos(nodes[1]);
+        if (precond_collapse(e, p))
+        {
+            V p_new = get_destination(nodes[1]);
+            return collapse_edge(e, p, p_new);
+        }
+        
+        p = get_pos(nodes[0]);
+        if (precond_collapse(e, p))
+        {
+            V p_new = get_destination(nodes[0]);
+            return collapse_edge(e, p, p_new);
         }
         return Complex::NULL_NODE;
     }
