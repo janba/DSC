@@ -2609,9 +2609,9 @@ private:
      */
     bool will_invert(const node_key& n, const V p_new)
     {
-        simplex_set st_n;
-        star(n);
-        return will_invert(n, p_new, st_n);
+        simplex_set ln_n;
+        Complex::link(n, ln_n);
+        return will_invert(n, p_new, ln_n);
     }
     
     void validity_check()
