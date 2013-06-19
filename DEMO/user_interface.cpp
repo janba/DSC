@@ -314,6 +314,7 @@ void UI::keyboard(unsigned char key, int x, int y) {
             }
             break;
     }
+    draw();
 }
 
 void UI::visible(int v)
