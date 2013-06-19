@@ -1953,13 +1953,18 @@ public:
      */
     node_key split(const face_key & f)
     {   
-        std::vector<V> verts;
-        get_pos(f, verts);
-        V p = Util::barycenter<MT>(verts[0], verts[1], verts[2]);
+        std::vector<node_key> nodes;
+        Complex::get_nodes(f, nodes);
+        V p = Util::barycenter<MT>(get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
+        V p_new = p;
+        if(is_interface(f))
+        {
+            p_new = Util::barycenter<MT>(get_destination(nodes[0]), get_destination(nodes[1]), get_destination(nodes[2]));
+        }
         
         node_key n = Complex::split(f);
         set_pos(n, p);
-        set_destination(n, p);
+        set_destination(n, p_new);
         
         simplex_set st_n;
         Complex::star(n, st_n);
@@ -1973,13 +1978,18 @@ public:
      */
     node_key split(const edge_key & e)
     {
-        std::vector<V> verts;
-        get_pos(e, verts);
-        V p = Util::barycenter<MT>(verts[0], verts[1]);
+        std::vector<node_key> nodes;
+        Complex::get_nodes(e, nodes);
+        V p = Util::barycenter<MT>(get_pos(nodes[0]), get_pos(nodes[1]));
+        V p_new = p;
+        if(is_interface(e))
+        {
+            p_new = Util::barycenter<MT>(get_destination(nodes[0]), get_destination(nodes[1]));
+        }
         
         node_key n = Complex::split(e);
         set_pos(n, p);
-        set_destination(n, p);
+        set_destination(n, p_new);
         
         simplex_set st_n;
         Complex::star(n, st_n);
