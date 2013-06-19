@@ -2069,7 +2069,7 @@ private:
     }
     
     /**
-     * Collapses the edge e and places the new node at the most optimal position of the position of either end node or their barycenter. 
+     * Collapses the edge e and places the new node at the most optimal position of the position of either end node or their barycenter.
      * If the parameter safe is true, the method if the nodes of edge e are editable, i.e. not a part of the interface, and will therefore not change the interface.
      * If non of the nodes are editable or precond_collapse returns false, the method returns NULL_NODE.
      */
@@ -2085,39 +2085,49 @@ private:
         bool editable1 = !is_interface(nodes[0]) && !is_boundary(nodes[0]);
         bool editable2 = !is_interface(nodes[1]) && !is_boundary(nodes[1]);
         
-        if(!safe || editable1 || editable2)
+        V p_opt, p_new_opt;
+        T q_max = 0.;
+        
+        if (!safe || (editable1 && editable2))
         {
-            if (!safe || (editable1 && editable2))
+            V p = Util::barycenter<MT>(get_pos(nodes[0]), get_pos(nodes[1]));
+            T q = min_quality(e, p);
+            if (precond_collapse(e, p) && q > q_max)
             {
-                V p = Util::barycenter<MT>(get_pos(nodes[0]), get_pos(nodes[1]));
-                V p_new = Util::barycenter<MT>(get_destination(nodes[0]), get_destination(nodes[1]));
-                if (precond_collapse(e, p))
-                {
-                    return collapse(e, p, p_new);
-                }
+                p_new_opt = Util::barycenter<MT>(get_destination(nodes[0]), get_destination(nodes[1]));
+                p_opt = p;
+                q_max = q;
             }
+        }
+        
+        if (!safe || editable1)
+        {
+            V p = get_pos(nodes[1]);
+            T q = min_quality(e, p);
             
-            if (!safe || editable1)
+            if (precond_collapse(e, p) && q > q_max)
             {
-                V p = get_pos(nodes[1]);
-                V p_new = get_destination(nodes[1]);
-                
-                if (precond_collapse(e, p))
-                {
-                    return collapse(e, p, p_new);
-                }
+                p_new_opt = get_destination(nodes[1]);
+                p_opt = p;
+                q_max = q;
             }
+        }
+        
+        if (!safe || editable2)
+        {
+            V p = get_pos(nodes[0]);
+            T q = min_quality(e, p);
             
-            if (!safe || editable2)
+            if (precond_collapse(e, p) && q > q_max)
             {
-                V p = get_pos(nodes[0]);
-                V p_new = get_destination(nodes[0]);
-                
-                if (precond_collapse(e, p))
-                {
-                    return collapse(e, p, p_new);
-                }
+                p_new_opt = get_destination(nodes[0]);
+                p_opt = p;
+                q_max = q;
             }
+        }
+        if(q_max > 0.)
+        {
+            return collapse(e, p_opt, p_new_opt);
         }
         return Complex::NULL_NODE;
     }
