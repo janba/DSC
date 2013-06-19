@@ -1093,19 +1093,6 @@ private:
         if(new_n == Complex::NULL_NODE)
         {
             new_n = unsafe_collapse(e);
-            if(new_n == Complex::NULL_NODE)
-            {
-                std::vector<V> verts;
-                get_pos(e, verts);
-                if(precond_collapse(e, verts[0]))
-                {
-                    new_n = collapse_edge(e, verts[0]);
-                }
-                else if(precond_collapse(e, verts[1]))
-                {
-                    new_n = collapse_edge(e, verts[1]);
-                }
-            }
         }
         return new_n != Complex::NULL_NODE;
     }
