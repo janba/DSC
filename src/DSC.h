@@ -2012,14 +2012,14 @@ private:
     }
     
     /**
-     * Returns the increase (positive) or decrease in quality if the edge e is collapsed and the resulting node is moved to v_new.
+     * Returns the minimum quality of neighbouring tetrahedra if the edge e is collapsed and the resulting node is moved to v_new.
      */
-    T quality_improvement(const edge_key& e, const V& v_new)
+    T min_quality(const edge_key& e, const V& v_new)
     {
         std::vector<node_key> nodes;
         Complex::get_nodes(e, nodes);
         
-        simplex_set lk_n0, lk_n1, lk_e;
+        simplex_set lk_n0, lk_n1;
         Complex::link(nodes[0], lk_n0);
         Complex::link(nodes[1], lk_n1);
         
@@ -2028,15 +2028,7 @@ private:
         Complex::closure(st_e, cl_st_e);
         lk_n0.add(lk_n1);
         lk_n0.difference(cl_st_e);
-        T q_new = min_quality(lk_n0, v_new);
-        
-        simplex_set st_n0, st_n1;
-        Complex::star(nodes[0], st_n0);
-        Complex::star(nodes[1], st_n1);
-        st_n0.add(st_n1);
-        
-        T q = min_quality(st_n0);
-        return q_new - q;
+        return min_quality(lk_n0, v_new);
     }
     
     /**
