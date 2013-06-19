@@ -1244,12 +1244,7 @@ private:
         node_key n2 = split_edge(e2);
         
         edge_key e = Complex::get_edge(n1, n2);
-        node_key new_n = safe_collapse(e);
-        if(new_n == Complex::NULL_NODE)
-        {
-            new_n = unsafe_collapse(e);
-        }
-        return new_n != Complex::NULL_NODE;
+        return remove_degenerate_edge(e);
     }
     
     /**
@@ -1260,12 +1255,7 @@ private:
     {
         node_key n1 = split_face(f);
         edge_key e = Complex::get_edge(n1, apex);
-        node_key new_n = safe_collapse(e);
-        if(new_n == Complex::NULL_NODE)
-        {
-            new_n = unsafe_collapse(e);
-        }
-        return new_n != Complex::NULL_NODE;
+        return remove_degenerate_edge(e);
     }
     
     /**
@@ -1277,12 +1267,7 @@ private:
         simplex_set cl_t;
         Complex::closure(t, cl_t);
         edge_key e = shortest_edge(cl_t);
-        node_key new_n = safe_collapse(e);
-        if(new_n == Complex::NULL_NODE)
-        {
-            new_n = unsafe_collapse(e);
-        }
-        return new_n != Complex::NULL_NODE;
+        return remove_degenerate_edge(e);
     }
     
     /**
