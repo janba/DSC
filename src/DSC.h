@@ -997,7 +997,7 @@ private:
         {
             if (Complex::exists(tit))
             {
-                split_tetrahedron(tit);
+                split(tit);
             }
         }
     }
@@ -1148,7 +1148,7 @@ private:
         V p = Util::project<MT>(get_pos(apex), verts[0], verts[1]);
         
         // Split longest edge
-        node_key n = split_edge(e);
+        node_key n = split(e);
         set_pos(n, p);
         
         // Collapse new edge
@@ -1224,8 +1224,8 @@ private:
         cl_t.erase(e1);
         edge_key e2 = longest_edge(cl_t);
         
-        node_key n1 = split_edge(e1);
-        node_key n2 = split_edge(e2);
+        node_key n1 = split(e1);
+        node_key n2 = split(e2);
         
         edge_key e = Complex::get_edge(n1, n2);
         return unsafe_collapse(e) != Complex::NULL_NODE;
@@ -1251,7 +1251,7 @@ private:
         V p = Util::project<MT>(get_pos(apex), verts);
         
         // Split the face
-        node_key n = split_face(f);
+        node_key n = split(f);
         set_pos(n, p);
         
         // Collapse edge
@@ -1911,7 +1911,7 @@ private:
             return;
         }
         
-        node_key n_new = split_edge(e);
+        node_key n_new = split(e);
         
         edge_key e_c = Complex::get_edge(nodes[0], n_new);
         assert(e_c != Complex::NULL_EDGE);
@@ -1931,7 +1931,7 @@ public:
     /**
      * Split a tetrahedron t and returns the new node which is positioned at the barycenter of the vertices of t.
      */
-    node_key split_tetrahedron(tet_key& t)
+    node_key split(tet_key& t)
     {
         std::vector<V> verts;
         get_pos(t, verts);
@@ -1944,7 +1944,6 @@ public:
         simplex_set st_n;
         Complex::star(n, st_n);
         st_n.insert(n);
-        
         update(st_n);
         return n;
     }
@@ -1952,7 +1951,7 @@ public:
     /**
      * Split a face f and returns the new node which is positioned at the barycenter of the vertices of f.
      */
-    node_key split_face(const face_key & f)
+    node_key split(const face_key & f)
     {   
         std::vector<V> verts;
         get_pos(f, verts);
@@ -1965,7 +1964,6 @@ public:
         simplex_set st_n;
         Complex::star(n, st_n);
         st_n.insert(n);
-        
         update(st_n);
         return n;
     }
@@ -1973,7 +1971,7 @@ public:
     /**
      * Split an edge e and returns the new node which is placed at the middle of e.
      */
-    node_key split_edge(const edge_key & e)
+    node_key split(const edge_key & e)
     {
         std::vector<V> verts;
         get_pos(e, verts);
@@ -1986,7 +1984,6 @@ public:
         simplex_set st_n;
         Complex::star(n, st_n);
         st_n.insert(n);
-        
         update(st_n);
         return n;
     }
