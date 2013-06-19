@@ -1235,10 +1235,27 @@ private:
      * Remove a degenerate tetrahedron of a type "cap" by splitting the face opposite cap's apex and collapsing cap's apex with the newly created vertex.
      * Return true if successful.
      */
-    bool remove_cap(const tet_key & t, const face_key & f, const node_key& apex)
+    bool remove_cap(const tet_key & t)
     {
-        node_key n1 = split_face(f);
-        edge_key e = Complex::get_edge(n1, apex);
+        // Find the largest face
+        simplex_set cl_t;
+        Complex::closure(t, cl_t);
+        face_key f = largest_face(cl_t);
+        
+        // Find the apex
+        node_key apex = Complex::get_apex(t, f);
+        
+        // Project the apex
+        std::vector<V> verts;
+        get_pos(f, verts);
+        V p = Util::project<MT>(get_pos(apex), verts);
+        
+        // Split the face
+        node_key n = split_face(f);
+        set_pos(n, p);
+        
+        // Collapse edge
+        edge_key e = Complex::get_edge(n, apex);
         return unsafe_collapse(e) != Complex::NULL_NODE;
     }
     
@@ -1280,7 +1297,7 @@ private:
         
         if(barycentric_coords[0] > 0.2 && barycentric_coords[1] > 0.2 && barycentric_coords[2] > 0.2) // The tetrahedron is a cap
         {
-            return remove_cap(t, f, apex);
+            return remove_cap(t);
         }
         else if(barycentric_coords[0] < -0.2 || barycentric_coords[1] < -0.2 || barycentric_coords[2] < -0.2) // The tetrahedron is a sliver
         {
