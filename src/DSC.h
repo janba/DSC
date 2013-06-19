@@ -1890,11 +1890,7 @@ private:
         
         if(precond_collapse(e_c, p))
         {
-            node_key n = collapse_edge(e_c, p);
-            if(n != Complex::NULL_NODE)
-            {
-                set_destination(n, p_new);
-            }
+            collapse_edge(e_c, p, p_new);
         }
     }
     
