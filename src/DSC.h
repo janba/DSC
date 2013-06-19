@@ -1338,6 +1338,14 @@ private:
         Complex::garbage_collect();
     }
     
+    //////////////////////////////////
+    // REMOVE LOW QUALITY SIMPLICES //
+    //////////////////////////////////
+    
+    ///////////////////
+    // FIX FUNCTIONS //
+    ///////////////////
+    
     void fix_complex()
     {
         simplex_set region;
