@@ -163,6 +163,15 @@ public:
         return *(cl1.edges_begin());
     }
     
+    node_key get_apex(const tet_key& t, const face_key f)
+    {
+        simplex_set cl_f, cl_t;
+        closure(t, cl_t);
+        closure(f, cl_f);
+        cl_t.difference(cl_f);
+        return *cl_t.nodes_begin();
+    }
+    
     void get_apices(const face_key& f, std::vector<node_key>& apices)
     {
         apices = std::vector<node_key>(0);
