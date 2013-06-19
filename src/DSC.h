@@ -1268,7 +1268,13 @@ private:
         simplex_set cl_t;
         Complex::closure(t, cl_t);
         edge_key e = shortest_edge(cl_t);
-        return unsafe_collapse(e) != Complex::NULL_NODE;
+        if(unsafe_collapse(e) == Complex::NULL_NODE)
+        {
+            cl_t.erase(e);
+            e = shortest_edge(cl_t);
+            return unsafe_collapse(e) != Complex::NULL_NODE;
+        }
+        return true;
     }
     
     /**
