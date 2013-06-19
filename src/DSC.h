@@ -2067,34 +2067,44 @@ private:
      */
     node_key safe_collapse(edge_key& e)
     {
+        if (!Complex::exists(e) || e == Complex::NULL_EDGE)
+        {
+            return Complex::NULL_NODE;
+        }
         std::vector<node_key> nodes;
         Complex::get_nodes(e, nodes);
-        node_key n1 = nodes[0];
-        node_key n2 = nodes[1];
         
-        bool editable1 = !is_interface(n1) && !is_boundary(n1);
-        bool editable2 = !is_interface(n2) && !is_boundary(n2);
+        bool editable1 = !is_interface(nodes[0]) && !is_boundary(nodes[0]);
+        bool editable2 = !is_interface(nodes[1]) && !is_boundary(nodes[1]);
         
         if(editable1 || editable2)
         {
             V p;
+            V p_new;
             if (editable1 && editable2)
             {
-                p = Util::barycenter<MT>(get_pos(n1), get_pos(n2));
-                
+                p = Util::barycenter<MT>(get_pos(nodes[0]), get_pos(nodes[1]));
+                p_new = Util::barycenter<MT>(get_destination(nodes[0]), get_destination(nodes[1]));
+                if (precond_collapse(e, p))
+                {
+                    return collapse_edge(e, p, p_new);
+                }
             }
-            else if (editable1)
+            
+            if (editable1)
             {
-                p = get_pos(n2);
+                p = get_pos(nodes[1]);
+                p_new = get_destination(nodes[1]);
             }
             else if (editable2)
             {
-                p = get_pos(n1);
+                p = get_pos(nodes[0]);
+                p_new = get_destination(nodes[0]);
             }
             
-            if (precond_collapse(e, p) && quality_improvement(e, p) > 0.)
+            if (precond_collapse(e, p))
             {
-                return collapse_edge(e, p);
+                return collapse_edge(e, p, p_new);
             }
         }
         return Complex::NULL_NODE;
