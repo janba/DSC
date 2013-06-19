@@ -2012,17 +2012,8 @@ private:
      */
     bool precond_collapse(const edge_key& e, const V& v_new)
     {
-        if (e == Complex::NULL_EDGE)
-        {
-            return false;
-        }
         std::vector<node_key> nodes;
         Complex::get_nodes(e, nodes);
-        
-        if(inverted(nodes[0]) || inverted(nodes[1])) // Should not be necessary!
-        {
-            return false;
-        }
         
         simplex_set lk_n0, lk_n1, lk_e;
         Complex::link(nodes[0], lk_n0);
