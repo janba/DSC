@@ -1024,7 +1024,7 @@ private:
         {
             if (Complex::exists(e) && length(e) < MIN_EDGE_LENGTH)
             {
-                node_key n = safe_collapse(e);
+                node_key n = collapse(e);
                 if (n != Complex::NULL_NODE)
                 {
                     freitag_smoothing(n);
@@ -1089,10 +1089,10 @@ private:
     
     bool remove_degenerate_edge(edge_key& e)
     {
-        node_key new_n = safe_collapse(e);
+        node_key new_n = collapse(e);
         if(new_n == Complex::NULL_NODE)
         {
-            new_n = unsafe_collapse(e);
+            new_n = collapse(e, false);
         }
         return new_n != Complex::NULL_NODE;
     }
@@ -1153,7 +1153,7 @@ private:
         
         // Collapse new edge
         edge_key e_rem = Complex::get_edge(apex, n);
-        return unsafe_collapse(e_rem) != Complex::NULL_NODE;
+        return collapse(e_rem, false) != Complex::NULL_NODE;
     }
     
     /**
@@ -1167,7 +1167,7 @@ private:
         edge_key e = shortest_edge(cl_f);
         
         // Remove edge
-        return unsafe_collapse(e) != Complex::NULL_NODE;
+        return collapse(e, false) != Complex::NULL_NODE;
     }
     
     /**
@@ -1228,7 +1228,7 @@ private:
         node_key n2 = split(e2);
         
         edge_key e = Complex::get_edge(n1, n2);
-        return unsafe_collapse(e) != Complex::NULL_NODE;
+        return collapse(e, false) != Complex::NULL_NODE;
     }
     
     /**
@@ -1256,7 +1256,7 @@ private:
         
         // Collapse edge
         edge_key e = Complex::get_edge(n, apex);
-        return unsafe_collapse(e) != Complex::NULL_NODE;
+        return collapse(e, false) != Complex::NULL_NODE;
     }
     
     /**
@@ -1268,11 +1268,11 @@ private:
         simplex_set cl_t;
         Complex::closure(t, cl_t);
         edge_key e = shortest_edge(cl_t);
-        if(unsafe_collapse(e) == Complex::NULL_NODE)
+        if(collapse(e, false) == Complex::NULL_NODE)
         {
             cl_t.erase(e);
             e = shortest_edge(cl_t);
-            return unsafe_collapse(e) != Complex::NULL_NODE;
+            return collapse(e, false) != Complex::NULL_NODE;
         }
         return true;
     }
@@ -1920,7 +1920,7 @@ private:
         
         if(precond_collapse(e_c, p))
         {
-            collapse_edge(e_c, p, p_new);
+            collapse(e_c, p, p_new);
         }
     }
     
@@ -2005,7 +2005,7 @@ private:
     /**
      * Collapses the edge e and moves the resulting node to the position p. Returns the new node if successful, otherwise NULL_NODE.
      */
-    node_key collapse_edge(edge_key& e, const V& p, const V& p_new)
+    node_key collapse(edge_key& e, const V& p, const V& p_new)
     {
         node_key n_new = Complex::collapse(e);
         
@@ -2069,11 +2069,11 @@ private:
     }
     
     /**
-     * Checks if the nodes of edge e are editable, i.e. neither a part of the interface nor the boundary. If both are editable, unsafe_collapse is called.
-     * If one is editable then this node is moved to the other if precond_collapse returns true.
+     * Collapses the edge e and places the new node at the most optimal position of the position of either end node or their barycenter. 
+     * If the parameter safe is true, the method if the nodes of edge e are editable, i.e. not a part of the interface, and will therefore not change the interface.
      * If non of the nodes are editable or precond_collapse returns false, the method returns NULL_NODE.
      */
-    node_key safe_collapse(edge_key& e)
+    node_key collapse(edge_key& e, bool safe = true)
     {
         if (!Complex::exists(e) || e == Complex::NULL_EDGE)
         {
@@ -2085,71 +2085,39 @@ private:
         bool editable1 = !is_interface(nodes[0]) && !is_boundary(nodes[0]);
         bool editable2 = !is_interface(nodes[1]) && !is_boundary(nodes[1]);
         
-        if(editable1 || editable2)
+        if(!safe || editable1 || editable2)
         {
-            V p;
-            V p_new;
-            if (editable1 && editable2)
+            if (!safe || (editable1 && editable2))
             {
-                p = Util::barycenter<MT>(get_pos(nodes[0]), get_pos(nodes[1]));
-                p_new = Util::barycenter<MT>(get_destination(nodes[0]), get_destination(nodes[1]));
+                V p = Util::barycenter<MT>(get_pos(nodes[0]), get_pos(nodes[1]));
+                V p_new = Util::barycenter<MT>(get_destination(nodes[0]), get_destination(nodes[1]));
                 if (precond_collapse(e, p))
                 {
-                    return collapse_edge(e, p, p_new);
+                    return collapse(e, p, p_new);
                 }
             }
             
-            if (editable1)
+            if (!safe || editable1)
             {
-                p = get_pos(nodes[1]);
-                p_new = get_destination(nodes[1]);
-            }
-            else if (editable2)
-            {
-                p = get_pos(nodes[0]);
-                p_new = get_destination(nodes[0]);
+                V p = get_pos(nodes[1]);
+                V p_new = get_destination(nodes[1]);
+                
+                if (precond_collapse(e, p))
+                {
+                    return collapse(e, p, p_new);
+                }
             }
             
-            if (precond_collapse(e, p))
+            if (!safe || editable2)
             {
-                return collapse_edge(e, p, p_new);
+                V p = get_pos(nodes[0]);
+                V p_new = get_destination(nodes[0]);
+                
+                if (precond_collapse(e, p))
+                {
+                    return collapse(e, p, p_new);
+                }
             }
-        }
-        return Complex::NULL_NODE;
-    }
-    
-    /**
-     * Collapses the edge e by moving its two nodes to the barycenter of their positions if precond_collapse returns true.
-     * NOTE: This method allows to move interface vertices. Use safe_collapse to make sure the interface is not changed.
-     */
-    node_key unsafe_collapse(edge_key& e)
-    {
-        if (!Complex::exists(e) || e == Complex::NULL_EDGE)
-        {
-            return Complex::NULL_NODE;
-        }
-        std::vector<node_key> nodes;
-        Complex::get_nodes(e, nodes);
-        
-        V p = Util::barycenter<MT>(get_pos(nodes[0]), get_pos(nodes[1]));
-        if (precond_collapse(e, p))
-        {
-            V p_new = Util::barycenter<MT>(get_destination(nodes[0]), get_destination(nodes[1]));
-            return collapse_edge(e, p, p_new);
-        }
-        
-        p = get_pos(nodes[1]);
-        if (precond_collapse(e, p))
-        {
-            V p_new = get_destination(nodes[1]);
-            return collapse_edge(e, p, p_new);
-        }
-        
-        p = get_pos(nodes[0]);
-        if (precond_collapse(e, p))
-        {
-            V p_new = get_destination(nodes[0]);
-            return collapse_edge(e, p, p_new);
         }
         return Complex::NULL_NODE;
     }
