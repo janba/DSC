@@ -2409,6 +2409,20 @@ public:
     }
     
     /**
+     * Returns the minimum quality among tetrahedra in the star of each end node of the edge e.
+     */
+    T min_quality(const edge_key& e)
+    {
+        std::vector<node_key> nodes;
+        Complex::get_nodes(e, nodes);
+        simplex_set st_n0, st_n1;
+        Complex::star(nodes[0], st_n0);
+        Complex::star(nodes[1], st_n1);
+        st_n0.add(st_n1);
+        return min_quality(st_n0);
+    }
+    
+    /**
      * Returns minimum quality among the tetrahedra adjacent to face f.
      */
     T min_quality(const face_key& f)
