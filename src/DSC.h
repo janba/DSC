@@ -1265,16 +1265,13 @@ private:
         simplex_set cl_t;
         Complex::closure(t, cl_t);
         face_key f = largest_face(cl_t);
-        std::vector<V> verts;
-        get_pos(f, verts);
         
         // Find the apex
-        simplex_set cl_f;
-        Complex::closure(f, cl_f);
-        cl_t.difference(cl_f);
-        node_key apex = *cl_t.nodes_begin();
+        node_key apex = Complex::get_apex(t, f);
         
         // Project the apex
+        std::vector<V> verts;
+        get_pos(f, verts);
         V proj_apex = Util::project<MT>(get_pos(apex), verts);
         
         // Find barycentric coordinates
