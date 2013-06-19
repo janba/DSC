@@ -1989,14 +1989,14 @@ private:
     /**
      * Collapses the edge e and moves the resulting node to the position p. Returns the new node if successful, otherwise NULL_NODE.
      */
-    node_key collapse_edge(edge_key& e, const V& p)
+    node_key collapse_edge(edge_key& e, const V& p, const V& p_new)
     {
         node_key n_new = Complex::collapse(e);
         
-        if (n_new != Complex::NULL_NODE)
+        if (Complex::exists(n_new) && n_new != Complex::NULL_NODE)
         {
             set_pos(n_new, p);
-            set_destination(n_new, p);
+            set_destination(n_new, p_new);
             
             simplex_set st, st_cl;
             Complex::star(n_new, st);
