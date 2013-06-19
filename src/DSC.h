@@ -1292,7 +1292,7 @@ private:
     }
     
     /**
-     * Attempt to remove tetrahedra with quality lower than MIN_QUALITY.
+     * Attempt to remove tetrahedra with quality lower than DEG_TET_QUALITY.
      */
     void remove_degenerate_tets()
     {
