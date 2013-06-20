@@ -1010,27 +1010,27 @@ private:
      */
     void thinning_pass()
     {
-        std::vector<edge_key> edges;
-        for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
+        std::vector<tet_key> tetrahedra;
+        for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
         {
-            if (!eit->is_interface() && !eit->is_boundary())
+            if (volume(tit.key()) < MIN_TET_VOLUME)
             {
-                edges.push_back(eit.key());
+                tetrahedra.push_back(tit.key());
             }
         }
-        
-        std::vector<node_key> nodes;
-        for (auto &e : edges)
+        int i = 0, j = 0;
+        for(auto &t : tetrahedra)
         {
-            if (Complex::exists(e) && length(e) < MIN_EDGE_LENGTH)
+            if (Complex::exists(t) && volume(t) < MIN_TET_VOLUME)
             {
-                node_key n = collapse(e);
-                if (n != Complex::NULL_NODE)
+                if(collapse(t))
                 {
-                    freitag_smoothing(n);
+                    i++;
                 }
+                j++;
             }
         }
+        std::cout << "Thinning pass collapses: " << i << "/" << j << std::endl;
     }
     
     ///////////////////////
