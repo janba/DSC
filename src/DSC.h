@@ -2125,7 +2125,7 @@ private:
                 q_max = q;
             }
         }
-        if(q_max > 0.)
+        if((!safe && q_max > 0.) || (safe && q_max > min_quality(e)))
         {
             return collapse(e, p_opt, p_new_opt);
         }
