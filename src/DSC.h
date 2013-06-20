@@ -2080,10 +2080,10 @@ private:
     }
     
     /**
-     * Returns true if the collapse of the edge e results in a minimum tetrahedron quality above MIN_TET_QUALITY or in an improvement of the minimum tetrahedron quality.
-     * The merged nodes are assumed moved to v_new after the collapse.
+     * Returns true if the collapse of the edge e does not result in any inverted tetrahedra.
+     * The merged nodes are assumed moved to p after the collapse.
      */
-    bool precond_collapse(const edge_key& e, const V& v_new)
+    bool precond_collapse(const edge_key& e, const V& p)
     {
         std::vector<node_key> nodes;
         Complex::get_nodes(e, nodes);
@@ -2098,7 +2098,7 @@ private:
         lk_n0.add(lk_n1);
         lk_n0.difference(cl_st_e);
         
-        if(will_invert(nodes[0], v_new, lk_n0) || will_invert(nodes[1], v_new, lk_n0))
+        if(will_invert(nodes[0], p, lk_n0) || will_invert(nodes[1], p, lk_n0))
         {
             return false;
         }
