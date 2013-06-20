@@ -1600,25 +1600,30 @@ public:
      */
     void deform(int num_steps = 10)
     {
-        bool finished = false;
+        int missing;
         int step = 0;
-        while (!finished && step < num_steps)
-        {
+        do {
             std::cout << "Move vertices step " << step << std::endl;
-            finished = true;
+            missing = 0;
+            int movable = 0;
             for (auto nit = Complex::nodes_begin(); nit != Complex::nodes_end(); nit++)
             {
                 if (nit->is_interface() && Complex::exists(nit.key()))
                 {
-                    finished = finished & move_vertex(nit.key(), nit->get_destination());
+                    if(!move_vertex(nit.key(), get_destination(nit.key())))
+                    {
+                        missing++;
+                    }
+                    movable++;
                 }
             }
+            std::cout << "Vertices missing to be moved: " << missing <<"/" << movable << std::endl;
             validity_check();
             
             fix_complex();
             
             ++step;
-        }
+        } while (missing > 0 && step < num_steps);
         
         if(step_no%5 == 0)
         {
