@@ -1126,10 +1126,53 @@ private:
         Complex::garbage_collect();
     }
     
+    //////////////////////////////////
+    // REMOVE LOW QUALITY SIMPLICES //
+    //////////////////////////////////
+    
+    bool remove_edge(edge_key& e)
+    {
+        node_key n = collapse(e);
+        if(n == Complex::NULL_NODE)
+        {
+            n = collapse(e, false);
+        }
+        return n != Complex::NULL_NODE;
+    }
+    
+    /**
+     * Attempt to remove edges shorter than MIN_EDGE_LENGTH by safely collapsing them.
+     */
+    void remove_edges()
+    {
+        std::list<edge_key> edges;
+        for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
+        {
+            if (length(eit.key()) < DEG_EDGE_LENGTH)
+            {
+                edges.push_back(eit.key());
+            }
+        }
+        int i = 0, j = 0;
+        for(auto e : edges)
+        {
+            if(Complex::exists(e) && length(e) < DEG_EDGE_LENGTH)
+            {
+                if(remove_edge(e))
+                {
+                    i++;
+                }
+                j++;
+            }
+        }
+        std::cout << "Removed " << i <<"/"<< j << " low quality edges" << std::endl;
+        Complex::garbage_collect();
+    }
+    
     /**
      * Attempt to remove the cap f by splitting the longest edge and collapsing it with cap's apex.
      */
-    bool remove_cap(face_key const & f)
+    bool remove_cap(const face_key& f)
     {
         // Find longest edge
         simplex_set cl_f;
@@ -1173,7 +1216,7 @@ private:
     /**
      * Attempt to remove the face f by first determining whether it's a cap or a needle.
      */
-    bool remove_degenerate_face(const face_key& f)
+    bool remove_face(const face_key& f)
     {
         if(max_angle(f) > M_PI - MIN_ANGLE)
         {
@@ -1185,31 +1228,32 @@ private:
     /**
      * Attempts to remove degenerate faces (faces with a minimum angle smaller than DEG_ANGLE).
      */
-    void remove_degenerate_faces()
+    void remove_faces()
     {
-        std::list<face_key> degenerate_faces;
+        std::list<face_key> faces;
         
         for (auto fit = Complex::faces_begin(); fit != Complex::faces_end(); fit++)
         {
             if(min_angle(fit.key()) < DEG_ANGLE)
             {
-               degenerate_faces.push_back(fit.key());
+               faces.push_back(fit.key());
             }
         }
         
         int i = 0, j = 0;
-        for (auto &f : degenerate_faces)
+        for (auto &f : faces)
         {
             if (Complex::exists(f) && min_angle(f) < DEG_ANGLE)
             {
-                if(remove_degenerate_face(f))
+                if(remove_face(f))
                 {
                     i++;
                 }
                 j++;
             }
         }
-        std::cout << "Removed " << i <<"/"<< j << " degenerate faces" << std::endl;
+        std::cout << "Removed " << i <<"/"<< j << " low quality faces" << std::endl;
+        Complex::garbage_collect();
     }
     
     /**
@@ -1318,7 +1362,7 @@ private:
      * This function detects what type of degeneracy tetrahedron t is (sliver, cap, needle or wedge)
      * and selects appropriate degeneracy removal routine.
      */
-    bool remove_degenerate_tet(const tet_key & t)
+    bool remove_tet(const tet_key & t)
     {
         // Find the largest face
         simplex_set cl_t;
@@ -1374,36 +1418,32 @@ private:
     /**
      * Attempt to remove tetrahedra with quality lower than DEG_TET_QUALITY.
      */
-    void remove_degenerate_tets()
+    void remove_tets()
     {
-        std::vector<tet_key> degenerated_tets;
+        std::vector<tet_key> tets;
         
         for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
         {
-            if (quality(tit.key()) <= DEG_TET_QUALITY)
+            if (quality(tit.key()) < DEG_TET_QUALITY)
             {
-                degenerated_tets.push_back(tit.key());
+                tets.push_back(tit.key());
             }
         }
         int i = 0, j=0;
-        for (auto &tet : degenerated_tets)
+        for (auto &tet : tets)
         {
-            if (Complex::exists(tet) && quality(tet) <= DEG_TET_QUALITY)
+            if (Complex::exists(tet) && quality(tet) < DEG_TET_QUALITY)
             {
-                if(remove_degenerate_tet(tet))
+                if(remove_tet(tet))
                 {
                     i++;
                 }
                 j++;
             }
         }
-        std::cout << "Removed " << i <<"/"<< j << " degenerate tets" << std::endl;
+        std::cout << "Removed " << i <<"/"<< j << " low quality tets" << std::endl;
         Complex::garbage_collect();
     }
-    
-    //////////////////////////////////
-    // REMOVE LOW QUALITY SIMPLICES //
-    //////////////////////////////////
     
     ///////////////////
     // FIX FUNCTIONS //
@@ -1425,12 +1465,12 @@ private:
         interface_edge_flip_pass();
         validity_check();
         
-        print_out("Remove degeneracies.");
-        remove_degenerate_tets();
+        print_out("Remove low quality.");
+        remove_tets();
         validity_check();
-        remove_degenerate_faces();
+        remove_faces();
         validity_check();
-        remove_degenerate_edges();
+        remove_edges();
         validity_check();
         
         print_out("Smooth.");
