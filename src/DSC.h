@@ -1104,7 +1104,7 @@ private:
         {
             if(Complex::exists(e) && length(e) < DEG_EDGE_LENGTH)
             {
-                if(remove_degeneracy(e))
+                if(collapse(e, false))
                 {
                     i++;
                 }
@@ -1132,7 +1132,7 @@ private:
         {
             if (Complex::exists(f) && min_angle(f) < DEG_ANGLE)
             {
-                if(remove_degeneracy(f))
+                if(collapse(f, false))
                 {
                     i++;
                 }
@@ -1155,11 +1155,11 @@ private:
             }
         }
         int i = 0, j = 0;
-        for (auto &tet : tets)
+        for (auto &t : tets)
         {
-            if (Complex::exists(tet) && quality(tet) < DEG_TET_QUALITY)
+            if (Complex::exists(t) && quality(t) < DEG_TET_QUALITY)
             {
-                if(remove_degeneracy(tet))
+                if(collapse(t, false))
                 {
                     i++;
                 }
