@@ -1087,14 +1087,43 @@ private:
     // REMOVE DEGENERACIES PASS //
     //////////////////////////////
     
-    bool remove_degenerate_edge(edge_key& e)
+    /**
+     * Remove a degeneracy by trying to collapse the shortest edge in set one by one.
+     * Return true if successful.
+     */
+    bool remove_degeneracy(simplex_set& set)
     {
-        node_key new_n = collapse(e);
-        if(new_n == Complex::NULL_NODE)
+        while(set.size_edges() > 0)
         {
-            new_n = collapse(e, false);
+            edge_key e = shortest_edge(set);
+            if(collapse(e, false) != Complex::NULL_NODE)
+            {
+                return true;
+            }
+            set.erase(e);
         }
-        return new_n != Complex::NULL_NODE;
+        return false;
+    }
+    
+    bool remove_degeneracy(const edge_key& e)
+    {
+        simplex_set cl_e;
+        Complex::closure(e, cl_e);
+        return remove_degeneracy(cl_e);
+    }
+    
+    bool remove_degeneracy(const face_key& f)
+    {
+        simplex_set cl_f;
+        Complex::closure(f, cl_f);
+        return remove_degeneracy(cl_f);
+    }
+    
+    bool remove_degeneracy(const tet_key& t)
+    {
+        simplex_set cl_t;
+        Complex::closure(t, cl_t);
+        return remove_degeneracy(cl_t);
     }
     
     /**
@@ -1102,20 +1131,20 @@ private:
      */
     void remove_degenerate_edges()
     {
-        std::list<edge_key> degenerate_edges;
+        std::list<edge_key> edges;
         for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
         {
             if (length(eit.key()) < DEG_EDGE_LENGTH)
             {
-                degenerate_edges.push_back(eit.key());
+                edges.push_back(eit.key());
             }
         }
-        int i = 0, j=0;
-        for(auto e : degenerate_edges)
+        int i = 0, j = 0;
+        for(auto e : edges)
         {
             if(Complex::exists(e) && length(e) < DEG_EDGE_LENGTH)
             {
-                if(remove_degenerate_edge(e))
+                if(remove_degeneracy(e))
                 {
                     i++;
                 }
@@ -1123,6 +1152,61 @@ private:
             }
         }
         std::cout << "Removed " << i <<"/"<< j << " degenerate edges" << std::endl;
+        Complex::garbage_collect();
+    }
+    
+    void remove_degenerate_faces()
+    {
+        std::list<face_key> faces;
+        
+        for (auto fit = Complex::faces_begin(); fit != Complex::faces_end(); fit++)
+        {
+            if(min_angle(fit.key()) < DEG_ANGLE)
+            {
+                faces.push_back(fit.key());
+            }
+        }
+        
+        int i = 0, j = 0;
+        for (auto &f : faces)
+        {
+            if (Complex::exists(f) && min_angle(f) < DEG_ANGLE)
+            {
+                if(remove_degeneracy(f))
+                {
+                    i++;
+                }
+                j++;
+            }
+        }
+        std::cout << "Removed " << i <<"/"<< j << " degenerate faces" << std::endl;
+        Complex::garbage_collect();
+    }
+    
+    void remove_degenerate_tets()
+    {
+        std::vector<tet_key> tets;
+        
+        for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
+        {
+            if (quality(tit.key()) < DEG_TET_QUALITY)
+            {
+                tets.push_back(tit.key());
+            }
+        }
+        int i = 0, j = 0;
+        for (auto &tet : tets)
+        {
+            if (Complex::exists(tet) && quality(tet) < DEG_TET_QUALITY)
+            {
+                if(remove_degeneracy(tet))
+                {
+                    i++;
+                }
+                j++;
+            }
+        }
+        std::cout << "Removed " << i <<"/"<< j << " degenerate tets" << std::endl;
         Complex::garbage_collect();
     }
     
@@ -1472,6 +1556,14 @@ private:
         validity_check();
         remove_edges();
         validity_check();
+        
+//        print_out("Remove degeneracies.");
+//        remove_degenerate_tets();
+//        validity_check();
+//        remove_degenerate_faces();
+//        validity_check();
+//        remove_degenerate_edges();
+//        validity_check();
         
         print_out("Smooth.");
         smooth();
