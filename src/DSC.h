@@ -992,14 +992,19 @@ private:
                 tetrahedra.push_back(tit.key());
             }
         }
-        
-        for(auto &tit : tetrahedra)
+        int i = 0, j = 0;
+        for(auto &t : tetrahedra)
         {
-            if (Complex::exists(tit))
+            if (Complex::exists(t) && volume(t) > MAX_TET_VOLUME)
             {
-                split(tit);
+                if(split(t) != Complex::NULL_NODE)
+                {
+                    i++;
+                }
+                j++;
             }
         }
+        std::cout << "Thickening pass splits: " << i << "/" << j << std::endl;
     }
     
     ///////////////////
