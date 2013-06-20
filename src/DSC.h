@@ -2082,13 +2082,10 @@ private:
         std::vector<node_key> nodes;
         Complex::get_nodes(e, nodes);
         
-        bool editable1 = !is_interface(nodes[0]) && !is_boundary(nodes[0]);
-        bool editable2 = !is_interface(nodes[1]) && !is_boundary(nodes[1]);
-        
         V p_opt, p_new_opt;
         T q_max = 0.;
         
-        if (!safe || (editable1 && editable2))
+        if (!is_boundary(nodes[0]) && !is_boundary(nodes[1]) && (!safe || (!is_interface(nodes[0]) && !is_interface(nodes[1]))))
         {
             V p = Util::barycenter<MT>(get_pos(nodes[0]), get_pos(nodes[1]));
             T q = min_quality(e, p);
@@ -2100,7 +2097,7 @@ private:
             }
         }
         
-        if (!safe || editable1)
+        if (!is_boundary(nodes[0]) && (!safe || !is_interface(nodes[0])))
         {
             V p = get_pos(nodes[1]);
             T q = min_quality(e, p);
@@ -2113,7 +2110,7 @@ private:
             }
         }
         
-        if (!safe || editable2)
+        if (!is_boundary(nodes[1]) && (!safe || !is_interface(nodes[1])))
         {
             V p = get_pos(nodes[0]);
             T q = min_quality(e, p);
