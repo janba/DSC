@@ -1263,18 +1263,54 @@ private:
      * Remove a degenerate tetrahedron of a type "wedge" or "needle" by collapsing the shortest edge.
      * Return true if successful.
      */
-    bool remove_wedge_or_needle(const tet_key & t)
+    bool remove_wedge(const tet_key & t)
     {
         simplex_set cl_t;
         Complex::closure(t, cl_t);
-        edge_key e = shortest_edge(cl_t);
-        if(collapse(e, false) == Complex::NULL_NODE)
+        while(cl_t.size_edges() > 2)
         {
+            edge_key e = shortest_edge(cl_t);
+            if(collapse(e, false) != Complex::NULL_NODE)
+            {
+                return true;
+            }
             cl_t.erase(e);
-            e = shortest_edge(cl_t);
-            return collapse(e, false) != Complex::NULL_NODE;
         }
-        return true;
+        return false;
+        
+//        simplex_set cl_t;
+//        Complex::closure(t, cl_t);
+//        edge_key e1 = longest_edge(cl_t);
+//        cl_t.erase(e1);
+//        edge_key e2 = longest_edge(cl_t);
+//        
+//        node_key n1 = split(e1);
+//        node_key n2 = split(e2);
+//        
+//        edge_key e = Complex::get_edge(n1, n2);
+//        return collapse(e) != Complex::NULL_NODE;
+    }
+    
+    /**
+     * Remove a tetrahedron of a type "needle" by splitting the tetrahedron.
+     * Return true if successful.
+     */
+    bool remove_needle(const tet_key & t)
+    {
+        simplex_set cl_t;
+        Complex::closure(t, cl_t);
+        while(cl_t.size_edges() > 1)
+        {
+            edge_key e = shortest_edge(cl_t);
+            if(collapse(e, false) != Complex::NULL_NODE)
+            {
+                return true;
+            }
+            cl_t.erase(e);
+        }
+        return false;
+//        split(t);
+//        return true;
     }
     
     /**
@@ -1310,8 +1346,29 @@ private:
             return remove_sliver(t);
         }
         
-        // The tetrahedron is a wedge or a needle
-        return remove_wedge_or_needle(t);
+        T mean_dist = 0.;
+        for(V &p : verts)
+        {
+            mean_dist += (p-proj_apex).length()/3.;
+        }
+        int close = 0;
+        for(V &p : verts)
+        {
+            if((p-proj_apex).length() < mean_dist)
+            {
+                close++;
+            }
+        }
+        
+        if(close == 2) // The tetrahedron is a needle
+        {
+            return remove_needle(t);
+        }
+        else if(close == 1) // The tetrahedron is a wedge
+        {
+            return remove_wedge(t);
+        }
+        return false;
     }
     
     /**
