@@ -1580,12 +1580,12 @@ private:
     
     void resize_complex()
     {
-        print_out("Thinning pass.");
-        thinning_pass();
-        validity_check();
-        
         print_out("Thickening pass.");
         thickening_pass();
+        validity_check();
+        
+        print_out("Thinning pass.");
+        thinning_pass();
         validity_check();
         
         fix_complex();
