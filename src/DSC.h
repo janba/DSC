@@ -2323,6 +2323,37 @@ private:
         return Complex::NULL_NODE;
     }
     
+    bool collapse(const face_key& f, bool safe = true)
+    {
+        simplex_set cl_f;
+        Complex::closure(f, cl_f);
+        while(cl_f.size_edges() > 0)
+        {
+            edge_key e = shortest_edge(cl_f);
+            if(collapse(e, safe) != Complex::NULL_NODE)
+            {
+                return true;
+            }
+            cl_f.erase(e);
+        }
+        return false;
+    }
+    
+    bool collapse(const tet_key& t, bool safe = true)
+    {
+        simplex_set cl_t;
+        Complex::closure(t, cl_t);
+        while(cl_t.size_edges() > 0)
+        {
+            edge_key e = shortest_edge(cl_t);
+            if(collapse(e, safe) != Complex::NULL_NODE)
+            {
+                return true;
+            }
+            cl_t.erase(e);
+        }
+        return false;
+    }
     
     //////////////////////
     // GETTER FUNCTIONS //
