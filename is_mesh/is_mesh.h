@@ -560,7 +560,7 @@ namespace OpenTissue
              * Marek
              */
         protected:
-            node_key_type split_tetrahedron_helper(tetrahedron_key_type & t,
+            node_key_type split_tetrahedron_helper(const tetrahedron_key_type & t,
                                                    std::map<tetrahedron_key_type, tetrahedron_key_type> & new_tets)
             {
                 orient_faces_oppositely(t);
@@ -3264,7 +3264,7 @@ namespace OpenTissue
             /**
              * Marek
              */
-            node_key_type split_tetrahedron(tetrahedron_key_type & t)
+            node_key_type split_tetrahedron(const tetrahedron_key_type & t)
             {
                 std::map<tetrahedron_key_type, tetrahedron_key_type> new_tets;
                 return split_tetrahedron_helper(t, new_tets);

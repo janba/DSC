@@ -1931,7 +1931,7 @@ public:
     /**
      * Split a tetrahedron t and returns the new node which is positioned at the barycenter of the vertices of t.
      */
-    node_key split(tet_key& t)
+    node_key split(const tet_key& t)
     {
         std::vector<V> verts;
         get_pos(t, verts);

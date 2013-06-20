@@ -315,7 +315,7 @@ public:
         return n;
     }
     
-    node_key split(tet_key & t)
+    node_key split(const tet_key& t)
     {
         int label = get(t).label;
         
