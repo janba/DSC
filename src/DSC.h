@@ -1086,46 +1086,6 @@ private:
     //////////////////////////////
     // REMOVE DEGENERACIES PASS //
     //////////////////////////////
-    
-    /**
-     * Remove a degeneracy by trying to collapse the shortest edge in set one by one.
-     * Return true if successful.
-     */
-    bool remove_degeneracy(simplex_set& set)
-    {
-        while(set.size_edges() > 0)
-        {
-            edge_key e = shortest_edge(set);
-            if(collapse(e, false) != Complex::NULL_NODE)
-            {
-                return true;
-            }
-            set.erase(e);
-        }
-        return false;
-    }
-    
-    bool remove_degeneracy(const edge_key& e)
-    {
-        simplex_set cl_e;
-        Complex::closure(e, cl_e);
-        return remove_degeneracy(cl_e);
-    }
-    
-    bool remove_degeneracy(const face_key& f)
-    {
-        simplex_set cl_f;
-        Complex::closure(f, cl_f);
-        return remove_degeneracy(cl_f);
-    }
-    
-    bool remove_degeneracy(const tet_key& t)
-    {
-        simplex_set cl_t;
-        Complex::closure(t, cl_t);
-        return remove_degeneracy(cl_t);
-    }
-    
     /**
      * Attempt to remove edges shorter than DEG_EDGE_LENGTH by collapsing them.
      */
