@@ -110,9 +110,9 @@ public:
         MIN_TET_QUALITY = 0.3;
         FLIP_EDGE_TET_FLATNESS = 0.995;
         
-        T vol_avg = AVG_EDGE_LENGTH*sqrt(2.)/12;
-        MIN_TET_VOLUME = 0.25*vol_avg;
-        MAX_TET_VOLUME = 2.*vol_avg;
+        T vol_avg = AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*sqrt(2.)/12.;
+        MIN_TET_VOLUME = 0.5*vol_avg;
+        MAX_TET_VOLUME = 10.*vol_avg;
     }
     
     DeformableSimplicialComplex() {}
