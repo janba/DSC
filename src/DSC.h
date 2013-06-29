@@ -439,13 +439,13 @@ private:
     //////////////////////
     
     /**
-     * Finds the triangulation of the input polygon "sandwiched" between two vertices in vv,
-     * which maximizes the worst tetrahedron's quality (using dynamic programming -- Klincsek's algorithm).
+     * Build an array for the dynamic programming method
      */
-    T klincsek_triangulation(const std::vector<node_key>& polygon, std::vector<node_key>& new_edges, std::vector<V>& vv)
+    std::vector<std::vector<kt_chunk<MT> > > build_table(const node_key& n1, const node_key& n2, const std::vector<node_key>& polygon)
     {
-        // Build an array for the dynamic programming method
-        T max_double = INFINITY;
+        V v1 = get_pos(n1);
+        V v2 = get_pos(n2);
+        
         T q;
         int n = (int) polygon.size();
         
@@ -455,7 +455,7 @@ private:
         for (int i=0; i<n-1; ++i)
         {
             kt_array[i].resize(n);
-            kt_array[i][i+1].quality = max_double;
+            kt_array[i][i+1].quality = INFINITY;
             kt_array[i][i+1].i = i;
             kt_array[i][i+1].j = i+1;
         }
@@ -466,7 +466,7 @@ private:
             {
                 for (int k=i+1; k<j; ++k)
                 {
-                    q = Util::quality<MT>(get_pos(polygon[i]), get_pos(polygon[k]), get_pos(polygon[j]), vv[0], vv[1]);
+                    q = Util::quality<MT>(get_pos(polygon[i]), get_pos(polygon[k]), get_pos(polygon[j]), v2, v1);
                     if (k<j-1)
                     {
                         q = std::min(q, kt_array[k][j].quality);
@@ -486,13 +486,24 @@ private:
                 }
             }
         }
+        return kt_array;
+    }
+    
+    /**
+     * Finds the triangulation of the input polygon "sandwiched" between two vertices in vv,
+     * which maximizes the worst tetrahedron's quality (using dynamic programming -- Klincsek's algorithm).
+     */
+    T klincsek_triangulation(const node_key& n1, const node_key& n2, const std::vector<node_key>& polygon, std::vector<node_key>& new_edges)
+    {
+        int n = (int) polygon.size();
+        auto kt_array = build_table(n1, n2, polygon);
         
         // Find optimal triangulation of the polygon
         std::list<kt_chunk<MT> > kt_stack;
         kt_stack.push_front(kt_array[0][kt_array[0][n-1].k]);
         kt_stack.push_front(kt_array[kt_array[0][n-1].k][n-1]);
         
-        q = kt_array[0][n-1].quality;
+        T q = kt_array[0][n-1].quality;
         
         while (!kt_stack.empty())
         {
@@ -522,12 +533,9 @@ private:
         
         T min_q = min_quality(st_e);
         int label = get_label(*(st_e.tetrahedra_begin()));
-        
-        std::vector<V> vv;
-        get_pos(e, vv);
-        std::vector<V> verts(2);
-        verts[0] = vv[1];// VERTEX FLIP (due to strange choice in vertices())
-        verts[1] = vv[0];
+
+        std::vector<node_key> apices;
+        Complex::get_nodes(e, apices);
         
         simplex_set lk_e;
         Complex::link(e, lk_e);
@@ -536,7 +544,7 @@ private:
         sort_vertices(lk_e, polygon);
         check_consistency(e, polygon);
         
-        T q = klincsek_triangulation(polygon, new_edges, verts);
+        T q = klincsek_triangulation(apices[0], apices[1], polygon, new_edges);
         
         if (q > min_q && q > 0.)
         {
@@ -686,7 +694,7 @@ private:
             sort_vertices(mf_boundary, polygon);
             check_consistency(verts, polygon);
             
-            q = klincsek_triangulation(polygon, new_edges, verts);
+            q = klincsek_triangulation(apices[0], apices[1], polygon, new_edges);
             
             // If Klincsek's algorithm found a better triangulation, proceed with multi-face retriangulation
             if (q > q_old + EPSILON && q > 0.)
