@@ -1079,10 +1079,10 @@ private:
             {
                 if (!smart_laplacian(nit.key()))
                 {
-                    if (min_quality(nit.key()) < MIN_TET_QUALITY)
-                    {
-                        freitag_smoothing(nit.key());
-                    }
+//                    if (min_quality(nit.key()) < MIN_TET_QUALITY)
+//                    {
+//                        freitag_smoothing(nit.key());
+//                    }
                 }
             }
         }
