@@ -1094,24 +1094,6 @@ namespace Util
         return q;
     }
     
-    template<typename MT>
-    inline typename MT::real_type quality(typename MT::vector3_type const a,
-                                          typename MT::vector3_type const b,
-                                          typename MT::vector3_type const c,
-                                          typename MT::vector3_type const apex1,
-                                          typename MT::vector3_type const apex2)
-    {
-        typedef typename MT::real_type      T;
-        
-        T const qv = quality<MT>(a, b, c, apex1);
-        T const qw = quality<MT>(b, a, c, apex2);
-        if (qv < qw)
-        {
-            return qv;
-        }
-        return qw;
-    }
-    
     
     /**
      * Finds the center of a smallest circle containing the triangle specified by vertices a, b, c.

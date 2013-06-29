@@ -446,7 +446,6 @@ private:
         V v1 = get_pos(n1);
         V v2 = get_pos(n2);
         
-        T q;
         int n = (int) polygon.size();
         
         std::vector<std::vector<kt_chunk<MT> > > kt_array;
@@ -460,23 +459,25 @@ private:
             kt_array[i][i+1].j = i+1;
         }
         
-        for (int i=n-3; i>=0; --i)
+        for (int i = n-3; i >= 0; i--)
         {
-            for (int j=i+2; j<n; ++j)
+            for (int j= i+2; j < n; j++)
             {
-                for (int k=i+1; k<j; ++k)
+                for (int k = i+1; k < j; k++)
                 {
-                    q = Util::quality<MT>(get_pos(polygon[i]), get_pos(polygon[k]), get_pos(polygon[j]), v2, v1);
-                    if (k<j-1)
+                    T q2 = Util::quality<MT>(get_pos(polygon[i]), get_pos(polygon[k]), get_pos(polygon[j]), v2);
+                    T q1 = Util::quality<MT>(get_pos(polygon[k]), get_pos(polygon[i]), get_pos(polygon[j]), v1);
+                    T q = std::min(q1, q2);
+                    if (k < j-1)
                     {
                         q = std::min(q, kt_array[k][j].quality);
                     }
-                    if (k>i+1)
+                    if (k > i+1)
                     {
                         q = std::min(q, kt_array[i][k].quality);
                     }
                     
-                    if (k==i+1 || q>kt_array[i][j].quality)
+                    if (k == i+1 || q > kt_array[i][j].quality)
                     {
                         kt_array[i][j].quality = q;
                         kt_array[i][j].k = k;
