@@ -388,6 +388,33 @@ public:
         return res;
     }
     
+    node_key flip_32(const edge_key& e)
+    {
+        simplex_set lk_e;
+        link(e, lk_e);
+        node_key n1 = *lk_e.nodes_begin();
+        node_key n2 = split(e);
+        edge_key e2 = get_edge(n1, n2);
+        node_key n3 = collapse(e2);
+        return n3;
+    }
+    
+    node_key flip_23(const face_key& f)
+    {
+        simplex_set lk_f;
+        link(f, lk_f);
+        node_key n1 = *lk_f.nodes_begin();
+        node_key n2 = split(f);
+        edge_key e = get_edge(n1, n2);
+        node_key n3 = collapse(e);
+        return n3;
+    }
+    
+    void flip_44()
+    {
+        
+    }
+    
     ///////////////////////////////////
     // SHOULD BE REMOVED OR REPLACED //
     ///////////////////////////////////
