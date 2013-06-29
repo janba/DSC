@@ -2290,7 +2290,8 @@ private:
                 q_max = q;
             }
         }
-        if((!safe && q_max > 0.) || (safe && q_max > min_quality(e)))
+        T q = std::min(min_quality(nodes[0]), min_quality(nodes[1]));
+        if((!safe && q_max > 0.) || (safe && q_max > q))
         {
             return collapse(e, p_opt, p_new_opt);
         }
@@ -2609,13 +2610,9 @@ public:
      */
     T min_quality(const edge_key& e)
     {
-        std::vector<node_key> nodes;
-        Complex::get_nodes(e, nodes);
-        simplex_set st_n0, st_n1;
-        Complex::star(nodes[0], st_n0);
-        Complex::star(nodes[1], st_n1);
-        st_n0.add(st_n1);
-        return min_quality(st_n0);
+        simplex_set st_e;
+        Complex::star(e, st_e);
+        return min_quality(st_e);
     }
     
     /**
