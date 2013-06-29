@@ -525,32 +525,125 @@ private:
     }
     
     /**
+     * Build an array for the dynamic programming method
+     */
+    T build_table(const edge_key& e, const std::vector<node_key>& polygon, std::vector<std::vector<int>>& K)
+    {
+        std::vector<V> verts;
+        get_pos(e, verts);
+        
+        const int m = (int) polygon.size();
+        
+        auto Q = std::vector<std::vector<T>>(m-1, std::vector<T>(m, 0.));
+        K = std::vector<std::vector<int>>(m-1, std::vector<int>(m, 0) );
+        
+        for(int i = 0; i < m-1; i++)
+        {
+            Q[i][i+1] = INFINITY;
+        }
+        
+        for (int i = m-3; i >= 0; i--)
+        {
+            for (int j = i+2; j < m; j++)
+            {
+                for (int k = i+1; k < j; k++)
+                {
+                    T q2 = Util::quality<MT>(get_pos(polygon[i]), get_pos(polygon[k]), get_pos(polygon[j]), verts[1]);
+                    T q1 = Util::quality<MT>(get_pos(polygon[k]), get_pos(polygon[i]), get_pos(polygon[j]), verts[0]);
+                    T q = std::min(q1, q2);
+                    if (k < j-1)
+                    {
+                        q = std::min(q, Q[k][j]);
+                    }
+                    if (k > i+1)
+                    {
+                        q = std::min(q, Q[i][k]);
+                    }
+                    
+                    if (k == i+1 || q > Q[i][j])
+                    {
+                        Q[i][j] = q;
+                        K[i][j] = k;
+                    }
+                }
+            }
+        }
+        
+        std::cout << "Q" << std::endl;
+        for(auto &i : Q)
+        {
+            for(auto &j : i)
+            {
+                std::cout << j << ", ";
+            }
+            std::cout << std::endl;
+        }
+        
+        std::cout << "\nK" << std::endl;
+        for(auto &i : K)
+        {
+            for(auto &j : i)
+            {
+                std::cout << j << ", ";
+            }
+            std::cout << std::endl;
+        }
+        
+        return Q[0][m-1];
+    }
+    
+    std::vector<node_key> get_polygon(edge_key const & e)
+    {
+        simplex_set lk_e;
+        Complex::link(e, lk_e);
+        std::vector<node_key> polygon;
+        
+        sort_vertices(lk_e, polygon);
+        check_consistency(e, polygon);
+        return polygon;
+    }
+    
+    void edge_removal(std::vector<node_key>& polygon, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K, int i, int j)
+    {
+        if(j >= i+2)
+        {
+            int k = K[i][j];
+            edge_removal(polygon, n1, n2, K, i, k);
+            edge_removal(polygon, n1, n2, K, k, j);
+            Complex::flip_23(Complex::get_face(n1, n2, polygon[k]));
+        }
+    }
+    
+    void edge_removal(std::vector<node_key>& polygon, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K)
+    {
+        const int m = (int) polygon.size();
+        int k = K[0][m-1];
+        edge_removal(polygon, n1, n2, K, 0, k);
+        edge_removal(polygon, n1, n2, K, k, m-1);
+        Complex::flip_32(Complex::get_edge(n1, n2));
+    }
+    
+    /**
      * Attempt to remove edge e (the topological operation -- mesh reconnection).
      */
     void edge_removal(edge_key const & e)
     {
         simplex_set st_e;
         Complex::star(e, st_e);
-        
-        T min_q = min_quality(st_e);
         int label = get_label(*(st_e.tetrahedra_begin()));
-
-        std::vector<node_key> apices;
-        Complex::get_nodes(e, apices);
         
-        simplex_set lk_e;
-        Complex::link(e, lk_e);
-        std::vector<node_key> polygon, new_edges;
+        std::vector<node_key> polygon = get_polygon(e);
+        std::vector<node_key> nodes;
+        Complex::get_nodes(e, nodes);
         
-        sort_vertices(lk_e, polygon);
-        check_consistency(e, polygon);
+        std::vector<std::vector<int>> K;
+        T q_new = build_table(e, polygon, K);
         
-        T q = klincsek_triangulation(apices[0], apices[1], polygon, new_edges);
-        
-        if (q > min_q && q > 0.)
+        if (q_new > min_quality(e))
         {
             simplex_set new_simplices;
-            Complex::remove_edge(e, new_edges, new_simplices);
+            
+            edge_removal(polygon, nodes[0], nodes[1], K);
             
             for (auto tit = new_simplices.tetrahedra_begin(); tit != new_simplices.tetrahedra_end(); tit++)
             {
