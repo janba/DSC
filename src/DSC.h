@@ -638,6 +638,24 @@ private:
         }
     }
     
+    face_key get_neighbour(const face_key& f, const edge_key& e)
+    {
+        simplex_set st_e;
+        Complex::star(e, st_e);
+        if(st_e.size_faces() != 4)
+        {
+            return Complex::NULL_FACE;
+        }
+        
+        simplex_set st_f, cl_st_f;
+        Complex::star(f, st_f);
+        Complex::closure(st_f, cl_st_f);
+        
+        st_e.difference(cl_st_f);
+        assert(st_e.size_faces() == 1);
+        return *st_e.faces_begin();
+    }
+    
     /**
      * The helper function for optimal_multi_face_remove().
      * TODO: Sanity check.
