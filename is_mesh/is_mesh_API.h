@@ -420,12 +420,7 @@ public:
     ///////////////////////////////////
     // SHOULD BE REMOVED OR REPLACED //
     ///////////////////////////////////
-    
-    void remove_edge(const edge_key& e, std::vector<node_key> & new_edges, simplex_set& new_simplices)
-    {
-        mesh.remove_edge(e, new_edges, new_simplices);
-    }
-    
+        
     void find_min_multi_face(const face_key& f, simplex_set & multi_face, simplex_set & min_multi_face)
     {
         mesh.find_min_multi_face(f, multi_face, min_multi_face);
