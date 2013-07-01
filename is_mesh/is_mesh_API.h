@@ -210,13 +210,23 @@ public:
         return *(cl1.faces_begin());
     }
     
-    node_key get_apex(const tet_key& t, const face_key f)
+    node_key get_apex(const tet_key& t, const face_key& f)
     {
         simplex_set cl_f, cl_t;
         closure(t, cl_t);
         closure(f, cl_f);
         cl_t.difference(cl_f);
         return *cl_t.nodes_begin();
+    }
+    
+    node_key get_apex(const face_key& f, const edge_key& e)
+    {
+        simplex_set cl_f, cl_e;
+        closure(f, cl_f);
+        closure(e, cl_e);
+        cl_f.difference(cl_e);
+        assert(cl_f.size_nodes() == 1);
+        return *cl_f.nodes_begin();
     }
     
     void get_apices(const face_key& f, std::vector<node_key>& apices)
