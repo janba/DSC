@@ -669,6 +669,80 @@ private:
         }
     }
     
+    std::vector<edge_key> test_neighbour(const face_key& f, const node_key& a, const node_key& b, node_key& u, node_key& w, T& q_old, T& q_new)
+    {
+        edge_key e = Complex::get_edge(u,w);
+        face_key g = get_neighbour(f, e);
+        
+        if(g != Complex::NULL_FACE && !is_boundary(e) && !is_interface(e))
+        {
+            node_key v = Complex::get_apex(g, e);
+            orient_consistently(a, u, v, w);
+            T V_uv = Util::signed_volume<MT>(get_pos(a), get_pos(b), get_pos(u), get_pos(v));
+            T V_vw = Util::signed_volume<MT>(get_pos(a), get_pos(b), get_pos(v), get_pos(w));
+            T V_wu = Util::signed_volume<MT>(get_pos(a), get_pos(b), get_pos(w), get_pos(u));
+            
+            if((V_uv > 0. && V_vw > 0.) || (V_vw > 0. && V_wu > 0.) || (V_wu > 0. && V_uv > 0.))
+            {
+                q_old = std::min(Util::quality<MT>(get_pos(a), get_pos(u), get_pos(v), get_pos(w)),
+                                 Util::quality<MT>(get_pos(u), get_pos(v), get_pos(w), get_pos(b)));
+                
+                T q_uv_old, q_uv_new, q_vw_old, q_vw_new;
+                auto uv_edges = test_neighbour(g, a, b, u, v, q_uv_old, q_uv_new);
+                auto vw_edges = test_neighbour(g, a, b, v, w, q_vw_old, q_vw_new);
+                
+                q_old = std::min(std::min(q_old, q_uv_old), q_vw_old);
+                q_new = std::min(q_uv_new, q_vw_new);
+                T q = Util::quality<MT>(get_pos(a), get_pos(b), get_pos(u), get_pos(w));
+                
+                if(q_new > q_old || q_new > q)
+                {
+                    std::vector<edge_key> edges = {Complex::get_edge(f, g)};
+                    edges.insert(edges.end(), uv_edges.begin(), uv_edges.end());
+                    edges.insert(edges.end(), vw_edges.begin(), vw_edges.end());
+                    return edges;
+                }
+            }
+        }
+        q_old = INFINITY;
+        q_new = Util::quality<MT>(get_pos(a), get_pos(b), get_pos(u), get_pos(w));
+        return std::vector<edge_key>();
+    }
+    
+    void remove_multi_face(const face_key& f)
+    {
+        std::vector<node_key> apices;
+        Complex::get_apices(f, apices);
+        std::vector<node_key> nodes;
+        Complex::get_nodes(f, nodes);
+        
+        T q_01_new, q_01_old, q_12_new, q_12_old, q_20_new, q_20_old;
+        auto e01 = test_neighbour(f, apices[0], apices[1], nodes[0], nodes[1], q_01_old, q_01_new);
+        auto e12 = test_neighbour(f, apices[0], apices[1], nodes[1], nodes[2], q_12_old, q_12_new);
+        auto e20 = test_neighbour(f, apices[0], apices[1], nodes[2], nodes[0], q_20_old, q_20_new);
+        
+        T q_old = std::min(std::min(std::min(min_quality(f), q_01_old), q_12_old), q_20_old);
+        T q_new = std::min(std::min(q_01_new, q_12_new), q_20_new);
+        
+        if(q_new > q_old)
+        {
+            node_key n = Complex::flip_23(f);
+            assert(n != Complex::NULL_NODE);
+            for(auto &e : e01)
+            {
+                Complex::flip_32(e);
+            }
+            for(auto &e : e12)
+            {
+                Complex::flip_32(e);
+            }
+            for(auto &e : e20)
+            {
+                Complex::flip_32(e);
+            }
+        }
+    }
+    
     /**
      * The helper function for optimal_multi_face_remove().
      * TODO: Sanity check.
