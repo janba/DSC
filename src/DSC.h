@@ -584,13 +584,13 @@ private:
         return polygon;
     }
     
-    void edge_removal(std::vector<node_key>& polygon, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K, int i, int j)
+    void flip_23_recursively(std::vector<node_key>& polygon, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K, int i, int j)
     {
         if(j >= i+2)
         {
             int k = K[i][j];
-            edge_removal(polygon, n1, n2, K, i, k);
-            edge_removal(polygon, n1, n2, K, k, j);
+            flip_23_recursively(polygon, n1, n2, K, i, k);
+            flip_23_recursively(polygon, n1, n2, K, k, j);
             Complex::flip_23(Complex::get_face(n1, n2, polygon[k]));
         }
     }
@@ -599,8 +599,8 @@ private:
     {
         const int m = (int) polygon.size();
         int k = K[0][m-1];
-        edge_removal(polygon, n1, n2, K, 0, k);
-        edge_removal(polygon, n1, n2, K, k, m-1);
+        flip_23_recursively(polygon, n1, n2, K, 0, k);
+        flip_23_recursively(polygon, n1, n2, K, k, m-1);
         Complex::flip_32(Complex::get_edge(n1, n2));
     }
     
