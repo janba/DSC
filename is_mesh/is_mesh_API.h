@@ -406,7 +406,6 @@ public:
         node_key n2 = split(e);
         edge_key e2 = get_edge(n1, n2);
         node_key n3 = collapse(e2);
-        assert(n3 == n1);
         return n3;
     }
     
@@ -418,7 +417,6 @@ public:
         node_key n2 = split(f);
         edge_key e = get_edge(n1, n2);
         node_key n3 = collapse(e);
-        assert(n3 == n1);
         return n3;
     }
     
