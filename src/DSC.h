@@ -569,26 +569,6 @@ private:
             }
         }
         
-        std::cout << "Q" << std::endl;
-        for(auto &i : Q)
-        {
-            for(auto &j : i)
-            {
-                std::cout << j << ", ";
-            }
-            std::cout << std::endl;
-        }
-        
-        std::cout << "\nK" << std::endl;
-        for(auto &i : K)
-        {
-            for(auto &j : i)
-            {
-                std::cout << j << ", ";
-            }
-            std::cout << std::endl;
-        }
-        
         return Q[0][m-1];
     }
     
