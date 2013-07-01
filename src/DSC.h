@@ -525,7 +525,8 @@ private:
     }
     
     /**
-     * Build an array for the dynamic programming method
+     * Build a table K for the dynamic programming method by Klincsek (see Shewchuk "Two Discrete Optimization Algorithms 
+     * for the Topological Improvement of Tetrahedral Meshes" article for details).
      */
     T build_table(const edge_key& e, const std::vector<node_key>& polygon, std::vector<std::vector<int>>& K)
     {
@@ -604,7 +605,8 @@ private:
     }
     
     /**
-     * Attempt to remove edge e (the topological operation -- mesh reconnection).
+     * Attempt to remove edge e by mesh reconnection using the dynamic programming method by Klincsek (see Shewchuk "Two Discrete Optimization Algorithms
+     * for the Topological Improvement of Tetrahedral Meshes" article for details).
      */
     void edge_removal(edge_key const & e)
     {
