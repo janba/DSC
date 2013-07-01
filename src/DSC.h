@@ -656,6 +656,19 @@ private:
         return *st_e.faces_begin();
     }
     
+    void orient_consistently(const node_key& a, node_key& u, const node_key& v, node_key& w)
+    {
+        V x = get_pos(a) - get_pos(u);
+        V y = get_pos(v) - get_pos(u);
+        V z = get_pos(w) - get_pos(u);
+        if(MT::dot(x, cross(y,z)) < 0.)
+        {
+            node_key t = u;
+            u = w;
+            w = t;
+        }
+    }
+    
     /**
      * The helper function for optimal_multi_face_remove().
      * TODO: Sanity check.
