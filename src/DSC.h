@@ -1128,7 +1128,7 @@ private:
                 {
                     if (Complex::exists(*fit) && !is_interface(*fit) && !is_boundary(*fit))
                     {
-                        multi_face_removal(*fit);
+                        remove_multi_face(*fit);
                     }
                 }
             }
