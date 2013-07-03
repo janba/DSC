@@ -2980,12 +2980,13 @@ private:
     /**
      * Returns whether any of the tetrahedra in the star of n will invert if node n is moved to p_new.
      */
-    bool will_invert(const node_key& n, const V p_new)
-    {
-        simplex_set ln_n;
-        Complex::link(n, ln_n);
-        return will_invert(n, p_new, ln_n);
-    }
+//    bool will_invert(const node_key& n, const V p_new)
+//    {
+//        simplex_set st_n, cl_st_n;
+//        Complex::star(n, st_n);
+//        Complex::closure(st_n, cl_st_n);
+//        return will_invert(n, p_new, cl_st_n);
+//    }
     
     void validity_check()
     {
