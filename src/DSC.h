@@ -673,6 +673,7 @@ private:
     {
         edge_key e = Complex::get_edge(u,w);
         face_key g = get_neighbour(f, e);
+        T q = Util::quality<MT>(get_pos(a), get_pos(b), get_pos(u), get_pos(w));
         
         if(g != Complex::NULL_FACE && !is_boundary(e) && !is_interface(e))
         {
@@ -693,7 +694,6 @@ private:
                 
                 q_old = std::min(std::min(q_old, q_uv_old), q_vw_old);
                 q_new = std::min(q_uv_new, q_vw_new);
-                T q = Util::quality<MT>(get_pos(a), get_pos(b), get_pos(u), get_pos(w));
                 
                 if(q_new > q_old || q_new > q)
                 {
@@ -705,7 +705,7 @@ private:
             }
         }
         q_old = INFINITY;
-        q_new = Util::quality<MT>(get_pos(a), get_pos(b), get_pos(u), get_pos(w));
+        q_new = q;
         return std::vector<edge_key>();
     }
     
