@@ -656,19 +656,6 @@ private:
         return *st_e.faces_begin();
     }
     
-    void orient_consistently(const node_key& a, node_key& u, const node_key& v, node_key& w)
-    {
-        V x = get_pos(a) - get_pos(u);
-        V y = get_pos(v) - get_pos(u);
-        V z = get_pos(w) - get_pos(u);
-        if(MT::dot(x, cross(y,z)) > 0.)
-        {
-            node_key t = u;
-            u = w;
-            w = t;
-        }
-    }
-    
     std::vector<edge_key> test_neighbour(const face_key& f, const node_key& a, const node_key& b, node_key& u, node_key& w, T& q_old, T& q_new)
     {
         edge_key e = Complex::get_edge(u,w);
@@ -678,7 +665,6 @@ private:
         if(g != Complex::NULL_FACE && !is_boundary(e) && !is_interface(e))
         {
             node_key v = Complex::get_apex(g, e);
-            orient_consistently(a, u, v, w);
             T V_uv = Util::signed_volume<MT>(get_pos(a), get_pos(b), get_pos(u), get_pos(v));
             T V_vw = Util::signed_volume<MT>(get_pos(a), get_pos(b), get_pos(v), get_pos(w));
             T V_wu = Util::signed_volume<MT>(get_pos(a), get_pos(b), get_pos(w), get_pos(u));
