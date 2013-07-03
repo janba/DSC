@@ -709,12 +709,31 @@ private:
         return std::vector<edge_key>();
     }
     
+    /*
+     * Orient the nodes in a counter clockwise order seen from the node a.
+     */
+    void orient_cc(const node_key& a, std::vector<node_key>& nodes)
+    {
+        V x = get_pos(a) - get_pos(nodes[0]);
+        V y = get_pos(nodes[1]) - get_pos(nodes[0]);
+        V z = get_pos(nodes[2]) - get_pos(nodes[0]);
+        T val = MT::dot(x, cross(y,z));
+        assert(val != 0.);
+        if(val > 0.)
+        {
+            node_key t = nodes[0];
+            nodes[0] = nodes[2];
+            nodes[2] = t;
+        }
+    }
+    
     void remove_multi_face(const face_key& f)
     {
         std::vector<node_key> apices;
         Complex::get_apices(f, apices);
         std::vector<node_key> nodes;
         Complex::get_nodes(f, nodes);
+        orient_cc(apices[0], nodes);
         
         T q_01_new, q_01_old, q_12_new, q_12_old, q_20_new, q_20_old;
         auto e01 = test_neighbour(f, apices[0], apices[1], nodes[0], nodes[1], q_01_old, q_01_new);
