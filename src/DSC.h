@@ -661,7 +661,7 @@ private:
         V x = get_pos(a) - get_pos(u);
         V y = get_pos(v) - get_pos(u);
         V z = get_pos(w) - get_pos(u);
-        if(MT::dot(x, cross(y,z)) < 0.)
+        if(MT::dot(x, cross(y,z)) > 0.)
         {
             node_key t = u;
             u = w;
