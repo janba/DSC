@@ -735,15 +735,18 @@ private:
             assert(n != Complex::NULL_NODE);
             for(auto &e : e01)
             {
-                Complex::flip_32(e);
+                n = Complex::flip_32(e);
+                assert(n != Complex::NULL_NODE);
             }
             for(auto &e : e12)
             {
-                Complex::flip_32(e);
+                n = Complex::flip_32(e);
+                assert(n != Complex::NULL_NODE);
             }
             for(auto &e : e20)
             {
-                Complex::flip_32(e);
+                n = Complex::flip_32(e);
+                assert(n != Complex::NULL_NODE);
             }
         }
     }
