@@ -713,7 +713,7 @@ private:
         }
     }
     
-    void remove_multi_face(const face_key& f)
+    bool remove_multi_face(const face_key& f)
     {
         std::vector<node_key> apices;
         Complex::get_apices(f, apices);
@@ -748,6 +748,11 @@ private:
                 n = Complex::flip_32(e);
                 assert(n != Complex::NULL_NODE);
             }
+            return true;
+        }
+        return false;
+    }
+    
         }
     }
     
