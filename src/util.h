@@ -1323,14 +1323,90 @@ namespace Util
         
         // Compute the t value for the directed line ray intersecting the plane.
         T t = n / d;
+        if(t < 0.) // The ray goes away from the triangle
+        {
+            return t;
+        }
         V p = p0 + t*ray;
         
-        if (!is_between<MT>(p, verts)) // The intersection happens outside the face.
+        std::vector<T> coords;
+        get_barycentric_coords<MT>(p, verts[0], verts[1], verts[2], coords);
+        
+        if(coords[0] >= 0. && coords[1] >= 0. && coords[2] >= 0.) // The intersection happens inside the triangle.
         {
-            return INFINITY;
+            return t;
+        }
+        return INFINITY; // The intersection happens outside the triangle.
+    }
+    
+    
+    // Copyright 2001 softSurfer, 2012 Dan Sunday
+    // This code may be freely used and modified for any purpose
+    // providing that this copyright notice is included with it.
+    // SoftSurfer makes no warranty for this code, and cannot be held
+    // liable for any real or imagined damage resulting from its use.
+    // Users of this code must verify correctness for their application.
+    
+    // intersect3D_RayTriangle(): find the 3D intersection of a ray with a triangle
+    //    Input:  a ray R, and a triangle T
+    //    Output: *I = intersection point (when it exists)
+    //    Return: -1 = triangle is degenerate (a segment or point)
+    //             0 =  disjoint (no intersect)
+    //             1 =  intersect in unique point I1
+    //             2 =  are in the same plane
+    template<typename MT>
+    typename MT::real_type intersection(const typename MT::vector3_type& p0, const typename MT::vector3_type& p1, const typename MT::vector3_type& v0, const typename MT::vector3_type& v1, const typename MT::vector3_type& v2)
+    {
+        typedef typename MT::real_type      T;
+        typedef typename MT::vector3_type   V;
+        
+        // get triangle edge vectors and plane normal
+        V u = v1 - v0;
+        V v = v2 - v0;
+        V n = MT::cross(u, v);              // cross product
+        if (n == V(0))             // triangle is degenerate
+            return INFINITY;                  // do not deal with this case
+        
+        V dir = p1 - p0;              // ray direction vector
+        V w0 = p0 - v0;
+        T a = -MT::dot(n, w0);
+        T b = MT::dot(n, dir);
+        if (std::abs(b) < EPSILON) {     // ray is  parallel to triangle plane
+            if (a == 0) {                // ray lies in triangle plane
+                return 0.;
+            }
+            else {
+                return INFINITY;              // ray disjoint from plane
+            }
         }
         
-        return t;
+        // get intersect point of ray with triangle plane
+        T r = a / b;
+        if (r < 0.0)                    // ray goes away from triangle
+            return r;                   // => no intersect
+        // for a segment, also test if (r > 1.0) => no intersect
+        
+        V I = p0 + r * dir;            // intersect point of ray and plane
+        
+        // is I inside T?
+        T uu = dot(u,u);
+        T uv = dot(u,v);
+        T vv = dot(v,v);
+        V w = I - v0;
+        T wu = dot(w,u);
+        T wv = dot(w,v);
+        T D = uv * uv - uu * vv;
+        
+        // get and test parametric coords
+        float s, t;
+        s = (uv * wv - vv * wu) / D;
+        if (s < 0.0 || s > 1.0)         // I is outside T
+            return INFINITY;
+        t = (uv * wu - uu * wv) / D;
+        if (t < 0.0 || (s + t) > 1.0)  // I is outside T
+            return INFINITY;
+        
+        return r;                       // I is in T
     }
     
     /**
