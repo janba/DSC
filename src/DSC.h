@@ -771,7 +771,7 @@ private:
             Complex::get_nodes(*f, nodes);
             orient_cc(apices[1], nodes);
             
-            T t = Util::intersection<MT>(get_pos(apices[0]), get_pos(apices[1]), get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
+            T t = Util::intersection_ray_triangle<MT>(get_pos(apices[0]), get_pos(apices[1]), get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
             if(0. < t && t < 1.)
             {
                 if(remove_multi_face(*f))

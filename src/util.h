@@ -229,7 +229,7 @@ namespace Util
      * (it would introduce a very low quality tetrahedron).
      */
     template <typename MT>
-    inline void get_cosines(typename MT::vector3_type & v,
+    inline void cosines(typename MT::vector3_type & v,
                             std::vector<typename MT::vector3_type> & verts,
                             std::vector<typename MT::real_type> & cosines)
     {
@@ -294,20 +294,29 @@ namespace Util
      * Finds the barycentric coordinates of point v in a triangle spanned by points v0, v1, v2.
      */
     template <typename MT>
-    inline std::vector<typename MT::real_type> barycentric_coords(typename MT::vector3_type const & v, typename MT::vector3_type const & v0, typename MT::vector3_type const & v1, typename MT::vector3_type const & v2)
+    inline std::vector<typename MT::real_type> barycentric_coords(typename MT::vector3_type const& p, typename MT::vector3_type const& a, typename MT::vector3_type const& b, typename MT::vector3_type const& c)
     {
         typedef typename MT::real_type      T;
         typedef typename MT::vector3_type   V;
         
         std::vector<T> coords(3);
-        double scale = (v1[1] - v2[1])*(v0[0] - v2[0]) + (v2[0] - v1[0])*(v0[1] - v2[1]);
+        
+        V v0 = b - a;
+        V v1 = c - a;
+        V v2 = p - a;
+        T d00 = MT::dot(v0, v0);
+        T d01 = MT::dot(v0, v1);
+        T d11 = MT::dot(v1, v1);
+        T d20 = MT::dot(v2, v0);
+        T d21 = MT::dot(v2, v1);
+        T denom = d00 * d11 - d01 * d01;        
 #ifdef DEBUG
-        assert(scale != 0.);
+        assert(denom != 0.);
 #endif
-        scale = 1./scale;
-        coords[0] = ((v1[1] - v2[1])*(v[0] - v2[0]) + (v2[0] - v1[0])*(v[1] - v2[1])) * scale;
-        coords[1] = ((v2[1] - v0[1])*(v[0] - v2[0]) + (v0[0] - v2[0])*(v[1] - v2[1])) * scale;
-        coords[2] = 1. - coords[0] - coords[1];        
+        coords[0] = (d11 * d20 - d01 * d21) / denom;
+        coords[1] = (d00 * d21 - d01 * d20) / denom;
+        coords[2] = 1. - coords[0] - coords[1];
+           
         return coords;
     }
     
@@ -315,7 +324,7 @@ namespace Util
      * Calculates the barycentric coordinates of a point v in a tetrahedron spanned by the four vertices in verts.
      */
     template <typename MT>
-    inline void get_barycentric_coords(const typename MT::vector3_type& v, const std::vector<typename MT::vector3_type>& verts, std::vector<typename MT::real_type> & coords)
+    inline void barycentric_coords(const typename MT::vector3_type& v, const std::vector<typename MT::vector3_type>& verts, std::vector<typename MT::real_type> & coords)
     {        
         coords[0] = signed_volume<MT>(v       , verts[1], verts[2], verts[3]);
         coords[1] = signed_volume<MT>(verts[0], v       , verts[2], verts[3]);
@@ -673,7 +682,7 @@ namespace Util
     }
     
     /**
-     * Calculates the intersection between the line segment |p0 p1| and the plane spanned by the vertices in verts. The intersection point is defined by p0 + t*(p1 - p0) and the function returns t. Returns infinity if it does not intersect.
+     * Calculates the intersection between the line segment |p0 p1| and the plane spanned by the vertices v0, v1 and v2. The intersection point is defined by p0 + t*(p1 - p0) and the function returns t. Returns infinity if it does not intersect.
      */
     template<typename MT>
     typename MT::real_type intersection_ray_plane(const typename MT::vector3_type& p0, const typename MT::vector3_type& p1, const typename MT::vector3_type& v0, const typename MT::vector3_type& v1, const typename MT::vector3_type& v2)
@@ -682,10 +691,8 @@ namespace Util
         typedef typename MT::vector3_type   V;
         
         V normal = normal_direction<MT>(v0, v1, v2);
-        
-        V ray = p1 - p0;
         T n = MT::dot(normal, v0 - p0);
-        T d = MT::dot(normal, ray);
+        T d = MT::dot(normal, p1 - p0);
         
         if (std::abs(d) < EPSILON) // Plane and line are parallel if true.
         {
@@ -701,97 +708,27 @@ namespace Util
     }
     
     /**
-     * Calculates the intersection between the line segment |p0 p1| and the triangle made up by the vertices in verts. The intersection point is defined by p0 + t*(p1 - p0) and the function returns t. Returns infinity if it does not intersect.
+     * Calculates the intersection between the line segment |p0 p1| and the triangle |v0 v1 v2|. The intersection point is defined by p0 + t*(p1 - p0) and the function returns t. Returns infinity if it does not intersect.
      */
     template<typename MT>
-    typename MT::real_type intersection(const typename MT::vector3_type& p0, const typename MT::vector3_type& p1, const std::vector<typename MT::vector3_type>& verts)
+    typename MT::real_type intersection_ray_triangle(const typename MT::vector3_type& p0, const typename MT::vector3_type& p1, const typename MT::vector3_type& v0, const typename MT::vector3_type& v1, const typename MT::vector3_type& v2)
     {
         typedef typename MT::real_type      T;
         typedef typename MT::vector3_type   V;
         
-        T t = intersection_ray_plane<MT>(p0, p1, verts[0], verts[1], verts[2]);
+        T t = intersection_ray_plane<MT>(p0, p1, v0, v1, v2);
         if(t < 0.) // The ray goes away from the triangle
         {
             return t;
         }
         V p = p0 + t*(p1 - p0);
         
-        std::vector<T> coords = barycentric_coords<MT>(p, verts[0], verts[1], verts[2]);
+        std::vector<T> coords = barycentric_coords<MT>(p, v0, v1, v2);
         if(coords[0] >= 0. && coords[1] >= 0. && coords[2] >= 0.) // The intersection happens inside the triangle.
         {
             return t;
         }
         return INFINITY; // The intersection happens outside the triangle.
-    }
-    
-    
-    // Copyright 2001 softSurfer, 2012 Dan Sunday
-    // This code may be freely used and modified for any purpose
-    // providing that this copyright notice is included with it.
-    // SoftSurfer makes no warranty for this code, and cannot be held
-    // liable for any real or imagined damage resulting from its use.
-    // Users of this code must verify correctness for their application.
-    
-    // intersect3D_RayTriangle(): find the 3D intersection of a ray with a triangle
-    //    Input:  a ray R, and a triangle T
-    //    Output: *I = intersection point (when it exists)
-    //    Return: -1 = triangle is degenerate (a segment or point)
-    //             0 =  disjoint (no intersect)
-    //             1 =  intersect in unique point I1
-    //             2 =  are in the same plane
-    template<typename MT>
-    typename MT::real_type intersection(const typename MT::vector3_type& p0, const typename MT::vector3_type& p1, const typename MT::vector3_type& v0, const typename MT::vector3_type& v1, const typename MT::vector3_type& v2)
-    {
-        typedef typename MT::real_type      T;
-        typedef typename MT::vector3_type   V;
-        
-        // get triangle edge vectors and plane normal
-        V u = v1 - v0;
-        V v = v2 - v0;
-        V n = MT::cross(u, v);              // cross product
-        if (n == V(0))             // triangle is degenerate
-            return INFINITY;                  // do not deal with this case
-        
-        V dir = p1 - p0;              // ray direction vector
-        V w0 = p0 - v0;
-        T a = -MT::dot(n, w0);
-        T b = MT::dot(n, dir);
-        if (std::abs(b) < EPSILON) {     // ray is  parallel to triangle plane
-            if (a == 0) {                // ray lies in triangle plane
-                return 0.;
-            }
-            else {
-                return INFINITY;              // ray disjoint from plane
-            }
-        }
-        
-        // get intersect point of ray with triangle plane
-        T r = a / b;
-        if (r < 0.0)                    // ray goes away from triangle
-            return r;                   // => no intersect
-        // for a segment, also test if (r > 1.0) => no intersect
-        
-        V I = p0 + r * dir;            // intersect point of ray and plane
-        
-        // is I inside T?
-        T uu = dot(u,u);
-        T uv = dot(u,v);
-        T vv = dot(v,v);
-        V w = I - v0;
-        T wu = dot(w,u);
-        T wv = dot(w,v);
-        T D = uv * uv - uu * vv;
-        
-        // get and test parametric coords
-        float s, t;
-        s = (uv * wv - vv * wu) / D;
-        if (s < 0.0 || s > 1.0)         // I is outside T
-            return INFINITY;
-        t = (uv * wu - uu * wv) / D;
-        if (t < 0.0 || (s + t) > 1.0)  // I is outside T
-            return INFINITY;
-        
-        return r;                       // I is in T
     }
     
     /**
