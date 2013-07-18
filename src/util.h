@@ -883,6 +883,7 @@ namespace Util
         
         gamma = 1 - (alpha + beta);
         
+        coords = std::vector<T>(3);
         coords[0] = alpha;
         coords[1] = beta;
         coords[2] = gamma;
