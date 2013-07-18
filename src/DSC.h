@@ -1655,8 +1655,7 @@ private:
         V proj_apex = Util::project<MT>(get_pos(apex), verts);
         
         // Find barycentric coordinates
-        std::vector<T> barycentric_coords;
-        Util::get_barycentric_coords<MT>(proj_apex, verts[0], verts[1], verts[2], barycentric_coords);
+        std::vector<T> barycentric_coords = Util::barycentric_coords<MT>(proj_apex, verts[0], verts[1], verts[2]);
         
         if(barycentric_coords[0] > 0.2 && barycentric_coords[1] > 0.2 && barycentric_coords[2] > 0.2) // The tetrahedron is a cap
         {

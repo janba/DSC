@@ -853,40 +853,21 @@ namespace Util
      * Finds the barycentric coordinates of point v in a triangle spanned by points v0, v1, v2.
      */
     template <typename MT>
-    inline void get_barycentric_coords(typename MT::vector3_type const & v,
-                                       typename MT::vector3_type const & v0,
-                                       typename MT::vector3_type const & v1,
-                                       typename MT::vector3_type const & v2,
-                                       std::vector<typename MT::real_type> & coords)
+    inline std::vector<typename MT::real_type> barycentric_coords(typename MT::vector3_type const & v, typename MT::vector3_type const & v0, typename MT::vector3_type const & v1, typename MT::vector3_type const & v2)
     {
         typedef typename MT::real_type      T;
-        typedef typename MT::vector3_type   V3;
+        typedef typename MT::vector3_type   V;
         
-        T alpha, beta, gamma;
-        V3 e  = v -v2,
-        e0 = v0-v2,
-        e1 = v1-v2;
-        V3 c_1 = MT::cross(e , e1),
-        c_0 = MT::cross(e , e0),
-        c01 = MT::cross(e0, e1),
-        c10 = MT::cross(e1, e0);
-        
-        if (MT::dot(c_1, c01) > 0)
-            alpha = MT::length(c_1) / MT::length(c01);
-        else
-            alpha = -MT::length(c_1) / MT::length(c01);
-        
-        if (MT::dot(c_0, c10) > 0)
-            beta = MT::length(c_0) / MT::length(c10);
-        else
-            beta = -MT::length(c_0) / MT::length(c10);
-        
-        gamma = 1 - (alpha + beta);
-        
-        coords = std::vector<T>(3);
-        coords[0] = alpha;
-        coords[1] = beta;
-        coords[2] = gamma;
+        std::vector<T> coords(3);
+        double scale = (v1[1] - v2[1])*(v0[0] - v2[0]) + (v2[0] - v1[0])*(v0[1] - v2[1]);
+#ifdef DEBUG
+        assert(scale != 0.);
+#endif
+        scale = 1./scale;
+        coords[0] = ((v1[1] - v2[1])*(v[0] - v2[0]) + (v2[0] - v1[0])*(v[1] - v2[1])) * scale;
+        coords[1] = ((v2[1] - v0[1])*(v[0] - v2[0]) + (v0[0] - v2[0])*(v[1] - v2[1])) * scale;
+        coords[2] = 1. - coords[0] - coords[1];        
+        return coords;
     }
     
     /**
@@ -1342,9 +1323,7 @@ namespace Util
         }
         V p = p0 + t*(p1 - p0);
         
-        std::vector<T> coords;
-        get_barycentric_coords<MT>(p, verts[0], verts[1], verts[2], coords);
-        
+        std::vector<T> coords = barycentric_coords<MT>(p, verts[0], verts[1], verts[2]);
         if(coords[0] >= 0. && coords[1] >= 0. && coords[2] >= 0.) // The intersection happens inside the triangle.
         {
             return t;
