@@ -753,6 +753,32 @@ private:
         return false;
     }
     
+    /**
+    * Attempt to remove face f using multi-face removal.
+    */
+    void multi_face_removal(const face_key& f)
+    {
+        std::vector<node_key> apices;
+        Complex::get_apices(f, apices);
+        
+        simplex_set lk_n1, lk_n2;
+        Complex::link(apices[0], lk_n1);
+        Complex::link(apices[1], lk_n2);
+        lk_n1.intersection(lk_n2);
+        for(auto f = lk_n1.faces_begin(); f != lk_n1.faces_end(); f++)
+        {
+            std::vector<node_key> nodes;
+            Complex::get_nodes(*f, nodes);
+            orient_cc(apices[1], nodes);
+            
+            T t = Util::intersection<MT>(get_pos(apices[0]), get_pos(apices[1]), get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
+            if(0. < t && t < 1.)
+            {
+                if(remove_multi_face(*f))
+                {
+                    return;
+                }
+            }
         }
     }
     
@@ -1057,7 +1083,7 @@ private:
     /**
      * Attempt to remove face f using multi-face removal.
      */
-    void multi_face_removal(const face_key& f)
+    void multi_face_removal_old(const face_key& f)
     {
         simplex_set st_f;
         Complex::star(f, st_f);
@@ -1141,7 +1167,7 @@ private:
                 {
                     if (Complex::exists(*fit) && !is_interface(*fit) && !is_boundary(*fit))
                     {
-                        remove_multi_face(*fit);
+                        multi_face_removal(*fit);
                     }
                 }
             }
