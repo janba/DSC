@@ -1820,7 +1820,7 @@ public:
         
         if(step_no%5 == 0)
         {
-            resize_complex();
+//            resize_complex();
         }
         
         Complex::garbage_collect();
@@ -1869,7 +1869,7 @@ private:
         for(auto fit = ln.faces_begin(); fit != ln.faces_end(); fit++)
         {
             get_pos(*fit, face_pos);
-            T t = Util::intersection<MT>(pos, new_pos, face_pos[0], face_pos[1], face_pos[2]);
+            T t = Util::intersection_ray_plane<MT>(pos, new_pos, face_pos[0], face_pos[1], face_pos[2]);
             if (0. <= t)
             {
                 min_t = std::min(t, min_t);

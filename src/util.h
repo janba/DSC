@@ -1299,18 +1299,18 @@ namespace Util
     }
     
     /**
-     * Calculates the intersection between the line segment |p0 p1| and the triangle made up by the vertices in verts. The intersection point is defined by p0 + t*(p1 - p0) and the function returns t. Returns infinity if it does not intersect.
+     * Calculates the intersection between the line segment |p0 p1| and the plane spanned by the vertices in verts. The intersection point is defined by p0 + t*(p1 - p0) and the function returns t. Returns infinity if it does not intersect.
      */
     template<typename MT>
-    typename MT::real_type intersection(const typename MT::vector3_type& p0, const typename MT::vector3_type& p1, const std::vector<typename MT::vector3_type>& verts)
+    typename MT::real_type intersection_ray_plane(const typename MT::vector3_type& p0, const typename MT::vector3_type& p1, const typename MT::vector3_type& v0, const typename MT::vector3_type& v1, const typename MT::vector3_type& v2)
     {
         typedef typename MT::real_type      T;
         typedef typename MT::vector3_type   V;
         
-        V normal = normal_direction<MT>(verts[0], verts[1], verts[2]);
+        V normal = normal_direction<MT>(v0, v1, v2);
         
         V ray = p1 - p0;
-        T n = MT::dot(normal, verts[0] - p0);
+        T n = MT::dot(normal, v0 - p0);
         T d = MT::dot(normal, ray);
         
         if (std::abs(d) < EPSILON) // Plane and line are parallel if true.
@@ -1323,12 +1323,24 @@ namespace Util
         }
         
         // Compute the t value for the directed line ray intersecting the plane.
-        T t = n / d;
+        return n / d;
+    }
+    
+    /**
+     * Calculates the intersection between the line segment |p0 p1| and the triangle made up by the vertices in verts. The intersection point is defined by p0 + t*(p1 - p0) and the function returns t. Returns infinity if it does not intersect.
+     */
+    template<typename MT>
+    typename MT::real_type intersection(const typename MT::vector3_type& p0, const typename MT::vector3_type& p1, const std::vector<typename MT::vector3_type>& verts)
+    {
+        typedef typename MT::real_type      T;
+        typedef typename MT::vector3_type   V;
+        
+        T t = intersection_ray_plane<MT>(p0, p1, verts[0], verts[1], verts[2]);
         if(t < 0.) // The ray goes away from the triangle
         {
             return t;
         }
-        V p = p0 + t*ray;
+        V p = p0 + t*(p1 - p0);
         
         std::vector<T> coords;
         get_barycentric_coords<MT>(p, verts[0], verts[1], verts[2], coords);
