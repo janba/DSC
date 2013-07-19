@@ -92,7 +92,7 @@ public:
         
         std::vector<int> hist;
         double min_a, max_a;
-        complex->calc_dihedral_angles(hist, min_a, max_a);
+        complex->get_dihedral_angles(hist, min_a, max_a);
         write_variable("Min dih. angle", min_a, "degrees");
         write_variable("Max dih. angle", max_a, "degrees");
     }
@@ -131,10 +131,15 @@ public:
         
         std::vector<int> hist;
         double min_a, max_a;
-        complex->calc_dihedral_angles(hist, min_a, max_a);
+        complex->get_dihedral_angles(hist, min_a, max_a);
         write_variable("Min dih. angle", min_a, "degrees");
         write_variable("Max dih. angle", max_a, "degrees");
-        write_variable("hist", hist);
+        write_variable("DAhist", hist);
+        
+        complex->get_qualities(hist, min_a);
+        write_variable("Min quality", min_a);
+        write_variable("Qhist", hist);
+        
     }
     
     /**

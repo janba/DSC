@@ -3034,11 +3034,29 @@ public:
         return acos(min_cos_dihedral_angle(t));
     }
     
+    void get_qualities(std::vector<int>& histogram, T& min_quality)
+    {
+        min_quality = INFINITY;
+        
+        histogram = std::vector<int>(180);
+        for (int i = 0; i < 100; ++i)
+        {
+            histogram[i] = 0;
+        }
+        
+        for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
+        {
+            T q = quality(tit.key());
+            min_quality = std::min(min_quality, q);
+            histogram[(int)floor(q*100.)] += 1;
+        }
+    }
+    
     /**
      * Calculates the dihedral angles in the SimplicialComplex and returns these in a histogram,
      * along with the minimum and maximum dihedral angles.
      */
-    void calc_dihedral_angles(std::vector<int> & histogram, T & min_angle, T & max_angle)
+    void get_dihedral_angles(std::vector<int> & histogram, T & min_angle, T & max_angle)
     {
         max_angle = -INFINITY, min_angle = INFINITY;
         
