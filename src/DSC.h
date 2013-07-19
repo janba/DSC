@@ -7,18 +7,6 @@
 
 #include "printing.h"
 
-/**
- * Data structure used by klincsek_triangulation() (indices for triangle's vertices and triangle's quality).
- */
-template <typename MT>
-struct kt_chunk
-{
-    typename MT::real_type quality;
-    int i;
-    int j;
-    int k;
-};
-
 template <typename MT>
 struct quality_struct
 {
@@ -434,95 +422,9 @@ public:
     ////////////////////////
 private:
     
-    //////////////////////
-    // TOPOLOGICAL PASS //
-    //////////////////////
-    
-    /**
-     * Build an array for the dynamic programming method
-     */
-    std::vector<std::vector<kt_chunk<MT> > > build_table(const node_key& n1, const node_key& n2, const std::vector<node_key>& polygon)
-    {
-        V v1 = get_pos(n1);
-        V v2 = get_pos(n2);
-        
-        int n = (int) polygon.size();
-        
-        std::vector<std::vector<kt_chunk<MT> > > kt_array;
-        kt_array.resize(n-1);
-        
-        for (int i=0; i<n-1; ++i)
-        {
-            kt_array[i].resize(n);
-            kt_array[i][i+1].quality = INFINITY;
-            kt_array[i][i+1].i = i;
-            kt_array[i][i+1].j = i+1;
-        }
-        
-        for (int i = n-3; i >= 0; i--)
-        {
-            for (int j= i+2; j < n; j++)
-            {
-                for (int k = i+1; k < j; k++)
-                {
-                    T q2 = Util::quality<MT>(get_pos(polygon[i]), get_pos(polygon[k]), get_pos(polygon[j]), v2);
-                    T q1 = Util::quality<MT>(get_pos(polygon[k]), get_pos(polygon[i]), get_pos(polygon[j]), v1);
-                    T q = std::min(q1, q2);
-                    if (k < j-1)
-                    {
-                        q = std::min(q, kt_array[k][j].quality);
-                    }
-                    if (k > i+1)
-                    {
-                        q = std::min(q, kt_array[i][k].quality);
-                    }
-                    
-                    if (k == i+1 || q > kt_array[i][j].quality)
-                    {
-                        kt_array[i][j].quality = q;
-                        kt_array[i][j].k = k;
-                        kt_array[i][j].i = i;
-                        kt_array[i][j].j = j;
-                    }
-                }
-            }
-        }
-        return kt_array;
-    }
-    
-    /**
-     * Finds the triangulation of the input polygon "sandwiched" between two vertices in vv,
-     * which maximizes the worst tetrahedron's quality (using dynamic programming -- Klincsek's algorithm).
-     */
-    T klincsek_triangulation(const node_key& n1, const node_key& n2, const std::vector<node_key>& polygon, std::vector<node_key>& new_edges)
-    {
-        int n = (int) polygon.size();
-        auto kt_array = build_table(n1, n2, polygon);
-        
-        // Find optimal triangulation of the polygon
-        std::list<kt_chunk<MT> > kt_stack;
-        kt_stack.push_front(kt_array[0][kt_array[0][n-1].k]);
-        kt_stack.push_front(kt_array[kt_array[0][n-1].k][n-1]);
-        
-        T q = kt_array[0][n-1].quality;
-        
-        while (!kt_stack.empty())
-        {
-            kt_chunk<MT> kt = kt_stack.front();
-            kt_stack.pop_front();
-            
-            if (kt.j - kt.i != 1)
-            {
-                new_edges.push_back(polygon[kt.i]);
-                new_edges.push_back(polygon[kt.j]);
-                
-                kt_stack.push_front(kt_array[kt.i][kt.k]);
-                kt_stack.push_front(kt_array[kt.k][kt.j]);
-            }
-        }
-        
-        return q;
-    }
+    //////////////////////////////
+    // TOPOLOGICAL EDGE REMOVAL //
+    //////////////////////////////
     
     /**
      * Build a table K for the dynamic programming method by Klincsek (see Shewchuk "Two Discrete Optimization Algorithms 
@@ -637,6 +539,10 @@ private:
             update(cl_ns);
         }
     }
+    
+    //////////////////////////////
+    // TOPOLOGICAL FACE REMOVAL //
+    //////////////////////////////
     
     face_key get_neighbour(const face_key& f, const edge_key& e)
     {
@@ -807,35 +713,6 @@ private:
         return quality;
     }
     
-    
-    /**
-     * Returns the boundary of the multi-face in mf_boundary.
-     */
-    void multi_face_boundary(simplex_set& multi_face, simplex_set& mf_boundary)
-    {
-        simplex_set cl_mf, e_mf;
-        Complex::closure(multi_face, cl_mf);
-        for(auto eit = cl_mf.edges_begin(); eit != cl_mf.edges_end(); eit++)
-        {
-            simplex_set st_e;
-            Complex::star(*eit, st_e);
-            int i = 0;
-            for(auto fit = st_e.faces_begin(); fit != st_e.faces_end(); fit++)
-            {
-                if(cl_mf.contains(*fit))
-                {
-                    i++;
-                }
-            }
-            assert(i <= 2);
-            if(i == 1)
-            {
-                e_mf.insert(*eit);
-            }
-        }
-        Complex::closure(e_mf, mf_boundary);
-    }
-    
     /**
      * Returns the faces in the set candidate which is connected to the face f. Connected means there is no interface simplices between f and the candidate face and all faces between f and the candidate face is in the candidate set.
      */
@@ -873,84 +750,7 @@ private:
         link0.intersection(link1);
         
         connected_component(f, link0, multi_face);
-    }
-    
-    /**
-     * Attempt multi-face retriangulation on the initial set given in removed-faces.
-     */
-    void optimal_multi_face_retriangulation(const face_key& f, simplex_set & new_simplices)
-    {
-        simplex_set multi_face;
-        removable_multi_face(f, multi_face);
-        
-        simplex_set mf_boundary;
-        multi_face_boundary(multi_face, mf_boundary);
-        
-        if (mf_boundary.size_nodes() != mf_boundary.size_edges()) // if mf_boundary is not homomorphic to a circle/segment
-        {
-            simplex_set new_mf;
-            Complex::find_min_multi_face(f, multi_face, new_mf);
-            multi_face.intersection(new_mf);
-            
-            mf_boundary.clear();
-            multi_face_boundary(multi_face, mf_boundary);
-        }
-        
-        if (multi_face.size_faces() > 1)
-        {
-            std::vector<node_key> apices;
-            Complex::get_apices(f, apices);
-            
-            std::vector<V> verts(2);
-            verts[0] = get_pos(apices[0]);
-            verts[1] = get_pos(apices[1]);
-            
-            simplex_set st_mf;
-            Complex::star(multi_face, st_mf);
-            T q_old = min_quality(st_mf);
-            T q = -1.;
-            
-            std::vector<node_key> polygon, new_edges;
-            sort_vertices(mf_boundary, polygon);
-            check_consistency(verts, polygon);
-            
-            q = klincsek_triangulation(apices[0], apices[1], polygon, new_edges);
-            
-            // If Klincsek's algorithm found a better triangulation, proceed with multi-face retriangulation
-            if (q > q_old + EPSILON && q > 0.)
-            {
-                simplex_set new_multi_face;
-                Complex::multi_face_retriangulation(multi_face, new_edges, new_multi_face, new_simplices);
-                multi_face = new_multi_face;
-                
-                assert (new_simplices.size_tetrahedra() == 2 * multi_face.size_faces());
-            }
-        }
-    }
-    
-    /**
-     * Attempt to remove face f using multi-face retriangulation.
-     */
-    void multi_face_retriangulation(const face_key& f)
-    {
-        simplex_set st_f;
-        Complex::star(f, st_f);
-        int label = get_label(*st_f.tetrahedra_begin());
-        
-        // Attempt to remove the multi-face by multi-face retriangulation
-        simplex_set new_simplices;
-        optimal_multi_face_retriangulation(f, new_simplices);
-        
-        for (auto tit = new_simplices.tetrahedra_begin(); tit != new_simplices.tetrahedra_end(); tit++)
-        {
-            set_label(*tit, label);
-        }
-        
-        simplex_set ns_cl;
-        Complex::closure(new_simplices, ns_cl);
-        update(ns_cl);
-    }
-    
+    }    
     
     /**
      * Attempt multi-face removal (a reconnection method), which finds the optimal subset (via dynamic programming)
@@ -1130,25 +930,6 @@ private:
                     if (Complex::exists(*eit) && !is_interface(*eit) && !is_boundary(*eit))
                     {
                         edge_removal(*eit);
-                    }
-                }
-            }
-        }
-        
-        // Attempt to remove each face of each remaining tetrahedron in tets using multi-face retriangulation.
-        // Accept if it increases the minimum quality locally.
-        for (auto &t : tets)
-        {
-            if (Complex::exists(t) && quality(t) < MIN_TET_QUALITY)
-            {
-                simplex_set cl_t;
-                Complex::closure(t, cl_t);
-                
-                for (auto fit = cl_t.faces_begin(); fit != cl_t.faces_end(); fit++)
-                {
-                    if (Complex::exists(*fit) && !is_interface(*fit) && !is_boundary(*fit))
-                    {
-                        multi_face_retriangulation(*fit);
                     }
                 }
             }
