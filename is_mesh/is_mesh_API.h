@@ -617,9 +617,21 @@ public:
         return n3;
     }
     
-    void flip_44()
+    node_key flip_44(const face_key& f1, const face_key& f2)
     {
-        
+        edge_key e1 = get_edge(f1, f2);
+        node_key n1 = get_apex(f1, e1);
+        node_key n2 = split(e1);
+        edge_key e2 = get_edge(n1, n2);
+#ifdef DEBUG
+        assert(e2 != NULL_EDGE);
+#endif
+        node_key n3 = collapse(e2);
+#ifdef DEBUG
+        assert(n3 != NULL_NODE);
+        assert(n1 == n3);
+#endif
+        return n3;
     }
     
     ///////////////////////////////////
