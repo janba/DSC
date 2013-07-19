@@ -351,6 +351,95 @@ private:
         return false;
     }
     
+    ///////////////////////////////////////
+    // TOPOLOGICAL BOUNDARY EDGE REMOVAL //
+    ///////////////////////////////////////
+    
+    
+    void remove_boundary_edge_flips(const std::vector<node_key>& polygon1, const std::vector<node_key>& polygon2, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K1, std::vector<std::vector<int>>& K2)
+    {
+        const int m1 = static_cast<int>(polygon1.size());
+        const int m2 = static_cast<int>(polygon2.size());
+        int k = K1[0][m1-1];
+        flip_23_recursively(polygon1, n1, n2, K1, 0, k);
+        flip_23_recursively(polygon1, n1, n2, K1, k, m1-1);
+        
+        // Find the faces to flip about.
+        simplex_set st_e;
+        Complex::star(Complex::get_edge(n1,n2), st_e);
+        std::vector<face_key> faces;
+        for (auto fit = st_e.faces_begin(); fit != st_e.faces_end(); fit++)
+        {
+            if (is_interface(*fit) || is_boundary(*fit))
+            {
+                faces.push_back(*fit);
+            }
+        }
+        
+        if(m2 == 0)
+        {
+            Complex::flip_22(faces[0], faces[1]);
+        }
+        else {
+            k = K2[0][m2-1];
+            flip_23_recursively(polygon2, n1, n2, K2, 0, k);
+            flip_23_recursively(polygon2, n1, n2, K2, k, m2-1);
+            Complex::flip_44(faces[0], faces[1]);
+        }
+    }
+    
+    bool boundary_edge_removal(const edge_key& e)
+    {
+        std::vector<node_key> polygon = get_polygon(e);
+        std::vector<std::vector<node_key>> pols(2);
+        int i = 0;
+        int count = 0;
+        for(auto &n : polygon)
+        {
+            pols[i].push_back(n);
+            if(is_interface(n))
+            {
+                count++;
+                i = (i+1)%2;
+                pols[i].push_back(n);
+            }
+        }
+        if(count > 2)
+        {
+            return false;
+        }
+        
+        std::vector<std::vector<int>> K1, K2;
+        T q_new = build_table(e, pols[0], K1);
+        
+        if(pols[1].size() != 0)
+        {
+            q_new = std::min(q_new, build_table(e, pols[1], K2));
+        }
+        
+        if (q_new > min_quality(e))
+        {
+            std::vector<node_key> nodes;
+            Complex::get_nodes(e, nodes);
+            
+            simplex_set st_e;
+            Complex::star(e, st_e);
+            std::vector<face_key> faces;
+            for (auto fit = st_e.faces_begin(); fit != st_e.faces_end(); fit++)
+            {
+                if (is_interface(*fit) || is_boundary(*fit))
+                {
+                    faces.push_back(*fit);
+                }
+            }
+            std::cout << faces.size() << " / " << st_e.size_faces() << std::endl;
+            
+            remove_boundary_edge_flips(pols[0], pols[1], nodes[0], nodes[1], K1, K2);
+            return true;
+        }
+        return false;
+    }
+    
     //////////////////////////////
     // TOPOLOGICAL FACE REMOVAL //
     //////////////////////////////
@@ -740,11 +829,20 @@ private:
                 
                 for (auto eit = cl_t.edges_begin(); eit != cl_t.edges_end(); eit++)
                 {
-                    if (Complex::exists(*eit) && !is_interface(*eit) && !is_boundary(*eit))
+                    if (Complex::exists(*eit))
                     {
-                        if(edge_removal(*eit))
+                        if(!is_interface(*eit) && !is_boundary(*eit))
                         {
-                            i++;
+                            if(edge_removal(*eit))
+                            {
+                                i++;
+                            }
+                        }
+                        else {
+                            if(boundary_edge_removal(*eit))
+                            {
+                                i++;
+                            }
                         }
                         j++;
                     }
