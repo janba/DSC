@@ -1927,7 +1927,45 @@ private:
         }
         return false;
     }
+    
+    /**
+     * Flips the edge e (which is a special case of the edge remove operation in the embedding mesh).
+     * Relabels the tetrahedra accordingly so that the interface mesh geometry does not change.
+     */
+    bool border_flip(const edge_key & e)
+    {
+        if(!is_interface(e) && !is_boundary(e))
+        {
+            return false;
         }
+        // Find the pair of nodes to be connected by a new edge as a result of edge flip.
+        simplex_set st_e;
+        Complex::star(e, st_e);
+        std::vector<face_key> faces;
+        std::cout << std::endl;
+        for (auto fit = st_e.faces_begin(); fit != st_e.faces_end(); fit++)
+        {
+            if (is_interface(*fit) || is_boundary(*fit))
+            {
+                std::cout << "Face: " << *fit << std::endl;
+                std::vector<V> verts;
+                get_pos(*fit, verts);
+                for(auto &v : verts)
+                {
+                    std::cout << v << std::endl;
+                }
+                faces.push_back(*fit);
+            }
+        }
+        
+        if(faces.size() != 2)
+        {
+            return false;
+        }
+        
+        node_key n = Complex::flip_44(faces[0], faces[1]);
+        validity_check();
+        return n != Complex::NULL_NODE;
     }
     
     ////////////
