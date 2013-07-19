@@ -724,7 +724,7 @@ namespace Util
         V p = p0 + t*(p1 - p0);
         
         std::vector<T> coords = barycentric_coords<MT>(p, v0, v1, v2);
-        if(coords[0] >= 0. && coords[1] >= 0. && coords[2] >= 0.) // The intersection happens inside the triangle.
+        if(coords[0] > EPSILON && coords[1] > EPSILON && coords[2] > EPSILON) // The intersection happens inside the triangle.
         {
             return t;
         }
