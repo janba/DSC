@@ -39,12 +39,13 @@ private:
     Mesh mesh;
     
 public:
-    ISMesh(std::vector<typename MT::real_type> & points, std::vector<int> & tets): NULL_NODE(-1), NULL_EDGE(-1), NULL_FACE(-1), NULL_TETRAHEDRON(-1)
+    ISMesh(std::vector<typename MT::real_type> & points, std::vector<int> & tets, std::vector<int> & tet_labels): NULL_NODE(-1), NULL_EDGE(-1), NULL_FACE(-1), NULL_TETRAHEDRON(-1)
     {
         vectors_read(points, tets, mesh);
         
         check_validity();
         check_validity();
+        init(tet_labels);
     }
     
     ///////////////
@@ -91,11 +92,189 @@ public:
         return mesh.tetrahedra_end();
     }
     
+    /////////////////////
+    // LABEL FUNCTIONS //
+    /////////////////////
+public:
+    template<typename key>
+    bool is_interface(const key& k)
+    {
+        return get(k).is_interface();
+    }
+    
+    template<typename key>
+    bool is_boundary(const key& k)
+    {
+        return get(k).is_boundary();
+    }
+    
+    int get_label(const tet_key& t)
+    {
+        return get(t).label;
+    }
+    
+private:
+    template<typename key>
+    void set_interface(const key& k, bool b)
+    {
+        return get(k).set_interface(b);
+    }
+    
+    template<typename key>
+    void set_boundary(const key& k, bool b)
+    {
+        return get(k).set_boundary(b);
+    }
+    
+    void set_label(const tet_key& t, int label)
+    {
+        get(t).label = label;
+    }
+    
+    /**
+     * Label all tetrahedra according to tet_labels and perform an initial update
+     * of flags and attributes of all simplices
+     */
+    void init(std::vector<int> & tet_labels)
+    {
+        // Label all tetrahedra
+        for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
+        {
+            tit->label = tet_labels[tit.key()];
+        }
+        
+        // Update all faces
+        for (auto fit = faces_begin(); fit != faces_end(); fit++)
+        {
+            update_flag(fit.key());
+        }
+        
+        // Update all edges
+        for (auto eit = edges_begin(); eit != edges_end(); eit++)
+        {
+            update_flag(eit.key());
+        }
+        
+        // Update all nodes
+        for (auto nit = nodes_begin(); nit != nodes_end(); nit++)
+        {
+            update_flag(nit.key());
+        }
+    }
+    
+    /**
+     * Updates the flags (is interface, is boundary, is locked) of simplices in set.
+     */
+    void update(simplex_set & set)
+    {
+        // Update faces
+        for (auto fit = set.faces_begin(); fit != set.faces_end(); fit++)
+        {
+            if (exists(*fit))
+            {
+                update_flag(*fit);
+            }
+        }
+        
+        // Update edges
+        for (auto eit = set.edges_begin(); eit != set.edges_end(); eit++)
+        {
+            if (exists(*eit))
+            {
+                update_flag(*eit);
+            }
+        }
+        
+        // Update nodes
+        for (auto nit = set.nodes_begin(); nit != set.nodes_end(); nit++)
+        {
+            if (exists(*nit))
+            {
+                update_flag(*nit);
+            }
+        }
+    }
+    
+    void update_flag(const face_key & f)
+    {
+        set_interface(f, false);
+        set_boundary(f, false);
+        
+        simplex_set st_f;
+        star(f, st_f);
+        if (st_f.size_tetrahedra() == 1)
+        {
+            // On the boundary
+            set_boundary(f, true);
+            if (get_label(*(st_f.tetrahedra_begin())) != 0)
+            {
+                set_interface(f, true);
+            }
+        }
+        else if(st_f.size_tetrahedra() == 2)
+        {
+            auto tit = st_f.tetrahedra_begin();
+            int label0 = get_label(*tit);   ++tit;
+            int label1 = get_label(*tit);
+            if (label0 != label1)
+            {
+                // On the interface
+                set_interface(f, true);
+            }
+        }
+    }
+    
+    void update_flag(const edge_key & e)
+    {
+        set_boundary(e, false);
+        set_interface(e, false);
+        
+        simplex_set ste;
+        star(e, ste);
+        
+        for (auto efit = ste.faces_begin(); efit != ste.faces_end(); efit++)
+        {
+            if (exists(*efit))
+            {
+                if (is_boundary(*efit))
+                {
+                    set_boundary(e, true);
+                }
+                else if (is_interface(*efit))
+                {
+                    set_interface(e, true);
+                }
+            }
+        }
+    }
+    
+    void update_flag(const node_key & n)
+    {
+        set_interface(n, false);
+        set_boundary(n, false);
+        
+        simplex_set st_n;
+        star(n, st_n);
+        for (auto neit = st_n.edges_begin(); neit != st_n.edges_end(); neit++)
+        {
+            if (exists(*neit))
+            {
+                if (is_interface(*neit))
+                {
+                    set_interface(n, true);
+                }
+                if (is_boundary(*neit))
+                {
+                    set_boundary(n, true);
+                }
+            }
+        }
+    }
     
     //////////////////////
     // GETTER FUNCTIONS //
     //////////////////////
-
+public:
     typename Mesh::node_type & get(const node_key& k)
     {
         return mesh.find_node(k);
@@ -348,6 +527,11 @@ public:
         {
             get(it->first).label = tt[it->second];
         }
+        
+        simplex_set st_n;
+        star(n, st_n);
+        st_n.insert(n);
+        update(st_n);
         return n;
     }
     
@@ -369,6 +553,11 @@ public:
         {
             get(it->first).label = tt[it->second];
         }
+        
+        simplex_set st_n;
+        star(n, st_n);
+        st_n.insert(n);
+        update(st_n);
         return n;
     }
     
@@ -384,6 +573,8 @@ public:
         {
             get(*tit).label = label;
         }
+        st_n.insert(n);
+        update(st_n);
         return n;
     }
     
@@ -393,11 +584,15 @@ public:
         get_nodes(e, nodes);
         assert(nodes[0] != NULL_NODE);
         assert(nodes[1] != NULL_NODE);
-        node_key res = mesh.edge_collapse_helper(e, nodes[1], nodes[0]);
-        if (res == (node_key)-1) {
+        node_key n = mesh.edge_collapse_helper(e, nodes[1], nodes[0]);
+        if (n == (node_key)-1) {
             return NULL_NODE;
         }
-        return res;
+        simplex_set st_n;
+        star(n, st_n);
+        st_n.insert(n);
+        update(st_n);
+        return n;
     }
     
     node_key flip_32(const edge_key& e)

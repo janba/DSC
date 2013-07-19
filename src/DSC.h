@@ -76,9 +76,8 @@ public:
     
     /// SimplicialComplex constructor.
     DeformableSimplicialComplex(std::vector<T> & points, std::vector<int> & tets, std::vector<int> & tet_labels):
-        ISMesh<MT>(points, tets)
+        ISMesh<MT>(points, tets, tet_labels)
     {
-        init(tet_labels);
         step_no = 0;
         
         T ie_min, ie_avg;
@@ -105,22 +104,6 @@ public:
     
     DeformableSimplicialComplex() {}
     
-    
-    /**
-     * Label all tetrahedra according to tet_labels and perform an initial update
-     * of flags and attributes of all simplices
-     */
-    void init(std::vector<int> & tet_labels)
-    {
-        // Update and label all tetrahedra
-        for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
-        {
-            tit->label = tet_labels[tit.key()];
-        }
-        
-        update();
-    }
-    
 private:
     
     /// Calculates the minimum and average length of edges on the interface.
@@ -143,12 +126,27 @@ private:
         ie_avg /= cnt;
     }
     
-    
-    
     /////////////////////////
     // ATTRIBUTE FUNCTIONS //
     /////////////////////////
 public:
+    template<typename key>
+    bool is_interface(const key& k)
+    {
+        return Complex::is_interface(k);
+    }
+    
+    template<typename key>
+    bool is_boundary(const key& k)
+    {
+        return Complex::is_boundary(k);
+    }
+    
+    int get_label(const tet_key& t)
+    {
+        return Complex::get_label(t);
+    }
+    
     /**
      * Returns the position of node n.
      */
@@ -217,180 +215,7 @@ public:
     void set_destination(const node_key& n, V p)
     {
         Complex::get(n).set_destination(p);
-    }
-    
-    /////////////////////
-    // LABEL FUNCTIONS //
-    /////////////////////
-public:    
-    template<typename key>
-    bool is_interface(const key& k)
-    {
-        return Complex::get(k).is_interface();
-    }
-    
-    template<typename key>
-    void set_interface(const key& k, bool b)
-    {
-        return Complex::get(k).set_interface(b);
-    }
-    
-    template<typename key>
-    bool is_boundary(const key& k)
-    {
-        return Complex::get(k).is_boundary();
-    }
-    
-    template<typename key>
-    void set_boundary(const key& k, bool b)
-    {
-        return Complex::get(k).set_boundary(b);
-    }
-    
-    int get_label(const tet_key& t)
-    {
-        return Complex::get(t).label;
-    }
-    
-    void set_label(const tet_key& t, int label)
-    {
-        Complex::get(t).label = label;
-    }
-    
-    //////////////////////
-    // UPDATE FUNCTIONS //
-    //////////////////////
-    
-    void update()
-    {
-        // Update all faces
-        for (auto fit = Complex::faces_begin(); fit != Complex::faces_end(); fit++)
-        {
-            update_flag(fit.key());
-        }
-        
-        // Update all edges
-        for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
-        {
-            update_flag(eit.key());
-        }
-        
-        // Update all nodes
-        for (auto nit = Complex::nodes_begin(); nit != Complex::nodes_end(); nit++)
-        {
-            update_flag(nit.key());
-        }
-    }
-    
-    /**
-     * Updates the flags (is interface, is boundary, is locked) of simplices in set.
-     */
-    void update(simplex_set & set)
-    {
-        // Update faces
-        for (auto fit = set.faces_begin(); fit != set.faces_end(); fit++)
-        {
-            if (Complex::exists(*fit))
-            {
-                update_flag(*fit);
-            }
-        }
-        
-        // Update edges
-        for (auto eit = set.edges_begin(); eit != set.edges_end(); eit++)
-        {
-            if (Complex::exists(*eit))
-            {
-                update_flag(*eit);
-            }
-        }
-        
-        // Update nodes
-        for (auto nit = set.nodes_begin(); nit != set.nodes_end(); nit++)
-        {
-            if (Complex::exists(*nit))
-            {
-                update_flag(*nit);
-            }
-        }
-    }
-    
-private:
-    void update_flag(const face_key & f)
-    {
-        set_interface(f, false);
-        set_boundary(f, false);
-        
-        simplex_set st_f;
-        Complex::star(f, st_f);
-        if (st_f.size_tetrahedra() == 1)
-        {
-            // On the boundary
-            set_boundary(f, true);
-            if (get_label(*(st_f.tetrahedra_begin())) != 0)
-            {
-                set_interface(f, true);
-            }
-        }
-        else if(st_f.size_tetrahedra() == 2)
-        {
-            auto tit = st_f.tetrahedra_begin();
-            int label0 = get_label(*tit);   ++tit;
-            int label1 = get_label(*tit);
-            if (label0 != label1)
-            {
-                // On the interface
-                set_interface(f, true);
-            }
-        }
-    }
-    
-    void update_flag(const edge_key & e)
-    {
-        set_boundary(e, false);
-        set_interface(e, false);
-        
-        simplex_set ste;
-        Complex::star(e, ste);
-        
-        for (auto efit = ste.faces_begin(); efit != ste.faces_end(); efit++)
-        {
-            if (Complex::exists(*efit))
-            {
-                if (is_boundary(*efit))
-                {
-                    set_boundary(e, true);
-                }
-                else if (is_interface(*efit))
-                {
-                    set_interface(e, true);
-                }
-            }
-        }
-    }
-    
-    void update_flag(const node_key & n)
-    {
-        set_interface(n, false);
-        set_boundary(n, false);
-        
-        simplex_set st_n;
-        Complex::star(n, st_n);
-        for (auto neit = st_n.edges_begin(); neit != st_n.edges_end(); neit++)
-        {
-            if (Complex::exists(*neit))
-            {
-                if (is_interface(*neit))
-                {
-                    set_interface(n, true);
-                }
-                if (is_boundary(*neit))
-                {
-                    set_boundary(n, true);
-                }
-            }
-        }
-    }
+    }  
     
     /////////////
     // GETTERS //
@@ -514,7 +339,6 @@ private:
     {
         simplex_set st_e;
         Complex::star(e, st_e);
-        int label = get_label(*(st_e.tetrahedra_begin()));
         
         std::vector<node_key> polygon = get_polygon(e);
         std::vector<node_key> nodes;
@@ -525,18 +349,7 @@ private:
         
         if (q_new > min_quality(e))
         {
-            simplex_set new_simplices;
-            
             edge_removal(polygon, nodes[0], nodes[1], K);
-            
-            for (auto tit = new_simplices.tetrahedra_begin(); tit != new_simplices.tetrahedra_end(); tit++)
-            {
-                set_label(*tit, label);
-            }
-            
-            simplex_set cl_ns;
-            Complex::closure(new_simplices, cl_ns);
-            update(cl_ns);
             return true;
         }
         return false;
@@ -2148,10 +1961,6 @@ public:
         set_pos(n, p);
         set_destination(n, p_new);
         
-        simplex_set st_n;
-        Complex::star(n, st_n);
-        st_n.insert(n);
-        update(st_n);
         return n;
     }
     
@@ -2172,11 +1981,6 @@ public:
         node_key n = Complex::split(e);
         set_pos(n, p);
         set_destination(n, p_new);
-        
-        simplex_set st_n;
-        Complex::star(n, st_n);
-        st_n.insert(n);
-        update(st_n);
         return n;
     }
     
@@ -2195,11 +1999,6 @@ private:
         {
             set_pos(n_new, p);
             set_destination(n_new, p_new);
-            
-            simplex_set st, st_cl;
-            Complex::star(n_new, st);
-            Complex::closure(st, st_cl);
-            update(st_cl);
         }
         return n_new;
     }
