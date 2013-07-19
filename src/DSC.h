@@ -510,7 +510,7 @@ private:
      * Attempt to remove edge e by mesh reconnection using the dynamic programming method by Klincsek (see Shewchuk "Two Discrete Optimization Algorithms
      * for the Topological Improvement of Tetrahedral Meshes" article for details).
      */
-    void edge_removal(edge_key const & e)
+    bool edge_removal(edge_key const & e)
     {
         simplex_set st_e;
         Complex::star(e, st_e);
@@ -537,7 +537,9 @@ private:
             simplex_set cl_ns;
             Complex::closure(new_simplices, cl_ns);
             update(cl_ns);
+            return true;
         }
+        return false;
     }
     
     //////////////////////////////
@@ -662,7 +664,7 @@ private:
     /**
     * Attempt to remove face f using multi-face removal.
     */
-    void multi_face_removal(const face_key& f)
+    bool multi_face_removal(const face_key& f)
     {
         std::vector<node_key> apices;
         Complex::get_apices(f, apices);
@@ -682,10 +684,11 @@ private:
             {
                 if(remove_multi_face(*f))
                 {
-                    return;
+                    return true;
                 }
             }
         }
+        return false;
     }
     
     /**
@@ -918,6 +921,7 @@ private:
         }
         
         // Attempt to remove each edge of each tetrahedron in tets. Accept if it increases the minimum quality locally.
+        int i = 0, j = 0;
         for (auto &t : tets)
         {
             if (Complex::exists(t) && quality(t) < MIN_TET_QUALITY)
@@ -929,14 +933,20 @@ private:
                 {
                     if (Complex::exists(*eit) && !is_interface(*eit) && !is_boundary(*eit))
                     {
-                        edge_removal(*eit);
+                        if(edge_removal(*eit))
+                        {
+                            i++;
+                        }
+                        j++;
                     }
                 }
             }
         }
+        std::cout << "Topological edge removals: " << i << " / " << j << std::endl;
         
         // Attempt to remove each face of each remaining tetrahedron in tets using multi-face removal.
         // Accept if it increases the minimum quality locally.
+        i = 0, j = 0;
         for (auto &t : tets)
         {
             if (Complex::exists(t) && quality(t) < MIN_TET_QUALITY)
@@ -948,11 +958,16 @@ private:
                 {
                     if (Complex::exists(*fit) && !is_interface(*fit) && !is_boundary(*fit))
                     {
-                        multi_face_removal(*fit);
+                        if(multi_face_removal(*fit))
+                        {
+                            i++;
+                        }
+                        j++;
                     }
                 }
             }
         }
+        std::cout << "Topological face removals: " << i << " / " << j << std::endl;
         
         Complex::garbage_collect();
     }
