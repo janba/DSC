@@ -625,17 +625,6 @@ public:
     ///////////////////////////////////
     // SHOULD BE REMOVED OR REPLACED //
     ///////////////////////////////////
-        
-    void find_min_multi_face(const face_key& f, simplex_set & multi_face, simplex_set & min_multi_face)
-    {
-        mesh.find_min_multi_face(f, multi_face, min_multi_face);
-    }
-    
-    void multi_face_retriangulation(simplex_set & removed_faces, std::vector<node_key> & new_edges_desc,
-                                    simplex_set & new_faces, simplex_set & new_simplices)
-    {
-        mesh.multi_face_retriangulation(removed_faces, new_edges_desc, new_faces, new_simplices);
-    }
     
     void multi_face_remove(simplex_set & removed_faces, simplex_set & new_simplices)
     {
