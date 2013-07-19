@@ -801,13 +801,19 @@ private:
             }
         }
         
+        int i = 0, j = 0;
         for (auto e : flippable_edges)
         {
             if (Complex::exists(e) && is_flippable(e))
             {
-                flip(e);
+                if(flip(e))
+                {
+                    i++;
+                }
+                j++;
             }
         }
+        std::cout << "Edge flips: " << i << "/" << j << std::endl;
     }
     
     
@@ -1887,7 +1893,7 @@ private:
      * Flips the edge e (which is a special case of the edge remove operation in the embedding mesh).
      * Relabels the tetrahedra accordingly so that the interface mesh geometry does not change.
      */
-    void flip(const edge_key & e)
+    bool flip(const edge_key & e)
     {
         // Find the pair of nodes to be connected by a new edge as a result of edge flip.
         simplex_set lk_e;
@@ -1903,7 +1909,7 @@ private:
         assert(nodes.size() == 2);
         if(Complex::get_edge(nodes[0], nodes[1]) != Complex::NULL_EDGE) // Check that there does not already exist an edge between the pair of nodes.
         {
-            return;
+            return false;
         }
         
         node_key n_new = split(e);
@@ -1915,7 +1921,11 @@ private:
         
         if(precond_collapse(e_c, p))
         {
-            collapse(e_c, p, p_new);
+            node_key n = collapse(e_c, p, p_new);
+            return n != Complex::NULL_NODE;
+        }
+        return false;
+    }
         }
     }
     
