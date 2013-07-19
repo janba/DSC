@@ -311,7 +311,7 @@ private:
         return polygon;
     }
     
-    void flip_23_recursively(std::vector<node_key>& polygon, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K, int i, int j)
+    void flip_23_recursively(const std::vector<node_key>& polygon, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K, int i, int j)
     {
         if(j >= i+2)
         {
@@ -322,9 +322,9 @@ private:
         }
     }
     
-    void edge_removal(std::vector<node_key>& polygon, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K)
+    void edge_removal(const std::vector<node_key>& polygon, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K)
     {
-        const int m = (int) polygon.size();
+        const int m = static_cast<int>(polygon.size());
         int k = K[0][m-1];
         flip_23_recursively(polygon, n1, n2, K, 0, k);
         flip_23_recursively(polygon, n1, n2, K, k, m-1);
@@ -335,20 +335,16 @@ private:
      * Attempt to remove edge e by mesh reconnection using the dynamic programming method by Klincsek (see Shewchuk "Two Discrete Optimization Algorithms
      * for the Topological Improvement of Tetrahedral Meshes" article for details).
      */
-    bool edge_removal(edge_key const & e)
+    bool edge_removal(const edge_key& e)
     {
-        simplex_set st_e;
-        Complex::star(e, st_e);
-        
         std::vector<node_key> polygon = get_polygon(e);
-        std::vector<node_key> nodes;
-        Complex::get_nodes(e, nodes);
-        
         std::vector<std::vector<int>> K;
         T q_new = build_table(e, polygon, K);
         
         if (q_new > min_quality(e))
         {
+            std::vector<node_key> nodes;
+            Complex::get_nodes(e, nodes);
             edge_removal(polygon, nodes[0], nodes[1], K);
             return true;
         }
@@ -755,7 +751,7 @@ private:
                 }
             }
         }
-        std::cout << "Topological edge removals: " << i << " / " << j << std::endl;
+        std::cout << "Topological edge removals: " << i << "/" << j << std::endl;
         
         // Attempt to remove each face of each remaining tetrahedron in tets using multi-face removal.
         // Accept if it increases the minimum quality locally.
@@ -780,7 +776,7 @@ private:
                 }
             }
         }
-        std::cout << "Topological face removals: " << i << " / " << j << std::endl;
+        std::cout << "Topological face removals: " << i << "/" << j << std::endl;
         
         Complex::garbage_collect();
     }
