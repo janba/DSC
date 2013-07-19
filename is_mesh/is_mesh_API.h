@@ -599,10 +599,20 @@ public:
     {
         simplex_set lk_e;
         link(e, lk_e);
+#ifdef DEBUG
+        assert(lk_e.size_nodes() == 3);
+#endif
         node_key n1 = *lk_e.nodes_begin();
         node_key n2 = split(e);
         edge_key e2 = get_edge(n1, n2);
+#ifdef DEBUG
+        assert(e2 != NULL_EDGE);
+#endif
         node_key n3 = collapse(e2);
+#ifdef DEBUG
+        assert(n3 != NULL_NODE);
+        assert(n1 == n3);
+#endif
         return n3;
     }
     
@@ -611,9 +621,19 @@ public:
         simplex_set lk_f;
         link(f, lk_f);
         node_key n1 = *lk_f.nodes_begin();
+#ifdef DEBUG
+        assert(lk_f.size_nodes() == 2);
+#endif
         node_key n2 = split(f);
         edge_key e = get_edge(n1, n2);
+#ifdef DEBUG
+        assert(e != NULL_EDGE);
+#endif
         node_key n3 = collapse(e);
+#ifdef DEBUG
+        assert(n3 != NULL_NODE);
+        assert(n1 == n3);
+#endif
         return n3;
     }
     
