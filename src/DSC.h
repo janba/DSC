@@ -1858,15 +1858,21 @@ private:
         
         simplex_set ln_e;
         Complex::link(e, ln_e);
+        std::vector<node_key> nodes;
         for (auto nit = ln_e.nodes_begin(); nit != ln_e.nodes_end(); nit++)
         {
             if (is_interface(*nit) || is_boundary(*nit))
             {
                 verts.push_back(get_pos(*nit));
+                nodes.push_back(*nit);
             }
         }
         
         if (verts.size() != 4)
+        {
+            return false;
+        }
+        if(Complex::get_edge(nodes[0], nodes[1]) != Complex::NULL_EDGE) // Check that there does not already exist an edge between the pair of nodes.
         {
             return false;
         }
@@ -1905,12 +1911,7 @@ private:
                 nodes.push_back(*nit);
             }
         }
-        
         assert(nodes.size() == 2);
-        if(Complex::get_edge(nodes[0], nodes[1]) != Complex::NULL_EDGE) // Check that there does not already exist an edge between the pair of nodes.
-        {
-            return false;
-        }
         
         node_key n_new = split(e);
         
