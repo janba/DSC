@@ -637,6 +637,11 @@ public:
         return n3;
     }
     
+    node_key flip_22(const face_key& f1, const face_key& f2)
+    {
+        return flip_44(f1, f2);
+    }
+    
     node_key flip_44(const face_key& f1, const face_key& f2)
     {
         edge_key e1 = get_edge(f1, f2);
