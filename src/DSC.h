@@ -420,7 +420,9 @@ private:
         
         // Find the faces to flip about.
         edge_key e = Complex::get_edge(n1,n2);
+#ifdef DEBUG
         assert(e != Complex::NULL_EDGE);
+#endif
         simplex_set st_e;
         Complex::star(e, st_e);
         std::vector<face_key> faces;
@@ -432,8 +434,10 @@ private:
             }
         }
         
-        assert(is_interface(n1) && is_interface(n2));
+#ifdef DEBUG
+        assert((is_interface(n1) && is_interface(n2)) || (is_boundary(n1) && is_boundary(n2)));
         assert(faces.size() == 2);
+#endif
         
         if(m2 <= 2) {
             Complex::flip_22(faces[0], faces[1]);
@@ -829,12 +833,12 @@ private:
         
         for (auto tit = new_simplices.tetrahedra_begin(); tit != new_simplices.tetrahedra_end(); tit++)
         {
-            set_label(*tit, label);
+            Complex::set_label(*tit, label);
         }
         
         simplex_set ns_cl;
         Complex::closure(new_simplices, ns_cl);
-        update(ns_cl);
+        Complex::update(ns_cl);
     }
     
     /**
