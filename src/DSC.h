@@ -411,9 +411,18 @@ private:
         flip_23_recursively(polygon1, n1, n2, K1, 0, k);
         flip_23_recursively(polygon1, n1, n2, K1, k, m1-1);
         
+        if(m2 > 2)
+        {
+            k = K2[0][m2-1];
+            flip_23_recursively(polygon2, n1, n2, K2, 0, k);
+            flip_23_recursively(polygon2, n1, n2, K2, k, m2-1);
+        }
+        
         // Find the faces to flip about.
+        edge_key e = Complex::get_edge(n1,n2);
+        assert(e != Complex::NULL_EDGE);
         simplex_set st_e;
-        Complex::star(Complex::get_edge(n1,n2), st_e);
+        Complex::star(e, st_e);
         std::vector<face_key> faces;
         for (auto fit = st_e.faces_begin(); fit != st_e.faces_end(); fit++)
         {
@@ -423,14 +432,13 @@ private:
             }
         }
         
-        if(m2 == 0)
-        {
+        assert(is_interface(n1) && is_interface(n2));
+        assert(faces.size() == 2);
+        
+        if(m2 <= 2) {
             Complex::flip_22(faces[0], faces[1]);
         }
         else {
-            k = K2[0][m2-1];
-            flip_23_recursively(polygon2, n1, n2, K2, 0, k);
-            flip_23_recursively(polygon2, n1, n2, K2, k, m2-1);
             Complex::flip_44(faces[0], faces[1]);
         }
     }
