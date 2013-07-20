@@ -419,31 +419,16 @@ private:
         }
         
         // Find the faces to flip about.
-        edge_key e = Complex::get_edge(n1,n2);
-#ifdef DEBUG
-        assert(e != Complex::NULL_EDGE);
-#endif
-        simplex_set st_e;
-        Complex::star(e, st_e);
-        std::vector<face_key> faces;
-        for (auto fit = st_e.faces_begin(); fit != st_e.faces_end(); fit++)
-        {
-            if (is_interface(*fit) || is_boundary(*fit))
-            {
-                faces.push_back(*fit);
-            }
-        }
+        face_key f1 = Complex::get_face(n1, n2, polygon1.front());
+        face_key f2 = Complex::get_face(n1, n2, polygon1.back());
         
-#ifdef DEBUG
-        assert((is_interface(n1) && is_interface(n2)) || (is_boundary(n1) && is_boundary(n2)));
-        assert(faces.size() == 2);
-#endif
+        // Check that the faces lies in almost the same plane.
         
         if(m2 <= 2) {
-            Complex::flip_22(faces[0], faces[1]);
+            Complex::flip_22(f1, f2);
         }
         else {
-            Complex::flip_44(faces[0], faces[1]);
+            Complex::flip_44(f1, f2);
         }
     }
     
