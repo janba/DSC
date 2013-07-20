@@ -1484,9 +1484,9 @@ private:
         topological_pass();
         validity_check();
         
-        print_out("Edge flip pass.");
-        interface_edge_flip_pass();
-        validity_check();
+//        print_out("Edge flip pass.");
+//        interface_edge_flip_pass();
+//        validity_check();
         
         print_out("Remove low quality.");
         remove_tets();
