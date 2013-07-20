@@ -311,6 +311,53 @@ private:
         return polygon;
     }
     
+    void get_half_polygon(const edge_key& e, std::vector<node_key>& polygon1, std::vector<node_key>& polygon2)
+    {
+        std::vector<node_key> nodes;
+        Complex::get_nodes(e, nodes);
+        std::vector<node_key> polygon = get_polygon(e);
+        int i1 = -1, i2 = -1;
+        for(int i = 0; i < polygon.size(); i++)
+        {
+            face_key f = Complex::get_face(nodes[0], nodes[1], polygon[i]);
+            assert(f != Complex::NULL_FACE);
+            if(is_interface(f) || is_boundary(f))
+            {
+                if(i2 != -1) // More than one boundary meets at edge e.
+                {
+                    return;
+                }
+                
+                if(i1 == -1) {
+                    i1 = i;
+                }
+                else {
+                    i2 = i;
+                }
+            }
+        }
+        assert(i2 != -1);
+        
+        for(int i = i1; i != i2; i = (i+1)%polygon.size())
+        {
+            polygon1.push_back(polygon[i]);
+        }
+        polygon1.push_back(polygon[i2]);
+        
+        for(int i = i2; i != i1; i = (i+1)%polygon.size())
+        {
+            polygon2.push_back(polygon[i]);
+        }
+        polygon2.push_back(polygon[i1]);
+        
+        if(polygon1.size() <= 2)
+        {
+            swap(polygon1, polygon2);
+        }
+        assert(polygon1.size() > 2);
+    }
+    
+    
     void flip_23_recursively(const std::vector<node_key>& polygon, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K, int i, int j)
     {
         if(j >= i+2)
@@ -390,31 +437,20 @@ private:
     
     bool boundary_edge_removal(const edge_key& e)
     {
-        std::vector<node_key> polygon = get_polygon(e);
-        std::vector<std::vector<node_key>> pols(2);
-        int i = 0;
-        int count = 0;
-        for(auto &n : polygon)
-        {
-            pols[i].push_back(n);
-            if(is_interface(n))
-            {
-                count++;
-                i = (i+1)%2;
-                pols[i].push_back(n);
-            }
-        }
-        if(count > 2)
+        std::vector<node_key> polygon1, polygon2;
+        get_half_polygon(e, polygon1, polygon2);
+        
+        if(polygon1.size() <= 2)
         {
             return false;
         }
         
         std::vector<std::vector<int>> K1, K2;
-        T q_new = build_table(e, pols[0], K1);
+        T q_new = build_table(e, polygon1, K1);
         
-        if(pols[1].size() != 0)
+        if(polygon2.size() > 2)
         {
-            q_new = std::min(q_new, build_table(e, pols[1], K2));
+            q_new = std::min(q_new, build_table(e, polygon2, K2));
         }
         
         if (q_new > min_quality(e))
@@ -434,7 +470,7 @@ private:
             }
             std::cout << faces.size() << " / " << st_e.size_faces() << std::endl;
             
-            remove_boundary_edge_flips(pols[0], pols[1], nodes[0], nodes[1], K1, K2);
+            remove_boundary_edge_flips(polygon1, polygon2, nodes[0], nodes[1], K1, K2);
             return true;
         }
         return false;
