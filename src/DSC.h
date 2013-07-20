@@ -2928,8 +2928,8 @@ public:
         {
             if (fit->is_interface())
             {
-                std::vector<node_key> nodes(3);
-                Complex::get(fit.key(), nodes);
+                std::vector<node_key> nodes;
+                Complex::get_nodes(fit.key(), nodes);
                 
                 indices.push_back(vert_index[nodes[0]]);
                 indices.push_back(vert_index[nodes[1]]);
@@ -2953,9 +2953,9 @@ public:
         
         for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
         {
-            std::vector<node_key> nodes(4);
+            std::vector<node_key> nodes;
             std::vector<int> tet;
-            Complex::get(tit.key(), nodes);
+            Complex::get_nodes(tit.key(), nodes);
             
             for (int i = 0; i < nodes.size(); i++)
                 tet.push_back(indices[nodes[i]]);
