@@ -590,10 +590,10 @@ public:
         if (n == (node_key)-1) {
             return NULL_NODE;
         }
-        simplex_set st_n;
+        simplex_set st_n, cl_st_n;
         star(n, st_n);
-        st_n.insert(n);
-        update(st_n);
+        closure(st_n, cl_st_n);
+        update(cl_st_n);
         return n;
     }
     
