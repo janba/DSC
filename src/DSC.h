@@ -457,19 +457,6 @@ private:
         {
             std::vector<node_key> nodes;
             Complex::get_nodes(e, nodes);
-            
-            simplex_set st_e;
-            Complex::star(e, st_e);
-            std::vector<face_key> faces;
-            for (auto fit = st_e.faces_begin(); fit != st_e.faces_end(); fit++)
-            {
-                if (is_interface(*fit) || is_boundary(*fit))
-                {
-                    faces.push_back(*fit);
-                }
-            }
-            std::cout << faces.size() << " / " << st_e.size_faces() << std::endl;
-            
             remove_boundary_edge_flips(polygon1, polygon2, nodes[0], nodes[1], K1, K2);
             return true;
         }
