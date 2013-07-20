@@ -229,18 +229,18 @@ private:
         set_boundary(e, false);
         set_interface(e, false);
         
-        simplex_set ste;
-        star(e, ste);
+        simplex_set st_e;
+        star(e, st_e);
         
-        for (auto efit = ste.faces_begin(); efit != ste.faces_end(); efit++)
+        for (auto fit = st_e.faces_begin(); fit != st_e.faces_end(); fit++)
         {
-            if (exists(*efit))
+            if (exists(*fit))
             {
-                if (is_boundary(*efit))
+                if (is_boundary(*fit))
                 {
                     set_boundary(e, true);
                 }
-                else if (is_interface(*efit))
+                else if (is_interface(*fit))
                 {
                     set_interface(e, true);
                 }
@@ -255,15 +255,15 @@ private:
         
         simplex_set st_n;
         star(n, st_n);
-        for (auto neit = st_n.edges_begin(); neit != st_n.edges_end(); neit++)
+        for (auto eit = st_n.edges_begin(); eit != st_n.edges_end(); eit++)
         {
-            if (exists(*neit))
+            if (exists(*eit))
             {
-                if (is_interface(*neit))
+                if (is_interface(*eit))
                 {
                     set_interface(n, true);
                 }
-                if (is_boundary(*neit))
+                if (is_boundary(*eit))
                 {
                     set_boundary(n, true);
                 }
@@ -582,8 +582,10 @@ public:
     {
         std::vector<node_key> nodes;
         get_nodes(e, nodes);
+#ifdef DEBUG
         assert(nodes[0] != NULL_NODE);
         assert(nodes[1] != NULL_NODE);
+#endif
         node_key n = mesh.edge_collapse_helper(e, nodes[1], nodes[0]);
         if (n == (node_key)-1) {
             return NULL_NODE;
@@ -597,6 +599,9 @@ public:
     
     node_key flip_32(const edge_key& e)
     {
+#ifdef DEBUG
+        assert(!is_interface(e) && !is_boundary(e));
+#endif
         simplex_set lk_e;
         link(e, lk_e);
 #ifdef DEBUG
@@ -618,6 +623,9 @@ public:
     
     node_key flip_23(const face_key& f)
     {
+#ifdef DEBUG
+        assert(!is_interface(f) && !is_boundary(f));
+#endif
         simplex_set lk_f;
         link(f, lk_f);
         node_key n1 = *lk_f.nodes_begin();
@@ -644,6 +652,10 @@ public:
     
     node_key flip_44(const face_key& f1, const face_key& f2)
     {
+#ifdef DEBUG
+        assert((is_interface(f1) && is_interface(f2)) || (!is_interface(f1) && !is_interface(f2)));
+        assert((is_boundary(f1) && is_boundary(f2)) || (!is_boundary(f1) && !is_boundary(f2)));
+#endif
         edge_key e1 = get_edge(f1, f2);
         node_key n1 = get_apex(f1, e1);
         node_key n2 = split(e1);
