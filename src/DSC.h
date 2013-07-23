@@ -710,9 +710,9 @@ private:
         Complex::garbage_collect();
     }
     
-    /////////////////////
-    // THICKENING PASS //
-    /////////////////////
+    ////////////////
+    // THICKENING //
+    ////////////////
     
     /**
      * Splits all tetrahedra with a volume greater than MAX_TET_VOLUME by inserting a vertex.
@@ -742,9 +742,9 @@ private:
         std::cout << "Thickening pass splits: " << i << "/" << j << std::endl;
     }
     
-    ///////////////////
-    // THINNING PASS //
-    ///////////////////
+    //////////////
+    // THINNING //
+    //////////////
     /**
      * Collapses all edges which is shorter than MIN_EDGE_LENGTH. However, the collapse is only performed if it does not alter the interface and it improves the minimum quality of the tetrahedra in the star of the edge.
      */
@@ -773,59 +773,9 @@ private:
         std::cout << "Thinning pass collapses: " << i << "/" << j << std::endl;
     }
     
-    ///////////////////////
-    // RELABEL TETS PASS //
-    ///////////////////////
-    
-    /**
-     * Relabel all tetrahedra in the SimplicialComplex mesh when
-     * a) their quality is lower than TET_RELABEL_THRESHOLD and the minimum sine of their dihedral angles is lower than TET_RELABEL_THRESHOLD
-     * b) they fulfill criteria for relabelling (described in detail in relabel_condition()).
-     * Compliant with multiple phases.
-     */
-    bool relabel_tets()
-    {
-        int counter = 0;
-        for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
-        {
-            if(relabel_tet(tit.key()))
-            {
-                ++counter;
-            }
-        }
-        
-        if (counter > 0)
-        {
-            std::cout << "Relabeled " << counter << " tets" << std::endl;
-        }
-        
-        return (counter > 0);
-    }
-    
-    /////////////////
-    // SMOOTH PASS //
-    /////////////////
-    
-    void smooth()
-    {
-        int i = 0, j = 0;
-        for (auto nit = Complex::nodes_begin(); nit != Complex::nodes_end(); nit++)
-        {
-            if (Complex::exists(nit.key()) && !is_boundary(nit.key()) && !is_interface(nit.key()))
-            {
-                if (smart_laplacian(nit.key()))
-                {
-                    i++;
-                }
-                j++;
-            }
-        }
-        std::cout << "Smoothed: " << i << "/" << j << std::endl;
-    }
-    
-    //////////////////////////////
-    // REMOVE DEGENERACIES PASS //
-    //////////////////////////////
+    /////////////////////////
+    // REMOVE DEGENERACIES //
+    /////////////////////////
     /**
      * Attempt to remove edges shorter than DEG_EDGE_LENGTH by collapsing them.
      */
@@ -1000,7 +950,7 @@ private:
     }
     
     /**
-     * Attempts to remove degenerate faces (faces with a minimum angle smaller than DEG_ANGLE).
+     * Attempts to remove degenerate faces (faces with a minimum angle smaller than MIN_ANGLE).
      */
     void remove_faces()
     {
@@ -1189,7 +1139,7 @@ private:
     }
     
     /**
-     * Attempt to remove tetrahedra with quality lower than DEG_TET_QUALITY.
+     * Attempt to remove tetrahedra with quality lower than MIN_TET_QUALITY.
      */
     void remove_tets()
     {
@@ -1216,6 +1166,155 @@ private:
         }
         std::cout << "Removed " << i <<"/"<< j << " low quality tets" << std::endl;
         Complex::garbage_collect();
+    }
+    
+    ///////////////
+    // SMOOTHING //
+    ///////////////
+private:
+    /**
+     * Performs Laplacian smoothing if it improves the minimum tetrahedron quality locally.
+     */
+    bool smart_laplacian(const node_key& n, T alpha = 1.)
+    {
+        T q_old = min_quality(n);
+        V old_pos = get_pos(n);
+        V avg_pos = get_barycenter(n);
+        set_pos(n, old_pos + alpha * (avg_pos - old_pos));
+        
+        T q_new = min_quality(n);
+        if (q_new < q_old)
+        {
+            set_pos(n, old_pos);
+            return false;
+        }
+        return true;
+    }
+    
+    void smooth()
+    {
+        int i = 0, j = 0;
+        for (auto nit = Complex::nodes_begin(); nit != Complex::nodes_end(); nit++)
+        {
+            if (Complex::exists(nit.key()) && !is_boundary(nit.key()) && !is_interface(nit.key()))
+            {
+                if (smart_laplacian(nit.key()))
+                {
+                    i++;
+                }
+                j++;
+            }
+        }
+        std::cout << "Smoothed: " << i << "/" << j << std::endl;
+    }
+    
+    ////////////////
+    // RELABELING //
+    ////////////////
+private:
+    /**
+     * Precondition for relable_tet function.
+     * Returns true when
+     * a) the quality of tetrahedron t is lower than DEG_TET_QUALITY.
+     * b) the biggest face f of tetrahedron t lies on the interface.
+     * c) the area of f is at least 0.48 of the total area of all the faces of t.
+     * d) the vertex opposite to f lies on the interface.
+     */
+    bool precond_relabel(const tet_key& t, face_key & f)
+    {
+        if (quality(t) > DEG_TET_QUALITY)
+        {
+            return false;
+        }
+        
+        // Find the face (f) of t that lies on the interface and has the biggest area (max_area).
+        // Compute the total area of all faces of t (total_area).
+        T max_area = 0.;
+        T total_area = 0.;
+        simplex_set cl_t;
+        Complex::closure(t, cl_t);
+        for (auto fit = cl_t.faces_begin(); fit != cl_t.faces_end(); fit++)
+        {
+            T a = area(*fit);
+            total_area += a;
+            
+            if (is_interface(*fit) && !is_boundary(*fit) && a > max_area)
+            {
+                max_area = a;
+                f = *fit;
+            }
+        }
+        
+        // Relabel the tetrahedron if it's biggest face lies on the interface, it's at least 0.48 of the sum of all it's faces' areas
+        // and if the vertex opposite to this face also lies on the interface.
+        if (max_area > 0.48*total_area)
+        {
+            std::vector<V> verts;
+            get_pos(f, verts);
+            
+            simplex_set lk_f;
+            Complex::link(f, lk_f);
+            for(auto nit = lk_f.nodes_begin(); nit != lk_f.nodes_end(); nit++)
+            {
+                if (cl_t.contains(*nit) && is_interface(*nit) &&
+                    Util::distance<MT>(get_pos(*nit), verts[0], verts[1], verts[2]) < MIN_EDGE_LENGTH)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Relabels tetrahedron t if precond_relabel() returns true.
+     */
+    bool relabel_tet(const tet_key& t)
+    {
+        face_key f;
+        
+        if (precond_relabel(t, f))
+        {
+            int label = -1;
+            simplex_set st_f;
+            Complex::star(f, st_f);
+            for (auto tit = st_f.tetrahedra_begin(); tit != st_f.tetrahedra_end(); tit++)
+            {
+                if(*tit != t)
+                {
+                    label = get_label(*tit);
+                }
+            }
+            
+            if (label != -1 && label != get_label(t))
+            {
+                Complex::set_label(t, label);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Relabel all tetrahedra in the SimplicialComplex mesh when
+     * a) their quality is lower than TET_RELABEL_THRESHOLD and the minimum sine of their dihedral angles is lower than TET_RELABEL_THRESHOLD
+     * b) they fulfill criteria for relabelling (described in detail in relabel_condition()).
+     * Compliant with multiple phases.
+     */
+    bool relabel_tets()
+    {
+        int i = 0, j = 0;
+        for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
+        {
+            if(relabel_tet(tit.key()))
+            {
+                i++;
+            }
+            j++;
+        }
+        std::cout << "Relabeled tetrahedra: " << i << "/" << j << std::endl;
+        
+        return (i > 0);
     }
     
     ///////////////////
@@ -1372,120 +1471,6 @@ private:
         assert(min_t < INFINITY);
         return min_t;
     }
-    
-    ///////////////
-    // SMOOTHING //
-    ///////////////
-private:
-    /**
-     * Performs Laplacian smoothing if it improves the minimum tetrahedron quality locally.
-     */
-    bool smart_laplacian(const node_key& n, T alpha = 1.)
-    {
-        T q_old = min_quality(n);
-        V old_pos = get_pos(n);
-        V avg_pos = get_barycenter(n);
-        set_pos(n, old_pos + alpha * (avg_pos - old_pos));
-        
-        T q_new = min_quality(n);
-        if (q_new < q_old)
-        {
-            set_pos(n, old_pos);
-            return false;
-        }
-        return true;
-    }
-    
-    ////////////////
-    // RELABELING //
-    ////////////////
-private:
-    /**
-     * Precondition for relable_tet function.
-     * Returns true when
-     * a) the quality of tetrahedron t is lower than DEG_TET_QUALITY.
-     * b) the biggest face f of tetrahedron t lies on the interface.
-     * c) the area of f is at least 0.48 of the total area of all the faces of t.
-     * d) the vertex opposite to f lies on the interface.
-     */
-    bool precond_relabel(const tet_key& t, face_key & f)
-    {
-        if (quality(t) > DEG_TET_QUALITY)
-        {
-            return false;
-        }
-        
-        // Find the face (f) of t that lies on the interface and has the biggest area (max_area).
-        // Compute the total area of all faces of t (total_area).
-        T max_area = 0.;
-        T total_area = 0.;
-        simplex_set cl_t;
-        Complex::closure(t, cl_t);
-        for (auto fit = cl_t.faces_begin(); fit != cl_t.faces_end(); fit++)
-        {
-            T a = area(*fit);
-            total_area += a;
-            
-            if (is_interface(*fit) && !is_boundary(*fit) && a > max_area)
-            {
-                max_area = a;
-                f = *fit;
-            }
-        }
-        
-        // Relabel the tetrahedron if it's biggest face lies on the interface, it's at least 0.48 of the sum of all it's faces' areas
-        // and if the vertex opposite to this face also lies on the interface.
-        if (max_area > 0.48*total_area)
-        {
-            std::vector<V> verts;
-            get_pos(f, verts);
-            
-            simplex_set lk_f;
-            Complex::link(f, lk_f);
-            for(auto nit = lk_f.nodes_begin(); nit != lk_f.nodes_end(); nit++)
-            {
-                if (cl_t.contains(*nit) && is_interface(*nit) &&
-                    Util::distance<MT>(get_pos(*nit), verts[0], verts[1], verts[2]) < MIN_EDGE_LENGTH)
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    
-    /**
-     * Relabels tetrahedron t if precond_relabel() returns true.
-     */
-    bool relabel_tet(const tet_key& t)
-    {
-        face_key f;
-        
-        if (precond_relabel(t, f))
-        {
-            int label = -1;
-            simplex_set st_f;
-            Complex::star(f, st_f);
-            for (auto tit = st_f.tetrahedra_begin(); tit != st_f.tetrahedra_end(); tit++)
-            {
-                if(*tit != t)
-                {
-                    label = get_label(*tit);
-                }
-            }
-            
-            if (label != -1 && label != get_label(t))
-            {
-                set_label(t, label);
-                simplex_set cl_t;
-                Complex::closure(t, cl_t);
-                update(cl_t);
-                return true;
-            }
-        }
-        return false;
-    }
-    
     
     ///////////
     // FLIPS //
