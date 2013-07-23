@@ -395,11 +395,6 @@ private:
         return false;
     }
     
-    ///////////////////////////////////////
-    // TOPOLOGICAL BOUNDARY EDGE REMOVAL //
-    ///////////////////////////////////////
-    
-    
     void remove_boundary_edge_flips(const std::vector<node_key>& polygon1, const std::vector<node_key>& polygon2, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K1, std::vector<std::vector<int>>& K2)
     {
         const int m1 = static_cast<int>(polygon1.size());
@@ -418,8 +413,6 @@ private:
         // Find the faces to flip about.
         face_key f1 = Complex::get_face(n1, n2, polygon1.front());
         face_key f2 = Complex::get_face(n1, n2, polygon1.back());
-        
-        // Check that the faces lies in almost the same plane.
         
         if(m2 <= 2) {
             Complex::flip_22(f1, f2);
@@ -452,6 +445,36 @@ private:
             std::vector<node_key> nodes;
             Complex::get_nodes(e, nodes);
             remove_boundary_edge_flips(polygon1, polygon2, nodes[0], nodes[1], K1, K2);
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Returns whether it is possible to flip the edge e or not, i.e. whether the edge is not a feature edge 
+     * (it is not a feature edge if its neighborhood is sufficiently flat).
+     */
+    bool is_topological_removable(const edge_key & e)
+    {
+        simplex_set st_e;
+        Complex::star(e, st_e);
+        std::vector<face_key> faces;
+        for(auto fit = st_e.faces_begin(); fit != st_e.faces_end(); fit++)
+        {
+            if (is_interface(*fit) || is_boundary(*fit))
+            {
+                faces.push_back(*fit);
+            }
+        }
+        if(faces.size() > 2)
+        {
+            return false;
+        }
+        assert(faces.size() == 2);
+        
+        T angle = cos_dihedral_angle(e, faces[0], faces[1]);
+        if(angle > 0.8)
+        {
             return true;
         }
         return false;
