@@ -1068,19 +1068,19 @@ private:
     
     void smooth()
     {
+        int i = 0, j = 0;
         for (auto nit = Complex::nodes_begin(); nit != Complex::nodes_end(); nit++)
         {
             if (Complex::exists(nit.key()) && !is_boundary(nit.key()) && !is_interface(nit.key()))
             {
-                if (!smart_laplacian(nit.key()))
+                if (smart_laplacian(nit.key()))
                 {
-//                    if (min_quality(nit.key()) < MIN_TET_QUALITY)
-//                    {
-//                        freitag_smoothing(nit.key());
-//                    }
+                    i++;
                 }
+                j++;
             }
         }
+        std::cout << "Smoothed: " << i << "/" << j << std::endl;
     }
     
     //////////////////////////////
