@@ -60,9 +60,8 @@ private:
     // User defined parameters
     T AVG_EDGE_LENGTH;
     T MIN_DEFORMATION;
-        
-    //old:
-    T FLIP_EDGE_TET_FLATNESS;
+
+    T FLIP_EDGE_INTERFACE_FLATNESS;
         
     int step_no;
     
@@ -92,7 +91,7 @@ public:
         
         DEG_TET_QUALITY = 0.01;
         MIN_TET_QUALITY = 0.3;
-        FLIP_EDGE_TET_FLATNESS = 0.995;
+        FLIP_EDGE_INTERFACE_FLATNESS = 0.995;
         
         T vol_avg = AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*sqrt(2.)/12.;
         MIN_TET_VOLUME = 0.5*vol_avg;
@@ -473,7 +472,7 @@ private:
         assert(faces.size() == 2);
         
         T angle = cos_dihedral_angle(e, faces[0], faces[1]);
-        if(angle > 0.8)
+        if(angle > FLIP_EDGE_INTERFACE_FLATNESS)
         {
             return true;
         }
@@ -2043,7 +2042,7 @@ private:
         
         T flatness = Util::calc_flatness<MT>(verts[0], verts[1], verts[2], verts[3]);
         
-        if (flatness >= FLIP_EDGE_TET_FLATNESS)
+        if (flatness >= FLIP_EDGE_INTERFACE_FLATNESS)
         {
             return true;
         }
