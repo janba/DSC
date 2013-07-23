@@ -39,33 +39,31 @@ public:
     
 private:
     
+    // Thresholds on the dihedral angle between two neighbouring faces
     T DEG_ANGLE;
     T MIN_ANGLE;
-    T COS_MIN_ANGLE;
     
+    // Thresholds on the quality of tetrahedra
+    T DEG_TET_QUALITY;
+    T MIN_TET_QUALITY;
+    
+    // Thresholds on the volume of tetrahedra
     T DEG_TET_VOLUME;
     T MIN_TET_VOLUME;
     T MAX_TET_VOLUME;
     
+    // Thresholds on the length of edges
     T DEG_EDGE_LENGTH;
     T MIN_EDGE_LENGTH;
     T MAX_EDGE_LENGTH;
     
-    T DEG_TET_QUALITY;
-    T MIN_TET_QUALITY;
-    
+    // User defined parameters
     T AVG_EDGE_LENGTH;
     T MIN_DEFORMATION;
-    
+        
     //old:
-    T MIN_DIHEDRAL_ANGLE;
-    
     T FLIP_EDGE_TET_FLATNESS;
-    
-    
-#define MAX_COS_FACE_ANGLE 0.996
-#define MAX_COS 0.998
-    
+        
     int step_no;
     
     //////////////////////////
@@ -92,7 +90,6 @@ public:
         
         MIN_DEFORMATION = 0.25 * AVG_EDGE_LENGTH;
         
-        MIN_DIHEDRAL_ANGLE = 5.*M_PI/180.;
         DEG_TET_QUALITY = 0.01;
         MIN_TET_QUALITY = 0.3;
         FLIP_EDGE_TET_FLATNESS = 0.995;
@@ -237,9 +234,9 @@ public:
         return DEG_TET_QUALITY;
     }
     
-    T get_min_dihedral_angle() const
+    T get_min_angle() const
     {
-        return MIN_DIHEDRAL_ANGLE;
+        return MIN_ANGLE;
     }
     
     ////////////////////////

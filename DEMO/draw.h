@@ -124,7 +124,7 @@ public:
         for (auto tit = complex->tetrahedra_begin(); tit != complex->tetrahedra_end(); tit++)
         {
             low_quality = complex->quality(tit.key()) < complex->get_min_tet_quality();
-            small_angle = complex->min_dihedral_angle(tit.key()) < complex->get_min_dihedral_angle();
+            small_angle = complex->min_dihedral_angle(tit.key()) < complex->get_min_angle();
             if (low_quality || small_angle)
             {
                 if (low_quality && small_angle) {
