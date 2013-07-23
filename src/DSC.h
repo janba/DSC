@@ -365,7 +365,7 @@ private:
         }
     }
     
-    void edge_removal(const std::vector<node_key>& polygon, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K)
+    void topological_edge_removal(const std::vector<node_key>& polygon, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K)
     {
         const int m = static_cast<int>(polygon.size());
         int k = K[0][m-1];
@@ -378,7 +378,7 @@ private:
      * Attempt to remove edge e by mesh reconnection using the dynamic programming method by Klincsek (see Shewchuk "Two Discrete Optimization Algorithms
      * for the Topological Improvement of Tetrahedral Meshes" article for details).
      */
-    bool edge_removal(const edge_key& e)
+    bool topological_edge_removal(const edge_key& e)
     {
         std::vector<node_key> polygon = get_polygon(e);
         std::vector<std::vector<int>> K;
@@ -388,13 +388,13 @@ private:
         {
             std::vector<node_key> nodes;
             Complex::get_nodes(e, nodes);
-            edge_removal(polygon, nodes[0], nodes[1], K);
+            topological_edge_removal(polygon, nodes[0], nodes[1], K);
             return true;
         }
         return false;
     }
     
-    void remove_boundary_edge_flips(const std::vector<node_key>& polygon1, const std::vector<node_key>& polygon2, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K1, std::vector<std::vector<int>>& K2)
+    void topological_boundary_edge_removal(const std::vector<node_key>& polygon1, const std::vector<node_key>& polygon2, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K1, std::vector<std::vector<int>>& K2)
     {
         const int m1 = static_cast<int>(polygon1.size());
         const int m2 = static_cast<int>(polygon2.size());
@@ -421,7 +421,7 @@ private:
         }
     }
     
-    bool boundary_edge_removal(const edge_key& e)
+    bool topological_boundary_edge_removal(const edge_key& e)
     {
         std::vector<node_key> polygon1, polygon2;
         get_half_polygon(e, polygon1, polygon2);
@@ -443,7 +443,7 @@ private:
         {
             std::vector<node_key> nodes;
             Complex::get_nodes(e, nodes);
-            remove_boundary_edge_flips(polygon1, polygon2, nodes[0], nodes[1], K1, K2);
+            topological_boundary_edge_removal(polygon1, polygon2, nodes[0], nodes[1], K1, K2);
             return true;
         }
         return false;
@@ -508,14 +508,14 @@ private:
                     {
                         if(!is_interface(*eit) && !is_boundary(*eit))
                         {
-                            if(edge_removal(*eit))
+                            if(topological_edge_removal(*eit))
                             {
                                 i++;
                             }
                         }
                         else if(is_topological_removable(*eit))
                         {
-                            if(boundary_edge_removal(*eit))
+                            if(topological_boundary_edge_removal(*eit))
                             {
                                 i++;
                             }
@@ -608,7 +608,10 @@ private:
         }
     }
     
-    bool remove_multi_face(const face_key& f)
+    /**
+     * Attempt to remove the faces sandwiched between the apices of f using multi-face removal. The face f is used as a starting point.
+     */
+    bool topological_face_removal(const face_key& f)
     {
         std::vector<node_key> apices;
         Complex::get_apices(f, apices);
@@ -649,16 +652,14 @@ private:
     }
     
     /**
-    * Attempt to remove face f using multi-face removal.
+    * Attempt to remove the faces sandwiched between the nodes apex1 and apex2 using multi-face removal. 
+    * The face which intersects with the line segment |apex1 apex2| is used as a starting point.
     */
-    bool multi_face_removal(const face_key& f)
-    {
-        std::vector<node_key> apices;
-        Complex::get_apices(f, apices);
-        
+    bool topological_face_removal(const node_key& apex1, const node_key& apex2)
+    {        
         simplex_set lk_n1, lk_n2;
-        Complex::link(apices[0], lk_n1);
-        Complex::link(apices[1], lk_n2);
+        Complex::link(apex1, lk_n1);
+        Complex::link(apex2, lk_n2);
         lk_n1.intersection(lk_n2);
         for(auto f = lk_n1.faces_begin(); f != lk_n1.faces_end(); f++)
         {
@@ -666,12 +667,12 @@ private:
             {
                 std::vector<node_key> nodes;
                 Complex::get_nodes(*f, nodes);
-                orient_cc(apices[1], nodes);
+                orient_cc(apex2, nodes);
                 
-                T t = Util::intersection_ray_triangle<MT>(get_pos(apices[0]), get_pos(apices[1]), get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
+                T t = Util::intersection_ray_triangle<MT>(get_pos(apex1), get_pos(apex2), get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
                 if(0. < t && t < 1.)
                 {
-                    if(remove_multi_face(*f))
+                    if(topological_face_removal(*f))
                     {
                         return true;
                     }
@@ -709,7 +710,9 @@ private:
                 {
                     if (Complex::exists(*fit) && !is_interface(*fit) && !is_boundary(*fit))
                     {
-                        if(multi_face_removal(*fit))
+                        std::vector<node_key> apices;
+                        Complex::get_apices(*fit, apices);
+                        if(topological_face_removal(apices[0], apices[1]))
                         {
                             i++;
                         }
