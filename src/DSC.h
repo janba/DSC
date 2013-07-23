@@ -2992,24 +2992,28 @@ public:
     } // extract_tet_mesh
     
     /**
-     * Returns the cosine to the dihedral angle between face f1 and face f2.
+     * Returns the cosine to the dihedral angle between face f1 and face f2 at edge e.
      */
-    T cos_dihedral_angle(const face_key& f1, const face_key& f2)
+    T cos_dihedral_angle(const edge_key& e, const face_key& f1, const face_key& f2)
     {
-        V n0 = get_normal(f1);
-        V n1 = get_normal(f2);
+        std::vector<V> verts;
+        get_pos(e, verts);
+        V c = get_pos(Complex::get_apex(f1, e));
+        V d = get_pos(Complex::get_apex(f2, e));
+        V n0 = Util::normal_direction<MT>(verts[0], verts[1], c);
+        V n1 = Util::normal_direction<MT>(verts[1], verts[0], d);
         T angle = MT::dot(n0, n1);
-        assert(angle <= 1.);
-        assert(angle >= -1.);
+        assert(angle < 1. + EPSILON);
+        assert(angle > -1. - EPSILON);
         return angle;
     }
     
     /**
      * Returns the dihedral angle between face f1 and face f2.
      */
-    T dihedral_angle(const face_key& f1, const face_key& f2)
+    T dihedral_angle(const edge_key& e, const face_key& f1, const face_key& f2)
     {
-        return acos(cos_dihedral_angle(f1, f2));
+        return acos(cos_dihedral_angle(e, f1, f2));
     }
     
     /**
@@ -3026,7 +3030,7 @@ public:
             {
                 if(*fit1 != *fit2)
                 {
-                    min_angle = std::max(min_angle, cos_dihedral_angle(*fit1, *fit2));
+                    min_angle = std::max(min_angle, cos_dihedral_angle(Complex::get_edge(*fit1, *fit2),*fit1, *fit2));
                 }
             }
         }
@@ -3081,7 +3085,7 @@ public:
                 {
                     if(*fit1 != *fit2)
                     {
-                        T angle = dihedral_angle(*fit1, *fit2)*180./M_PI;
+                        T angle = dihedral_angle(Complex::get_edge(*fit1, *fit2),*fit1, *fit2)*180./M_PI;
                         min_angle = std::min(min_angle, angle);
                         max_angle = std::max(max_angle, angle);
                         histogram[(int)floor(angle)] += 1;
