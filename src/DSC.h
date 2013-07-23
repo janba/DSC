@@ -3000,12 +3000,7 @@ public:
         get_pos(e, verts);
         V c = get_pos(Complex::get_apex(f1, e));
         V d = get_pos(Complex::get_apex(f2, e));
-        V n0 = Util::normal_direction<MT>(verts[0], verts[1], c);
-        V n1 = Util::normal_direction<MT>(verts[1], verts[0], d);
-        T angle = MT::dot(n0, n1);
-        assert(angle < 1. + EPSILON);
-        assert(angle > -1. - EPSILON);
-        return angle;
+        return Util::cos_dihedral_angle<MT>(verts[0], verts[1], c, d);
     }
     
     /**

@@ -12,6 +12,9 @@
 
 namespace Util
 {
+    template <typename MT>
+    inline typename MT::vector3_type normal_direction(typename MT::vector3_type const & a, typename MT::vector3_type const & b, typename MT::vector3_type const & c);
+    
     
     template <typename MT>
     inline int sgn(typename MT::real_type val)
@@ -253,6 +256,32 @@ namespace Util
             q.normalize();
             cosines[2*k+1] = MT::dot(p,q);
         }
+    }
+    
+    /**
+     * Returns the cosine to the dihedral angle between face |abc| and face |abd|.
+     */
+    template<typename MT>
+    inline typename MT::real_type cos_dihedral_angle(const typename MT::vector3_type& a, const typename MT::vector3_type& b, const typename MT::vector3_type& c, const typename MT::vector3_type& d)
+    {
+        typedef typename MT::real_type      T;
+        typedef typename MT::vector3_type   V;
+        
+        V n0 = normal_direction<MT>(a, b, c);
+        V n1 = normal_direction<MT>(b, a, d);
+        T angle = MT::dot(n0, n1);
+        assert(angle < 1. + EPSILON);
+        assert(angle > -1. - EPSILON);
+        return angle;
+    }
+    
+    /**
+     * Returns the dihedral angle between face |abc| and face |abd|.
+     */
+    template<typename MT>
+    inline typename MT::real_type dihedral_angle(const typename MT::vector3_type& a, const typename MT::vector3_type& b, const typename MT::vector3_type& c, const typename MT::vector3_type& d)
+    {
+        return MT::acos(cos_dihedral_angle<MT>(a, b, c, d));
     }
     
     template <typename MT>
