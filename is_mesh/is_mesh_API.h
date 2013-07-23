@@ -671,20 +671,6 @@ public:
         return n3;
     }
     
-    ///////////////////////////////////
-    // SHOULD BE REMOVED OR REPLACED //
-    ///////////////////////////////////
-    
-    void multi_face_remove(simplex_set & removed_faces, simplex_set & new_simplices)
-    {
-        mesh.multi_face_remove(removed_faces, new_simplices);
-    }
-    
-    void boundary_2manifold(simplex_set & faces, simplex_set & result_set)
-    {
-        mesh.boundary_2manifold(faces, result_set);
-    }
-    
     ///////////////////////
     // UTILITY FUNCTIONS //
     ///////////////////////
