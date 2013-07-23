@@ -126,11 +126,16 @@ private:
         return get(k).set_boundary(b);
     }
     
+public:
     void set_label(const tet_key& t, int label)
     {
         get(t).label = label;
+        simplex_set cl_t;
+        closure(t, cl_t);
+        update(cl_t);
     }
     
+private:
     /**
      * Label all tetrahedra according to tet_labels and perform an initial update
      * of flags and attributes of all simplices
