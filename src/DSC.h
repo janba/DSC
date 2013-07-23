@@ -1173,17 +1173,7 @@ private:
     //////////////////////////////////
     // REMOVE LOW QUALITY SIMPLICES //
     //////////////////////////////////
-    
-    bool remove_edge(edge_key& e)
-    {
-        node_key n = collapse(e);
-        if(n == Complex::NULL_NODE)
-        {
-            n = collapse(e, false);
-        }
-        return n != Complex::NULL_NODE;
-    }
-    
+        
     /**
      * Attempt to remove edges shorter than MIN_EDGE_LENGTH by safely collapsing them.
      */
@@ -1192,7 +1182,7 @@ private:
         std::list<edge_key> edges;
         for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
         {
-            if (length(eit.key()) < DEG_EDGE_LENGTH)
+            if (length(eit.key()) < MIN_EDGE_LENGTH)
             {
                 edges.push_back(eit.key());
             }
@@ -1200,9 +1190,9 @@ private:
         int i = 0, j = 0;
         for(auto e : edges)
         {
-            if(Complex::exists(e) && length(e) < DEG_EDGE_LENGTH)
+            if(Complex::exists(e) && length(e) < MIN_EDGE_LENGTH)
             {
-                if(remove_edge(e))
+                if(collapse(e) != Complex::NULL_NODE)
                 {
                     i++;
                 }
@@ -1240,7 +1230,7 @@ private:
         
         // Collapse new edge
         edge_key e_rem = Complex::get_edge(apex, n);
-        return collapse(e_rem, false) != Complex::NULL_NODE;
+        return collapse(e_rem) != Complex::NULL_NODE;
     }
     
     /**
@@ -1254,7 +1244,7 @@ private:
         edge_key e = shortest_edge(cl_f);
         
         // Remove edge
-        return collapse(e, false) != Complex::NULL_NODE;
+        return collapse(e) != Complex::NULL_NODE;
     }
     
     /**
@@ -1278,7 +1268,7 @@ private:
         
         for (auto fit = Complex::faces_begin(); fit != Complex::faces_end(); fit++)
         {
-            if(min_angle(fit.key()) < DEG_ANGLE)
+            if(min_angle(fit.key()) < MIN_ANGLE)
             {
                faces.push_back(fit.key());
             }
@@ -1287,7 +1277,7 @@ private:
         int i = 0, j = 0;
         for (auto &f : faces)
         {
-            if (Complex::exists(f) && min_angle(f) < DEG_ANGLE)
+            if (Complex::exists(f) && min_angle(f) < MIN_ANGLE)
             {
                 if(remove_face(f))
                 {
@@ -1316,7 +1306,7 @@ private:
         node_key n2 = split(e2);
         
         edge_key e = Complex::get_edge(n1, n2);
-        return collapse(e, false) != Complex::NULL_NODE;
+        return collapse(e) != Complex::NULL_NODE;
     }
     
     /**
@@ -1344,7 +1334,7 @@ private:
         
         // Collapse edge
         edge_key e = Complex::get_edge(n, apex);
-        return collapse(e, false) != Complex::NULL_NODE;
+        return collapse(e) != Complex::NULL_NODE;
     }
     
     /**
@@ -1358,7 +1348,7 @@ private:
         while(cl_t.size_edges() > 2)
         {
             edge_key e = shortest_edge(cl_t);
-            if(collapse(e, false) != Complex::NULL_NODE)
+            if(collapse(e) != Complex::NULL_NODE)
             {
                 return true;
             }
@@ -1390,7 +1380,7 @@ private:
         while(cl_t.size_edges() > 1)
         {
             edge_key e = shortest_edge(cl_t);
-            if(collapse(e, false) != Complex::NULL_NODE)
+            if(collapse(e) != Complex::NULL_NODE)
             {
                 return true;
             }
@@ -1467,7 +1457,7 @@ private:
         
         for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
         {
-            if (quality(tit.key()) < DEG_TET_QUALITY)
+            if (quality(tit.key()) < MIN_TET_QUALITY)
             {
                 tets.push_back(tit.key());
             }
@@ -1475,7 +1465,7 @@ private:
         int i = 0, j=0;
         for (auto &tet : tets)
         {
-            if (Complex::exists(tet) && quality(tet) < DEG_TET_QUALITY)
+            if (Complex::exists(tet) && quality(tet) < MIN_TET_QUALITY)
             {
                 if(remove_tet(tet))
                 {
@@ -1500,32 +1490,27 @@ private:
         smooth();
         validity_check();
         
-        print_out("Topological edge removal.");
+        print_out("Topological removals.");
         topological_edge_removal();
         validity_check();
-        print_out("Topological face removal.");
         topological_face_removal();
         validity_check();
         
-//        print_out("Edge flip pass.");
-//        interface_edge_flip_pass();
+//        print_out("Low quality removal.");
+//        remove_tets();
+//        validity_check();
+//        remove_faces();
+//        validity_check();
+//        remove_edges();
 //        validity_check();
         
-        print_out("Remove low quality.");
-        remove_tets();
+        print_out("Degeneracy removal.");
+        remove_degenerate_tets();
         validity_check();
-        remove_faces();
+        remove_degenerate_faces();
         validity_check();
-        remove_edges();
+        remove_degenerate_edges();
         validity_check();
-        
-//        print_out("Remove degeneracies.");
-//        remove_degenerate_tets();
-//        validity_check();
-//        remove_degenerate_faces();
-//        validity_check();
-//        remove_degenerate_edges();
-//        validity_check();
         
         print_out("Smooth.");
         smooth();
