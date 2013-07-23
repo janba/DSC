@@ -480,6 +480,56 @@ private:
         return false;
     }
     
+    /**
+     * Improve tetrahedra quality by the topological operation (re-connection) edge removal. It do so only for tetrahedra of quality lower than MIN_TET_QUALITY.
+     */
+    void topological_edge_removal()
+    {
+        std::vector<tet_key> tets;
+        for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
+        {
+            if (quality(tit.key()) < MIN_TET_QUALITY)
+            {
+                tets.push_back(tit.key());
+            }
+        }
+        
+        // Attempt to remove each edge of each tetrahedron in tets. Accept if it increases the minimum quality locally.
+        int i = 0, j = 0;
+        for (auto &t : tets)
+        {
+            if (Complex::exists(t) && quality(t) < MIN_TET_QUALITY)
+            {
+                simplex_set cl_t;
+                Complex::closure(t, cl_t);
+                
+                for (auto eit = cl_t.edges_begin(); eit != cl_t.edges_end(); eit++)
+                {
+                    if (Complex::exists(*eit))
+                    {
+                        if(!is_interface(*eit) && !is_boundary(*eit))
+                        {
+                            if(edge_removal(*eit))
+                            {
+                                i++;
+                            }
+                        }
+                        else if(is_topological_removable(*eit))
+                        {
+                            if(boundary_edge_removal(*eit))
+                            {
+                                i++;
+                            }
+                        }
+                        j++;
+                    }
+                }
+            }
+        }
+        std::cout << "Topological edge removals: " << i << "/" << j << std::endl;
+        Complex::garbage_collect();
+    }
+    
     //////////////////////////////
     // TOPOLOGICAL FACE REMOVAL //
     //////////////////////////////
@@ -847,10 +897,9 @@ private:
     }
     
     /**
-     * Improve tetrahedra by topological operations (re-connection): edge removal, multi-face removal,
-     * multi-face retriangulation. It do so only for tetrahedra of quality lower than MIN_TET_QUALITY.
+     * Improve tetrahedra quality by the topological operation (re-connection) multi-face removal. It do so only for tetrahedra of quality lower than MIN_TET_QUALITY.
      */
-    void topological_pass()
+    void topological_face_removal()
     {
         std::vector<tet_key> tets;
         for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
@@ -861,42 +910,9 @@ private:
             }
         }
         
-        // Attempt to remove each edge of each tetrahedron in tets. Accept if it increases the minimum quality locally.
-        int i = 0, j = 0;
-        for (auto &t : tets)
-        {
-            if (Complex::exists(t) && quality(t) < MIN_TET_QUALITY)
-            {
-                simplex_set cl_t;
-                Complex::closure(t, cl_t);
-                
-                for (auto eit = cl_t.edges_begin(); eit != cl_t.edges_end(); eit++)
-                {
-                    if (Complex::exists(*eit))
-                    {
-                        if(!is_interface(*eit) && !is_boundary(*eit))
-                        {
-                            if(edge_removal(*eit))
-                            {
-                                i++;
-                            }
-                        }
-                        else {
-                            if(boundary_edge_removal(*eit))
-                            {
-                                i++;
-                            }
-                        }
-                        j++;
-                    }
-                }
-            }
-        }
-        std::cout << "Topological edge removals: " << i << "/" << j << std::endl;
-        
         // Attempt to remove each face of each remaining tetrahedron in tets using multi-face removal.
         // Accept if it increases the minimum quality locally.
-        i = 0, j = 0;
+        int i = 0, j = 0;
         for (auto &t : tets)
         {
             if (Complex::exists(t) && quality(t) < MIN_TET_QUALITY)
@@ -1485,8 +1501,11 @@ private:
         smooth();
         validity_check();
         
-        print_out("Topological pass.");
-        topological_pass();
+        print_out("Topological edge removal.");
+        topological_edge_removal();
+        validity_check();
+        print_out("Topological face removal.");
+        topological_face_removal();
         validity_check();
         
 //        print_out("Edge flip pass.");
