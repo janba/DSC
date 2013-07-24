@@ -1657,11 +1657,6 @@ public:
         node_key n = Complex::split(t);
         set_pos(n, p);
         set_destination(n, p);
-        
-        simplex_set st_n;
-        Complex::star(n, st_n);
-        st_n.insert(n);
-        update(st_n);
         return n;
     }
     
