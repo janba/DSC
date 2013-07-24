@@ -50,12 +50,12 @@ public:
         typename MT::matrix3x3_type mrot = MT::get_rotation_matrix(MT::axis_type::ZAXIS, VelocityFunc<MT>::VELOCITY);
         V p;
         V new_pos;
-        for(auto vi = dsc.nodes_begin(); vi != dsc.nodes_end(); vi++)
+        for(auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
         {
-            if(vi->is_interface())
+            if(nit->is_interface() && !nit->is_crossing())
             {
-                new_pos = center + mrot * (dsc.get_pos(vi.key()) - center);
-                dsc.set_destination(vi.key(), new_pos);
+                new_pos = center + mrot * (dsc.get_pos(nit.key()) - center);
+                dsc.set_destination(nit.key(), new_pos);
             }
         }
         VelocityFunc<MT>::update_compute_time(clock() - init_time);

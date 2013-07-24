@@ -122,6 +122,12 @@ public:
         return Complex::is_boundary(k);
     }
     
+    template<typename key>
+    bool is_crossing(const key& k)
+    {
+        return Complex::is_crossing(k);
+    }
+    
     int get_label(const tet_key& t)
     {
         return Complex::get_label(t);
@@ -1398,6 +1404,10 @@ public:
             {
                 if (nit->is_interface() && Complex::exists(nit.key()))
                 {
+                    if(nit->is_crossing())
+                    {
+                        set_destination(nit.key(), get_pos(nit.key()));
+                    }
                     if(!move_vertex(nit.key(), get_destination(nit.key())))
                     {
                         missing++;

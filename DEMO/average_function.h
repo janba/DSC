@@ -46,7 +46,7 @@ public:
         {
             if(nit->is_interface())
             {
-                V p = dsc.get_pos(nit.key());
+                V p = dsc.get_pos(nit.key() && !nit->is_crossing());
                 V p_new = p + VelocityFunc<MT>::VELOCITY * (dsc.get_barycenter(nit.key(), true) - p);
                 dsc.set_destination(nit.key(), p_new);
             }
