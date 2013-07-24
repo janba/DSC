@@ -108,6 +108,12 @@ public:
         return get(k).is_boundary();
     }
     
+    template<typename key>
+    bool is_crossing(const key& k)
+    {
+        return get(k).is_crossing();
+    }
+    
     int get_label(const tet_key& t)
     {
         return get(t).label;
@@ -124,6 +130,12 @@ private:
     void set_boundary(const key& k, bool b)
     {
         return get(k).set_boundary(b);
+    }
+    
+    template<typename key>
+    void set_crossing(const key& k, bool b)
+    {
+        return get(k).set_crossing(b);
     }
     
 public:

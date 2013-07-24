@@ -6,7 +6,6 @@
 template<typename MT>
 class default_node_traits
 {
-private:
     typedef typename MT::real_type      T;
     typedef typename MT::vector3_type   V;
     
@@ -46,12 +45,11 @@ public:
         p_new = p_;
     }
     
-    bool is_locked()    { return (flags%2 == 1); }
+    bool is_crossing()    { return (flags%2 == 1); }
     bool is_boundary()  { return ((flags>>1)%2 == 1); }
-    bool is_interface()    { return ((flags>>3)%2 == 1); }
-    bool is_stable()    { return ((flags>>4)%2 == 1); }
+    bool is_interface()    { return ((flags>>2)%2 == 1); }
     
-    void set_locked(bool b)
+    void set_crossing(bool b)
     {
 		unsigned int mask = 1;
 		if (b) flags |= mask;
@@ -67,14 +65,7 @@ public:
     
     void set_interface(bool b)
     {
-		unsigned int mask = 8;
-		if (b) flags |= mask;
-		else flags &= ~mask;
-    }
-    
-    void set_stable(bool b)
-    {
-		unsigned int mask = 16;
+		unsigned int mask = 4;
 		if (b) flags |= mask;
 		else flags &= ~mask;
     }
@@ -94,11 +85,11 @@ public:
     default_edge_traits() : flags(0) {}
     default_edge_traits(const default_edge_traits& t) : flags(t.flags) {}
     
-    bool is_locked()    { return (flags%2 == 1); }
+    bool is_crossing()    { return (flags%2 == 1); }
     bool is_boundary()  { return ((flags>>1)%2 == 1); }
-    bool is_interface()    { return ((flags>>3)%2 == 1); }
+    bool is_interface()    { return ((flags>>2)%2 == 1); }
     
-    void set_locked(bool b)
+    void set_crossing(bool b)
     {
 		unsigned int mask = 1;
 		if (b) flags |= mask;
@@ -114,7 +105,7 @@ public:
     
     void set_interface(bool b)
     {
-		unsigned int mask = 8;
+		unsigned int mask = 4;
 		if (b) flags |= mask;
 		else flags &= ~mask;
     }
