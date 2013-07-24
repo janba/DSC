@@ -1363,13 +1363,13 @@ private:
         smooth();
         validity_check();
         
-        print_out("Relabel tets.");
-        bool relabeled = relabel_tets();
-        validity_check();
-        
-        if (relabeled) {
-            smooth();
-        }
+//        print_out("Relabel tets.");
+//        bool relabeled = relabel_tets();
+//        validity_check();
+//        
+//        if (relabeled) {
+//            smooth();
+//        }
     }
     
     void resize_complex()
