@@ -394,6 +394,20 @@ public:
         return *(cl1.faces_begin());
     }
     
+    tet_key get_tet(const tet_key& t, const face_key& f)
+    {
+        simplex_set st_f;
+        star(f, st_f);
+        for(auto tit = st_f.tetrahedra_begin(); tit != st_f.tetrahedra_end(); tit++)
+        {
+            if(*tit != t)
+            {
+                return *tit;
+            }
+        }
+        return NULL_TETRAHEDRON;
+    }
+    
     node_key get_apex(const tet_key& t, const face_key& f)
     {
         simplex_set cl_f, cl_t;
