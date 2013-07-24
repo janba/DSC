@@ -1403,12 +1403,20 @@ private:
     
     void resize_complex()
     {
+        print_out("Thickening interface pass.");
+        thickening_interface();
+        validity_check();
+        
+//        print_out("Thinning interface pass.");
+//        thinning_interface();
+//        validity_check();
+        
         print_out("Thickening pass.");
-        thickening_pass();
+        thickening();
         validity_check();
         
         print_out("Thinning pass.");
-        thinning_pass();
+        thinning();
         validity_check();
         
         fix_complex();
