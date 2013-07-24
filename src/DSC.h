@@ -65,8 +65,9 @@ public:
         calc_interface_edge_length(ie_min, ie_avg);
         AVG_EDGE_LENGTH = ie_avg;
         
-        MIN_EDGE_LENGTH = 0.5 * AVG_EDGE_LENGTH;
         DEG_EDGE_LENGTH = 0.1 * AVG_EDGE_LENGTH;
+        MIN_EDGE_LENGTH = 0.5 * AVG_EDGE_LENGTH;
+        MAX_EDGE_LENGTH = 2. * AVG_EDGE_LENGTH;
         
         DEG_ANGLE = 5.*M_PI/180.;
         MIN_ANGLE = 10.*M_PI/180.;
@@ -723,9 +724,37 @@ private:
     ////////////////
     
     /**
+     * Splits all interface edges with a volume greater than MAX_EDGE_LENGTH by inserting a vertex.
+     */
+    void thickening_interface()
+    {
+        std::vector<edge_key> edges;
+        for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
+        {
+            if (is_interface(eit.key()) && length(eit.key()) > MAX_EDGE_LENGTH)
+            {
+                edges.push_back(eit.key());
+            }
+        }
+        int i = 0, j = 0;
+        for(auto &e : edges)
+        {
+            if (Complex::exists(e) && is_interface(e) && length(e) > MAX_EDGE_LENGTH)
+            {
+                if(split(e) != Complex::NULL_NODE)
+                {
+                    i++;
+                }
+                j++;
+            }
+        }
+        std::cout << "Thickening interface splits: " << i << "/" << j << std::endl;
+    }
+    
+    /**
      * Splits all tetrahedra with a volume greater than MAX_TET_VOLUME by inserting a vertex.
      */
-    void thickening_pass()
+    void thickening()
     {
         std::vector<tet_key> tetrahedra;
         for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
@@ -747,7 +776,7 @@ private:
                 j++;
             }
         }
-        std::cout << "Thickening pass splits: " << i << "/" << j << std::endl;
+        std::cout << "Thickening splits: " << i << "/" << j << std::endl;
     }
     
     //////////////
@@ -756,7 +785,7 @@ private:
     /**
      * Collapses all edges which is shorter than MIN_EDGE_LENGTH. However, the collapse is only performed if it does not alter the interface and it improves the minimum quality of the tetrahedra in the star of the edge.
      */
-    void thinning_pass()
+    void thinning()
     {
         std::vector<tet_key> tetrahedra;
         for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
@@ -778,7 +807,7 @@ private:
                 j++;
             }
         }
-        std::cout << "Thinning pass collapses: " << i << "/" << j << std::endl;
+        std::cout << "Thinning collapses: " << i << "/" << j << std::endl;
     }
     
     /////////////////////////
