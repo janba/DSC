@@ -245,10 +245,12 @@ private:
     {
         set_boundary(e, false);
         set_interface(e, false);
+        set_crossing(e, false);
         
         simplex_set st_e;
         star(e, st_e);
         
+        int i = 0;
         for (auto fit = st_e.faces_begin(); fit != st_e.faces_end(); fit++)
         {
             if (exists(*fit))
@@ -257,18 +259,60 @@ private:
                 {
                     set_boundary(e, true);
                 }
-                else if (is_interface(*fit))
+                if (is_interface(*fit))
                 {
                     set_interface(e, true);
+                    i++;
                 }
             }
         }
+        if(i > 2)
+        {
+            set_crossing(e, true);
+        }
+    }
+    
+    void connected_component(simplex_set& st_n, const tet_key& t)
+    {
+        int label = get_label(t);
+        st_n.erase(t);
+        simplex_set cl_t;
+        closure(t, cl_t);
+        
+        for(auto fit = cl_t.faces_begin(); fit != cl_t.faces_end(); fit++)
+        {
+            tet_key t2 = get_tet(t, *fit);
+            if(st_n.contains(t2) && label == get_label(t2))
+            {
+                connected_component(st_n, t2);
+            }
+        }
+    }
+public:
+    bool crossing(const node_key& n)
+    {
+        simplex_set st_n;
+        star(n, st_n);
+        
+        int c = 0;
+        while (st_n.size_tetrahedra() > 0)
+        {
+            if(c == 2)
+            {
+                return true;
+            }
+            tet_key t = *st_n.tetrahedra_begin();
+            connected_component(st_n, t);
+            c++;
+        }
+        return false;
     }
     
     void update_flag(const node_key & n)
     {
         set_interface(n, false);
         set_boundary(n, false);
+        set_crossing(n, false);
         
         simplex_set st_n;
         star(n, st_n);
@@ -284,7 +328,15 @@ private:
                 {
                     set_boundary(n, true);
                 }
+                if (is_crossing(*eit))
+                {
+                    set_crossing(n, true);
+                }
             }
+        }
+        if(!is_crossing(n) && is_interface(n) && crossing(n))
+        {
+            set_crossing(n, true);
         }
     }
     
