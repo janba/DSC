@@ -1433,13 +1433,16 @@ public:
             {
                 if (nit->is_interface() && Complex::exists(nit.key()))
                 {
-                    if(nit->is_crossing())
-                    {
-                        set_destination(nit.key(), get_pos(nit.key()));
-                    }
                     if(!move_vertex(nit.key(), get_destination(nit.key())))
                     {
-                        missing++;
+                        if(nit->is_crossing())
+                        {
+                            std::cout << "Crossing " << nit.key() << std::endl;
+                            set_destination(nit.key(), get_pos(nit.key()));
+                        }
+                        else {
+                            missing++;
+                        }
                     }
                     movable++;
                 }
