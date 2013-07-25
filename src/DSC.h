@@ -1482,20 +1482,20 @@ private:
     bool move_vertex(const node_key & n)
     {
         V pos = get_pos(n);
-        V new_pos = get_destination(n);
-        T l = MT::length(new_pos - pos);
+        V destination = get_destination(n);
+        T l = MT::length(destination - pos);
         
         if (l < EPSILON) // The vertex is not moved
         {
             return true;
         }
         
-        T t = intersection_with_link(n, new_pos);
+        T t = intersection_with_link(n, destination);
         
         l = std::max(std::min(l*t - l*MIN_DEFORMATION, l), 0.);
-        set_pos(n, pos + l*normalize(new_pos - pos));
+        set_pos(n, pos + l*normalize(destination - pos));
         
-        if (MT::length(new_pos - pos) < EPSILON)
+        if (MT::length(destination - get_pos(n)) < EPSILON)
         {
             return true;
         }
