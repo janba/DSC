@@ -863,6 +863,12 @@ private:
                 {
                     i++;
                 }
+                else {
+                    simplex_set cl_f;
+                    Complex::closure(f, cl_f);
+                    edge_key e = longest_edge(cl_f);
+                    split(e);
+                }
                 j++;
             }
         }
@@ -889,6 +895,12 @@ private:
                 if(collapse(t, false))
                 {
                     i++;
+                }
+                else {
+                    simplex_set cl_t;
+                    Complex::closure(t, cl_t);
+                    edge_key e = longest_edge(cl_t);
+                    split(e);
                 }
                 j++;
             }
