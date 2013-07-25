@@ -1490,6 +1490,10 @@ public:
                 {
                     if(!move_vertex(nit.key()))
                     {
+                        if(step == 9)
+                        {
+                            print(nit.key());
+                        }
                         missing++;
                     }
                     movable++;
