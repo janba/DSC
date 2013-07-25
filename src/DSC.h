@@ -441,36 +441,6 @@ private:
     }
     
     /**
-     * Returns whether it is possible to flip the edge e or not, i.e. whether the edge is not a feature edge 
-     * (it is not a feature edge if its neighborhood is sufficiently flat).
-     */
-    bool is_topological_removable(const edge_key & e)
-    {
-        simplex_set st_e;
-        Complex::star(e, st_e);
-        std::vector<face_key> faces;
-        for(auto fit = st_e.faces_begin(); fit != st_e.faces_end(); fit++)
-        {
-            if (is_interface(*fit) || is_boundary(*fit))
-            {
-                faces.push_back(*fit);
-            }
-        }
-        if(faces.size() > 2)
-        {
-            return false;
-        }
-        assert(faces.size() == 2);
-        
-        T angle = cos_dihedral_angle(e, faces[0], faces[1]);
-        if(angle > FLIP_EDGE_INTERFACE_FLATNESS)
-        {
-            return true;
-        }
-        return false;
-    }
-    
-    /**
      * Improve tetrahedra quality by the topological operation (re-connection) edge removal. It do so only for tetrahedra of quality lower than MIN_TET_QUALITY. 
      * For details see "Two Discrete Optimization Algorithms for the Topological Improvement of Tetrahedral Meshes" by Shewchuk.
      */
@@ -1531,51 +1501,35 @@ private:
     // FLIPS //
     ///////////
 private:
+    
+    
     /**
-     * Returns whether it is possible to flip the edge e or not, i.e.: whether the edge does not fulfill Delaunay criterion, and whether
-     * it is not a feature edge (it is not a feature edge if its neighborhood is sufficiently flat).
+     * Returns whether it is possible to flip the edge e or not, i.e. whether the edge is a feature edge
+     * (it is not a feature edge if its neighborhood is sufficiently flat).
      */
     bool is_flippable(const edge_key & e)
     {
-        std::vector<V> verts;
-        get_pos(e, verts);
-        
-        simplex_set ln_e;
-        Complex::link(e, ln_e);
-        std::vector<node_key> nodes;
-        for (auto nit = ln_e.nodes_begin(); nit != ln_e.nodes_end(); nit++)
+        simplex_set st_e;
+        Complex::star(e, st_e);
+        std::vector<face_key> faces;
+        for(auto fit = st_e.faces_begin(); fit != st_e.faces_end(); fit++)
         {
-            if (is_interface(*nit) || is_boundary(*nit))
+            if (is_interface(*fit) || is_boundary(*fit))
             {
-                verts.push_back(get_pos(*nit));
-                nodes.push_back(*nit);
+                faces.push_back(*fit);
             }
         }
-        
-        if (verts.size() != 4)
+        if(faces.size() > 2)
         {
             return false;
         }
-        if(Complex::get_edge(nodes[0], nodes[1]) != Complex::NULL_EDGE) // Check that there does not already exist an edge between the pair of nodes.
-        {
-            return false;
-        }
+        assert(faces.size() == 2);
         
-        T alpha0 = Util::angle<MT>(verts[2], verts[0], verts[1]);
-        T alpha1 = Util::angle<MT>(verts[3], verts[0], verts[1]);
-        
-        if (alpha0 + alpha1 <= M_PI)
-        {
-            return false;
-        }
-        
-        T flatness = Util::calc_flatness<MT>(verts[0], verts[1], verts[2], verts[3]);
-        
-        if (flatness >= FLIP_EDGE_INTERFACE_FLATNESS)
+        T angle = cos_dihedral_angle(e, faces[0], faces[1]);
+        if(angle > FLIP_EDGE_INTERFACE_FLATNESS)
         {
             return true;
         }
-        
         return false;
     }
     
