@@ -81,6 +81,9 @@ public:
         T vol_avg = AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*sqrt(2.)/12.;
         MIN_TET_VOLUME = 0.5*vol_avg;
         MAX_TET_VOLUME = 10.*vol_avg;
+        
+        fix_complex();
+        resize_complex();
     }
     
     DeformableSimplicialComplex() {}
