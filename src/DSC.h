@@ -1539,31 +1539,24 @@ private:
      */
     bool flip(const edge_key & e)
     {
-        // Find the pair of nodes to be connected by a new edge as a result of edge flip.
-        simplex_set lk_e;
-        Complex::link(e, lk_e);
-        std::vector<node_key> nodes;
-        for (auto nit = lk_e.nodes_begin(); nit != lk_e.nodes_end(); nit++)
+        simplex_set st_e;
+        Complex::star(e, st_e);
+        std::vector<face_key> faces;
+        for(auto fit = st_e.faces_begin(); fit != st_e.faces_end(); fit++)
         {
-            if (is_interface(*nit) || is_boundary(*nit)) {
-                nodes.push_back(*nit);
+            if (is_interface(*fit) || is_boundary(*fit))
+            {
+                faces.push_back(*fit);
             }
         }
-        assert(nodes.size() == 2);
-        
-        node_key n_new = split(e);
-        
-        edge_key e_c = Complex::get_edge(nodes[0], n_new);
-        assert(e_c != Complex::NULL_EDGE);
-        V p = get_pos(nodes[0]);
-        V p_new = get_destination(nodes[0]);
-        
-        if(precond_collapse(e_c, p))
+        if(faces.size() > 2)
         {
-            node_key n = collapse(e_c, p, p_new);
-            return n != Complex::NULL_NODE;
+            return false;
         }
-        return false;
+        assert(faces.size() == 2);
+        
+        node_key n = Complex::flip_44(faces[0], faces[1]);
+        return n != Complex::NULL_NODE;
     }
     
     ////////////
