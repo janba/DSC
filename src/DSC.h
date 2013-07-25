@@ -1423,9 +1423,9 @@ private:
 //        thinning_interface();
 //        validity_check();
         
-        print_out("Thickening pass.");
-        thickening();
-        validity_check();
+//        print_out("Thickening pass.");
+//        thickening();
+//        validity_check();
         
         print_out("Thinning pass.");
         thinning();
@@ -1475,10 +1475,7 @@ public:
             ++step;
         } while (missing > 0 && step < num_steps);
         
-        if(step_no%5 == 0)
-        {
-//            resize_complex();
-        }
+        resize_complex();
         
         Complex::garbage_collect();
         ++step_no;
