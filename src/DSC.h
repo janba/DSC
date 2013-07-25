@@ -540,7 +540,7 @@ private:
                                 i++;
                             }
                         }
-                        else if(is_topological_removable(*eit))
+                        else if(is_flippable(*eit))
                         {
                             if(topological_boundary_edge_removal(*eit))
                             {
