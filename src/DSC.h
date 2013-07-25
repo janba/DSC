@@ -1451,18 +1451,11 @@ public:
             int movable = 0;
             for (auto nit = Complex::nodes_begin(); nit != Complex::nodes_end(); nit++)
             {
-                if (nit->is_interface() && Complex::exists(nit.key()))
+                if (Complex::exists(nit.key()) && !nit->is_crossing() && nit->is_interface())
                 {
-                    if(!move_vertex(nit.key(), get_destination(nit.key())))
+                    if(!move_vertex(nit.key()))
                     {
-                        if(nit->is_crossing())
-                        {
-                            std::cout << "Crossing " << nit.key() << std::endl;
-                            set_destination(nit.key(), get_pos(nit.key()));
-                        }
-                        else {
-                            missing++;
-                        }
+                        missing++;
                     }
                     movable++;
                 }
