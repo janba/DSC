@@ -133,7 +133,7 @@ UI::UI(int &argc, char** argv)
         
         CONTINUOUS = false;
         RECORD = true;
-        QUIT_ON_COMPLETION = false;
+        QUIT_ON_COMPLETION = true;
     }
     update_title();
     check_gl_error();
