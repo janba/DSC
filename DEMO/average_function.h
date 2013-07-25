@@ -22,7 +22,7 @@ public:
      Creates a velocity function which smooths the interface.
      */
     AverageFunc(double velocity, double accuracy, int max_time_steps = 500):
-        VelocityFunc<MT>(velocity/100., accuracy/100., max_time_steps)
+        VelocityFunc<MT>(velocity/10., accuracy/100., max_time_steps)
     {
         
     }
