@@ -44,9 +44,9 @@ public:
         clock_t init_time = clock();
         for(auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
         {
-            if(nit->is_interface())
+            if(nit->is_interface() && !nit->is_crossing())
             {
-                V p = dsc.get_pos(nit.key() && !nit->is_crossing());
+                V p = dsc.get_pos(nit.key());
                 V p_new = p + VelocityFunc<MT>::VELOCITY * (dsc.get_barycenter(nit.key(), true) - p);
                 dsc.set_destination(nit.key(), p_new);
             }
