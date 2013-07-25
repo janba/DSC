@@ -1486,9 +1486,10 @@ private:
     /**
      * Tries moving the node n to the new position new_pos. Returns true if it succeeds.
      */
-    bool move_vertex(const node_key & n, const typename MT::vector3_type & new_pos)
+    bool move_vertex(const node_key & n)
     {
         V pos = get_pos(n);
+        V new_pos = get_destination(n);
         T l = MT::length(new_pos - pos);
         
         if (l < EPSILON) // The vertex is not moved
@@ -1506,7 +1507,7 @@ private:
             return true;
         }
         return false;
-    } // move_vertex
+    }
     
     
     /**
