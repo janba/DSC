@@ -1832,7 +1832,7 @@ private:
             }
         }
         T q = std::min(min_quality(nodes[0]), min_quality(nodes[1]));
-        if((!safe && q_max > 0.) || (safe && q_max > q))
+        if((!safe && q_max > EPSILON) || q_max > q)
         {
             return collapse(e, p_opt, p_new_opt);
         }
