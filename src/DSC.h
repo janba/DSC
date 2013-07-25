@@ -107,6 +107,71 @@ private:
         ie_avg /= cnt;
     }
     
+    void print(const node_key& n)
+    {
+        std::cout << "Node: " << n << std::endl;
+        std::cout << "P = " << get_pos(n) << std::endl;
+        std::cout << "D = " << get_destination(n) << std::endl;
+        
+        simplex_set st_n;
+        Complex::star(n, st_n);
+        std::cout << "\nStar_edges = [";
+        for(auto eit = st_n.edges_begin(); eit != st_n.edges_end(); eit++)
+        {
+            std::vector<V> verts;
+            get_pos(*eit, verts);
+            V p1 = verts[0];
+            V p2 = verts[1];
+            std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
+            std::cout << p2[0] << ", " << p2[1] << ", " << p2[2] << "; " << std::endl;
+        }
+        std::cout << "];" << std::endl;
+        
+        std::cout << "\nStar_Iedges = [";
+        for(auto eit = st_n.edges_begin(); eit != st_n.edges_end(); eit++)
+        {
+            if(is_interface(*eit))
+            {
+                std::vector<V> verts;
+                get_pos(*eit, verts);
+                V p1 = verts[0];
+                V p2 = verts[1];
+                std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
+                std::cout << p2[0] << ", " << p2[1] << ", " << p2[2] << "; " << std::endl;
+            }
+        }
+        std::cout << "];" << std::endl;
+        
+        simplex_set set;
+        Complex::link(n, set);
+        std::cout << "\nedges = [";
+        for(auto eit = set.edges_begin(); eit != set.edges_end(); eit++)
+        {
+            std::vector<V> verts;
+            get_pos(*eit, verts);
+            V p1 = verts[0];
+            V p2 = verts[1];
+            std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
+            std::cout << p2[0] << ", " << p2[1] << ", " << p2[2] << "; " << std::endl;
+        }
+        std::cout << "];" << std::endl;
+        
+        std::cout << "\nIedges = [";
+        for(auto eit = set.edges_begin(); eit != set.edges_end(); eit++)
+        {
+            if(is_interface(*eit))
+            {
+                std::vector<V> verts;
+                get_pos(*eit, verts);
+                V p1 = verts[0];
+                V p2 = verts[1];
+                std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
+                std::cout << p2[0] << ", " << p2[1] << ", " << p2[2] << "; " << std::endl;
+            }
+        }
+        std::cout << "];" << std::endl;
+    }
+    
     /////////////////////////
     // ATTRIBUTE FUNCTIONS //
     /////////////////////////
