@@ -13,6 +13,7 @@
 #include <is_mesh/io/is_mesh_lists_read.h>
 
 #include "attributes.h"
+#include "attribute_vector.h"
 
 template <typename MT>
 class ISMesh
@@ -34,6 +35,39 @@ public:
     const edge_key NULL_EDGE;
     const face_key NULL_FACE;
     const tet_key NULL_TETRAHEDRON;
+    
+    
+    ///////////////////////
+    // ATTRIBUTE VECTORS //
+    ///////////////////////
+    
+    template<typename ITEM>
+    class VertexAttributeVector : public AttributeVector<ITEM, node_key>
+    {
+    public:
+        VertexAttributeVector(size_t _size = 0, ITEM item = ITEM()): AttributeVector<ITEM, node_key>(_size, item){}
+    };
+    
+    template<typename ITEM>
+    class EdgeAttributeVector : public AttributeVector<ITEM, edge_key>
+    {
+    public:
+        EdgeAttributeVector(size_t _size = 0, ITEM item = ITEM()): AttributeVector<ITEM, edge_key>(_size, item){}
+    };
+    
+    template<typename ITEM>
+    class FaceAttributeVector : public AttributeVector<ITEM, face_key>
+    {
+    public:
+        FaceAttributeVector(size_t _size = 0, ITEM item = ITEM()): AttributeVector<ITEM, face_key>(_size, item){}
+    };
+    
+    template<typename ITEM>
+    class TetAttributeVector : public AttributeVector<ITEM, tet_key>
+    {
+    public:
+        TetAttributeVector(size_t _size = 0, ITEM item = ITEM()): AttributeVector<ITEM, tet_key>(_size, item){}
+    };
     
 private:
     Mesh mesh;
