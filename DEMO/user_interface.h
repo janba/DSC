@@ -123,6 +123,7 @@ public:
      *** MISCELLANEOUS ***
      t:         Performs a test on the current velocity function.
      s:         Takes a screen shot.
+     e:         Export the simplicial complex to a .dsc file.
      TAB:       Switches the display type.
      
      *** SELECT MOTION ***
