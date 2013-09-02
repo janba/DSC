@@ -2443,7 +2443,7 @@ public:
                 tet.push_back(indices[nodes[i]]);
             }
             
-            tet.push_back(tit->label);
+            tet.push_back(get_label(tit.key()));
             tets.push_back(tet);
         }
     } // extract_tet_mesh
@@ -2600,7 +2600,7 @@ public:
         for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
         {
             total++;
-            if (tit->label != 0)
+            if (get_label(tit.key()) != 0)
                 object++;
         }
     }

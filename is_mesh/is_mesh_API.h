@@ -615,7 +615,7 @@ public:
             int label = -100;
             for (auto tit = st_f.tetrahedra_begin(); tit != st_f.tetrahedra_end(); tit++)
             {
-                int tl = get(*tit).label;
+                int tl = get_label(*tit);
                 
                 if (tl > label)
                 {
@@ -634,7 +634,7 @@ public:
         
         for (auto tit = st_e.tetrahedra_begin(); tit != st_e.tetrahedra_end(); tit++)
         {
-            tt[*tit] = get(*tit).label;
+            tt[*tit] = get_label(*tit);
         }
         
         std::map<tet_key, tet_key> new_tets;
@@ -642,7 +642,7 @@ public:
         
         for (auto it = new_tets.begin(); it != new_tets.end(); it++)
         {
-            get(it->first).label = tt[it->second];
+            set_label(it->first, tt[it->second]);
         }
         
         simplex_set st_n;
@@ -660,7 +660,7 @@ public:
         
         for (auto tit = st_f.tetrahedra_begin(); tit != st_f.tetrahedra_end(); tit++)
         {
-            tt[*tit] = get(*tit).label;
+            tt[*tit] = get_label(*tit);
         }
         
         std::map<tet_key, tet_key> new_tets;
@@ -668,7 +668,7 @@ public:
         
         for(auto it = new_tets.begin(); it != new_tets.end(); it++)
         {
-            get(it->first).label = tt[it->second];
+            set_label(it->first, tt[it->second]);
         }
         
         simplex_set st_n;
