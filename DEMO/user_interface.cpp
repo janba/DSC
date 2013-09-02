@@ -371,7 +371,7 @@ void UI::motion1()
     std::vector<V> pts_inside(1);
     pts_inside[0] = V( 0.0f, 0.0f, 0.0f);
     
-    //import_tet_mesh(get_data_file_path("bunny.dsc").data(), points, tets, tet_labels);
+//    import_tet_mesh<GELTypes>(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
     build_tetrahedralization<GELTypes>(get_data_file_path("armadillo-very-simple.obj"), points, tets, tet_labels, pts_inside);
     
     dsc = new DeformableSimplicialComplex<GELTypes>(points, tets, tet_labels);
@@ -401,7 +401,7 @@ void UI::motion2()
     vector<V> pts_inside(1);
     pts_inside[0] = V( 0.0f, 0.0f, 0.0f);
     
-    //import_tet_mesh(get_data_file_path("bunny.dsc").data(), points, tets, tet_labels);
+    //import_tet_mesh<GELTypes>(get_data_file_path("bunny.dsc").data(), points, tets, tet_labels);
     build_tetrahedralization<GELTypes>(get_data_file_path("armadillo-very-simple.obj"), points, tets, tet_labels, pts_inside);
     
     dsc = new DeformableSimplicialComplex<GELTypes>(points, tets, tet_labels);
@@ -431,7 +431,7 @@ void UI::motion3()
     vector<V> pts_inside(1);
     pts_inside[0] = V( 0.0f, 0.0f, 0.0f);
     
-    //import_tet_mesh(get_data_file_path("bunny.dsc").data(), points, tets, tet_labels);
+    //import_tet_mesh<GELTypes>(get_data_file_path("bunny.dsc").data(), points, tets, tet_labels);
     build_tetrahedralization<GELTypes>(get_data_file_path("armadillo-very-simple.obj"), points, tets, tet_labels, pts_inside);
     
     dsc = new DeformableSimplicialComplex<GELTypes>(points, tets, tet_labels);

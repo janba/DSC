@@ -1,7 +1,7 @@
 #ifndef MESH_IO_H
 #define MESH_IO_H
 
-#include "simplicial_complex.h"
+#include "DSC.h"
 
 #include <fstream>
 #include <string>
@@ -12,7 +12,7 @@
  * Exports the mesh as a .dsc file.
  */
 template <typename MT>
-inline void export_tet_mesh(SimplicialComplex<MT> & dsc, const std::string & filename)
+inline void export_tet_mesh(DeformableSimplicialComplex<MT> & dsc, const std::string & filename)
 {
 	std::vector<typename MT::vector3_type> points;
 	vector< vector<int> > tets;
@@ -20,9 +20,9 @@ inline void export_tet_mesh(SimplicialComplex<MT> & dsc, const std::string & fil
     
     std::ofstream file(filename.data());
     
-    for (typename vector<typename MT::vector3_type>::iterator it = points.begin(); it != points.end(); it++)
+    for (auto &p : points)
     {
-		file << "v " << it[0] << " " << it[1] << " " << it[2] << std::endl;
+		file << "v " << p[0] << " " << p[1] << " " << p[2] << std::endl;
     }
     
     for (vector< vector<int> >::iterator it = tets.begin(); it != tets.end(); it++)
@@ -90,7 +90,7 @@ inline void import_tet_mesh(const std::string & filename, vector<typename MT::re
 }
 
 template <typename MT>
-inline void save_interface(SimplicialComplex<MT> & dsc, string & filename)
+inline void save_interface(DeformableSimplicialComplex<MT> & dsc, string & filename)
 {
 	vector<typename MT::vector3_type> verts;
 	vector<int> indices;
@@ -142,7 +142,7 @@ inline void save_interface(SimplicialComplex<MT> & dsc, string & filename)
  }*/
 
 template <typename MT>
-inline void save_obj(SimplicialComplex<MT> & dsc, std::vector<std::string> const & materials, std::string const & path)
+inline void save_obj(DeformableSimplicialComplex<MT> & dsc, std::vector<std::string> const & materials, std::string const & path)
 {
     typedef typename MT::real_type      T;
     typedef typename MT::vector3_type   V;
@@ -151,11 +151,11 @@ inline void save_obj(SimplicialComplex<MT> & dsc, std::vector<std::string> const
     std::vector<V> normals;
     std::vector<int> labels;
     std::vector<int> indices;
-    std::map<typename SimplicialComplex<MT>::node_key_type, int> vert_index;
-    std::map<typename SimplicialComplex<MT>::edge_key_type, int> edge_index;
+    std::map<typename DeformableSimplicialComplex<MT>::node_key_type, int> vert_index;
+    std::map<typename DeformableSimplicialComplex<MT>::edge_key_type, int> edge_index;
     
-    typename SimplicialComplex<MT>::node_iterator nit = dsc.nodes_begin();
-    typename SimplicialComplex<MT>::node_iterator nn_it = dsc.nodes_end();
+    typename DeformableSimplicialComplex<MT>::node_iterator nit = dsc.nodes_begin();
+    typename DeformableSimplicialComplex<MT>::node_iterator nn_it = dsc.nodes_end();
     
     while (nit != nn_it)
     {
@@ -167,8 +167,8 @@ inline void save_obj(SimplicialComplex<MT> & dsc, std::vector<std::string> const
         ++nit;
     }
     
-    typename SimplicialComplex<MT>::face_iterator fit = dsc.faces_begin();
-    typename SimplicialComplex<MT>::face_iterator ff_it = dsc.faces_end();
+    typename DeformableSimplicialComplex<MT>::face_iterator fit = dsc.faces_begin();
+    typename DeformableSimplicialComplex<MT>::face_iterator ff_it = dsc.faces_end();
     
     while (fit != ff_it)
     {
@@ -176,7 +176,7 @@ inline void save_obj(SimplicialComplex<MT> & dsc, std::vector<std::string> const
         {
             int l = enforce_orientation(dsc, fit.key());
             
-            std::vector<typename SimplicialComplex<MT>::node_key_type> nodes(3);
+            std::vector<typename DeformableSimplicialComplex<MT>::node_key_type> nodes(3);
             dsc.vertices(fit.key(), nodes);
             
             indices.push_back(vert_index[nodes[0]]);

@@ -2412,7 +2412,7 @@ public:
         for (auto nit = Complex::nodes_begin(); nit != Complex::nodes_end(); nit++)
         {
             indices[nit.key()] = counter;
-            points.push_back(nit->v);
+            points.push_back(get_pos(nit.key()));
             ++counter;
         }
         
@@ -2423,7 +2423,9 @@ public:
             Complex::get_nodes(tit.key(), nodes);
             
             for (int i = 0; i < nodes.size(); i++)
+            {
                 tet.push_back(indices[nodes[i]]);
+            }
             
             tet.push_back(tit->label);
             tets.push_back(tet);
