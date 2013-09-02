@@ -13,16 +13,16 @@
 #include <vector>
 #include <map>
 
-/** Abstract class for HMesh entity attribute vectors. This class is used for storing all attributes
- associated with any type of mesh entity - be it Vertex, HalfEdge, or Face. Also the position attribute
+/** Abstract class for attribute vectors. This class is used for storing all attributes
+ associated with any type of simplicial complex entity - be it vertex, edge, face or tetrahedron. Also the position attribute
  is stored in an AttributeVector class.
  */
 template<typename ITEM, typename ITEMID>
 class AttributeVector
 {
 protected:
-    /// Construct from optional size and item (size should be identical to number of entities in associated container
-    AttributeVector(size_t _size = 0, ITEM item = ITEM()) : items(_size, item)
+    /// Construct from optional size and item
+    AttributeVector(size_t _size = 0, ITEM item = ITEM())
     {
         
     }
@@ -31,24 +31,13 @@ public:
     /// const reference to item given by ID
     const ITEM& operator [](ITEMID id) const
     {
-        assert(id < items.size());
-        return items[id];
+        return items.at(id);
     }
     
     /// reference to item given by ID
     ITEM& operator [](ITEMID id)
     {
-        if(id >= items.size())
-        {
-            items.resize(id + 1);
-        }
         return items[id];
-    }
-    
-    /// resize the vector (may be necessary if associated container size grows)
-    void resize(size_t _size, ITEM item = ITEM())
-    {
-        items.resize(_size, item);
     }
     
     /// number of attribute items in vector
@@ -63,16 +52,13 @@ public:
         items.clear();
     }
     
-    /// clenup unused items from the vector, given by remap from associated container
-    void cleanup(const std::map<ITEMID, ITEMID>& map)
+    /// clenup unused items from the vector deleted
+    void cleanup(const std::vector<ITEMID>& deleted)
     {
-        std::map<ITEMID, ITEM> new_items(map.size());
-        for(auto it : map)
+        for(auto it : deleted)
         {
-            assert(it->second.index < map.size());
-            new_items[it->second.index] = items[it->first.index];
+            items.erase(*it);
         }
-        std::swap(items, new_items);
     }
     
 private:
