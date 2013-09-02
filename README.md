@@ -13,7 +13,7 @@ Furthermore, it is able to model large deformations and handle topology changes.
 __If you want news about the development and use of the DSC method, please apply for membership of the mailing list at__
 https://groups.google.com/forum/#!forum/dsc-development
 
-For installation instructions as well as a description of how to use the DSC method, see the DSC wiki (https://github.com/asny/DSC/wiki)
+For installation instructions as well as a description of how to use the DSC code, see the [DSC wiki](https://github.com/asny/DSC/wiki)
 
 ---
 ### References
