@@ -11,6 +11,7 @@
 #include "average_function.h"
 #include "normal_function.h"
 #include "tetrahedralize.h"
+#include "mesh_io.h"
 
 void _check_gl_error(const char *file, int line)
 {
@@ -269,6 +270,14 @@ void UI::keyboard(unsigned char key, int x, int y) {
             {
                 std::cout << "TAKING SCREEN SHOT" << std::endl;
                 Painter<GELTypes>::save_painting(WIN_SIZE_X, WIN_SIZE_Y, "LOG");
+            }
+            break;
+        case 'e':
+            if(dsc)
+            {
+                std::cout << "EXPORTING MESH" << std::endl;
+                std::string filepath("data/mesh.dsc");
+                export_tet_mesh<GELTypes>(*dsc, filepath);
             }
             break;
         case '+':
