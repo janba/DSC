@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7A45DB87176E120A00B9B388 /* attributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB86176E120A00B9B388 /* attributes.h */; };
 		7A45DB96176E122100B9B388 /* configuration.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB88176E122100B9B388 /* configuration.h */; };
 		7A45DB97176E122100B9B388 /* is_mesh_lists_read.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8A176E122100B9B388 /* is_mesh_lists_read.h */; };
 		7A45DB98176E122100B9B388 /* is_mesh_lists_write.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8B176E122100B9B388 /* is_mesh_lists_write.h */; };
@@ -25,6 +24,7 @@
 		7A45DBB3176E177100B9B388 /* predicates.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 7A45DBB0176E177100B9B388 /* predicates.cxx */; };
 		7A45DBB4176E177100B9B388 /* tetgen.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 7A45DBB1176E177100B9B388 /* tetgen.cxx */; };
 		7A45DBB5176E177100B9B388 /* tetgen.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DBB2176E177100B9B388 /* tetgen.h */; };
+		7A56303F17D57445005152B6 /* attributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A56303E17D57445005152B6 /* attributes.h */; };
 		7AE27AEE17675B04000F8238 /* GEL_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27ADE17675B04000F8238 /* GEL_types.h */; };
 		7AE27AEF17675B04000F8238 /* log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AE27ADF17675B04000F8238 /* log.cpp */; };
 		7AE27AF017675B04000F8238 /* log.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE017675B04000F8238 /* log.h */; };
@@ -59,7 +59,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		7A45DB86176E120A00B9B388 /* attributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = attributes.h; path = is_mesh/attributes.h; sourceTree = "<group>"; };
 		7A45DB88176E122100B9B388 /* configuration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = configuration.h; path = is_mesh/configuration.h; sourceTree = "<group>"; };
 		7A45DB8A176E122100B9B388 /* is_mesh_lists_read.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = is_mesh_lists_read.h; sourceTree = "<group>"; };
 		7A45DB8B176E122100B9B388 /* is_mesh_lists_write.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = is_mesh_lists_write.h; sourceTree = "<group>"; };
@@ -76,6 +75,7 @@
 		7A45DBB0176E177100B9B388 /* predicates.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = predicates.cxx; path = Tetgen/predicates.cxx; sourceTree = "<group>"; };
 		7A45DBB1176E177100B9B388 /* tetgen.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tetgen.cxx; path = Tetgen/tetgen.cxx; sourceTree = "<group>"; };
 		7A45DBB2176E177100B9B388 /* tetgen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tetgen.h; path = Tetgen/tetgen.h; sourceTree = "<group>"; };
+		7A56303E17D57445005152B6 /* attributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = attributes.h; path = src/attributes.h; sourceTree = SOURCE_ROOT; };
 		7AE27AC717675AAA000F8238 /* libTetgen.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTetgen.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AE27AD617675AE8000F8238 /* libDSC.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDSC.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AE27ADE17675B04000F8238 /* GEL_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GEL_types.h; path = src/GEL_types.h; sourceTree = SOURCE_ROOT; };
@@ -147,7 +147,6 @@
 				7A45DB93176E122100B9B388 /* kernel_iterator.h */,
 				7A45DB94176E122100B9B388 /* kernel.h */,
 				7A45DB95176E122100B9B388 /* simplex_set.h */,
-				7A45DB86176E120A00B9B388 /* attributes.h */,
 				7AF7E9C0176B524700F43714 /* is_mesh_API.h */,
 			);
 			name = ISMesh;
@@ -194,6 +193,7 @@
 			children = (
 				7AE27ADE17675B04000F8238 /* GEL_types.h */,
 				7AE27AE217675B04000F8238 /* OTB_types.h */,
+				7A56303E17D57445005152B6 /* attributes.h */,
 				7AE27ADF17675B04000F8238 /* log.cpp */,
 				7AE27AE017675B04000F8238 /* log.h */,
 				7AE27AE117675B04000F8238 /* mesh_io.h */,
@@ -256,7 +256,6 @@
 				7AE27AF917675B04000F8238 /* velocity_function.h in Headers */,
 				7AF7E9BF176B4FE400F43714 /* DSC.h in Headers */,
 				7AF7E9C1176B524700F43714 /* is_mesh_API.h in Headers */,
-				7A45DB87176E120A00B9B388 /* attributes.h in Headers */,
 				7A45DB96176E122100B9B388 /* configuration.h in Headers */,
 				7A45DB97176E122100B9B388 /* is_mesh_lists_read.h in Headers */,
 				7A45DB98176E122100B9B388 /* is_mesh_lists_write.h in Headers */,
@@ -270,6 +269,7 @@
 				7A45DBA0176E122100B9B388 /* kernel_iterator.h in Headers */,
 				7A45DBA1176E122100B9B388 /* kernel.h in Headers */,
 				7A45DBA2176E122100B9B388 /* simplex_set.h in Headers */,
+				7A56303F17D57445005152B6 /* attributes.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
