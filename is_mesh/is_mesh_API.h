@@ -115,7 +115,7 @@ public:
     
     int get_label(const tet_key& t)
     {
-        return get(t).label;
+        return get(t).label();
     }
     
 private:
@@ -140,7 +140,7 @@ private:
 public:
     void set_label(const tet_key& t, int label)
     {
-        get(t).label = label;
+        get(t).label(label);
         simplex_set cl_t;
         closure(t, cl_t);
         update(cl_t);
@@ -156,7 +156,7 @@ private:
         // Label all tetrahedra
         for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
         {
-            tit->label = tet_labels[tit.key()];
+            tit->label(tet_labels[tit.key()]);
         }
         
         // Update all faces

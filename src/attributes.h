@@ -25,12 +25,12 @@ class default_node_traits
     
     V p;
     V p_new;
-    unsigned int flags;
+    std::bitset<3> flags;
     
 public:
     
-    default_node_traits() : p(0.,0.,0.), p_new(0.,0.,0.), flags(0) {}
-    default_node_traits(T const & x, T const & y, T const & z) : p(x,y,z), p_new(x,y,z), flags(0) {}
+    default_node_traits() : p(0.,0.,0.), p_new(0.,0.,0.) {}
+    default_node_traits(T const & x, T const & y, T const & z) : p(x,y,z), p_new(x,y,z) {}
     
     V get_pos()
     {
@@ -59,121 +59,121 @@ public:
         p_new = p_;
     }
     
-    bool is_crossing()    { return (flags%2 == 1); }
-    bool is_boundary()  { return ((flags>>1)%2 == 1); }
-    bool is_interface()    { return ((flags>>2)%2 == 1); }
+    bool is_crossing()
+    {
+        return flags[2];
+    }
+    
+    bool is_boundary()
+    {
+        return flags[1];
+    }
+    
+    bool is_interface()
+    {
+        return flags[0];
+    }
     
     void set_crossing(bool b)
     {
-		unsigned int mask = 1;
-		if (b) flags |= mask;
-		else flags &= ~mask;
+        flags[2] = b;
     }
     
     void set_boundary(bool b)
     {
-		unsigned int mask = 2;
-		if (b) flags |= mask;
-		else flags &= ~mask;
+		flags[1] = b;
     }
     
     void set_interface(bool b)
     {
-		unsigned int mask = 4;
-		if (b) flags |= mask;
-		else flags &= ~mask;
+		flags[0] = b;
     }
 };
 
 class default_edge_traits
 {
-    unsigned int flags;
+    std::bitset<3> flags;
     
 public:
-    default_edge_traits() : flags(0) {}
+    default_edge_traits() {}
     
-    bool is_crossing()    { return (flags%2 == 1); }
-    bool is_boundary()  { return ((flags>>1)%2 == 1); }
-    bool is_interface()    { return ((flags>>2)%2 == 1); }
+    
+    bool is_crossing()
+    {
+        return flags[2];
+    }
+    
+    bool is_boundary()
+    {
+        return flags[1];
+    }
+    
+    bool is_interface()
+    {
+        return flags[0];
+    }
     
     void set_crossing(bool b)
     {
-		unsigned int mask = 1;
-		if (b) flags |= mask;
-		else flags &= ~mask;
+        flags[2] = b;
     }
     
     void set_boundary(bool b)
     {
-		unsigned int mask = 2;
-		if (b) flags |= mask;
-		else flags &= ~mask;
+		flags[1] = b;
     }
     
     void set_interface(bool b)
     {
-		unsigned int mask = 4;
-		if (b) flags |= mask;
-		else flags &= ~mask;
+		flags[0] = b;
     }
 };
 
 class default_face_traits
 {
-    unsigned int flags;
+    std::bitset<2> flags;
     
 public:
-    default_face_traits() : flags(0) {}
-    
-    bool is_locked()    { return (flags%2 == 1); }
-    bool is_boundary()  { return ((flags>>1)%2 == 1); }
-    bool is_processed() { return ((flags>>2)%2 == 1); }
-    bool is_interface() { return ((flags>>3)%2 == 1); }
-    bool is_error() { return ((flags>>4)%2 == 1); }
-    
-    void set_error(bool b)
+    default_face_traits() {}
+        
+    bool is_boundary()
     {
-		unsigned int mask = 16;
-		if (b) flags |= mask;
-		else flags &= ~mask;
+        return flags[1];
     }
     
-    void set_locked(bool b)
+    bool is_interface()
     {
-		unsigned int mask = 1;
-		if (b) flags |= mask;
-		else flags &= ~mask;
+        return flags[0];
     }
     
     void set_boundary(bool b)
     {
-		unsigned int mask = 2;
-		if (b) flags |= mask;
-		else flags &= ~mask;
-    }
-    
-    void set_processed(bool b)
-    {
-		unsigned int mask = 4;
-		if (b) flags |= mask;
-		else flags &= ~mask;
+		flags[1] = b;
     }
     
     void set_interface(bool b)
     {
-		unsigned int mask = 8;
-		if (b) flags |= mask;
-		else flags &= ~mask;
+		flags[0] = b;
     }
 };
 
 class default_tetrahedron_traits
 {
+    unsigned int l;
+    
 public:
-    unsigned int label;
+    default_tetrahedron_traits() : l(0) {}
     
-    default_tetrahedron_traits() : label(0) {}
+    int label()
+    {
+        return l;
+    }
     
+    void label(unsigned int _label)
+    {
+        l = _label;
+    }
+
 };
 
 #endif
