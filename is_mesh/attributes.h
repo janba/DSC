@@ -74,16 +74,10 @@ public:
 template <typename MT>
 class default_edge_traits
 {
-public:
-    
-    typedef typename MT::real_type      T;
-    typedef typename MT::vector3_type   V;
-    
-public:
     unsigned int flags;
     
+public:
     default_edge_traits() : flags(0) {}
-    default_edge_traits(const default_edge_traits& t) : flags(t.flags) {}
     
     bool is_crossing()    { return (flags%2 == 1); }
     bool is_boundary()  { return ((flags>>1)%2 == 1); }
@@ -114,17 +108,10 @@ public:
 template <typename MT>
 class default_face_traits
 {
-public:
-    
-    typedef typename MT::real_type      T;
-    typedef typename MT::vector3_type   V;
-    
-public:
-    
     unsigned int flags;
     
+public:
     default_face_traits() : flags(0) {}
-    default_face_traits(const default_face_traits& t) : flags(t.flags) {}
     
     bool is_locked()    { return (flags%2 == 1); }
     bool is_boundary()  { return ((flags>>1)%2 == 1); }
@@ -172,15 +159,9 @@ template <typename MT>
 class default_tetrahedron_traits
 {
 public:
-    
-    typedef typename MT::real_type      T;
-    typedef typename MT::vector3_type   V;
-    
-public:
     unsigned int label;
     
     default_tetrahedron_traits() : label(0) {}
-    default_tetrahedron_traits(const default_tetrahedron_traits& t) : label(t.label) {}
     
 };
 
