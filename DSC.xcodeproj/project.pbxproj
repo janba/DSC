@@ -469,6 +469,7 @@
 				HEADER_SEARCH_PATHS = (
 					/Library/Frameworks/GEL.framework/Headers/,
 					.,
+					/opt/local/include/,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -482,6 +483,7 @@
 				HEADER_SEARCH_PATHS = (
 					/Library/Frameworks/GEL.framework/Headers/,
 					.,
+					/opt/local/include/,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -494,6 +496,7 @@
 				HEADER_SEARCH_PATHS = (
 					/Library/Frameworks/GEL.framework/Headers/,
 					.,
+					/opt/local/include/,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -506,6 +509,7 @@
 				HEADER_SEARCH_PATHS = (
 					/Library/Frameworks/GEL.framework/Headers/,
 					.,
+					/opt/local/include/,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
