@@ -20,15 +20,16 @@
 #include "is_mesh_API.h"
 #include "util.h"
 #include "printing.h"
+#include "attributes.h"
 
-template <typename MT>
-class DeformableSimplicialComplex : public ISMesh<MT>
+template <typename MT, typename node_traits = default_node_traits<MT>, typename edge_traits = default_edge_traits, typename face_traits = default_face_traits, typename tet_traits = default_tetrahedron_traits>
+class DeformableSimplicialComplex : public ISMesh<MT, node_traits, edge_traits, face_traits, tet_traits>
 {
     typedef typename MT::real_type      T;
     typedef typename MT::vector3_type   V;
     typedef typename MT::vector4_type   V4;
     
-    typedef ISMesh<MT> Complex;
+    typedef ISMesh<MT, node_traits, edge_traits, face_traits, tet_traits> Complex;
 public:
     
     typedef typename Complex::node_key      node_key;
@@ -73,7 +74,7 @@ public:
     
     /// SimplicialComplex constructor.
     DeformableSimplicialComplex(std::vector<T> & points, std::vector<int> & tets, std::vector<int> & tet_labels):
-        ISMesh<MT>(points, tets, tet_labels)
+        ISMesh<MT, node_traits, edge_traits, face_traits, tet_traits>(points, tets, tet_labels)
     {
         step_no = 0;
         

@@ -71,7 +71,6 @@ public:
     }
 };
 
-template <typename MT>
 class default_edge_traits
 {
     unsigned int flags;
@@ -105,7 +104,6 @@ public:
     }
 };
 
-template <typename MT>
 class default_face_traits
 {
     unsigned int flags;
@@ -155,7 +153,6 @@ public:
     }
 };
 
-template <typename MT>
 class default_tetrahedron_traits
 {
 public:

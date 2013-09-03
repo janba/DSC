@@ -12,12 +12,11 @@
 #include <is_mesh/is_mesh.h>
 #include <is_mesh/io/is_mesh_lists_read.h>
 
-#include "attributes.h"
 
-template <typename MT>
+template <typename MT, typename node_traits, typename edge_traits, typename face_traits, typename tet_traits>
 class ISMesh
 {
-    typedef typename OpenTissue::is_mesh::t4mesh< default_node_traits<MT>, default_tetrahedron_traits<MT>, default_edge_traits<MT>, default_face_traits<MT> > Mesh;
+    typedef typename OpenTissue::is_mesh::t4mesh< node_traits, tet_traits, edge_traits, face_traits> Mesh;
     
     typedef typename MT::real_type      T;
     typedef typename MT::vector3_type   V;
@@ -757,7 +756,7 @@ public:
     ///////////////////////
     // UTILITY FUNCTIONS //
     ///////////////////////
-        
+    
     void garbage_collect()
     {
         mesh.garbage_collect();
