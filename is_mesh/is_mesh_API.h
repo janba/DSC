@@ -772,60 +772,35 @@ private:
         for (auto fit = mesh.faces_begin(); fit != mesh.faces_end(); fit++)
         {
             simplex_set st_f;
-            mesh.star(fit.key(), st_f);
+            star(fit.key(), st_f);
             if (st_f.size_tetrahedra() > 2)
-            {
-                std::map<tet_key, simplex_set> t_bnds;
-                
+            {                
                 std::cout << fit.key() << ": " << std::endl;
-                auto tit = st_f.tetrahedra_begin();
-                while (tit != st_f.tetrahedra_end())
+                for (auto tit = st_f.tetrahedra_begin(); tit != st_f.tetrahedra_end(); ++tit)
                 {
-                    simplex_set bnd_t;
-                    mesh.boundary(*tit, bnd_t);
-                    t_bnds[*tit] = bnd_t;
+                    simplex_set cl_t;
+                    closure(*tit, cl_t);
                     
-                    auto ftit = bnd_t.nodes_begin();
-                    while (ftit != bnd_t.nodes_end())
+                    for (auto nit = cl_t.nodes_begin(); nit != cl_t.nodes_end(); ++nit)
                     {
-                        std::cout << *ftit << " ";
-                        ++ftit;
+                        std::cout << *nit << " ";
                     }
                     std::cout << std::endl;
-                    ++tit;
+                    
                 }
-                
-                while (!t_bnds.empty())
-                {
-                    typename std::map<tet_key, simplex_set>::iterator it;
-                    it = t_bnds.begin();
-                    tet_key t = it->first;
-                    simplex_set bnd0;
-                    bnd0.add(it->second);
-                    ++it;
-                    while (it != t_bnds.end())
-                    {
-                        simplex_set bnd1;
-                        bnd1.add(it->second);
-                        bnd1.difference(bnd0);
-                        if (bnd1.size_faces() == 0)
-                        {
-                            mesh.unsafe_remove(t); // FUCKED
-                            break;
-                        }
-                        ++it;
-                    }
-                    t_bnds.erase(t_bnds.begin());
-                }
-                
                 valid = false;
             }
         }
         
         if (!valid)
+        {
             std::cout << "Input mesh invalid" << std::endl;
+        }
         else
+        {
             std::cout << "Input mesh valid" << std::endl;
+        }
+        assert(valid);
     }
 };
 
