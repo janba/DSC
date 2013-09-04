@@ -73,14 +73,12 @@ private:
 public:
     
     /// SimplicialComplex constructor.
-    DeformableSimplicialComplex(std::vector<T> & points, std::vector<int> & tets, std::vector<int> & tet_labels):
+    DeformableSimplicialComplex(double _AVG_EDGE_LENGTH, std::vector<T> & points, std::vector<int> & tets, std::vector<int> & tet_labels):
         ISMesh<MT, node_traits, edge_traits, face_traits, tet_traits>(points, tets, tet_labels)
     {
         step_no = 0;
         
-        T ie_min, ie_avg;
-        calc_interface_edge_length(ie_min, ie_avg);
-        AVG_EDGE_LENGTH = ie_avg;
+        AVG_EDGE_LENGTH = 0.01*_AVG_EDGE_LENGTH;
         
         DEG_EDGE_LENGTH = 0.1 * AVG_EDGE_LENGTH;
         MIN_EDGE_LENGTH = 0.5 * AVG_EDGE_LENGTH;
@@ -107,26 +105,7 @@ public:
     
 private:
     
-    /// Calculates the minimum and average length of edges on the interface.
-    void calc_interface_edge_length(T& ie_min, T& ie_avg)
-    {
-        ie_min = INFINITY;
-        ie_avg = 0.;
-        int cnt = 0;
-        for(auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
-        {
-            if (eit->is_interface())
-            {
-                T l = length(eit.key());
-                ie_min = std::min(l, ie_min);
-                ie_avg += l;
-                ++cnt;
-            }
-        }
-        assert(cnt != 0);
-        ie_avg /= cnt;
-    }
-    
+    // For debugging!
     void print(const node_key& n)
     {
         std::cout << "Node: " << n << std::endl;

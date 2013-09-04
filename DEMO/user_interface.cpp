@@ -136,8 +136,8 @@ UI::UI(int &argc, char** argv)
         ext.extract("alpha", ACCURACY);
     }
     else {
-        VELOCITY = 5.;
-        DISCRETIZATION = 25.;
+        VELOCITY = 1.;
+        DISCRETIZATION = 5.;
         ACCURACY = 5.;
         
         CONTINUOUS = false;
@@ -391,7 +391,7 @@ void UI::motion1()
 //    import_tet_mesh<GELTypes>(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
     build_tetrahedralization<GELTypes>(get_data_file_path("armadillo-very-simple.obj"), points, tets, tet_labels, pts_inside);
     
-    dsc = new DeformableSimplicialComplex<GELTypes>(points, tets, tet_labels);
+    dsc = new DeformableSimplicialComplex<GELTypes>(DISCRETIZATION, points, tets, tet_labels);
     vel_fun = new RotateFunc<GELTypes>(VELOCITY, ACCURACY);
     
     basic_log = new Log(create_log_path());
@@ -421,7 +421,7 @@ void UI::motion2()
     //import_tet_mesh<GELTypes>(get_data_file_path("bunny.dsc").data(), points, tets, tet_labels);
     build_tetrahedralization<GELTypes>(get_data_file_path("armadillo-very-simple.obj"), points, tets, tet_labels, pts_inside);
     
-    dsc = new DeformableSimplicialComplex<GELTypes>(points, tets, tet_labels);
+    dsc = new DeformableSimplicialComplex<GELTypes>(DISCRETIZATION, points, tets, tet_labels);
     vel_fun = new AverageFunc<GELTypes>(VELOCITY, ACCURACY);
     
     basic_log = new Log(create_log_path());
@@ -451,7 +451,7 @@ void UI::motion3()
     //import_tet_mesh<GELTypes>(get_data_file_path("bunny.dsc").data(), points, tets, tet_labels);
     build_tetrahedralization<GELTypes>(get_data_file_path("armadillo-very-simple.obj"), points, tets, tet_labels, pts_inside);
     
-    dsc = new DeformableSimplicialComplex<GELTypes>(points, tets, tet_labels);
+    dsc = new DeformableSimplicialComplex<GELTypes>(DISCRETIZATION, points, tets, tet_labels);
     vel_fun = new NormalFunc<GELTypes>(VELOCITY, ACCURACY);
     
     basic_log = new Log(create_log_path());
