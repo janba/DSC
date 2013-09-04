@@ -25,6 +25,8 @@
 		7A45DBB4176E177100B9B388 /* tetgen.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 7A45DBB1176E177100B9B388 /* tetgen.cxx */; };
 		7A45DBB5176E177100B9B388 /* tetgen.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DBB2176E177100B9B388 /* tetgen.h */; };
 		7A56303F17D57445005152B6 /* attributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A56303E17D57445005152B6 /* attributes.h */; };
+		7A90991C17D7A27000A66365 /* tetralizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A90991A17D7A27000A66365 /* tetralizer.cpp */; };
+		7A90991D17D7A27000A66365 /* tetralizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A90991B17D7A27000A66365 /* tetralizer.h */; };
 		7AE27AEE17675B04000F8238 /* GEL_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27ADE17675B04000F8238 /* GEL_types.h */; };
 		7AE27AEF17675B04000F8238 /* log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AE27ADF17675B04000F8238 /* log.cpp */; };
 		7AE27AF017675B04000F8238 /* log.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE017675B04000F8238 /* log.h */; };
@@ -76,6 +78,8 @@
 		7A45DBB1176E177100B9B388 /* tetgen.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tetgen.cxx; path = Tetgen/tetgen.cxx; sourceTree = "<group>"; };
 		7A45DBB2176E177100B9B388 /* tetgen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tetgen.h; path = Tetgen/tetgen.h; sourceTree = "<group>"; };
 		7A56303E17D57445005152B6 /* attributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = attributes.h; path = src/attributes.h; sourceTree = SOURCE_ROOT; };
+		7A90991A17D7A27000A66365 /* tetralizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tetralizer.cpp; path = src/tetralizer.cpp; sourceTree = SOURCE_ROOT; };
+		7A90991B17D7A27000A66365 /* tetralizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tetralizer.h; path = src/tetralizer.h; sourceTree = SOURCE_ROOT; };
 		7AE27AC717675AAA000F8238 /* libTetgen.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTetgen.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AE27AD617675AE8000F8238 /* libDSC.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDSC.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AE27ADE17675B04000F8238 /* GEL_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GEL_types.h; path = src/GEL_types.h; sourceTree = SOURCE_ROOT; };
@@ -202,6 +206,8 @@
 				7AE27AE517675B04000F8238 /* tetrahedralize.h */,
 				7AE27AE917675B04000F8238 /* velocity_function.h */,
 				7AF7E9BE176B4FE400F43714 /* DSC.h */,
+				7A90991B17D7A27000A66365 /* tetralizer.h */,
+				7A90991A17D7A27000A66365 /* tetralizer.cpp */,
 			);
 			path = DSC;
 			sourceTree = "<group>";
@@ -270,6 +276,7 @@
 				7A45DBA1176E122100B9B388 /* kernel.h in Headers */,
 				7A45DBA2176E122100B9B388 /* simplex_set.h in Headers */,
 				7A56303F17D57445005152B6 /* attributes.h in Headers */,
+				7A90991D17D7A27000A66365 /* tetralizer.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,6 +377,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7AE27AEF17675B04000F8238 /* log.cpp in Sources */,
+				7A90991C17D7A27000A66365 /* tetralizer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
