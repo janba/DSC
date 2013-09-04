@@ -41,19 +41,15 @@ inline void export_tet_mesh(DeformableSimplicialComplex<MT> & dsc, const std::st
 		file << "v " << p[0] << " " << p[1] << " " << p[2] << std::endl;
     }
     
-    for (vector< vector<int> >::iterator it = tets.begin(); it != tets.end(); it++)
+    for (std::vector<int> tet : tets)
     {
-        vector<int> tet = *it;
 		file << "t ";
         for (int i = 0; i < tet.size() - 1; i++)
         {
-            file << tet[0];
-            if(i%2 == 0)
-                file << "//";
-            else
-                file << " ";
+            file << tet[i];
+            file << " ";
         }
-        file << tet[tet.size()] << std::endl;
+        file << tet[tet.size()-1] << std::endl;
     }
     
 }
@@ -73,7 +69,7 @@ inline void import_tet_mesh(const std::string & filename, vector<typename MT::re
 		file >> c;
 		if (c == 'v')
 		{
-            double x,y,z;
+            double x,y,z; // The (x,y,z) coordinates of a vertex.
             file >> x;
             file >> y;
             file >> z;
@@ -83,23 +79,22 @@ inline void import_tet_mesh(const std::string & filename, vector<typename MT::re
 		}
 		else if (c == 't')
 		{
-            int ia, ib, ic, id, iux, iuy, iuz, iuw;
-            char x;
-            int label;
-            file >> ia;	file >> x;	file >> x;	file >> iux;
-            file >> ib;	file >> x;	file >> x;	file >> iuy;
-            file >> ic;	file >> x;	file >> x;	file >> iuz;
-            file >> id;	file >> x;	file >> x;	file >> iuw;
+            int v1, v2, v3, v4; // The indeces of the four vertices of a tetrahedron.
+            int label; // The label of a tetrahedron.
+            file >> v1;
+            file >> v2;
+            file >> v3;
+            file >> v4;
             file >> label;
             
-            tets.push_back(ia);
-            tets.push_back(ib);
-            tets.push_back(ic);
-            tets.push_back(id);
-            if (label == 0) labels.push_back(0);
-            else if (label == 1) labels.push_back(1);
-            else if (label == 2) labels.push_back(2);
+            tets.push_back(v1);
+            tets.push_back(v2);
+            tets.push_back(v3);
+            tets.push_back(v4);
+            
+            labels.push_back(label);
 		}
+        c = '\n';
     }
     
     file.close();

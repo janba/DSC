@@ -2401,9 +2401,9 @@ public:
     
     void extract_tet_mesh(std::vector<typename MT::vector3_type> & points, std::vector< std::vector<int> > & tets)
     {
-        std::map<node_key, int> indices;
         Complex::garbage_collect();
         
+        std::map<node_key, int> indices;
         int counter = 0;
         for (auto nit = Complex::nodes_begin(); nit != Complex::nodes_end(); nit++)
         {
@@ -2418,15 +2418,14 @@ public:
             std::vector<int> tet;
             Complex::get_nodes(tit.key(), nodes);
             
-            for (int i = 0; i < nodes.size(); i++)
+            for (auto &n : nodes)
             {
-                tet.push_back(indices[nodes[i]]);
+                tet.push_back(indices[n]);
             }
-            
             tet.push_back(get_label(tit.key()));
             tets.push_back(tet);
         }
-    } // extract_tet_mesh
+    }
     
     /**
      * Returns the cosine to the dihedral angle between face f1 and face f2 at edge e.
