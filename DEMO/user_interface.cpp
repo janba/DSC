@@ -25,9 +25,7 @@
 
 #ifdef WIN32
 #include <GL/glut.h>
-#include <Util/ArgExtracter.h>
 #else
-#include <GEL/Util/ArgExtracter.h>
 #include <GLUT/glut.h>
 #endif
 
@@ -140,10 +138,37 @@ UI::UI(int &argc, char** argv)
         CONTINUOUS = true;
         RECORD = true;
         
-        Util::ArgExtracter ext(argc, argv);
-        ext.extract("nu", VELOCITY);
-        ext.extract("delta", DISCRETIZATION);
-        ext.extract("alpha", ACCURACY);
+        int motion;
+        for(int i = 0; i < argc; ++i)
+        {
+            std::string str(argv[i]);
+            if (str == "nu") {
+                VELOCITY = std::atof(argv[i+1]);
+            }
+            else if (str == "delta") {
+                DISCRETIZATION = std::atof(argv[i+1]);
+            }
+            else if (str == "alpha") {
+                ACCURACY = std::atof(argv[i+1]);
+            }
+            else if (str == "motion") {
+                motion = std::atoi(argv[i+1]);
+            }
+        }
+        
+        switch (motion) {
+            case 1:
+                motion1();
+                break;
+            case 2:
+                motion2();
+                break;
+            case 3:
+                motion3();
+                break;
+            default:
+                break;
+        }
     }
     else {
         VELOCITY = 5.;
