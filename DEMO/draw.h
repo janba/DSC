@@ -17,15 +17,11 @@
 #ifndef ___D_DSC__draw__
 #define ___D_DSC__draw__
 
-#include "DSC.h"
-
 
 #ifdef WIN32
-#include <GL/glew.h>
 #include <GL/glut.h>
 #include <GLGraphics/SOIL.h>
 #else
-#include <GEL/GL/glew.h>
 #include <GLUT/glut.h>
 #include <GEL/GLGraphics/SOIL.h>
 #endif

@@ -18,9 +18,18 @@
 #include "rotate_function.h"
 #include "average_function.h"
 #include "normal_function.h"
-#include "tetrahedralize.h"
+
+//#include "tetrahedralize.h"
 #include "mesh_io.h"
 #include "tetralizer.h"
+
+#ifdef WIN32
+#include <GL/glut.h>
+#include <Util/ArgExtracter.h>
+#else
+#include <GEL/Util/ArgExtracter.h>
+#include <GLUT/glut.h>
+#endif
 
 void _check_gl_error(const char *file, int line)
 {

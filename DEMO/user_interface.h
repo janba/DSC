@@ -19,24 +19,16 @@
 
 #include "GEL_types.h"
 //#include "OTB_types.h"
+
 #include "DSC.h"
-#include "log.h"
 #include "velocity_function.h"
+#include "log.h"
 #include "draw.h"
 
-#ifdef WIN32
-#include <GL/glew.h>
-#include <GL/glut.h>
-#include <Util/ArgExtracter.h>
-#else
-#include <GEL/Util/ArgExtracter.h>
-#include <GEL/GL/glew.h>
-#include <GLUT/glut.h>
-#endif
-
 #include <GLGraphics/GLViewController.h>
+
 /**
- A default user interface which utilize OpenGL, GLEW and GLUT. At least some of the motion functions should be overridden.
+ A default user interface which utilize OpenGL and GLUT. At least some of the motion functions should be overridden.
  */
 class UI
 {
