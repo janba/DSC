@@ -37,14 +37,11 @@
 
 #include <cassert>
 
-using namespace std;
-using namespace HMesh;
-
 template <typename MT>
-inline void init_mesh(Manifold& m,
-                      vector<typename MT::real_type>& points_interface,
-                      vector<int>&  faces_interface,
-                      vector<typename MT::vector3_type>& inside_pts,
+inline void init_mesh(HMesh::Manifold& m,
+                      std::vector<typename MT::real_type>& points_interface,
+                      std::vector<int>&  faces_interface,
+                      std::vector<typename MT::vector3_type>& inside_pts,
                       typename MT::real_type scaling_factor = 1.25)
 {
     typedef typename MT::vector3_type V;
@@ -61,9 +58,9 @@ inline void init_mesh(Manifold& m,
 	
     r *= scaling_factor;
     
-    VertexAttributeVector<int> touched(0);
+    HMesh::VertexAttributeVector<int> touched(0);
 	unsigned int i = 0;
-	for (VertexIDIterator vi = m.vertices_begin(); vi != m.vertices_end(); ++vi)
+	for (HMesh::VertexIDIterator vi = m.vertices_begin(); vi != m.vertices_end(); ++vi)
 	{
         m.pos(*vi) -= cf;   // Kenny: Argh! Manifold is hardwired to Vec3f we must convert types!
         m.pos(*vi) /= r;
@@ -94,10 +91,10 @@ inline void init_mesh(Manifold& m,
 	}
     
 	i = 0;
-	for (FaceIDIterator fi = m.faces_begin(); fi != m.faces_end(); ++fi, ++i)
+	for (HMesh::FaceIDIterator fi = m.faces_begin(); fi != m.faces_end(); ++fi, ++i)
 	{
 		int j = 0;
-        Walker w = m.walker(*fi);
+        HMesh::Walker w = m.walker(*fi);
 		for(; !w.full_circle(); w = w.next())
 		{
 			if (touched[w.vertex()] != -1)
@@ -108,11 +105,11 @@ inline void init_mesh(Manifold& m,
 }
 
 template<typename T>
-inline void build_boundary_mesh(vector<T>& points_boundary,
-                                vector<int>&  faces_boundary,
+inline void build_boundary_mesh(std::vector<T>& points_boundary,
+                                std::vector<int>&  faces_boundary,
                                 int n = 3)
 {
-	vector<vector<int> > face_xp_points(n+1),
+	std::vector<std::vector<int> > face_xp_points(n+1),
     face_xm_points(n+1),
     face_yp_points(n+1),
     face_ym_points(n+1),
@@ -290,10 +287,10 @@ inline void build_boundary_mesh(vector<T>& points_boundary,
 
 
 template<typename T>
-inline void tetrahedralize_inside(vector<T>& points_interface,
-                                  vector<int>&  faces_interface,
-                                  vector<T>& points_inside,
-                                  vector<int>&  tets_inside)
+inline void tetrahedralize_inside(std::vector<T>& points_interface,
+                                  std::vector<int>&  faces_interface,
+                                  std::vector<T>& points_inside,
+                                  std::vector<int>&  tets_inside)
 {
 	tetgenio in, out;
     
@@ -347,13 +344,13 @@ inline void tetrahedralize_inside(vector<T>& points_interface,
 }
 
 template <typename MT>
-inline void tetrahedralize_outside(vector<typename MT::real_type>& points_interface,
-                                   vector<int>&  faces_interface,
-                                   vector<typename MT::real_type>& points_boundary,
-                                   vector<int>&  faces_boundary,
-                                   vector<typename MT::real_type>& points_outside,
-                                   vector<int>&  tets_outside,
-                                   vector<typename MT::vector3_type>& inside_pts)
+inline void tetrahedralize_outside(std::vector<typename MT::real_type>& points_interface,
+                                   std::vector<int>&  faces_interface,
+                                   std::vector<typename MT::real_type>& points_boundary,
+                                   std::vector<int>&  faces_boundary,
+                                   std::vector<typename MT::real_type>& points_outside,
+                                   std::vector<int>&  tets_outside,
+                                   std::vector<typename MT::vector3_type>& inside_pts)
 {
     typedef typename MT::real_type T;
     
@@ -417,15 +414,15 @@ inline void tetrahedralize_outside(vector<typename MT::real_type>& points_interf
 }
 
 template<typename T>
-inline void merge_inside_outside(vector<T>& points_interface,
-                                 vector<int>&  faces_interface,
-                                 vector<T>& points_inside,
-                                 vector<int>&  tets_inside,
-                                 vector<T>& points_outside,
-                                 vector<int>&  tets_outside,
-                                 vector<T>& output_points,
-                                 vector<int>&  output_tets,
-                                 vector<int>&  output_tet_flags)
+inline void merge_inside_outside(std::vector<T>& points_interface,
+                                 std::vector<int>&  faces_interface,
+                                 std::vector<T>& points_inside,
+                                 std::vector<int>&  tets_inside,
+                                 std::vector<T>& points_outside,
+                                 std::vector<int>&  tets_outside,
+                                 std::vector<T>& output_points,
+                                 std::vector<int>&  output_tets,
+                                 std::vector<int>&  output_tet_flags)
 {
 	int no_interface_points = points_interface.size()/3;
 	int no_outside_points = points_outside.size()/3;
@@ -459,27 +456,27 @@ inline void merge_inside_outside(vector<T>& points_interface,
 
 
 template <typename MT>
-inline void build_tetrahedralization(string const & filename,
-                                     vector<typename MT::real_type> & points,
-                                     vector<int>&  tets,
-                                     vector<int>&  tet_flags,
-                                     vector<typename MT::vector3_type>& inside_pts)
+inline void build_tetrahedralization(std::string const & filename,
+                                     std::vector<typename MT::real_type> & points,
+                                     std::vector<int>&  tets,
+                                     std::vector<int>&  tet_flags,
+                                     std::vector<typename MT::vector3_type>& inside_pts)
 {
     typedef typename MT::real_type T;
     
-	Manifold m;
+    HMesh::Manifold m;
 	m.clear();
     
 	obj_load(filename, m);
 	//x3d_load(filename, m);
     
-	vector<T>    points_interface;
-	vector<int>  faces_interface;
-	vector<T>    points_boundary;
-	vector<int>  faces_boundary;
+	std::vector<T>    points_interface;
+	std::vector<int>  faces_interface;
+	std::vector<T>    points_boundary;
+	std::vector<int>  faces_boundary;
     
-	vector<T>     points_inside, points_outside;
-	vector<int>  tets_inside, tets_outside;
+	std::vector<T>     points_inside, points_outside;
+	std::vector<int>  tets_inside, tets_outside;
     
 	init_mesh<MT>(m, points_interface, faces_interface, inside_pts);
 	build_boundary_mesh<T>(points_boundary, faces_boundary);

@@ -380,17 +380,13 @@ void UI::stop()
 
 void UI::motion1()
 {
-    typedef typename GELTypes::vector3_type V;
     stop();
     // Build the Simplicial Complex
     std::vector<double> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
-    std::vector<V> pts_inside(1);
-    pts_inside[0] = V( 0.0f, 0.0f, 0.0f);
     
 //    import_tet_mesh<GELTypes>(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
-//    build_tetrahedralization<GELTypes>(get_data_file_path("armadillo-very-simple.obj"), points, tets, tet_labels, pts_inside);
     Tetralizer<GELTypes> tetralizer(50., 50., 50., DISCRETIZATION);
     tetralizer.tetralize(points, tets, tet_labels);
     
@@ -412,17 +408,12 @@ void UI::motion1()
 
 void UI::motion2()
 {
-    typedef typename GELTypes::vector3_type V;
     stop();
     // Build the Simplicial Complex
-    vector<double> points;
-    vector<int>  tets;
-    vector<int>  tet_labels;
-    vector<V> pts_inside(1);
-    pts_inside[0] = V( 0.0f, 0.0f, 0.0f);
-    
+    std::vector<double> points;
+    std::vector<int>  tets;
+    std::vector<int>  tet_labels;
     import_tet_mesh<GELTypes>(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
-//    build_tetrahedralization<GELTypes>(get_data_file_path("armadillo-very-simple.obj"), points, tets, tet_labels, pts_inside);
     
     dsc = new DeformableSimplicialComplex<GELTypes>(DISCRETIZATION, points, tets, tet_labels);
     vel_fun = new AverageFunc<GELTypes>(VELOCITY, ACCURACY);
@@ -442,16 +433,14 @@ void UI::motion2()
 
 void UI::motion3()
 {
-    typedef typename GELTypes::vector3_type V;
     stop();
     // Build the Simplicial Complex
-    vector<double> points;
-    vector<int>  tets;
-    vector<int>  tet_labels;
-    vector<V> pts_inside(1);
-    pts_inside[0] = V( 0.0f, 0.0f, 0.0f);
-    
+    std::vector<double> points;
+    std::vector<int>  tets;
+    std::vector<int>  tet_labels;
     import_tet_mesh<GELTypes>(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
+    
+//    std::vector<GELTypes::vector3_type> pts_inside = {GELTypes::vector3_type( 0.0f, 0.0f, 0.0f)};
 //    build_tetrahedralization<GELTypes>(get_data_file_path("armadillo-very-simple.obj"), points, tets, tet_labels, pts_inside);
     
     dsc = new DeformableSimplicialComplex<GELTypes>(DISCRETIZATION, points, tets, tet_labels);

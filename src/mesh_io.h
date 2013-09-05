@@ -31,7 +31,7 @@ template <typename MT>
 inline void export_tet_mesh(DeformableSimplicialComplex<MT> & dsc, const std::string & filename)
 {
 	std::vector<typename MT::vector3_type> points;
-	vector< vector<int> > tets;
+    std::vector< std::vector<int> > tets;
 	dsc.extract_tet_mesh(points, tets);
     
     std::ofstream file(filename.data());
@@ -58,7 +58,7 @@ inline void export_tet_mesh(DeformableSimplicialComplex<MT> & dsc, const std::st
  * Imports a mesh from a .dsc file.
  */
 template <typename MT>
-inline void import_tet_mesh(const std::string & filename, vector<typename MT::real_type>& points, vector<int>&  tets, vector<int>&  labels)
+inline void import_tet_mesh(const std::string & filename, std::vector<typename MT::real_type>& points, std::vector<int>&  tets, std::vector<int>&  labels)
 {
     
     std::ifstream file(filename.data());
@@ -101,13 +101,13 @@ inline void import_tet_mesh(const std::string & filename, vector<typename MT::re
 }
 
 template <typename MT>
-inline void save_interface(DeformableSimplicialComplex<MT> & dsc, string & filename)
+inline void save_interface(DeformableSimplicialComplex<MT> & dsc, std::string & filename)
 {
-	vector<typename MT::vector3_type> verts;
-	vector<int> indices;
+	std::vector<typename MT::vector3_type> verts;
+	std::vector<int> indices;
 	dsc.extract_interface(verts, indices);
     
-	ofstream obj_file;
+	std::ofstream obj_file;
 	obj_file.open(filename.data());
     
 	for (unsigned int i = 0; i < verts.size(); ++i)
