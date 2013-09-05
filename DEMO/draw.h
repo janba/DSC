@@ -17,13 +17,12 @@
 #ifndef ___D_DSC__draw__
 #define ___D_DSC__draw__
 
+#include <SOIL/SOIL.h>
 
 #ifdef WIN32
 #include <GL/glut.h>
-#include <GLGraphics/SOIL.h>
 #else
 #include <GLUT/glut.h>
-#include <GEL/GLGraphics/SOIL.h>
 #endif
 
 const static float ALPHA = 0.2;
