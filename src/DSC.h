@@ -78,7 +78,7 @@ public:
     {
         step_no = 0;
         
-        AVG_EDGE_LENGTH = 0.01*_AVG_EDGE_LENGTH;
+        AVG_EDGE_LENGTH = _AVG_EDGE_LENGTH;
         
         DEG_EDGE_LENGTH = 0.1 * AVG_EDGE_LENGTH;
         MIN_EDGE_LENGTH = 0.5 * AVG_EDGE_LENGTH;

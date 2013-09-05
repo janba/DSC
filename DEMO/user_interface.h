@@ -41,7 +41,7 @@
 class UI
 {
 protected:
-    float r = 1.5;
+    float r = 150.;
     GLGraphics::GLViewController * view_ctrl;
     
     VelocityFunc<GELTypes> *vel_fun;

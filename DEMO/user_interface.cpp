@@ -136,9 +136,9 @@ UI::UI(int &argc, char** argv)
         ext.extract("alpha", ACCURACY);
     }
     else {
-        VELOCITY = 1.;
-        DISCRETIZATION = 5.;
-        ACCURACY = 5.;
+        VELOCITY = 5.;
+        DISCRETIZATION = 2.5;
+        ACCURACY = 1.;
         
         CONTINUOUS = false;
         RECORD = true;
