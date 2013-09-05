@@ -25,8 +25,6 @@
 #include "log.h"
 #include "draw.h"
 
-#include <GLGraphics/GLViewController.h>
-
 /**
  A default user interface which utilize OpenGL and GLUT. At least some of the motion functions should be overridden.
  */
@@ -34,7 +32,6 @@ class UI
 {
 protected:
     float r = 150.;
-    GLGraphics::GLViewController * view_ctrl;
     
     VelocityFunc<GELTypes> *vel_fun;
     DeformableSimplicialComplex<GELTypes> *dsc;

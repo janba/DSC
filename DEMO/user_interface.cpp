@@ -211,10 +211,11 @@ void UI::reshape(int width, int height)
 {
     WIN_SIZE_X = width;
     WIN_SIZE_Y = height;
-    
-    if (vel_fun) {
-        view_ctrl->reshape(WIN_SIZE_X,WIN_SIZE_Y);
-    }
+	glViewport(0, 0, WIN_SIZE_X, WIN_SIZE_Y);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(53, WIN_SIZE_X/float(WIN_SIZE_Y), 0.01*r, 3.*r);
+    glMatrixMode(GL_MODELVIEW);
 }
 
 void UI::animate()
@@ -236,28 +237,12 @@ void UI::animate()
 
 void UI::mouse(int button, int state, int x, int y)
 {
-    if (dsc) {
-        CGLA::Vec2i pos(x,y);
-        if (state == GLUT_DOWN)
-        {
-            if (button == GLUT_LEFT_BUTTON)
-                view_ctrl->grab_ball(GLGraphics::ROTATE_ACTION,pos);
-            else if (button == GLUT_MIDDLE_BUTTON)
-                view_ctrl->grab_ball(GLGraphics::ZOOM_ACTION,pos);
-            else if (button == GLUT_RIGHT_BUTTON)
-                view_ctrl->grab_ball(GLGraphics::PAN_ACTION,pos);
-        }
-        else if (state == GLUT_UP)
-            view_ctrl->release_ball();
-    }
+    
 }
 
 void UI::motion(int x, int y)
 {
-    if (dsc) {
-        CGLA::Vec2i pos(x,y);
-        view_ctrl->roll_ball(pos);
-    }
+    
 }
 
 void UI::keyboard(unsigned char key, int x, int y) {
@@ -382,7 +367,10 @@ void UI::draw()
     Painter<GELTypes>::begin();
     if (dsc)
     {
-        view_ctrl->set_gl_modelview();
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        auto center = dsc->get_center();
+        gluLookAt(0., 0., -r, center[0], center[1], center[2], 0., 1., 0.);
         
         Painter<GELTypes>::draw_complex(dsc);
         if(vel_fun && RECORD && CONTINUOUS)
@@ -406,7 +394,6 @@ void UI::stop()
         delete vel_fun;
         delete dsc;
         delete basic_log;
-        delete view_ctrl;
         vel_fun = nullptr;
         dsc = nullptr;
     }
@@ -433,9 +420,6 @@ void UI::motion1()
     basic_log->write_log(dsc);
     basic_log->write_log(vel_fun);
     
-    view_ctrl = new GLGraphics::GLViewController(WIN_SIZE_X, WIN_SIZE_Y, (CGLA::Vec3f)dsc->get_center(), r);
-    view_ctrl->set_view_param(CGLA::Vec3f(0.,0., -r), (CGLA::Vec3f)dsc->get_center(), CGLA::Vec3f(0.,1.,0.));
-    
     update_title();
     reshape(WIN_SIZE_X, WIN_SIZE_Y);
 }
@@ -457,9 +441,6 @@ void UI::motion2()
     basic_log->write_message(vel_fun->get_name().c_str());
     basic_log->write_log(dsc);
     basic_log->write_log(vel_fun);
-    
-    view_ctrl = new GLGraphics::GLViewController(WIN_SIZE_X, WIN_SIZE_Y, (CGLA::Vec3f)dsc->get_center(), r);
-    view_ctrl->set_view_param(CGLA::Vec3f(0.,0., -r), (CGLA::Vec3f)dsc->get_center(), CGLA::Vec3f(0.,1.,0.));
     
     update_title();
     reshape(WIN_SIZE_X, WIN_SIZE_Y);
@@ -485,9 +466,6 @@ void UI::motion3()
     basic_log->write_message(vel_fun->get_name().c_str());
     basic_log->write_log(dsc);
     basic_log->write_log(vel_fun);
-    
-    view_ctrl = new GLGraphics::GLViewController(WIN_SIZE_X, WIN_SIZE_Y, (CGLA::Vec3f)dsc->get_center(), r);
-    view_ctrl->set_view_param(CGLA::Vec3f(0.,0., -r), (CGLA::Vec3f)dsc->get_center(), CGLA::Vec3f(0.,1.,0.));
     
     update_title();
     reshape(WIN_SIZE_X, WIN_SIZE_Y);
