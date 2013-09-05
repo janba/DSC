@@ -149,7 +149,7 @@ private:
             for (int j = 0; j < Nj-1; j++) {
                 for (int i = 0; i < Ni-1; i++)
                 {
-                    if(i > Ni*4./10. && i < Ni*6./10. && j > Nj*4./10. && j < Nj*6./10. && k > Nk*4./10. && k < Nk*6./10.)
+                    if(i > Ni*3./10. && i < Ni*7./10. && j > Nj*3./10. && j < Nj*7./10. && k > Nk*3./10. && k < Nk*7./10.)
                     {
                         for(int t = 0; t < 5; t++)
                         {
@@ -162,10 +162,6 @@ private:
                             tet_labels.push_back(0);
                         }
                     }
-//                    for(int t = 0; t < 5; t++)
-//                    {
-//                        tet_labels.push_back(1);
-//                    }
                 }
             }
         }

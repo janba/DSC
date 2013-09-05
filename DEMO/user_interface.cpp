@@ -20,6 +20,7 @@
 #include "normal_function.h"
 #include "tetrahedralize.h"
 #include "mesh_io.h"
+#include "tetralizer.h"
 
 void _check_gl_error(const char *file, int line)
 {
@@ -388,8 +389,10 @@ void UI::motion1()
     std::vector<V> pts_inside(1);
     pts_inside[0] = V( 0.0f, 0.0f, 0.0f);
     
-    import_tet_mesh<GELTypes>(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
+//    import_tet_mesh<GELTypes>(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
 //    build_tetrahedralization<GELTypes>(get_data_file_path("armadillo-very-simple.obj"), points, tets, tet_labels, pts_inside);
+    Tetralizer<GELTypes> tetralizer(50., 50., 50., DISCRETIZATION);
+    tetralizer.tetralize(points, tets, tet_labels);
     
     dsc = new DeformableSimplicialComplex<GELTypes>(DISCRETIZATION, points, tets, tet_labels);
     vel_fun = new RotateFunc<GELTypes>(VELOCITY, ACCURACY);
