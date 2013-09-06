@@ -82,20 +82,11 @@ UI::UI(int &argc, char** argv)
 		printf("ERROR: %s\n", glewGetErrorString(GlewInitResult));
 	}
     
-    glEnable(GL_MULTISAMPLE);
-    glEnable(GL_LINE_SMOOTH);
-    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-    glEnable(GL_POINT_SMOOTH);
-    glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-    
 	glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
     
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
-    
-	glEnable(GL_COLOR_MATERIAL);
-	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
     
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
@@ -104,9 +95,6 @@ UI::UI(int &argc, char** argv)
     
 	glEnable (GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
         
     vel_fun = nullptr;
     dsc = nullptr;
