@@ -47,6 +47,8 @@ protected:
     
     Log *basic_log;
     
+    Painter<GELTypes> *painter;
+    
     int WIN_SIZE_X;
     int WIN_SIZE_Y;
     
@@ -68,6 +70,11 @@ protected:
 public:
     
     UI(int &argc, char** argv);
+    
+    ~UI()
+    {
+        delete painter;
+    }
     
     static UI* get_instance()
     {
