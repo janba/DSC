@@ -99,7 +99,7 @@ public:
         write_variable("Min quality", complex->min_quality());
         
         std::vector<int> hist;
-        double min_a, max_a;
+        typename MT::real_type min_a, max_a;
         complex->get_dihedral_angles(hist, min_a, max_a);
         write_variable("Min dih. angle", min_a, "degrees");
         write_variable("Max dih. angle", max_a, "degrees");
@@ -138,7 +138,7 @@ public:
         write_variable("Min quality", complex->min_quality());
         
         std::vector<int> hist;
-        double min_a, max_a;
+        typename MT::real_type min_a, max_a;
         complex->get_dihedral_angles(hist, min_a, max_a);
         write_variable("Min dih. angle", min_a, "degrees");
         write_variable("Max dih. angle", max_a, "degrees");

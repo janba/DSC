@@ -55,7 +55,7 @@ public:
         clock_t init_time = clock();
         
         V center = dsc.get_center();
-        typename MT::matrix3x3_type mrot = MT::get_rotation_matrix(MT::axis_type::ZAXIS, VelocityFunc<MT>::VELOCITY);
+        typename MT::matrix3x3_type mrot = MT::get_rotation_matrix(MT::get_z_axis(), VelocityFunc<MT>::VELOCITY);
         V p;
         V new_pos;
         for(auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)

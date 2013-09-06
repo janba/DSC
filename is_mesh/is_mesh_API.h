@@ -38,7 +38,7 @@ private:
     Mesh mesh;
     
 public:
-    ISMesh(std::vector<typename MT::real_type> & points, std::vector<int> & tets, std::vector<int> & tet_labels): NULL_NODE(-1), NULL_EDGE(-1), NULL_FACE(-1), NULL_TETRAHEDRON(-1)
+    ISMesh(std::vector<T> & points, std::vector<int> & tets, std::vector<int> & tet_labels): NULL_NODE(-1), NULL_EDGE(-1), NULL_FACE(-1), NULL_TETRAHEDRON(-1)
     {
         vectors_read(points, tets, mesh);
         

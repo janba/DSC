@@ -73,7 +73,7 @@ private:
 public:
     
     /// SimplicialComplex constructor.
-    DeformableSimplicialComplex(double _AVG_EDGE_LENGTH, std::vector<T> & points, std::vector<int> & tets, std::vector<int> & tet_labels):
+    DeformableSimplicialComplex(T _AVG_EDGE_LENGTH, std::vector<T> & points, std::vector<int> & tets, std::vector<int> & tet_labels):
         ISMesh<MT, node_traits, edge_traits, face_traits, tet_traits>(points, tets, tet_labels)
     {
         step_no = 0;
@@ -109,8 +109,10 @@ private:
     void print(const node_key& n)
     {
         std::cout << "Node: " << n << std::endl;
-        std::cout << "P = " << get_pos(n) << std::endl;
-        std::cout << "D = " << get_destination(n) << std::endl;
+        V p = get_pos(n);
+        V d = get_destination(n);
+        std::cout << "P = " << p[0] << ", " << p[1] << ", " << p[2] << std::endl;
+        std::cout << "D = " << d[0] << ", " << d[1] << ", " << d[2]  << std::endl;
         
         simplex_set st_n;
         Complex::star(n, st_n);
@@ -624,7 +626,7 @@ private:
         V x = get_pos(a) - get_pos(nodes[0]);
         V y = get_pos(nodes[1]) - get_pos(nodes[0]);
         V z = get_pos(nodes[2]) - get_pos(nodes[0]);
-        T val = MT::dot(x, cross(y,z));
+        T val = MT::dot(x, MT::cross(y,z));
         assert(val != 0.);
         if(val > 0.)
         {
@@ -1530,8 +1532,8 @@ private:
         
         T t = intersection_with_link(n, destination);
         
-        l = std::max(std::min(l*t - l*MIN_DEFORMATION, l), 0.);
-        set_pos(n, pos + l*normalize(destination - pos));
+        l = std::max(std::min(l*t - l*MIN_DEFORMATION, l), static_cast<T>(0.));
+        set_pos(n, pos + l*MT::normalize(destination - pos));
         
         if (MT::length(destination - get_pos(n)) < EPSILON)
         {

@@ -113,8 +113,8 @@ namespace OpenTissue
       return true;
     }
 
-    template<typename mesh_type>
-    bool vectors_read(std::vector<double> & points,
+    template<typename mesh_type, typename T>
+    bool vectors_read(std::vector<T> & points,
                       std::vector<int>    & tets,
                       mesh_type & mesh)
     {

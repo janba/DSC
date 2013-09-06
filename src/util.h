@@ -219,7 +219,7 @@ namespace Util
     {
         typedef typename MT::real_type T;
         std::vector<T> cosines = cos_angles<MT>(a, b, c);
-        double max_cos = -1.;
+        T max_cos = -1.;
         for(auto cos : cosines)
         {
             max_cos = std::max(cos, max_cos);
