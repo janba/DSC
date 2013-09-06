@@ -40,15 +40,6 @@ void visible_(int v){
     UI::get_instance()->visible(v);
 }
 
-void motion_(int x, int y){
-    UI::get_instance()->motion(x,y);
-}
-
-void mouse_(int button, int state, int x, int y)
-{
-    UI::get_instance()->mouse(button, state, x, y);
-}
-
 void animate_(){
     UI::get_instance()->animate();
 }
@@ -71,8 +62,6 @@ UI::UI(int &argc, char** argv)
 	glutIgnoreKeyRepeat(true);
     glutVisibilityFunc(visible_);
     glutReshapeFunc(reshape_);
-	glutMouseFunc(mouse_);
-	glutMotionFunc(motion_);
 	glutIdleFunc(animate_);
     
 	glewExperimental = GL_TRUE;  // Added because of http://openglbook.com/glgenvertexarrays-access-violationsegfault-with-glew/
@@ -200,16 +189,6 @@ void UI::animate()
         }
     }
     glutPostRedisplay();
-}
-
-void UI::mouse(int button, int state, int x, int y)
-{
-    
-}
-
-void UI::motion(int x, int y)
-{
-    
 }
 
 void UI::keyboard(unsigned char key, int x, int y) {
