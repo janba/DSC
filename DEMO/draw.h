@@ -73,11 +73,31 @@ class Painter {
     typedef typename MT::real_type      T;
     typedef typename MT::vector3_type   V;
     
+    GLuint shaderProgram;
+    
+    GLuint VertexArrayID;
+    GLuint vertexbuffer;
+    
+    std::vector<V> vertexdata;
+    
+    GLuint positionAttribute;
+    
 public:
     
     Painter()
     {
+//        load_shader();
+//        glGenVertexArrays(1, &VertexArrayID);
+//        check_gl_error();
+//        glBindVertexArray(VertexArrayID);
+//        check_gl_error();
+//        
+//        glGenBuffers(1, &vertexbuffer);
+//        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+//        
+//        glEnableVertexAttribArray(positionAttribute);
         
+        check_gl_error();
     }
     
     /**
@@ -241,44 +261,150 @@ public:
         }
         glEnd();
     }
-
     
-    /**
-     Draws the domain.
-     */
-//    static void draw_domain(const Domain *domain, CGLA::Vec3d color = GRAY);
-//    
-//    /**
-//     Draws the vertices with the colors defined by the get_vertex_colors function in the simplicial complex.
-//     */
-//    static void draw_vertices(const SimplicialComplex<MT> *complex);
-//
-//    /**
-//     Draws the edges with the colors defined by the get_edge_colors function in the simplicial complex.
-//     */
-//    static void draw_edges(const SimplicialComplex<MT> *complex);
-//    
-//
-//    /**
-//     Draws the faces with the colors given as input.
-//     */
-//    static void draw_faces(const SimplicialComplex<MT> *complex, const HMesh::FaceAttributeVector<CGLA::Vec3d> &colors);
-//    
-//    /**
-//     Draws the interface with the color given as input.
-//     */
-//    static void draw_interface(const SimplicialComplex<MT> *complex, CGLA::Vec3d color = ORANGE);
-//    
-//    /**
-//     Draws the arrows given as input with the color given as input.
-//     */
-//    static void draw_arrows(const SimplicialComplex<MT> *complex, const HMesh::VertexAttributeVector<CGLA::Vec2d> &arrows, CGLA::Vec3d color = ORANGE);
-//
-//    /**
-//     Draws the lines given as input with the color given as input.
-//     */
-//    static void draw_lines(const SimplicialComplex<MT> *complex, const HMesh::VertexAttributeVector<CGLA::Vec2d> &lines, CGLA::Vec3d color = GREEN);
+    // NEW OPENGL STUFF
+    void draw_new()
+    {
+        glClearColor(BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2],BACKGROUND_COLOR[3]);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(T)*3*vertexdata.size(), &vertexdata[0], GL_STATIC_DRAW);
+        
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3*static_cast<int>(vertexdata.size()), GL_FLOAT, GL_FALSE, 3, (void*)0);
+        
+        glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertexdata.size()));
+        
+        glutSwapBuffers();
+        check_gl_error();
+    }
+    
+    void draw_interface(DeformableSimplicialComplex<MT> *complex, const float color[] = GRAY)
+    {
+        vertexdata.clear();
+        for (auto fit = complex->faces_begin(); fit != complex->faces_end(); fit++)
+        {
+            if (fit->is_interface())
+            {
+                std::vector<V> verts;
+                complex->get_pos(fit.key(), verts);
+                V n = complex->get_normal(fit.key());
+                
+                for(auto &v : verts)
+                {
+                    vertexdata.push_back(v);
+                }
+            }
+        }
+        draw_new();
+    }
+    
+    void load_shader()
+    {
+        shaderProgram = InitShader("beelsebob.vert",  "beelsebob.frag", "fragColour");
+        positionAttribute = glGetAttribLocation(shaderProgram, "position");
+        if (positionAttribute < 0) {
+            std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
+        }
+    }
+    
+    // Create a NULL-terminated string by reading the provided file
+	char* readShaderSource(const char* shaderFile)
+	{
+		FILE *filePointer;
+		char *content = NULL;
+        
+		int count=0;
+        
+		if (shaderFile != NULL) {
+			filePointer = fopen(shaderFile,"rt");
+            
+			if (filePointer != NULL) {
+                
+				fseek(filePointer, 0, SEEK_END);
+				count = ftell(filePointer);
+				rewind(filePointer);
+                
+				if (count > 0) {
+					content = (char *)malloc(sizeof(char) * (count+1));
+					count = fread(content,sizeof(char),count,filePointer);
+					content[count] = '\0';
+				}
+				fclose(filePointer);
+			}
+		}
+		return content;
+	}
+    
+	// Create a GLSL program object from vertex and fragment shader files
+	GLuint InitShader(const char* vShaderFile, const char* fShaderFile, const char* outputAttributeName)
+    {
+		struct Shader {
+			const char*  filename;
+			GLenum       type;
+			GLchar*      source;
+		}  shaders[2] = {
+			{ vShaderFile, GL_VERTEX_SHADER, NULL },
+			{ fShaderFile, GL_FRAGMENT_SHADER, NULL }
+		};
+        
+		GLuint program = glCreateProgram();
+        
+		for ( int i = 0; i < 2; ++i ) {
+			Shader& s = shaders[i];
+			s.source = readShaderSource( s.filename );
+			if ( shaders[i].source == NULL ) {
+				std::cerr << "Failed to read " << s.filename << std::endl;
+				exit( EXIT_FAILURE );
+			}
+			GLuint shader = glCreateShader( s.type );
+			glShaderSource( shader, 1, (const GLchar**) &s.source, NULL );
+			glCompileShader( shader );
+            
+			GLint  compiled;
+			glGetShaderiv( shader, GL_COMPILE_STATUS, &compiled );
+			if ( !compiled ) {
+				std::cerr << s.filename << " failed to compile:" << std::endl;
+				GLint  logSize;
+				glGetShaderiv( shader, GL_INFO_LOG_LENGTH, &logSize );
+				char* logMsg = new char[logSize];
+				glGetShaderInfoLog( shader, logSize, NULL, logMsg );
+				std::cerr << logMsg << std::endl;
+				delete [] logMsg;
+                
+				exit( EXIT_FAILURE );
+			}
+            
+			delete [] s.source;
+            
+			glAttachShader( program, shader );
+		}
+        
+		/* Link output */
+		glBindFragDataLocation(program, 0, outputAttributeName);
+        
+		/* link  and error check */
+		glLinkProgram(program);
+        
+		GLint  linked;
+		glGetProgramiv( program, GL_LINK_STATUS, &linked );
+		if ( !linked ) {
+			std::cerr << "Shader program failed to link" << std::endl;
+			GLint  logSize;
+			glGetProgramiv( program, GL_INFO_LOG_LENGTH, &logSize);
+			char* logMsg = new char[logSize];
+			glGetProgramInfoLog( program, logSize, NULL, logMsg );
+			std::cerr << logMsg << std::endl;
+			delete [] logMsg;
+            
+			exit( EXIT_FAILURE );
+		}
+		
+		/* use program object */
+		glUseProgram(program);
+        
+		return program;
+	}
+    
 };
-
-
-#endif /* defined(___D_DSC__draw__) */
