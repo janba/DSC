@@ -599,6 +599,7 @@
 					/Library/Frameworks/GEL.framework/Headers/,
 					.,
 					/opt/local/include/,
+					../glm/,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -613,6 +614,7 @@
 					/Library/Frameworks/GEL.framework/Headers/,
 					.,
 					/opt/local/include/,
+					../glm/,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -627,6 +629,7 @@
 					.,
 					/opt/local/include/,
 					/usr/local/include/,
+					../glm/,
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -642,6 +645,7 @@
 					.,
 					/opt/local/include/,
 					/usr/local/include/,
+					../glm/,
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
 				PRODUCT_NAME = "$(TARGET_NAME)";
