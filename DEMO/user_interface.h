@@ -40,14 +40,16 @@
 class UI
 {
 protected:
+    typedef GELTypes MT;
+    
     float r = 150.;
     
-    VelocityFunc<GELTypes> *vel_fun;
-    DeformableSimplicialComplex<GELTypes> *dsc;
+    VelocityFunc<MT> *vel_fun;
+    DeformableSimplicialComplex<MT> *dsc;
     
     Log *basic_log;
     
-    Painter<GELTypes> *painter;
+    Painter<MT> *painter;
     
     int WIN_SIZE_X;
     int WIN_SIZE_Y;

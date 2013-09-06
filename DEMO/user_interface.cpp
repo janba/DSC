@@ -71,7 +71,7 @@ UI::UI(int &argc, char** argv)
 		printf("ERROR: %s\n", glewGetErrorString(GlewInitResult));
 	}
         
-    painter = new Painter<GELTypes>();
+    painter = new Painter<MT>();
     vel_fun = nullptr;
     dsc = nullptr;
     
@@ -238,7 +238,7 @@ void UI::keyboard(unsigned char key, int x, int y) {
             {
                 std::cout << "EXPORTING MESH" << std::endl;
                 std::string filepath("data/mesh.dsc");
-                export_tet_mesh<GELTypes>(*dsc, filepath);
+                export_tet_mesh<MT>(*dsc, filepath);
             }
             break;
         case '+':
@@ -336,16 +336,16 @@ void UI::motion1()
 {
     stop();
     // Build the Simplicial Complex
-    std::vector<double> points;
+    std::vector<MT::real_type> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
     
 //    import_tet_mesh<GELTypes>(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
-    Tetralizer<GELTypes> tetralizer(50., 50., 50., DISCRETIZATION);
+    Tetralizer<MT> tetralizer(50., 50., 50., DISCRETIZATION);
     tetralizer.tetralize(points, tets, tet_labels);
     
-    dsc = new DeformableSimplicialComplex<GELTypes>(DISCRETIZATION, points, tets, tet_labels);
-    vel_fun = new RotateFunc<GELTypes>(VELOCITY, ACCURACY);
+    dsc = new DeformableSimplicialComplex<MT>(DISCRETIZATION, points, tets, tet_labels);
+    vel_fun = new RotateFunc<MT>(VELOCITY, ACCURACY);
     
     basic_log = new Log(create_log_path());
     
@@ -361,13 +361,13 @@ void UI::motion2()
 {
     stop();
     // Build the Simplicial Complex
-    std::vector<double> points;
+    std::vector<MT::real_type> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
-    import_tet_mesh<GELTypes>(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
+    import_tet_mesh<MT>(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
     
-    dsc = new DeformableSimplicialComplex<GELTypes>(DISCRETIZATION, points, tets, tet_labels);
-    vel_fun = new AverageFunc<GELTypes>(VELOCITY, ACCURACY);
+    dsc = new DeformableSimplicialComplex<MT>(DISCRETIZATION, points, tets, tet_labels);
+    vel_fun = new AverageFunc<MT>(VELOCITY, ACCURACY);
     
     basic_log = new Log(create_log_path());
     
@@ -383,16 +383,16 @@ void UI::motion3()
 {
     stop();
     // Build the Simplicial Complex
-    std::vector<double> points;
+    std::vector<MT::real_type> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
-    import_tet_mesh<GELTypes>(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
+    import_tet_mesh<MT>(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
     
 //    std::vector<GELTypes::vector3_type> pts_inside = {GELTypes::vector3_type( 0.0f, 0.0f, 0.0f)};
 //    build_tetrahedralization<GELTypes>(get_data_file_path("armadillo-very-simple.obj"), points, tets, tet_labels, pts_inside);
     
-    dsc = new DeformableSimplicialComplex<GELTypes>(DISCRETIZATION, points, tets, tet_labels);
-    vel_fun = new NormalFunc<GELTypes>(VELOCITY, ACCURACY);
+    dsc = new DeformableSimplicialComplex<MT>(DISCRETIZATION, points, tets, tet_labels);
+    vel_fun = new NormalFunc<MT>(VELOCITY, ACCURACY);
     
     basic_log = new Log(create_log_path());
     
