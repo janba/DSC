@@ -17,6 +17,14 @@
 #ifndef ___D_DSC__DSC_UI__
 #define ___D_DSC__DSC_UI__
 
+#include <GL/glew.h>
+
+#ifdef WIN32
+#include <GL/glut.h>
+#else
+#include <GLUT/glut.h>
+#endif
+
 #include "GEL_types.h"
 //#include "OTB_types.h"
 
@@ -26,7 +34,7 @@
 #include "draw.h"
 
 /**
- A default user interface which utilize OpenGL and GLUT. At least some of the motion functions should be overridden.
+ A default user interface which utilize OpenGL, GLEW and GLUT. At least some of the motion functions should be overridden.
  */
 class UI
 {

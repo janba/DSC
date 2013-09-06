@@ -23,12 +23,6 @@
 #include "mesh_io.h"
 #include "tetralizer.h"
 
-#ifdef WIN32
-#include <GL/glut.h>
-#else
-#include <GLUT/glut.h>
-#endif
-
 void _check_gl_error(const char *file, int line)
 {
     GLenum err (glGetError());

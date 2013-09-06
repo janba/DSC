@@ -19,6 +19,8 @@
 		7A0AB5BD17D906BD0058910E /* stbi_DDS_aug_c.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A0AB5B317D906BD0058910E /* stbi_DDS_aug_c.h */; };
 		7A0AB5BE17D906F10058910E /* libSOIL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0AB5A517D906AD0058910E /* libSOIL.a */; };
 		7A0AB5C217D908E10058910E /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0AB5C017D9082A0058910E /* CoreFoundation.framework */; };
+		7A30ED1517D9413C0051E6C0 /* GLM_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A30ED1417D9413C0051E6C0 /* GLM_types.h */; };
+		7A30ED1A17D951EB0051E6C0 /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A30ED1917D951EB0051E6C0 /* libGLEW.a */; };
 		7A45DB96176E122100B9B388 /* configuration.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB88176E122100B9B388 /* configuration.h */; };
 		7A45DB97176E122100B9B388 /* is_mesh_lists_read.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8A176E122100B9B388 /* is_mesh_lists_read.h */; };
 		7A45DB98176E122100B9B388 /* is_mesh_lists_write.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8B176E122100B9B388 /* is_mesh_lists_write.h */; };
@@ -85,6 +87,8 @@
 		7A0AB5B217D906BD0058910E /* stbi_DDS_aug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stbi_DDS_aug.h; sourceTree = "<group>"; };
 		7A0AB5B317D906BD0058910E /* stbi_DDS_aug_c.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stbi_DDS_aug_c.h; sourceTree = "<group>"; };
 		7A0AB5C017D9082A0058910E /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		7A30ED1417D9413C0051E6C0 /* GLM_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLM_types.h; path = src/GLM_types.h; sourceTree = SOURCE_ROOT; };
+		7A30ED1917D951EB0051E6C0 /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = ../../../../../usr/local/lib/libGLEW.a; sourceTree = "<group>"; };
 		7A45DB88176E122100B9B388 /* configuration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = configuration.h; path = is_mesh/configuration.h; sourceTree = "<group>"; };
 		7A45DB8A176E122100B9B388 /* is_mesh_lists_read.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = is_mesh_lists_read.h; sourceTree = "<group>"; };
 		7A45DB8B176E122100B9B388 /* is_mesh_lists_write.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = is_mesh_lists_write.h; sourceTree = "<group>"; };
@@ -163,6 +167,7 @@
 				7A0AB5BE17D906F10058910E /* libSOIL.a in Frameworks */,
 				7AE27B1817675D3D000F8238 /* GEL.framework in Frameworks */,
 				7AE27B1717675D34000F8238 /* libDSC.a in Frameworks */,
+				7A30ED1A17D951EB0051E6C0 /* libGLEW.a in Frameworks */,
 				7AE27B1A17675DA6000F8238 /* OpenGL.framework in Frameworks */,
 				7AE27B1917675DA2000F8238 /* GLUT.framework in Frameworks */,
 			);
@@ -221,6 +226,7 @@
 		7AE27AAE17675A1E000F8238 = {
 			isa = PBXGroup;
 			children = (
+				7A30ED1917D951EB0051E6C0 /* libGLEW.a */,
 				7A0AB5C017D9082A0058910E /* CoreFoundation.framework */,
 				7AE27AFF17675B9C000F8238 /* GEL.framework */,
 				7AE27AFD17675B78000F8238 /* GLUT.framework */,
@@ -250,6 +256,7 @@
 			children = (
 				7AE27ADE17675B04000F8238 /* GEL_types.h */,
 				7AE27AE217675B04000F8238 /* OTB_types.h */,
+				7A30ED1417D9413C0051E6C0 /* GLM_types.h */,
 				7A56303E17D57445005152B6 /* attributes.h */,
 				7AE27ADF17675B04000F8238 /* log.cpp */,
 				7AE27AE017675B04000F8238 /* log.h */,
@@ -343,6 +350,7 @@
 				7A45DBA2176E122100B9B388 /* simplex_set.h in Headers */,
 				7A56303F17D57445005152B6 /* attributes.h in Headers */,
 				7A90991D17D7A27000A66365 /* tetralizer.h in Headers */,
+				7A30ED1517D9413C0051E6C0 /* GLM_types.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -618,7 +626,9 @@
 					/Library/Frameworks/GEL.framework/Headers/,
 					.,
 					/opt/local/include/,
+					/usr/local/include/,
 				);
+				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -631,7 +641,9 @@
 					/Library/Frameworks/GEL.framework/Headers/,
 					.,
 					/opt/local/include/,
+					/usr/local/include/,
 				);
+				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -646,6 +658,7 @@
 				7A0AB5A717D906AD0058910E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7AE27AB217675A1E000F8238 /* Build configuration list for PBXProject "DSC" */ = {
 			isa = XCConfigurationList;
