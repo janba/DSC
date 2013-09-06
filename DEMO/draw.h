@@ -118,7 +118,7 @@ public:
     /**
      Saves the current painting to the selected folder.
      */
-    static void save_painting(int width, int height, std::string folder = std::string(""), int time_step = -1)
+    void save_painting(int width, int height, std::string folder = std::string(""), int time_step = -1)
     {
         std::ostringstream s;
         if (folder.length() == 0) {
@@ -144,7 +144,7 @@ public:
     /**
      Begins drawing.
      */
-    static void begin()
+    void begin()
     {
         glClearColor(BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2],BACKGROUND_COLOR[3]);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -153,7 +153,7 @@ public:
     /**
      Ends drawing.
      */
-    static void end()
+    void end()
     {
         glFlush();
         glutSwapBuffers();
@@ -162,7 +162,7 @@ public:
     /**
      Draws the simplicial complex.
      */
-    static void draw_complex(DeformableSimplicialComplex<MT> *complex)
+    void draw_complex(DeformableSimplicialComplex<MT> *complex)
     {
         draw_faces(complex);
 //        draw_nodes(complex);
@@ -175,7 +175,7 @@ public:
     /**
      Draws the bad tetrahedra.
      */
-    static void draw_bad_tetrahedra(DeformableSimplicialComplex<MT> *complex)
+    void draw_bad_tetrahedra(DeformableSimplicialComplex<MT> *complex)
     {
         bool low_quality, small_angle;
         std::vector<V> verts;
@@ -219,7 +219,7 @@ public:
     /**
      Draws the faces with the colors defined by the get_face_colors function in the simplicial complex.
      */
-    static void draw_faces(DeformableSimplicialComplex<MT> *complex, const float color[] = GRAY)
+    void draw_faces(DeformableSimplicialComplex<MT> *complex, const float color[] = GRAY)
     {
         glColor3fv(&color[0]);
         glBegin(GL_TRIANGLES);
@@ -242,7 +242,7 @@ public:
         glEnd();
     }
     
-    static void draw_edges(DeformableSimplicialComplex<MT> *complex, const float color[] = BLACK)
+    void draw_edges(DeformableSimplicialComplex<MT> *complex, const float color[] = BLACK)
     {
         glColor3fv(&color[0]);
         glLineWidth(LINE_WIDTH);
@@ -261,7 +261,7 @@ public:
         glEnd();
     }
 
-    static void draw_nodes(DeformableSimplicialComplex<MT> *complex, const float color[] = BLACK)
+    void draw_nodes(DeformableSimplicialComplex<MT> *complex, const float color[] = BLACK)
     {
         glColor3fv(&color[0]);
         glPointSize(POINT_SIZE);

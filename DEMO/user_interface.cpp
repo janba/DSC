@@ -230,7 +230,7 @@ void UI::keyboard(unsigned char key, int x, int y) {
             if(dsc)
             {
                 std::cout << "TAKING SCREEN SHOT" << std::endl;
-                Painter<GELTypes>::save_painting(WIN_SIZE_X, WIN_SIZE_Y, "LOG");
+                painter->save_painting(WIN_SIZE_X, WIN_SIZE_Y, "LOG");
             }
             break;
         case 'e':
@@ -297,7 +297,7 @@ void UI::visible(int v)
 
 void UI::draw()
 {
-    Painter<GELTypes>::begin();
+    painter->begin();
     if (dsc)
     {
         glMatrixMode(GL_MODELVIEW);
@@ -305,13 +305,13 @@ void UI::draw()
         auto center = dsc->get_center();
         gluLookAt(0., 0., -r, center[0], center[1], center[2], 0., 1., 0.);
         
-        Painter<GELTypes>::draw_complex(dsc);
+        painter->draw_complex(dsc);
         if(vel_fun && RECORD && CONTINUOUS)
         {
-            Painter<GELTypes>::save_painting(WIN_SIZE_X, WIN_SIZE_Y, basic_log->get_path(), vel_fun->get_time_step());
+            painter->save_painting(WIN_SIZE_X, WIN_SIZE_Y, basic_log->get_path(), vel_fun->get_time_step());
         }
     }
-    Painter<GELTypes>::end();
+    painter->end();
 }
 
 void UI::stop()
