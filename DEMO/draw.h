@@ -14,8 +14,7 @@
 //
 //  See licence.txt for a copy of the GNU General Public License.
 
-#ifndef ___D_DSC__draw__
-#define ___D_DSC__draw__
+#pragma once
 
 #include <SOIL/SOIL.h>
 
@@ -41,6 +40,29 @@ const static float GRAY[] = {0.8, 0.8, 0.8, ALPHA};
 
 const static float POINT_SIZE = 0.5;
 const static float LINE_WIDTH = 0.1;
+
+
+inline void _check_gl_error(const char *file, int line)
+{
+    GLenum err (glGetError());
+    
+    while(err!=GL_NO_ERROR) {
+        std::string error;
+        
+        switch(err) {
+            case GL_INVALID_OPERATION:      error="INVALID_OPERATION";      break;
+            case GL_INVALID_ENUM:           error="INVALID_ENUM";           break;
+            case GL_INVALID_VALUE:          error="INVALID_VALUE";          break;
+            case GL_OUT_OF_MEMORY:          error="OUT_OF_MEMORY";          break;
+            case GL_INVALID_FRAMEBUFFER_OPERATION:  error="INVALID_FRAMEBUFFER_OPERATION";  break;
+        }
+        
+        std::cerr << "GL_" << error.c_str() <<" - "<<file<<":"<<line<<std::endl;
+        err=glGetError();
+    }
+}
+
+#define check_gl_error() _check_gl_error(__FILE__,__LINE__)
 
 /**
  A painter handles all draw functionality using OpenGL.
