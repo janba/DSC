@@ -75,6 +75,13 @@ UI::UI(int &argc, char** argv)
 	glutMotionFunc(motion_);
 	glutIdleFunc(animate_);
     
+	glewExperimental = GL_TRUE;  // Added because of http://openglbook.com/glgenvertexarrays-access-violationsegfault-with-glew/
+    
+	GLint GlewInitResult = glewInit();
+	if (GlewInitResult != GLEW_OK) {
+		printf("ERROR: %s\n", glewGetErrorString(GlewInitResult));
+	}
+    
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_LINE_SMOOTH);
     glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
