@@ -1595,7 +1595,7 @@ private:
         }
         assert(faces.size() == 2);
         
-        T angle = cos_dihedral_angle(e, faces[0], faces[1]);
+        T angle = cos_dihedral_angle(faces[0], faces[1]);
         if(angle > FLIP_EDGE_INTERFACE_FLATNESS)
         {
             return true;
@@ -2430,46 +2430,88 @@ public:
     }
     
     /**
-     * Returns the cosine to the dihedral angle between face f1 and face f2 at edge e.
+     * Returns the cosine to the dihedral angle between face f1 and face f2.
      */
-    T cos_dihedral_angle(const edge_key& e, const face_key& f1, const face_key& f2)
+    T cos_dihedral_angle(const face_key& f1, const face_key& f2)
     {
-        std::vector<V> verts;
-        get_pos(e, verts);
-        V c = get_pos(Complex::get_apex(f1, e));
-        V d = get_pos(Complex::get_apex(f2, e));
-        return Util::cos_dihedral_angle<MT>(verts[0], verts[1], c, d);
+        std::vector<node_key> nodes, temp;
+        Complex::get_nodes(f1, nodes);
+        Complex::get_nodes(f2, temp);
+        nodes.insert(nodes.end(), temp.begin(), temp.end());
+        
+        std::vector<V> verts, apices;
+        for(int i = 0; i < nodes.size(); i++)
+        {
+            bool found = false;
+            for (int j = 0; j < nodes.size(); j++)
+            {
+                if(i != j && nodes[i] == nodes[j])
+                {
+                    if(i < j)
+                    {
+                        verts.push_back(get_pos(nodes[i]));
+                    }
+                    found = true;
+                }
+            }
+            if(!found)
+            {
+                apices.push_back(get_pos(nodes[i]));
+            }
+        }
+        
+        return Util::cos_dihedral_angle<MT>(verts[0], verts[1], apices[0], apices[1]);
     }
     
     /**
      * Returns the dihedral angle between face f1 and face f2.
      */
-    T dihedral_angle(const edge_key& e, const face_key& f1, const face_key& f2)
+    T dihedral_angle(const face_key& f1, const face_key& f2)
     {
-        return acos(cos_dihedral_angle(e, f1, f2));
+        return acos(cos_dihedral_angle(f1, f2));
+    }
+    
+    std::vector<T> cos_dihedral_angles(const tet_key& t)
+    {
+        std::vector<V> verts;
+        get_pos(t, verts);
+        std::vector<T> angles;
+        std::vector<int> apices;
+        for (int i = 0; i < verts.size(); i++) {
+            for (int j = 0; j < verts.size(); j++) {
+                if(i < j)
+                {
+                    apices.clear();
+                    for (int k = 0; k < verts.size(); k++) {
+                        if(k != i && k != j)
+                        {
+                            apices.push_back(k);   
+                        }
+                    }
+                    angles.push_back(Util::cos_dihedral_angle<MT>(verts[i], verts[j], verts[apices[0]], verts[apices[1]]));
+                }
+            }
+        }
+        return angles;
     }
     
     /**
-     * Returns the minimum dihedral angle between the faces of tetrahedron t.
+     * Returns the cosine of the minimum dihedral angle between the faces of tetrahedron t.
      */
     T min_cos_dihedral_angle(const tet_key& t)
     {
         T min_angle = -1.;
-        simplex_set cl_t;
-        Complex::closure(t, cl_t);
-        for(auto fit1 = cl_t.faces_begin(); fit1 != cl_t.faces_end(); fit1++)
+        std::vector<T> angles = cos_dihedral_angles(t);
+        for(auto a : angles)
         {
-            for(auto fit2 = fit1; fit2 != cl_t.faces_end(); fit2++)
-            {
-                if(*fit1 != *fit2)
-                {
-                    min_angle = std::max(min_angle, cos_dihedral_angle(Complex::get_edge(*fit1, *fit2),*fit1, *fit2));
-                }
-            }
+            min_angle = std::max(min_angle, a);
         }
         return min_angle;
     }
-    
+
+    /**
+     * Returns the minimum dihedral angle between the faces of tetrahedron t.
+     */
     T min_dihedral_angle(const tet_key& t)
     {
         return acos(min_cos_dihedral_angle(t));
@@ -2509,21 +2551,13 @@ public:
         
         for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
         {
-            simplex_set cl_t;
-            Complex::closure(tit.key(), cl_t);
-            
-            for(auto fit1 = cl_t.faces_begin(); fit1 != cl_t.faces_end(); fit1++)
+            std::vector<T> angles = cos_dihedral_angles(tit.key());
+            for(auto cos_a : angles)
             {
-                for(auto fit2 = fit1; fit2 != cl_t.faces_end(); fit2++)
-                {
-                    if(*fit1 != *fit2)
-                    {
-                        T angle = dihedral_angle(Complex::get_edge(*fit1, *fit2),*fit1, *fit2)*180./M_PI;
-                        min_angle = std::min(min_angle, angle);
-                        max_angle = std::max(max_angle, angle);
-                        histogram[(int)floor(angle)] += 1;
-                    }
-                }
+                T a = acos(cos_a)*180./M_PI;
+                min_angle = std::min(min_angle, a);
+                max_angle = std::max(max_angle, a);
+                histogram[(int)floor(a)] += 1;
             }
         }
     }
