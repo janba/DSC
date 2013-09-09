@@ -1423,18 +1423,6 @@ private:
         validity_check();
         remove_degenerate_edges();
         validity_check();
-        
-        print_out("Smooth.");
-        smooth();
-        validity_check();
-        
-//        print_out("Relabel tets.");
-//        bool relabeled = relabel_tets();
-//        validity_check();
-//        
-//        if (relabeled) {
-//            smooth();
-//        }
     }
     
     void resize_complex()
