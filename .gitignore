@@ -1,4 +1,3 @@
-
 t4mesh/.DS_Store
 
 .DS_Store
@@ -30,23 +29,3 @@ TinyXML/tinystr.h
 TinyXML/tinyxml.h
 
 DSC.xcodeproj/xcuserdata/asny.xcuserdatad/xcschemes/SOIL.xcscheme
-
-SOIL/SOIL.c
-
-SOIL/SOIL.h
-
-SOIL/image_DXT.c
-
-SOIL/image_DXT.h
-
-SOIL/image_helper.c
-
-SOIL/image_helper.h
-
-SOIL/stb_image_aug.c
-
-SOIL/stb_image_aug.h
-
-SOIL/stbi_DDS_aug.h
-
-SOIL/stbi_DDS_aug_c.h
