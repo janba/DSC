@@ -364,22 +364,25 @@ public:
     }
     
 
-    void get_nodes(const edge_key& e, std::vector<node_key>& nodes)
+    std::vector<node_key> get_nodes(const edge_key& e)
     {
-        nodes = std::vector<node_key>(2);
+        std::vector<node_key> nodes(2);
         mesh.vertices(e, nodes);
+        return nodes;
     }
     
-    void get_nodes(const face_key& f, std::vector<node_key>& nodes)
+    std::vector<node_key> get_nodes(const face_key& f)
     {
-        nodes = std::vector<node_key>(3);
+        std::vector<node_key> nodes(3);
         mesh.vertices(f, nodes);
+        return nodes;
     }
     
-    void get_nodes(const tet_key& t, std::vector<node_key>& nodes)
+    std::vector<node_key> get_nodes(const tet_key& t)
     {
-        nodes = std::vector<node_key>(4);
+        std::vector<node_key> nodes(4);
         mesh.vertices(t, nodes);
+        return nodes;
     }
     
     edge_key get_edge(const node_key& n1, const node_key& n2)
@@ -490,15 +493,16 @@ public:
         return *cl_f.nodes_begin();
     }
     
-    void get_apices(const face_key& f, std::vector<node_key>& apices)
+    std::vector<node_key> get_apices(const face_key& f)
     {
-        apices = std::vector<node_key>(0);
+        std::vector<node_key> apices;
         simplex_set lk_f;
         link(f, lk_f);
         for(auto nit = lk_f.nodes_begin(); nit != lk_f.nodes_end(); nit++)
         {
             apices.push_back(*nit);
         }
+        return apices;
     }
     
     ////////////////////
@@ -662,8 +666,7 @@ public:
     
     node_key collapse(edge_key& e)
     {
-        std::vector<node_key> nodes;
-        get_nodes(e, nodes);
+        auto nodes = get_nodes(e);
 #ifdef DEBUG
         assert(nodes[0] != NULL_NODE);
         assert(nodes[1] != NULL_NODE);

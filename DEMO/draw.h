@@ -178,7 +178,6 @@ public:
     void draw_bad_tetrahedra(DeformableSimplicialComplex<MT> *complex)
     {
         bool low_quality, small_angle;
-        std::vector<V> verts;
         glLineWidth(LINE_WIDTH);
         glBegin(GL_TRIANGLES);
         for (auto tit = complex->tetrahedra_begin(); tit != complex->tetrahedra_end(); tit++)
@@ -204,7 +203,7 @@ public:
                 for (auto fit = cl_t.faces_begin(); fit != cl_t.faces_end(); fit++)
                 {
                     V n = complex->get_normal(*fit);
-                    complex->get_pos(*fit, verts);
+                    auto verts = complex->get_pos(*fit);
                     glVertex3dv(&verts[0][0]);
                     glVertex3dv(&verts[1][0]);
                     glVertex3dv(&verts[2][0]);
@@ -227,8 +226,7 @@ public:
         {
             if (fit->is_interface())
             {
-                std::vector<V> verts;
-                complex->get_pos(fit.key(), verts);
+                auto verts = complex->get_pos(fit.key());
                 V n = complex->get_normal(fit.key());
                 
                 for (int i = 0; i < 3; ++i)
@@ -250,8 +248,7 @@ public:
         glBegin(GL_LINES);
         for(auto eit = complex->edges_begin(); eit != complex->edges_end(); eit++)
         {
-            std::vector<V> verts;
-            complex->get_pos(eit.key(), verts);
+            auto verts = complex->get_pos(eit.key());
             if(eit->is_interface())
             {
                 glVertex3dv(&verts[0][0]);

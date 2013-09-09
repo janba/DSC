@@ -119,8 +119,7 @@ private:
         std::cout << "\nStar_edges = [";
         for(auto eit = st_n.edges_begin(); eit != st_n.edges_end(); eit++)
         {
-            std::vector<V> verts;
-            get_pos(*eit, verts);
+            auto verts = get_pos(*eit);
             V p1 = verts[0];
             V p2 = verts[1];
             std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
@@ -133,8 +132,7 @@ private:
         {
             if(is_interface(*eit))
             {
-                std::vector<V> verts;
-                get_pos(*eit, verts);
+                auto verts = get_pos(*eit);
                 V p1 = verts[0];
                 V p2 = verts[1];
                 std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
@@ -148,8 +146,7 @@ private:
         std::cout << "\nedges = [";
         for(auto eit = set.edges_begin(); eit != set.edges_end(); eit++)
         {
-            std::vector<V> verts;
-            get_pos(*eit, verts);
+            auto verts = get_pos(*eit);
             V p1 = verts[0];
             V p2 = verts[1];
             std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
@@ -162,8 +159,7 @@ private:
         {
             if(is_interface(*eit))
             {
-                std::vector<V> verts;
-                get_pos(*eit, verts);
+                auto verts = get_pos(*eit);
                 V p1 = verts[0];
                 V p2 = verts[1];
                 std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
@@ -211,40 +207,40 @@ public:
     }
     
     /// Returns the positions of the nodes of edge e in verts.
-    void get_pos(const edge_key & e, std::vector<V>& verts)
+    std::vector<V> get_pos(const edge_key & e)
     {
-        verts = std::vector<V>(2);
-        std::vector<node_key> nodes(2);
-        Complex::get_nodes(e, nodes);
+        std::vector<V> verts(2);
+        auto nodes = Complex::get_nodes(e);
         for (int k = 0; k < 2; ++k)
         {
             verts[k] = get_pos(nodes[k]);
         }
+        return verts;
     }
     
     /// Returns the positions of the nodes of face f in verts.
-    void get_pos(const face_key & f, std::vector<V>& verts)
+    std::vector<V> get_pos(const face_key & f)
     {
-        verts = std::vector<V>(3);
+        std::vector<V> verts(3);
         Complex::orient_face(f);
-        std::vector<node_key> nodes(3);
-        Complex::get_nodes(f, nodes);
+        auto nodes = Complex::get_nodes(f);
         for (int k = 0; k < 3; ++k)
         {
             verts[k] = get_pos(nodes[k]);
         }
+        return verts;
     }
     
     /// Returns the positions of the nodes of tetrahedron t in verts.
-    void get_pos(const tet_key& t, std::vector<V>& verts)
+    std::vector<V> get_pos(const tet_key& t)
     {
-        verts = std::vector<V>(4);
-        std::vector<node_key> nodes(4);
-        Complex::get_nodes(t, nodes);
+        std::vector<V> verts(4);
+        auto nodes = Complex::get_nodes(t);
         for (int k = 0; k < 4; ++k)
         {
             verts[k] = get_pos(nodes[k]);
         }
+        return verts;
     }
     
 protected:
@@ -310,8 +306,7 @@ private:
      */
     T build_table(const edge_key& e, const std::vector<node_key>& polygon, std::vector<std::vector<int>>& K)
     {
-        std::vector<V> verts;
-        get_pos(e, verts);
+        auto verts = get_pos(e);
         
         const int m = (int) polygon.size();
         
@@ -366,8 +361,7 @@ private:
     
     void get_half_polygon(const edge_key& e, std::vector<node_key>& polygon1, std::vector<node_key>& polygon2)
     {
-        std::vector<node_key> nodes;
-        Complex::get_nodes(e, nodes);
+        auto nodes = Complex::get_nodes(e);
         std::vector<node_key> polygon = get_polygon(e);
         int i1 = -1, i2 = -1;
         for(int i = 0; i < polygon.size(); i++)
@@ -443,8 +437,7 @@ private:
         
         if (q_new > min_quality(e))
         {
-            std::vector<node_key> nodes;
-            Complex::get_nodes(e, nodes);
+            auto nodes = Complex::get_nodes(e);
             topological_edge_removal(polygon, nodes[0], nodes[1], K);
             return true;
         }
@@ -498,8 +491,7 @@ private:
         
         if (q_new > min_quality(e))
         {
-            std::vector<node_key> nodes;
-            Complex::get_nodes(e, nodes);
+            auto nodes = Complex::get_nodes(e);
             topological_boundary_edge_removal(polygon1, polygon2, nodes[0], nodes[1], K1, K2);
             return true;
         }
@@ -641,10 +633,8 @@ private:
      */
     bool topological_face_removal(const face_key& f)
     {
-        std::vector<node_key> apices;
-        Complex::get_apices(f, apices);
-        std::vector<node_key> nodes;
-        Complex::get_nodes(f, nodes);
+        auto apices = Complex::get_apices(f);
+        auto nodes = Complex::get_nodes(f);
         orient_cc(apices[0], nodes);
         
         T q_01_new, q_01_old, q_12_new, q_12_old, q_20_new, q_20_old;
@@ -693,8 +683,7 @@ private:
         {
             if(!is_boundary(*f) && !is_interface(*f))
             {
-                std::vector<node_key> nodes;
-                Complex::get_nodes(*f, nodes);
+                auto nodes = Complex::get_nodes(*f);
                 orient_cc(apex2, nodes);
                 
                 T t = Util::intersection_ray_triangle<MT>(get_pos(apex1), get_pos(apex2), get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
@@ -739,8 +728,7 @@ private:
                 {
                     if (Complex::exists(*fit) && !is_interface(*fit) && !is_boundary(*fit))
                     {
-                        std::vector<node_key> apices;
-                        Complex::get_apices(*fit, apices);
+                        auto apices = Complex::get_apices(*fit);
                         if(topological_face_removal(apices[0], apices[1]))
                         {
                             i++;
@@ -1553,10 +1541,9 @@ private:
         simplex_set ln;
         Complex::link(n,ln);
         T min_t = INFINITY;
-        std::vector<V> face_pos;
         for(auto fit = ln.faces_begin(); fit != ln.faces_end(); fit++)
         {
-            get_pos(*fit, face_pos);
+            auto face_pos = get_pos(*fit);
             T t = Util::intersection_ray_plane<MT>(pos, new_pos, face_pos[0], face_pos[1], face_pos[2]);
             if (0. <= t)
             {
@@ -1674,8 +1661,7 @@ public:
      */
     node_key split(const edge_key & e)
     {
-        std::vector<node_key> nodes;
-        Complex::get_nodes(e, nodes);
+        auto nodes = Complex::get_nodes(e);
         V p = Util::barycenter<MT>(get_pos(nodes[0]), get_pos(nodes[1]));
         V p_new = p;
         if(is_interface(e))
@@ -1714,8 +1700,7 @@ private:
      */
     bool precond_collapse(const edge_key& e, const V& p)
     {
-        std::vector<node_key> nodes;
-        Complex::get_nodes(e, nodes);
+        auto nodes = Complex::get_nodes(e);
         
         simplex_set lk_n0, lk_n1, lk_e;
         Complex::link(nodes[0], lk_n0);
@@ -1739,8 +1724,7 @@ private:
      */
     T min_quality(const edge_key& e, const V& v_new)
     {
-        std::vector<node_key> nodes;
-        Complex::get_nodes(e, nodes);
+        auto nodes = Complex::get_nodes(e);
         
         simplex_set lk_n0, lk_n1;
         Complex::link(nodes[0], lk_n0);
@@ -1765,8 +1749,7 @@ private:
         {
             return Complex::NULL_NODE;
         }
-        std::vector<node_key> nodes;
-        Complex::get_nodes(e, nodes);
+        auto nodes = Complex::get_nodes(e);
         
         V p_opt, p_new_opt;
         T q_max = 0.;
@@ -1858,8 +1841,7 @@ public:
      */
     V get_normal(const face_key & f)
     {
-        std::vector<V> verts;
-        get_pos(f, verts);
+        auto verts = get_pos(f);
         return Util::normal_direction<MT>(verts[0], verts[1], verts[2]);
     }
     
@@ -1919,8 +1901,7 @@ public:
     
     T length(const edge_key& e)
     {
-        std::vector<V> verts;
-        get_pos(e,verts);
+        auto verts = get_pos(e);
         return MT::length(verts[0] - verts[1]);
     }
     
@@ -1933,29 +1914,25 @@ public:
     
     T volume(const tet_key& t)
     {
-        std::vector<V> verts;
-        get_pos(t,verts);
+        auto verts = get_pos(t);
         return Util::volume<MT>(verts[0], verts[1], verts[2], verts[3]);
     }
     
     T signed_volume(const tet_key& t)
     {
-        std::vector<V> verts;
-        get_pos(t,verts);
+        auto verts = get_pos(t);
         return Util::signed_volume<MT>(verts[0], verts[1], verts[2], verts[3]);
     }
     
     T quality(const tet_key& t)
     {
-        std::vector<V> verts;
-        get_pos(t, verts);
+        auto verts = get_pos(t);
         return Util::quality<MT>(verts[0], verts[1], verts[2], verts[3]);
     }
     
     T min_angle(const face_key& f)
     {
-        std::vector<V> verts;
-        get_pos(f, verts);
+        auto verts = get_pos(f);
         return Util::min_angle<MT>(verts[0], verts[1], verts[2]);
     }
     
@@ -2041,10 +2018,9 @@ public:
     T min_quality(simplex_set& set, const V& pos)
     {
         T min_q = INFINITY;
-        std::vector<V> verts;
         for(auto fit = set.faces_begin(); fit != set.faces_end(); fit++)
         {
-            get_pos(*fit, verts);
+            auto verts = get_pos(*fit);
             min_q = std::min(min_q, std::abs(Util::quality<MT>(verts[0], verts[1], verts[2], pos)));
         }
         return min_q;
@@ -2184,8 +2160,7 @@ private:
      */
     void check_consistency(edge_key const & e, std::vector<node_key> & polygon)
     {
-        std::vector<V> verts;
-        get_pos(e, verts);
+        auto verts = get_pos(e);
         std::vector<V> vv(2);
         vv[1] = verts[0]; // VERTEX FLIP
         vv[0] = verts[1];
@@ -2238,10 +2213,9 @@ private:
     bool will_invert(const node_key& n, const V p_new, simplex_set& set)
     {
         V p = get_pos(n);
-        std::vector<V> verts;
         for(auto fit = set.faces_begin(); fit != set.faces_end(); fit++)
         {
-            get_pos(*fit, verts);
+            auto verts = get_pos(*fit);
             T vol1 = Util::signed_volume<MT>(verts[0], verts[1], verts[2], p);
             T vol2 = Util::signed_volume<MT>(verts[0], verts[1], verts[2], p_new);
             if(Util::sgn<MT>(vol1) !=  Util::sgn<MT>(vol2))
@@ -2347,8 +2321,7 @@ private:
             {
                 if(!edge_used[*eit])
                 {
-                    std::vector<node_key> nodes;
-                    Complex::get_nodes(*eit, nodes);
+                    auto nodes = Complex::get_nodes(*eit);
                     
                     if (nodes[0] == sorted_vertices.back())
                     {
@@ -2416,9 +2389,8 @@ public:
         
         for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
         {
-            std::vector<node_key> nodes;
             std::vector<int> tet;
-            Complex::get_nodes(tit.key(), nodes);
+            auto nodes = Complex::get_nodes(tit.key());
             
             for (auto &n : nodes)
             {
@@ -2434,9 +2406,8 @@ public:
      */
     T cos_dihedral_angle(const face_key& f1, const face_key& f2)
     {
-        std::vector<node_key> nodes, temp;
-        Complex::get_nodes(f1, nodes);
-        Complex::get_nodes(f2, temp);
+        auto nodes = Complex::get_nodes(f1);
+        auto temp = Complex::get_nodes(f2);
         nodes.insert(nodes.end(), temp.begin(), temp.end());
         
         std::vector<V> verts, apices;
@@ -2473,8 +2444,7 @@ public:
     
     std::vector<T> cos_dihedral_angles(const tet_key& t)
     {
-        std::vector<V> verts;
-        get_pos(t, verts);
+        auto verts = get_pos(t);
         std::vector<T> angles;
         std::vector<int> apices;
         for (int i = 0; i < verts.size(); i++) {
