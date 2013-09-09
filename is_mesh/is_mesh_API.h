@@ -489,7 +489,9 @@ public:
         closure(f, cl_f);
         closure(e, cl_e);
         cl_f.difference(cl_e);
+#ifdef DEBUG
         assert(cl_f.size_nodes() == 1);
+#endif
         return *cl_f.nodes_begin();
     }
     

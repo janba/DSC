@@ -202,7 +202,9 @@ public:
     V get_pos(const node_key& n)
     {
         V p = Complex::get(n).get_pos();
+#ifdef DEBUG
         assert(!MT::is_nan(p[0]) && !MT::is_nan(p[1]) && !MT::is_nan(p[2]));
+#endif
         return p;
     }
     
@@ -367,7 +369,9 @@ private:
         for(int i = 0; i < polygon.size(); i++)
         {
             face_key f = Complex::get_face(nodes[0], nodes[1], polygon[i]);
+#ifdef DEBUG
             assert(f != Complex::NULL_FACE);
+#endif
             if(is_interface(f) || is_boundary(f))
             {
                 if(i2 != -1) // More than one boundary meets at edge e.
@@ -383,7 +387,9 @@ private:
                 }
             }
         }
+#ifdef DEBUG
         assert(i2 != -1);
+#endif
         
         for(int i = i1; i != i2; i = (i+1)%polygon.size())
         {
@@ -401,7 +407,9 @@ private:
         {
             swap(polygon1, polygon2);
         }
+#ifdef DEBUG
         assert(polygon1.size() > 2);
+#endif
     }
     
     
@@ -567,7 +575,9 @@ private:
         Complex::closure(st_f, cl_st_f);
         
         st_e.difference(cl_st_f);
+#ifdef DEBUG
         assert(st_e.size_faces() == 1);
+#endif
         return *st_e.faces_begin();
     }
     
@@ -619,7 +629,9 @@ private:
         V y = get_pos(nodes[1]) - get_pos(nodes[0]);
         V z = get_pos(nodes[2]) - get_pos(nodes[0]);
         T val = MT::dot(x, MT::cross(y,z));
+#ifdef DEBUG
         assert(val != 0.);
+#endif
         if(val > 0.)
         {
             node_key t = nodes[0];
@@ -648,21 +660,29 @@ private:
         if(q_new > q_old)
         {
             node_key n = Complex::flip_23(f);
+#ifdef DEBUG
             assert(n != Complex::NULL_NODE);
+#endif
             for(auto &e : e01)
             {
                 n = Complex::flip_32(e);
+#ifdef DEBUG
                 assert(n != Complex::NULL_NODE);
+#endif
             }
             for(auto &e : e12)
             {
                 n = Complex::flip_32(e);
+#ifdef DEBUG
                 assert(n != Complex::NULL_NODE);
+#endif
             }
             for(auto &e : e20)
             {
                 n = Complex::flip_32(e);
+#ifdef DEBUG
                 assert(n != Complex::NULL_NODE);
+#endif
             }
             return true;
         }
@@ -1568,7 +1588,9 @@ private:
         {
             return false;
         }
+#ifdef DEBUG
         assert(faces.size() == 2);
+#endif
         
         T angle = cos_dihedral_angle(faces[0], faces[1]);
         if(angle > FLIP_EDGE_INTERFACE_FLATNESS)
@@ -1598,7 +1620,9 @@ private:
         {
             return false;
         }
+#ifdef DEBUG
         assert(faces.size() == 2);
+#endif
         
         node_key n = Complex::flip_44(faces[0], faces[1]);
         return n != Complex::NULL_NODE;
@@ -1877,7 +1901,9 @@ public:
                 i++;
             }
         }
+#ifdef DEBUG
         assert(i != 0);
+#endif
         return avg_pos / static_cast<T>(i);
     }
     

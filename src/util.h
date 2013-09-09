@@ -14,8 +14,7 @@
 //
 //  See licence.txt for a copy of the GNU General Public License.
 
-#ifndef UTIL_H
-#define UTIL_H
+#pragma once
 
 #include <vector>
 #include <list>
@@ -57,7 +56,9 @@ namespace Util
         
         V v = vv[i]-vv[1-i];
         V l = v / vv.length();
+#ifdef DEBUG
         assert(!MT::is_nan(l.length()));
+#endif
         return l;
     }
     
@@ -68,7 +69,9 @@ namespace Util
         
         V v = vv[i]-vv[1-i];
         V l = v / lng;
+#ifdef DEBUG
         assert(!MT::is_nan(l.length()));
+#endif
         return l;
     }
     
@@ -119,7 +122,9 @@ namespace Util
         int k = (i+2)%3;
         V n = MT::cross(vv[0]-vv[2], vv[1]-vv[2]);
         V ar = -MT::cross(n, vv[j]-vv[k])/(4.0 * area(vv));
+#ifdef DEBUG
         assert(!MT::is_nan(ar.length()));
+#endif
         return ar;
     }
     
@@ -132,7 +137,9 @@ namespace Util
         int k = (i+2)%3;
         V n = MT::cross(vv[0]-vv[2], vv[1]-vv[2]);
         V ar = -MT::cross(n, vv[j]-vv[k]) / (4.0 * a);
+#ifdef DEBUG
         assert(!MT::is_nan(ar.length()));
+#endif
         return ar;
     }
     
@@ -286,8 +293,10 @@ namespace Util
         V n0 = normal_direction<MT>(a, b, c);
         V n1 = normal_direction<MT>(b, a, d);
         T angle = MT::dot(n0, n1);
+#ifdef DEBUG
         assert(angle < 1. + EPSILON);
         assert(angle > -1. - EPSILON);
+#endif
         return angle;
     }
     
@@ -392,7 +401,9 @@ namespace Util
         V ab = b - a;
         V ac = c - a;
         V n = MT::cross(ab, ac);
+#ifdef DEBUG
         assert(!MT::is_nan(n[0]) && !MT::is_nan(n[1]) && !MT::is_nan(n[2]));
+#endif
         return MT::normalize(n);
     }
     
@@ -506,7 +517,9 @@ namespace Util
         result += l * grad_length<MT>(vv, 0, l);
         
         result /= rmsl;
+#ifdef DEBUG
         assert(!MT::is_nan(result.length()) || !"????");
+#endif
         return result;
     }
     
@@ -519,7 +532,9 @@ namespace Util
         T lrms = rms_length<MT>(a, b, c, d);
         
         T q = 8.48528 * v / (lrms * lrms * lrms);
+#ifdef DEBUG
         assert(!MT::is_nan(q));
+#endif
         return q;
     }
     
@@ -815,5 +830,3 @@ namespace Util
     }
     
 }
-
-#endif
