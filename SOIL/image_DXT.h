@@ -1,3 +1,7 @@
+/**
+ * @file image_DXT.h
+ * @brief simple DXT compression / decompression code
+ */
 /*
 	Jonathan Dummer
 	2007-07-31-10.32

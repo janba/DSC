@@ -1,3 +1,7 @@
+/**
+ * @file image_helper.h
+ * @brief Image helper functions
+ */
 /*
     Jonathan Dummer
 

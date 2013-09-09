@@ -1,3 +1,7 @@
+/**
+ * @file stbi_DDS_aug.h
+ * @brief adding DDS loading support to stbi
+ */
 /*
 	adding DDS loading support to stbi
 */

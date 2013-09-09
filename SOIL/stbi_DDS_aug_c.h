@@ -1,3 +1,7 @@
+/**
+ * @file stbi_DDS_aug_c.h
+ * @brief DDS file support
+ */
 
 ///	DDS file support, does decoding, _not_ direct uploading
 ///	(use SOIL for that ;-)
@@ -359,11 +363,11 @@ static stbi_uc *dds_load(stbi *s, int *x, int *y, int *comp, int req_comp)
 					stbi_decode_DXT_color_block ( block, compressed );
 				}
 				//	is this a partial block?
-				if( ref_x + 4 > s->img_x )
+				if( ref_x + 4 > (int)s->img_x )
 				{
 					bw = s->img_x - ref_x;
 				}
-				if( ref_y + 4 > s->img_y )
+				if( ref_y + 4 > (int)s->img_y )
 				{
 					bh = s->img_y - ref_y;
 				}
@@ -387,7 +391,7 @@ static stbi_uc *dds_load(stbi *s, int *x, int *y, int *comp, int req_comp)
 				{
 					block_size = 8;
 				}
-				for( i = 1; i < header.dwMipMapCount; ++i )
+				for( i = 1; i < (int)header.dwMipMapCount; ++i )
 				{
 					int mx = s->img_x >> (i + 2);
 					int my = s->img_y >> (i + 2);
@@ -424,7 +428,7 @@ static stbi_uc *dds_load(stbi *s, int *x, int *y, int *comp, int req_comp)
 				skip MIPmaps if present	*/
 			if( has_mipmap )
 			{
-				for( i = 1; i < header.dwMipMapCount; ++i )
+				for( i = 1; i < (int)header.dwMipMapCount; ++i )
 				{
 					int mx = s->img_x >> i;
 					int my = s->img_y >> i;
