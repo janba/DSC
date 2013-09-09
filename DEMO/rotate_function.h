@@ -33,7 +33,7 @@ public:
      Creates a rotating velocity function.
      */
     RotateFunc(double velocity, double accuracy, int max_time_steps = 500):
-        VelocityFunc<MT>(M_PI*velocity/(5.*180.), accuracy, max_time_steps)
+        VelocityFunc<MT>(velocity/5., accuracy, max_time_steps)
     {
         
     }
@@ -52,17 +52,21 @@ public:
     virtual void deform(DeformableSimplicialComplex<MT>& dsc)
     {
         typedef typename MT::vector3_type V;
+        typedef typename MT::vector4_type V4;
         clock_t init_time = clock();
         
         V center = dsc.get_center();
-        typename MT::matrix3x3_type mrot = MT::get_rotation_matrix(MT::get_z_axis(), VelocityFunc<MT>::VELOCITY);
+        typename MT::matrix4x4_type mrot = MT::get_rotation_matrix(MT::get_z_axis(), VelocityFunc<MT>::VELOCITY);
         V p;
         V new_pos;
         for(auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
         {
             if(nit->is_interface() && !nit->is_crossing())
             {
-                new_pos = center + mrot * (dsc.get_pos(nit.key()) - center);
+                V a = dsc.get_pos(nit.key()) - center;
+                V4 a4(a[0], a[1], a[2], 1.);
+                V4 b = mrot * a4;
+                new_pos = center + V(b[0], b[1], b[2]);
                 dsc.set_destination(nit.key(), new_pos);
             }
         }

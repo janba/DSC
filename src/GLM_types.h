@@ -84,12 +84,12 @@ public:
         return glm::normalize(v);
     }
     
-    static matrix3x3_type get_rotation_matrix(vector3_type const & axis, real_type const & angle)
+    // Returns a rotation matrix which rotates angle degrees around axis.
+    static matrix4x4_type get_rotation_matrix(vector3_type const & axis, real_type const & angle)
     {
         glm::mat4 m(1.0f);
-        matrix4x4_type r = glm::rotate(m, (float)angle, axis);
-        matrix3x3_type r3;
-        return r3;
+        matrix4x4_type r = glm::rotate(m, static_cast<float>(angle), axis);
+        return r;
     }
     
     static vector3_type get_x_axis()

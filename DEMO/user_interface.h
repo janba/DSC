@@ -40,7 +40,7 @@
 class UI
 {
 protected:
-    typedef GELTypes MT;
+    typedef GLMTypes MT;
     
     float r = 150.;
     
