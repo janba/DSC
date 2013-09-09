@@ -28,8 +28,8 @@ public:
     
     typedef glm::vec3       vector3_type;
     typedef glm::vec4       vector4_type;
-    typedef glm::mat4     matrix4x4_type;
     typedef glm::mat3     matrix3x3_type;
+    typedef glm::mat4     matrix4x4_type;
 public:
     
     static real_type dot(vector3_type const & v1, vector3_type const & v2)
@@ -47,6 +47,16 @@ public:
         return glm::length(v);
     }
     
+    static real_type sqr_length(vector3_type const & v)
+    {
+        return glm::dot(v, v);
+    }
+    
+    static vector3_type normalize(vector3_type const & v)
+    {
+        return glm::normalize(v);
+    }
+    
     static bool is_nan(real_type const & t)
     {
         return glm::isnan(t);
@@ -57,31 +67,19 @@ public:
         return glm::determinant(m);
     }
     
+    static matrix3x3_type transpose(matrix3x3_type const & m)
+    {
+        return glm::transpose(m);
+    }
+    
     static real_type determinant(matrix4x4_type const & m)
     {
         return glm::determinant(m);
     }
     
-    
     static matrix4x4_type transpose(matrix4x4_type const & m)
     {
         return glm::transpose(m);
-    }
-    
-//    static matrix4x4_type invert(matrix4x4_type const & m)
-//    {
-//        return glm::invert(m);
-//    }
-//    
-//    
-    static real_type sqr_length(vector3_type const & v)
-    {
-        return glm::dot(v, v);
-    }
-    
-    static vector3_type normalize(vector3_type const & v)
-    {
-        return glm::normalize(v);
     }
     
     // Returns a rotation matrix which rotates angle degrees around axis.
