@@ -17,8 +17,8 @@
 #ifndef DSC_GLM_types_h
 #define DSC_GLM_types_h
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <GLM/glm/glm.hpp>
+#include <GLM/glm/gtc/matrix_transform.hpp>
 
 class GLMTypes
 {
