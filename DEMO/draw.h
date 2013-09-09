@@ -204,10 +204,11 @@ public:
                 {
                     V n = complex->get_normal(*fit);
                     auto verts = complex->get_pos(*fit);
-                    glVertex3dv(&verts[0][0]);
-                    glVertex3dv(&verts[1][0]);
-                    glVertex3dv(&verts[2][0]);
-                    glNormal3dv(&n[0]);
+                    glVertex3d(static_cast<double>(verts[0][0]), static_cast<double>(verts[0][1]), static_cast<double>(verts[0][2]));
+                    glVertex3d(static_cast<double>(verts[1][0]), static_cast<double>(verts[1][1]), static_cast<double>(verts[1][2]));
+                    glVertex3d(static_cast<double>(verts[2][0]), static_cast<double>(verts[2][1]), static_cast<double>(verts[2][2]));
+                    
+                    glNormal3d(static_cast<double>(n[0]), static_cast<double>(n[1]), static_cast<double>(n[2]));
                 }
             }
         }
@@ -251,8 +252,8 @@ public:
             auto verts = complex->get_pos(eit.key());
             if(eit->is_interface())
             {
-                glVertex3dv(&verts[0][0]);
-                glVertex3dv(&verts[1][0]);
+                glVertex3d(static_cast<double>(verts[0][0]), static_cast<double>(verts[0][1]), static_cast<double>(verts[0][2]));
+                glVertex3d(static_cast<double>(verts[1][0]), static_cast<double>(verts[1][1]), static_cast<double>(verts[1][2]));
             }
         }
         glEnd();
