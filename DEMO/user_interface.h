@@ -25,8 +25,6 @@
 #include <GLUT/glut.h>
 #endif
 
-#include "GEL_types.h"
-//#include "OTB_types.h"
 #include "GLM_types.h"
 
 #include "DSC.h"
