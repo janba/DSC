@@ -42,6 +42,11 @@ For topology optimization animations, see http://www2.imm.dtu.dk/~asny/Publicati
 
     See licence.txt for a copy of the GNU General Public License.
   
+
+The DSC source code includes the external library CGLA which is a part of the [GEL library](http://www2.imm.dtu.dk/projects/GEL/). Permission to distribute the CGLA library as a part of the DSC project has been granted by copyright owner Andreas Bærentzen. For any other purpose the CGLA library is subject to the original license found in CGLA/intro.pdf.
+
+The DSC source code also includes the [SOIL libary](http://www.lonesock.net/soil.html) by Jonathan Dummer which is under the MIT license. It is therefore acceptable to include the SOIL package as long as the copyright notice is retained.
+
 ---
 ### Contact information
 
