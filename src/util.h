@@ -42,44 +42,6 @@ namespace Util
         return (0. < val) - (val < 0.);
     }
     
-    template <typename MT>
-    inline typename MT::real_type sqr_length(std::vector<typename MT::vector3_type> const & vv, int i, int j)
-    {
-        return MT::sqr_length(vv[i]-vv[j]);
-    }
-    
-    template <typename MT>
-    inline typename MT::real_type length(std::vector<typename MT::vector3_type> const & vv, int i = 0, int j = 1)
-    {
-        return (vv[i]-vv[j]).length();
-    }
-    
-    template <typename MT>
-    inline typename MT::vector3_type grad_length(std::vector<typename MT::vector3_type> const & vv, int i)
-    {
-        typedef typename MT::vector3_type V;
-        
-        V v = vv[i]-vv[1-i];
-        V l = v / vv.length();
-#ifdef DEBUG
-        assert(!MT::is_nan(l.length()));
-#endif
-        return l;
-    }
-    
-    template <typename MT>
-    inline typename MT::vector3_type grad_length(std::vector<typename MT::vector3_type> const & vv, int i, typename MT::real_type lng)
-    {
-        typedef typename MT::vector3_type V;
-        
-        V v = vv[i]-vv[1-i];
-        V l = v / lng;
-#ifdef DEBUG
-        assert(!MT::is_nan(l.length()));
-#endif
-        return l;
-    }
-    
     /**
      * Computes the signed area of the triangle spanned by vertices with positions v0, v1 and v2.
      */
@@ -167,20 +129,6 @@ namespace Util
     {
         return std::abs(signed_volume<MT>(a, b, c, d));
     }
-    
-//    template <typename MT>
-//    inline typename MT::vector3_type grad_volume(std::vector<typename MT::vector3_type> const & vv, int i)
-//    {
-//        typedef typename MT::real_type T;
-//        typedef typename MT::vector3_type V;
-//        
-//        int j = (i+1)%4;
-//        int k = (i+2)%4;
-//        int l = (i+3)%4;
-//        T sgn = (i%2==1)?(1):(-1);
-//        V g = sgn*cross(vv[j]-vv[l], vv[k]-vv[l]);
-//        return g / 6.0;
-//    }
     
     /**
      * Calculates the cosine of the angle between the line segments |ab| and |ac|.
