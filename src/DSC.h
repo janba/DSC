@@ -589,9 +589,9 @@ private:
         if(g != Complex::NULL_FACE && !is_boundary(e) && !is_interface(e))
         {
             node_key v = Complex::get_apex(g, e);
-            T V_uv = Util::signed_volume<MT>(get_pos(a), get_pos(b), get_pos(u), get_pos(v));
-            T V_vw = Util::signed_volume<MT>(get_pos(a), get_pos(b), get_pos(v), get_pos(w));
-            T V_wu = Util::signed_volume<MT>(get_pos(a), get_pos(b), get_pos(w), get_pos(u));
+            T V_uv = Util::signed_volume<T>(get_pos(a), get_pos(b), get_pos(u), get_pos(v));
+            T V_vw = Util::signed_volume<T>(get_pos(a), get_pos(b), get_pos(v), get_pos(w));
+            T V_wu = Util::signed_volume<T>(get_pos(a), get_pos(b), get_pos(w), get_pos(u));
             
             if((V_uv > 0. && V_vw > 0.) || (V_vw > 0. && V_wu > 0.) || (V_wu > 0. && V_uv > 0.))
             {
@@ -1928,13 +1928,13 @@ public:
     T volume(const tet_key& t)
     {
         auto verts = get_pos(t);
-        return Util::volume<MT>(verts[0], verts[1], verts[2], verts[3]);
+        return Util::volume<T>(verts[0], verts[1], verts[2], verts[3]);
     }
     
     T signed_volume(const tet_key& t)
     {
         auto verts = get_pos(t);
-        return Util::signed_volume<MT>(verts[0], verts[1], verts[2], verts[3]);
+        return Util::signed_volume<T>(verts[0], verts[1], verts[2], verts[3]);
     }
     
     T quality(const tet_key& t)
@@ -2153,7 +2153,7 @@ private:
         T sum = 0;
         for (unsigned int i = 0; i < n; ++i)
         {
-            sum += Util::signed_volume<MT>(vv[0], vv[1], vp[(i+1)%n], vp[i]);
+            sum += Util::signed_volume<T>(vv[0], vv[1], vp[(i+1)%n], vp[i]);
         }
         
         if (sum < 0.)
@@ -2229,8 +2229,8 @@ private:
         for(auto fit = set.faces_begin(); fit != set.faces_end(); fit++)
         {
             auto verts = get_pos(*fit);
-            T vol1 = Util::signed_volume<MT>(verts[0], verts[1], verts[2], p);
-            T vol2 = Util::signed_volume<MT>(verts[0], verts[1], verts[2], p_new);
+            T vol1 = Util::signed_volume<T>(verts[0], verts[1], verts[2], p);
+            T vol2 = Util::signed_volume<T>(verts[0], verts[1], verts[2], p_new);
             if(Util::sign(vol1) !=  Util::sign(vol2))
             {
                 return true;

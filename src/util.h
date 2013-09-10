@@ -61,24 +61,18 @@ namespace Util
         return std::abs(signed_area<real>(v0, v1, v2));
     }
     
-    template <typename MT>
-    inline typename MT::real_type signed_volume(typename MT::vector3_type const & a,
-                                                  typename MT::vector3_type const & b,
-                                                  typename MT::vector3_type const & c,
-                                                  typename MT::vector3_type const & d)
+    template <typename real, typename vec3>
+    inline real signed_volume(const vec3& a, const vec3& b, const vec3& c, const vec3& d)
     {
-        typename MT::matrix3x3_type m(a-d,c-d,b-d);
-        typename MT::real_type v = MT::determinant(m);
+        mat3 m(a-d,c-d,b-d);
+        real v = determinant(m);
         return v/6.0;
     }
     
-    template <typename MT>
-    inline typename MT::real_type volume(typename MT::vector3_type const & a,
-                                         typename MT::vector3_type const & b,
-                                         typename MT::vector3_type const & c,
-                                         typename MT::vector3_type const & d)
+    template <typename real, typename vec3>
+    inline real volume(const vec3& a, const vec3& b, const vec3& c, const vec3& d)
     {
-        return std::abs(signed_volume<MT>(a, b, c, d));
+        return std::abs(signed_volume<real>(a, b, c, d));
     }
     
     /**
@@ -387,7 +381,7 @@ namespace Util
     {
         typedef typename MT::real_type      T;
         
-        T v = Util::signed_volume<MT>(a, b, c, d);
+        T v = Util::signed_volume<T>(a, b, c, d);
         T lrms = rms_length<T>(a, b, c, d);
         
         T q = 8.48528 * v / (lrms * lrms * lrms);
