@@ -2231,7 +2231,7 @@ private:
             auto verts = get_pos(*fit);
             T vol1 = Util::signed_volume<MT>(verts[0], verts[1], verts[2], p);
             T vol2 = Util::signed_volume<MT>(verts[0], verts[1], verts[2], p_new);
-            if(Util::sgn<MT>(vol1) !=  Util::sgn<MT>(vol2))
+            if(Util::sign<MT>(vol1) !=  Util::sign<MT>(vol2))
             {
                 return true;
             }

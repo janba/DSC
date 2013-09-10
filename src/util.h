@@ -32,7 +32,7 @@ namespace Util
     
     
     template <typename MT>
-    inline int sgn(typename MT::real_type val)
+    inline int sign(typename MT::real_type val)
     {
         return (0. < val) - (val < 0.);
     }
