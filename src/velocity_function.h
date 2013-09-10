@@ -24,27 +24,25 @@
 template<class MT>
 class VelocityFunc
 {
-    typedef typename MT::real_type T;
-    
     int time_step;
     int MAX_TIME_STEPS;
     
-    T compute_time;
-    T deform_time;
+    real compute_time;
+    real deform_time;
     
-    T total_compute_time;
-    T total_deform_time;
+    real total_compute_time;
+    real total_deform_time;
     
 protected:
-    T VELOCITY; // Determines the distance each interface vertex moves at each iteration.
-    T ACCURACY; // Determines the accuracy of the final result.
+    real VELOCITY; // Determines the distance each interface vertex moves at each iteration.
+    real ACCURACY; // Determines the accuracy of the final result.
     
-    std::vector<typename MT::vector3_type> pos_old;
+    std::vector<vec3> pos_old;
     
     /**
      Creates a velocity function which is applied to the simplicial complex defined by the first input parameter. The velocity parameter determines the velocity of the function.
      */
-    VelocityFunc(T velocity, T accuracy, int max_time_steps):
+    VelocityFunc(real velocity, real accuracy, int max_time_steps):
         time_step(0), MAX_TIME_STEPS(max_time_steps), VELOCITY(velocity), ACCURACY(accuracy),
         compute_time(0.), deform_time(0.), total_compute_time(0.), total_deform_time(0.)
     {

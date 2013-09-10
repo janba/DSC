@@ -50,19 +50,16 @@ public:
      */
     virtual void deform(DeformableSimplicialComplex<MT>& dsc)
     {
-        typedef typename MT::vector3_type V;
-        typedef typename MT::vector4_type V4;
         auto init_time = std::chrono::system_clock::now();
         
-        V center = dsc.get_center();
-        typename MT::matrix3x3_type mrot = MT::get_rotation_matrix(MT::AXIS::ZAXIS, VelocityFunc<MT>::VELOCITY);
-        V p;
-        V new_pos;
+        vec3 center = dsc.get_center();
+        mat3 mrot = MT::get_rotation_matrix(MT::AXIS::ZAXIS, VelocityFunc<MT>::VELOCITY);
+        vec3 new_pos;
         for(auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
         {
             if(nit->is_interface() && !nit->is_crossing())
             {
-                new_pos = center + mrot * (dsc.get_pos(nit.key()) - center);
+                vec3 new_pos = center + mrot * (dsc.get_pos(nit.key()) - center);
                 dsc.set_destination(nit.key(), new_pos);
             }
         }
