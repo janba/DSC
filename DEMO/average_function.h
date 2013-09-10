@@ -48,7 +48,7 @@ public:
     virtual void deform(DeformableSimplicialComplex<MT>& dsc)
     {
         typedef typename MT::vector3_type V;
-        clock_t init_time = clock();
+        auto init_time = std::chrono::system_clock::now();
         for(auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
         {
             if(nit->is_interface() && !nit->is_crossing())
@@ -58,11 +58,11 @@ public:
                 dsc.set_destination(nit.key(), p_new);
             }
         }
-        VelocityFunc<MT>::update_compute_time(clock() - init_time);
-        init_time = clock();
+        VelocityFunc<MT>::update_compute_time(init_time);
+        init_time = std::chrono::system_clock::now();
         
         dsc.deform();
         
-        VelocityFunc<MT>::update_deform_time(clock() - init_time);
+        VelocityFunc<MT>::update_deform_time(init_time);
     }
 };

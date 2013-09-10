@@ -52,7 +52,7 @@ public:
     {
         typedef typename MT::vector3_type V;
         typedef typename MT::vector4_type V4;
-        clock_t init_time = clock();
+        auto init_time = std::chrono::system_clock::now();
         
         V center = dsc.get_center();
         typename MT::matrix4x4_type mrot = MT::get_rotation_matrix(MT::get_z_axis(), VelocityFunc<MT>::VELOCITY);
@@ -69,12 +69,12 @@ public:
                 dsc.set_destination(nit.key(), new_pos);
             }
         }
-        VelocityFunc<MT>::update_compute_time(clock() - init_time);
-        init_time = clock();
+        VelocityFunc<MT>::update_compute_time(init_time);
+        init_time = std::chrono::system_clock::now();
         
         dsc.deform();
         
-        VelocityFunc<MT>::update_deform_time(clock() - init_time);
+        VelocityFunc<MT>::update_deform_time(init_time);
     }
     
     /**
