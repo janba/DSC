@@ -2547,7 +2547,7 @@ public:
     
     T min_quality()
     {
-        T min_q;
+        T min_q = INFINITY;
         for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
         {
             min_q = std::min(min_q, quality(tit.key()));

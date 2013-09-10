@@ -94,7 +94,6 @@ public:
         write_variable("Deform time", vel_fun->get_deform_time(), "s");
         write_variable("Total time", vel_fun->get_compute_time() + vel_fun->get_deform_time(), "s");
         
-        
         write_variable("Min quality", complex->min_quality());
         
         std::vector<int> hist;
@@ -134,8 +133,6 @@ public:
         write_variable("#tetrahedra", total);
         write_variable("#obj tets", object);
         
-        write_variable("Min quality", complex->min_quality());
-        
         std::vector<int> hist;
         typename MT::real_type min_a, max_a;
         complex->get_dihedral_angles(hist, min_a, max_a);
@@ -158,7 +155,6 @@ public:
         write_message("VELOCITY FUNCTION INFO");
         write_variable("Velocity", vel_fun->get_velocity());
         write_variable("Accuracy", vel_fun->get_accuracy());
-        
     }
     
     /**
