@@ -45,69 +45,20 @@ namespace Util
     /**
      * Computes the signed area of the triangle spanned by vertices with positions v0, v1 and v2.
      */
-    template <typename MT>
-    inline typename MT::real_type signed_area(const typename MT::vector3_type& v0, const typename MT::vector3_type& v1, const typename MT::vector3_type& v2)
+    template <typename real, typename vec3>
+    inline real signed_area(const vec3& v0, const vec3& v1, const vec3& v2)
     {
-        typedef typename MT::vector3_type V;
-        V n = MT::cross(v1-v0, v2-v0);
+        vec3 n = cross(v1-v0, v2-v0);
         return 0.5 * n.length();
     }
     
     /**
      * Computes the area of the triangle spanned by vertices with positions v0, v1 and v2.
      */
-    template <typename MT>
-    inline typename MT::real_type area(const typename MT::vector3_type& v0, const typename MT::vector3_type& v1, const typename MT::vector3_type& v2)
+    template <typename real, typename vec3>
+    inline real area(const vec3& v0, const vec3& v1, const vec3& v2)
     {
-        return std::abs(signed_area<MT>(v0, v1, v2));
-    }
-    
-    /**
-     * Computes the signed area of the triangle spanned by vertices with positions at i, j, k in vv.
-     */
-    template <typename MT>
-    inline typename MT::real_type signed_area(std::vector<typename MT::vector3_type> const & vv, int i = 0, int j = 1, int k = 2)
-    {
-        return signed_area<MT>(vv[i], vv[j], vv[k]);
-    }
-    
-    /**
-     * Computes the area of the triangle spanned by vertices with positions at i, j, k in vv.
-     */
-    template <typename MT>
-    inline typename MT::real_type area(std::vector<typename MT::vector3_type> const & vv, int i = 0, int j = 1, int k = 2)
-    {
-        return std::abs(signed_area<MT>(vv, i, j, k));
-    }
-    
-    template <typename MT>
-    inline typename MT::vector3_type grad_area(std::vector<typename MT::vector3_type> const & vv, int i)
-    {
-        typedef typename MT::vector3_type V;
-        
-        int j = (i+1)%3;
-        int k = (i+2)%3;
-        V n = MT::cross(vv[0]-vv[2], vv[1]-vv[2]);
-        V ar = -MT::cross(n, vv[j]-vv[k])/(4.0 * area(vv));
-#ifdef DEBUG
-        assert(!MT::is_nan(ar.length()));
-#endif
-        return ar;
-    }
-    
-    template <typename MT>
-    inline typename MT::vector3_type grad_area(std::vector<typename MT::vector3_type> const & vv, int i, double a)
-    {
-        typedef typename MT::vector3_type V;
-        
-        int j = (i+1)%3;
-        int k = (i+2)%3;
-        V n = MT::cross(vv[0]-vv[2], vv[1]-vv[2]);
-        V ar = -MT::cross(n, vv[j]-vv[k]) / (4.0 * a);
-#ifdef DEBUG
-        assert(!MT::is_nan(ar.length()));
-#endif
-        return ar;
+        return std::abs(signed_area<real>(v0, v1, v2));
     }
     
     template <typename MT>
