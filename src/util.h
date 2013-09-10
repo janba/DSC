@@ -464,68 +464,23 @@ namespace Util
         return MT::dot(normal0, normal1);
     }
     
-    
-    
-    template <typename MT>
-    inline typename MT::real_type ms_length(std::vector<typename MT::vector3_type> const & vv)
+    template<typename real, typename vec3>
+    inline real ms_length(const vec3& a, const vec3& b, const vec3& c, const vec3& d)
     {
-        typedef typename MT::real_type T;
-        
-        T result = 0.0;
-        result += sqr_length<MT>(vv, 0, 1);
-        result += sqr_length<MT>(vv, 0, 2);
-        result += sqr_length<MT>(vv, 0, 3);
-        result += sqr_length<MT>(vv, 1, 2);
-        result += sqr_length<MT>(vv, 1, 3);
-        result += sqr_length<MT>(vv, 2, 3);
-        return result / 6.0;
+        real result = 0.;
+        result += sqr_length(a - b);
+        result += sqr_length(a - c);
+        result += sqr_length(a - d);
+        result += sqr_length(b - c);
+        result += sqr_length(b - d);
+        result += sqr_length(c - d);
+        return result / 6.;
     }
     
-    template <typename MT>
-    inline typename MT::real_type rms_length(typename MT::vector3_type const a, typename MT::vector3_type const b, typename MT::vector3_type const c, typename MT::vector3_type const d)
-    {        
-        std::vector<typename MT::vector3_type> verts(4);
-        verts[0] = a;
-        verts[1] = b;
-        verts[2] = c;
-        verts[3] = d;
-        return sqrt(ms_length<MT>(verts));
-    }
-    
-    template <typename MT>
-    inline typename MT::real_type rms_length(const std::vector<typename MT::vector3_type>& verts)
+    template<typename real, typename vec3>
+    inline real rms_length(const vec3& a, const vec3& b, const vec3& c, const vec3& d)
     {
-        return sqrt(ms_length<MT>(verts));
-    }
-    
-    template <typename MT>
-    inline typename MT::vector3_type grad_rms_length(std::vector<typename MT::vector3_type> const & vv, int i)
-    {
-        typedef typename MT::real_type    T;
-        typedef typename MT::vector3_type V;
-        
-        std::vector<V> ve(4);
-        T const rmsl = rms_length<MT>(vv);
-        V result(0.0);
-        ve[0] = vv[i];
-        
-        ve[1] = vv[(i+1)%4];
-        T l = length<MT>(ve);
-        result += l * grad_length<MT>(vv, 0, l);
-        
-        ve[1] = vv[(i+2)%4];
-        l = length<MT>(ve);
-        result += l * grad_length<MT>(vv, 0, l);
-        
-        ve[1] = vv[(i+3)%4];
-        l = length<MT>(ve);
-        result += l * grad_length<MT>(vv, 0, l);
-        
-        result /= rmsl;
-#ifdef DEBUG
-        assert(!MT::is_nan(result.length()) || !"????");
-#endif
-        return result;
+        return sqrt(ms_length<real>(a, b, c, d));
     }
     
     template<typename MT>
@@ -534,7 +489,7 @@ namespace Util
         typedef typename MT::real_type      T;
         
         T v = Util::signed_volume<MT>(a, b, c, d);
-        T lrms = rms_length<MT>(a, b, c, d);
+        T lrms = rms_length<T>(a, b, c, d);
         
         T q = 8.48528 * v / (lrms * lrms * lrms);
 #ifdef DEBUG
