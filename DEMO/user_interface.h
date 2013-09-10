@@ -46,7 +46,7 @@ protected:
     
     Log *basic_log;
     
-    Painter<MT> *painter;
+    Painter *painter;
     
     int WIN_SIZE_X;
     int WIN_SIZE_Y;

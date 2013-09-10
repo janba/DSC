@@ -67,18 +67,14 @@ inline void _check_gl_error(const char *file, int line)
 /**
  A painter handles all draw functionality using OpenGL.
  */
-template<class MT>
 class Painter {
-    
-    typedef typename MT::real_type      T;
-    typedef typename MT::vector3_type   V;
     
     GLuint shaderProgram;
     
     GLuint VertexArrayID;
     GLuint vertexbuffer;
     
-    std::vector<V> vertexdata;
+    std::vector<vec3> vertexdata;
     
     GLuint positionAttribute;
     
@@ -162,6 +158,7 @@ public:
     /**
      Draws the simplicial complex.
      */
+    template<typename MT>
     void draw_complex(DeformableSimplicialComplex<MT> *complex)
     {
         draw_faces(complex);
@@ -175,6 +172,7 @@ public:
     /**
      Draws the bad tetrahedra.
      */
+    template<typename MT>
     void draw_bad_tetrahedra(DeformableSimplicialComplex<MT> *complex)
     {
         bool low_quality, small_angle;
@@ -202,7 +200,7 @@ public:
                 
                 for (auto fit = cl_t.faces_begin(); fit != cl_t.faces_end(); fit++)
                 {
-                    V n = complex->get_normal(*fit);
+                    vec3 n = complex->get_normal(*fit);
                     auto verts = complex->get_pos(*fit);
                     glVertex3d(static_cast<double>(verts[0][0]), static_cast<double>(verts[0][1]), static_cast<double>(verts[0][2]));
                     glVertex3d(static_cast<double>(verts[1][0]), static_cast<double>(verts[1][1]), static_cast<double>(verts[1][2]));
@@ -219,6 +217,7 @@ public:
     /**
      Draws the faces with the colors defined by the get_face_colors function in the simplicial complex.
      */
+    template<typename MT>
     void draw_faces(DeformableSimplicialComplex<MT> *complex, const float color[] = GRAY)
     {
         glColor3fv(&color[0]);
@@ -228,7 +227,7 @@ public:
             if (fit->is_interface())
             {
                 auto verts = complex->get_pos(fit.key());
-                V n = complex->get_normal(fit.key());
+                vec3 n = complex->get_normal(fit.key());
                 
                 for (int i = 0; i < 3; ++i)
                 {
@@ -241,11 +240,12 @@ public:
         glEnd();
     }
     
+    template<typename MT>
     void draw_edges(DeformableSimplicialComplex<MT> *complex, const float color[] = BLACK)
     {
         glColor3fv(&color[0]);
         glLineWidth(LINE_WIDTH);
-        V p1, p2;
+        vec3 p1, p2;
         glBegin(GL_LINES);
         for(auto eit = complex->edges_begin(); eit != complex->edges_end(); eit++)
         {
@@ -258,13 +258,14 @@ public:
         }
         glEnd();
     }
-
+    
+    template<typename MT>
     void draw_nodes(DeformableSimplicialComplex<MT> *complex, const float color[] = BLACK)
     {
         glColor3fv(&color[0]);
         glPointSize(POINT_SIZE);
         glBegin(GL_POINTS);
-        V p;
+        vec3 p;
         for(auto nit = complex->nodes_begin(); nit != complex->nodes_end(); nit++)
         {
             if (nit->is_interface()) {
@@ -282,7 +283,7 @@ public:
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(T)*3*vertexdata.size(), &vertexdata[0], GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(real)*3*vertexdata.size(), &vertexdata[0], GL_STATIC_DRAW);
         
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3*static_cast<int>(vertexdata.size()), GL_FLOAT, GL_FALSE, 3, (void*)0);
@@ -293,6 +294,7 @@ public:
         check_gl_error();
     }
     
+    template<typename MT>
     void draw_interface(DeformableSimplicialComplex<MT> *complex, const float color[] = GRAY)
     {
         vertexdata.clear();
@@ -300,9 +302,9 @@ public:
         {
             if (fit->is_interface())
             {
-                std::vector<V> verts;
+                std::vector<vec3> verts;
                 complex->get_pos(fit.key(), verts);
-                V n = complex->get_normal(fit.key());
+                vec3 n = complex->get_normal(fit.key());
                 
                 for(auto &v : verts)
                 {

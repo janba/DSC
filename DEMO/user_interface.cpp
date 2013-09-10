@@ -71,7 +71,7 @@ UI::UI(int &argc, char** argv)
 		printf("ERROR: %s\n", glewGetErrorString(GlewInitResult));
 	}
         
-    painter = new Painter<MT>();
+    painter = new Painter();
     vel_fun = nullptr;
     dsc = nullptr;
     
