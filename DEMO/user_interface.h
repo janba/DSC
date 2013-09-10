@@ -24,7 +24,7 @@
 #include <GLUT/glut.h>
 #endif
 
-#include "GLM_types.h"
+#include "GEL_types.h"
 
 #include "DSC.h"
 #include "velocity_function.h"
@@ -37,7 +37,7 @@
 class UI
 {
 protected:
-    typedef GLMTypes MT;
+    typedef GELTypes MT;
     
     float r = 150.;
     
