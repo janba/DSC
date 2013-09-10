@@ -22,6 +22,8 @@
 #include <cmath>
 #include <cassert>
 
+#include "CGLA_API.h"
+
 constexpr double EPSILON = 1e-8;
 
 #ifndef INFINITY
