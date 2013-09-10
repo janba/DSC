@@ -16,8 +16,7 @@
 //
 //  See licence.txt for a copy of the GNU General Public License.
 
-#ifndef PRINTING_H
-#define PRINTING_H
+#pragma once
 
 #include <string.h>
 
@@ -61,5 +60,3 @@ inline void print_diff(double const & a, double const & b)
 		std::cout << "b: " << b << std::endl;
 	}
 }
-
-#endif

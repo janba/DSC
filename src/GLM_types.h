@@ -14,8 +14,7 @@
 //
 //  See licence.txt for a copy of the GNU General Public License.
 
-#ifndef DSC_GLM_types_h
-#define DSC_GLM_types_h
+#pragma once
 
 #include <GLM/glm/glm.hpp>
 #include <GLM/glm/gtc/matrix_transform.hpp>
@@ -106,5 +105,3 @@ public:
     }
     
 };
-
-#endif

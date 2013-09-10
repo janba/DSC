@@ -14,8 +14,7 @@
 //
 //  See licence.txt for a copy of the GNU General Public License.
 
-#ifndef ___D_DSC__rotate_func__
-#define ___D_DSC__rotate_func__
+#pragma once
 
 #include "velocity_function.h"
 
@@ -119,5 +118,3 @@ public:
     }
     
 };
-
-#endif /* defined(___D_DSC__rotate_func__) */

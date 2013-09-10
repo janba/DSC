@@ -14,8 +14,7 @@
 //
 //  See licence.txt for a copy of the GNU General Public License.
 
-#ifndef ___D_DSC__average_func__
-#define ___D_DSC__average_func__
+#pragma once
 
 #include "velocity_function.h"
 
@@ -67,5 +66,3 @@ public:
         VelocityFunc<MT>::update_deform_time(clock() - init_time);
     }
 };
-
-#endif /* defined(___D_DSC__average_func__) */

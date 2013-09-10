@@ -14,8 +14,7 @@
 //
 //  See licence.txt for a copy of the GNU General Public License.
 
-#ifndef ATTRIBUTES_H
-#define ATTRIBUTES_H
+#pragma once
 
 template<typename MT>
 class default_node_traits
@@ -175,5 +174,3 @@ public:
     }
 
 };
-
-#endif

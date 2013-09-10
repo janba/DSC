@@ -14,8 +14,7 @@
 //
 //  See licence.txt for a copy of the GNU General Public License.
 
-#ifndef _DDSC_velocity_func_h
-#define _DDSC_velocity_func_h
+#pragma once
 
 #include "DSC.h"
 #include "ctime"
@@ -196,5 +195,3 @@ public:
     }
     
 };
-
-#endif

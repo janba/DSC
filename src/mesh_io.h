@@ -14,8 +14,7 @@
 //
 //  See licence.txt for a copy of the GNU General Public License.
 
-#ifndef MESH_IO_H
-#define MESH_IO_H
+#pragma once
 
 #include "DSC.h"
 
@@ -225,6 +224,3 @@ inline void save_obj(DeformableSimplicialComplex<MT> & dsc, std::vector<std::str
     obj_file.close();
     
 }
-
-// MESH_IO_H
-#endif

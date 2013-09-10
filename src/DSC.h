@@ -14,8 +14,7 @@
 //
 //  See licence.txt for a copy of the GNU General Public License.
 
-#ifndef DSC_H
-#define DSC_H
+#pragma once
 
 #include "is_mesh_API.h"
 #include "util.h"
@@ -2605,7 +2604,3 @@ public:
     }
     
 };
-        
-        // SIMPLICIAL_COMPLEX_H
-#endif
-        

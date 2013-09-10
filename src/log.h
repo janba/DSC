@@ -14,8 +14,7 @@
 //
 //  See licence.txt for a copy of the GNU General Public License.
 
-#ifndef LOG_h
-#define LOG_h
+#pragma once
 
 #include "util.h"
 #include "DSC.h"
@@ -176,7 +175,3 @@ public:
         write_variable("Deform time", deform_time , "s");
     }
 };
-
-
-
-#endif

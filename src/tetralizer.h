@@ -14,8 +14,7 @@
 //
 //  See licence.txt for a copy of the GNU General Public License.
 
-#ifndef __DSC__tetralizer__
-#define __DSC__tetralizer__
+#pragma once
 
 #include "util.h"
 
@@ -175,5 +174,3 @@ public:
         label_tets(tet_labels);
     }
 };
-
-#endif
