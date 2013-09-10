@@ -14,8 +14,7 @@
 //
 //  See licence.txt for a copy of the GNU General Public License.
 
-#ifndef GEL_TYPES_H
-#define GEL_TYPES_H
+#pragma once
 
 #include <CGLA/Vec3d.h>
 #include <CGLA/Vec4d.h>
@@ -24,105 +23,18 @@
 #include <CGLA/Mat2x3d.h>
 #include <CGLA/eigensolution.h>
 
-#include <LinAlg/Matrix.h>
-#include <LinAlg/LapackFunc.h>
-
-class GELTypes //GELTypes
+class GELTypes
 {
 public:
     
     typedef double            real_type;
-    
-public:
-    
-    class CMatrixWrapper : public LinAlg::CMatrix
-    {
-    public:
-        
-        typedef LinAlg::CMatrix base_type;
-        
-    public:
-        
-        CMatrixWrapper(size_t const & M, size_t const & N)
-        : base_type(M,N)
-        {}
-        
-        CMatrixWrapper(base_type const & A)
-        : base_type(A)
-        {}
-        
-    public:
-        
-        real_type const & operator()(int const & i, int const & j) const
-        {
-            return base_type::get(i, j);
-        }
-        
-        real_type & operator()(int const & i, int const & j)
-        {
-            return (*this)[i][j];
-        }
-        
-        
-        CMatrixWrapper & operator=(CMatrixWrapper const & rhs)
-        {
-            if (&rhs != this)
-            {
-                base_type * base = this;
-                base->operator=(rhs);
-                //::base_type::operator=
-            }
-            return *this;
-        }
-        
-    };
-    
-    static CMatrixWrapper transpose(CMatrixWrapper const & A)
-    {
-        return CMatrixWrapper( A.Transposed() );
-    }
-    
-    class CVectorWrapper : public LinAlg::CVector
-    {
-    public:
-        
-        typedef LinAlg::CVector base_type;
-        
-        
-    public:
-        
-        CVectorWrapper(size_t const & N)
-        : base_type(N)
-        {}
-        
-        CVectorWrapper(base_type const & v)
-        : base_type(v)
-        {}
-        
-    public:
-        
-        real_type const & operator()(int const & i) const
-        {
-            return base_type::get(i);
-        }
-        
-        real_type & operator()(int const & i)
-        {
-            return (*this)[i];
-        }
-        
-    };
-    
-public:
-    
     typedef CGLA::Vec3d       vector3_type;
     typedef CGLA::Vec4d       vector4_type;
-    typedef CVectorWrapper    vectorN_type;
     typedef CGLA::Mat4x4d     matrix4x4_type;
     typedef CGLA::Mat3x3d     matrix3x3_type;
     typedef CGLA::Mat2x3d     matrix2x3_type;
-    typedef CMatrixWrapper    matrixMxN_type;
-    typedef CGLA::Axis        axis_type;
+    
+    typedef CGLA::Axis       AXIS;
     
 public:
     
@@ -188,28 +100,8 @@ public:
         CGLA::power_eigensolution(AA, Q, L);
     }
     
-    static matrix3x3_type get_rotation_matrix(axis_type const & axis, real_type const & angle)
+    static matrix3x3_type get_rotation_matrix(const CGLA::Axis& axis, const real_type& angle)
     {
         return CGLA::rotation_Mat3x3d(axis, angle);
     }
-    
-    static axis_type get_z_axis()
-    {
-        return CGLA::ZAXIS;
-    }
-    
-    static vector3_type mul(matrix3x3_type const & m, vector3_type const & v)
-    {
-        return m*v;
-    }
-    
-    static vectorN_type solve(matrixMxN_type const & A, vectorN_type const & b)
-    {
-        vectorN_type x = LinAlg::LinearLSSolve(A,b);
-        return x;
-    }
-    
 };
-
-// GEL_TYPES_H
-#endif
