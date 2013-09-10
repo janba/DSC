@@ -10,8 +10,6 @@
 #include <is_mesh/is_mesh.h>
 #include <is_mesh/is_mesh_key_type.h>
 
-#include <is_mesh/io/is_mesh_xml_write.h>
-
 namespace OpenTissue
 {
   namespace is_mesh

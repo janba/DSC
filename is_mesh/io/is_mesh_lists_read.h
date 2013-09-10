@@ -16,13 +16,67 @@
 #include <utility>
 #include <string>
 
-#include <is_mesh/io/is_mesh_xml_read.h>
-//#include <OpenTissue/math/is_number.h>
-
 namespace OpenTissue
 {
   namespace is_mesh
   {
+      namespace util
+      {
+          struct edge_key {
+              int k1, k2;
+              edge_key(int i, int j) : k1(i), k2(j) {}
+              bool operator<(const edge_key& k) const
+              {
+                  return k1 < k.k1 || (k1 == k.k1 && k2 < k.k2);
+                  }
+                  };
+                  struct face_key
+                  {
+                      int k1, k2, k3;
+                      face_key(int i, int j, int k) : k1(i), k2(j), k3(k){}
+                      bool operator<(const face_key& k) const
+                      {
+                          //        return k1 < k.k1 || (k1 == k.k1 && k2 < k.k2 || (k2 == k.k2 && k3 < k.k3)) ;
+                          if (k1 < k.k1) return true;
+                          if (k1 == k.k1 && k2 < k.k2) return true;
+                          if (k1 == k.k1 && k2 == k.k2 && k3 < k.k3) return true;
+                          return false;
+                      }
+                  };
+                  struct tetrahedron_key { int k1, k2, k3, k4; };
+                  
+                  template<typename map_type, typename mesh_type>
+                  inline int create_edge(int i, int j, map_type& edge_map, mesh_type& mesh)
+                  {
+                      int a,b;
+                      if (i <= j) { a = i; b = j; }
+                      else { a = j; b = i; }
+                      edge_key key(a, b);
+                      typename map_type::iterator it = edge_map.find(key);
+                      if (it == edge_map.end())
+                      {
+                          int n = mesh.insert_edge(i, j); //non-sorted
+                          it = edge_map.insert(std::pair<edge_key,int>(key, n)).first;
+                      }
+                      return it->second;
+                  }
+                  
+                  template<typename map_type, typename mesh_type>
+                  inline int create_face(int i, int j, int k, map_type& face_map, mesh_type& mesh)
+                  {
+                      int a[3] = {i, j, k};
+                      std::sort(a, a+3);
+                      face_key key(a[0], a[1], a[2]);
+                      typename map_type::iterator it = face_map.find(key); //lookup in sorted order
+                      if (it == face_map.end())
+                      {
+                          int a = mesh.insert_face(i, j, k); //create in supplied order
+                          it = face_map.insert(std::pair<face_key,int>(key, a)).first;
+                      }
+                      return it->second;
+                  }
+                  
+                  }
 
     /**
     * Read XML Method.

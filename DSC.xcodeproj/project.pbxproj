@@ -12,8 +12,6 @@
 		7A45DB96176E122100B9B388 /* configuration.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB88176E122100B9B388 /* configuration.h */; };
 		7A45DB97176E122100B9B388 /* is_mesh_lists_read.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8A176E122100B9B388 /* is_mesh_lists_read.h */; };
 		7A45DB98176E122100B9B388 /* is_mesh_lists_write.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8B176E122100B9B388 /* is_mesh_lists_write.h */; };
-		7A45DB99176E122100B9B388 /* is_mesh_xml_read.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8C176E122100B9B388 /* is_mesh_xml_read.h */; };
-		7A45DB9A176E122100B9B388 /* is_mesh_xml_write.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8D176E122100B9B388 /* is_mesh_xml_write.h */; };
 		7A45DB9B176E122100B9B388 /* is_mesh_default_traits.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8E176E122100B9B388 /* is_mesh_default_traits.h */; };
 		7A45DB9C176E122100B9B388 /* is_mesh_key_type.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8F176E122100B9B388 /* is_mesh_key_type.h */; };
 		7A45DB9D176E122100B9B388 /* is_mesh_simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB90176E122100B9B388 /* is_mesh_simplex.h */; };
@@ -22,9 +20,6 @@
 		7A45DBA0176E122100B9B388 /* kernel_iterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB93176E122100B9B388 /* kernel_iterator.h */; };
 		7A45DBA1176E122100B9B388 /* kernel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB94176E122100B9B388 /* kernel.h */; };
 		7A45DBA2176E122100B9B388 /* simplex_set.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB95176E122100B9B388 /* simplex_set.h */; };
-		7A45DBB3176E177100B9B388 /* predicates.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 7A45DBB0176E177100B9B388 /* predicates.cxx */; };
-		7A45DBB4176E177100B9B388 /* tetgen.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 7A45DBB1176E177100B9B388 /* tetgen.cxx */; };
-		7A45DBB5176E177100B9B388 /* tetgen.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DBB2176E177100B9B388 /* tetgen.h */; };
 		7A553EBC17DA6BC400125178 /* libSOIL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0AB5A517D906AD0058910E /* libSOIL.a */; };
 		7A553ECC17DA724800125178 /* image_DXT.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A553EC217DA724800125178 /* image_DXT.c */; };
 		7A553ECD17DA724800125178 /* image_DXT.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A553EC317DA724800125178 /* image_DXT.h */; };
@@ -39,7 +34,6 @@
 		7A56303F17D57445005152B6 /* attributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A56303E17D57445005152B6 /* attributes.h */; };
 		7A90991C17D7A27000A66365 /* tetralizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A90991A17D7A27000A66365 /* tetralizer.cpp */; };
 		7A90991D17D7A27000A66365 /* tetralizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A90991B17D7A27000A66365 /* tetralizer.h */; };
-		7A9C205417DFB3C20064171E /* GEL_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9C205317DFB3C20064171E /* GEL_types.h */; };
 		7A9C209B17DFB4D40064171E /* ArithMatFloat.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9C205E17DFB4D40064171E /* ArithMatFloat.h */; };
 		7A9C209C17DFB4D40064171E /* ArithQuat.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9C205F17DFB4D40064171E /* ArithQuat.h */; };
 		7A9C209D17DFB4D40064171E /* ArithSqMat2x2Float.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9C206017DFB4D40064171E /* ArithSqMat2x2Float.h */; };
@@ -140,8 +134,6 @@
 		7A45DB88176E122100B9B388 /* configuration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = configuration.h; path = is_mesh/configuration.h; sourceTree = "<group>"; };
 		7A45DB8A176E122100B9B388 /* is_mesh_lists_read.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = is_mesh_lists_read.h; sourceTree = "<group>"; };
 		7A45DB8B176E122100B9B388 /* is_mesh_lists_write.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = is_mesh_lists_write.h; sourceTree = "<group>"; };
-		7A45DB8C176E122100B9B388 /* is_mesh_xml_read.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = is_mesh_xml_read.h; sourceTree = "<group>"; };
-		7A45DB8D176E122100B9B388 /* is_mesh_xml_write.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = is_mesh_xml_write.h; sourceTree = "<group>"; };
 		7A45DB8E176E122100B9B388 /* is_mesh_default_traits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh_default_traits.h; path = is_mesh/is_mesh_default_traits.h; sourceTree = "<group>"; };
 		7A45DB8F176E122100B9B388 /* is_mesh_key_type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh_key_type.h; path = is_mesh/is_mesh_key_type.h; sourceTree = "<group>"; };
 		7A45DB90176E122100B9B388 /* is_mesh_simplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh_simplex.h; path = is_mesh/is_mesh_simplex.h; sourceTree = "<group>"; };
@@ -150,9 +142,6 @@
 		7A45DB93176E122100B9B388 /* kernel_iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = kernel_iterator.h; path = is_mesh/kernel_iterator.h; sourceTree = "<group>"; };
 		7A45DB94176E122100B9B388 /* kernel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = kernel.h; path = is_mesh/kernel.h; sourceTree = "<group>"; };
 		7A45DB95176E122100B9B388 /* simplex_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simplex_set.h; path = is_mesh/simplex_set.h; sourceTree = "<group>"; };
-		7A45DBB0176E177100B9B388 /* predicates.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = predicates.cxx; path = Tetgen/predicates.cxx; sourceTree = "<group>"; };
-		7A45DBB1176E177100B9B388 /* tetgen.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tetgen.cxx; path = Tetgen/tetgen.cxx; sourceTree = "<group>"; };
-		7A45DBB2176E177100B9B388 /* tetgen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tetgen.h; path = Tetgen/tetgen.h; sourceTree = "<group>"; };
 		7A553EC217DA724800125178 /* image_DXT.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = image_DXT.c; sourceTree = "<group>"; };
 		7A553EC317DA724800125178 /* image_DXT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = image_DXT.h; sourceTree = "<group>"; };
 		7A553EC417DA724800125178 /* image_helper.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = image_helper.c; sourceTree = "<group>"; };
@@ -231,7 +220,6 @@
 		7A9C209A17DFB4D40064171E /* Vec4uc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec4uc.h; sourceTree = "<group>"; };
 		7ACA21D717DE37C5005E9309 /* stb_image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image.c; sourceTree = "<group>"; };
 		7ACA21D817DE37C5005E9309 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
-		7AE27AC717675AAA000F8238 /* libTetgen.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTetgen.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AE27AD617675AE8000F8238 /* libDSC.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDSC.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AE27ADF17675B04000F8238 /* log.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = log.cpp; path = src/log.cpp; sourceTree = SOURCE_ROOT; };
 		7AE27AE017675B04000F8238 /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = log.h; path = src/log.h; sourceTree = SOURCE_ROOT; };
@@ -264,13 +252,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		7A9C205617DFB4CB0064171E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7AE27AC417675AAA000F8238 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -324,8 +305,6 @@
 			children = (
 				7A45DB8A176E122100B9B388 /* is_mesh_lists_read.h */,
 				7A45DB8B176E122100B9B388 /* is_mesh_lists_write.h */,
-				7A45DB8C176E122100B9B388 /* is_mesh_xml_read.h */,
-				7A45DB8D176E122100B9B388 /* is_mesh_xml_write.h */,
 			);
 			name = io;
 			path = is_mesh/io;
@@ -427,7 +406,6 @@
 				7AE27AFB17675B70000F8238 /* OpenGL.framework */,
 				7A9C205D17DFB4D40064171E /* CGLA */,
 				7A553EC117DA724800125178 /* SOIL */,
-				7AE27ACB17675AB3000F8238 /* Tetgen */,
 				7A07B9B1176B23A8006589A4 /* ISMesh */,
 				7AE27AB917675A1E000F8238 /* DSC */,
 				7AE27B0E17675CEA000F8238 /* DEMO */,
@@ -438,7 +416,6 @@
 		7AE27AB817675A1E000F8238 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7AE27AC717675AAA000F8238 /* libTetgen.a */,
 				7AE27AD617675AE8000F8238 /* libDSC.a */,
 				7AE27B0517675CDA000F8238 /* DEMO */,
 				7A0AB5A517D906AD0058910E /* libSOIL.a */,
@@ -464,16 +441,6 @@
 				7A90991A17D7A27000A66365 /* tetralizer.cpp */,
 			);
 			path = DSC;
-			sourceTree = "<group>";
-		};
-		7AE27ACB17675AB3000F8238 /* Tetgen */ = {
-			isa = PBXGroup;
-			children = (
-				7A45DBB0176E177100B9B388 /* predicates.cxx */,
-				7A45DBB1176E177100B9B388 /* tetgen.cxx */,
-				7A45DBB2176E177100B9B388 /* tetgen.h */,
-			);
-			name = Tetgen;
 			sourceTree = "<group>";
 		};
 		7AE27B0E17675CEA000F8238 /* DEMO */ = {
@@ -561,15 +528,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		7AE27AC517675AAA000F8238 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7A45DBB5176E177100B9B388 /* tetgen.h in Headers */,
-				7A9C205417DFB3C20064171E /* GEL_types.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		7AE27AD417675AE8000F8238 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -585,8 +543,6 @@
 				7A45DB96176E122100B9B388 /* configuration.h in Headers */,
 				7A45DB97176E122100B9B388 /* is_mesh_lists_read.h in Headers */,
 				7A45DB98176E122100B9B388 /* is_mesh_lists_write.h in Headers */,
-				7A45DB99176E122100B9B388 /* is_mesh_xml_read.h in Headers */,
-				7A45DB9A176E122100B9B388 /* is_mesh_xml_write.h in Headers */,
 				7A45DB9B176E122100B9B388 /* is_mesh_default_traits.h in Headers */,
 				7A45DB9C176E122100B9B388 /* is_mesh_key_type.h in Headers */,
 				7A45DB9D176E122100B9B388 /* is_mesh_simplex.h in Headers */,
@@ -635,23 +591,6 @@
 			name = CGLA;
 			productName = CGLA;
 			productReference = 7A9C205917DFB4CB0064171E /* libCGLA.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		7AE27AC617675AAA000F8238 /* Tetgen */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 7AE27AC817675AAA000F8238 /* Build configuration list for PBXNativeTarget "Tetgen" */;
-			buildPhases = (
-				7AE27AC317675AAA000F8238 /* Sources */,
-				7AE27AC417675AAA000F8238 /* Frameworks */,
-				7AE27AC517675AAA000F8238 /* Headers */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = Tetgen;
-			productName = Tetgen;
-			productReference = 7AE27AC717675AAA000F8238 /* libTetgen.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		7AE27AD517675AE8000F8238 /* DSC */ = {
@@ -709,7 +648,6 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				7AE27AC617675AAA000F8238 /* Tetgen */,
 				7A9C205817DFB4CB0064171E /* CGLA */,
 				7AE27AD517675AE8000F8238 /* DSC */,
 				7A0AB5A417D906AD0058910E /* SOIL */,
@@ -750,15 +688,6 @@
 				7A9C20C917DFB4D40064171E /* Vec2i.cpp in Sources */,
 				7A9C20CD17DFB4D40064171E /* Vec3f.cpp in Sources */,
 				7A9C20D017DFB4D40064171E /* Vec3i.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7AE27AC317675AAA000F8238 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7A45DBB3176E177100B9B388 /* predicates.cxx in Sources */,
-				7A45DBB4176E177100B9B388 /* tetgen.cxx in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -877,22 +806,6 @@
 			};
 			name = Release;
 		};
-		7AE27AC917675AAA000F8238 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				EXECUTABLE_PREFIX = lib;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		7AE27ACA17675AAA000F8238 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				EXECUTABLE_PREFIX = lib;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		7AE27AD817675AE8000F8238 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -958,21 +871,13 @@
 				7A9C205C17DFB4CB0064171E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7AE27AB217675A1E000F8238 /* Build configuration list for PBXProject "DSC" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7AE27ABE17675A1E000F8238 /* Debug */,
 				7AE27ABF17675A1E000F8238 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		7AE27AC817675AAA000F8238 /* Build configuration list for PBXNativeTarget "Tetgen" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				7AE27AC917675AAA000F8238 /* Debug */,
-				7AE27ACA17675AAA000F8238 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
