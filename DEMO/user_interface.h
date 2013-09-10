@@ -140,11 +140,11 @@ public:
      */
     virtual void keyboard(unsigned char key, int x, int y);
     
-    void motion1();
+    void rotate_cube();
     
-    void motion2();
+    void smooth_armadillo();
     
-    void motion3();
+    void expand_armadillo();
     
     /**
      Updates the window title.

@@ -101,13 +101,13 @@ UI::UI(int &argc, char** argv)
         
         switch (motion) {
             case 1:
-                motion1();
+                rotate_cube();
                 break;
             case 2:
-                motion2();
+                smooth_armadillo();
                 break;
             case 3:
-                motion3();
+                expand_armadillo();
                 break;
             default:
                 break;
@@ -188,13 +188,13 @@ void UI::keyboard(unsigned char key, int x, int y) {
             stop();
             break;
         case '1':
-            motion1();
+            rotate_cube();
             break;
         case '2':
-            motion2();
+            smooth_armadillo();
             break;
         case '3':
-            motion3();
+            expand_armadillo();
             break;
         case ' ':
             if(!CONTINUOUS)
@@ -332,7 +332,7 @@ void UI::stop()
     }
 }
 
-void UI::motion1()
+void UI::rotate_cube()
 {
     stop();
     // Build the Simplicial Complex
@@ -357,7 +357,7 @@ void UI::motion1()
     reshape(WIN_SIZE_X, WIN_SIZE_Y);
 }
 
-void UI::motion2()
+void UI::smooth_armadillo()
 {
     stop();
     // Build the Simplicial Complex
@@ -379,7 +379,7 @@ void UI::motion2()
     reshape(WIN_SIZE_X, WIN_SIZE_Y);
 }
 
-void UI::motion3()
+void UI::expand_armadillo()
 {
     stop();
     // Build the Simplicial Complex
