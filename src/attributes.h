@@ -17,7 +17,7 @@
 #pragma once
 
 template<typename MT>
-class default_node_traits
+class NodeAttributes
 {
     typedef typename MT::real_type      T;
     typedef typename MT::vector3_type   V;
@@ -28,8 +28,8 @@ class default_node_traits
     
 public:
     
-    default_node_traits() : p(0.,0.,0.), p_new(0.,0.,0.) {}
-    default_node_traits(T const & x, T const & y, T const & z) : p(x,y,z), p_new(x,y,z) {}
+    NodeAttributes() : p(0.,0.,0.), p_new(0.,0.,0.) {}
+    NodeAttributes(T const & x, T const & y, T const & z) : p(x,y,z), p_new(x,y,z) {}
     
     V get_pos()
     {
@@ -41,7 +41,7 @@ public:
         return p_new;
     }
     
-    void set(default_node_traits const & t)
+    void set(const NodeAttributes& t)
     {
 	    p = t.p;
         p_new = t.p_new;
@@ -89,12 +89,12 @@ public:
     }
 };
 
-class default_edge_traits
+class EdgeAttributes
 {
     std::bitset<3> flags;
     
 public:
-    default_edge_traits() {}
+    EdgeAttributes() {}
     
     
     bool is_crossing()
@@ -128,12 +128,12 @@ public:
     }
 };
 
-class default_face_traits
+class FaceAttributes
 {
     std::bitset<2> flags;
     
 public:
-    default_face_traits() {}
+    FaceAttributes() {}
         
     bool is_boundary()
     {
@@ -156,12 +156,12 @@ public:
     }
 };
 
-class default_tetrahedron_traits
+class TetAttributes
 {
     unsigned int l;
     
 public:
-    default_tetrahedron_traits() : l(0) {}
+    TetAttributes() : l(0) {}
     
     int label()
     {
