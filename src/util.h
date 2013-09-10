@@ -36,8 +36,8 @@ namespace Util
     inline typename MT::vector3_type normal_direction(typename MT::vector3_type const & a, typename MT::vector3_type const & b, typename MT::vector3_type const & c);
     
     
-    template <typename MT>
-    inline int sign(typename MT::real_type val)
+    template <typename real>
+    inline int sign(real val)
     {
         return (0. < val) - (val < 0.);
     }
