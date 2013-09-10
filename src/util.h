@@ -22,8 +22,11 @@
 #include <cmath>
 #include <cassert>
 
+constexpr double EPSILON = 1e-8;
 
-#define EPSILON 1e-12
+#ifndef INFINITY
+constexpr double INFINITY = 1e32;
+#endif
 
 namespace Util
 {
