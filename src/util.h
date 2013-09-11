@@ -354,27 +354,6 @@ namespace Util
     }
     
     /**
-     * Implies ordering in the space of binary vectors of given size.
-     *
-     * @param n     Size of binary vectors.
-     * @param v1    First vector.
-     * @param v2    Second vector.
-     *
-     * @return      True if the first vector is smaller than the second, false otherwise.
-     */
-    inline bool compare(int n, const std::vector<bool> & v1, const std::vector<bool> & v2)
-    {
-        for (int i = 0; i < n; ++i)
-        {
-            if (v1[i] && !v2[i]) return false;
-            if (!v1[i] && v2[i]) return true;
-        }
-        return false;
-    }
-    
-    
-    
-    /**
      Concatonates the integer number to the string name.
      */
     inline std::string concat4digits(std::string name, int number)
@@ -390,5 +369,4 @@ namespace Util
             s << name << number;
         return s.str();
     }
-    
 }
