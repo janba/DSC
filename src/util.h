@@ -266,19 +266,6 @@ namespace Util
         return p - normal * dot(p - a, normal);
     }
     
-    template <typename MT>
-    inline typename MT::real_type calc_flatness(typename MT::vector3_type const & a,
-                                                typename MT::vector3_type const & b,
-                                                typename MT::vector3_type const & c,
-                                                typename MT::vector3_type const & d)
-    {
-        typedef typename MT::vector3_type V;
-        V normal0 = normal_direction<MT>(d, a, b);
-        V normal1 = normal_direction<MT>(c, b, a);
-        
-        return MT::dot(normal0, normal1);
-    }
-    
     template<typename real, typename vec3>
     inline real ms_length(const vec3& a, const vec3& b, const vec3& c, const vec3& d)
     {
@@ -298,186 +285,17 @@ namespace Util
         return sqrt(ms_length<real>(a, b, c, d));
     }
     
-    template<typename MT>
-    inline typename MT::real_type quality(typename MT::vector3_type const a, typename MT::vector3_type const b, typename MT::vector3_type const c, typename MT::vector3_type const d)
+    template<typename real, typename vec3>
+    inline real quality(const vec3& a, const vec3& b, const vec3& c, const vec3& d)
     {
-        typedef typename MT::real_type      T;
+        real v = signed_volume<real>(a, b, c, d);
+        real lrms = rms_length<real>(a, b, c, d);
         
-        T v = Util::signed_volume<T>(a, b, c, d);
-        T lrms = rms_length<T>(a, b, c, d);
-        
-        T q = 8.48528 * v / (lrms * lrms * lrms);
+        real q = 8.48528 * v / (lrms * lrms * lrms);
 #ifdef DEBUG
-        assert(!MT::is_nan(q));
+        assert(!is_nan(q));
 #endif
         return q;
-    }
-    
-    
-    /**
-     * Finds the center of a smallest circle containing the triangle specified by vertices a, b, c.
-     * For an acute or right triangle, this is the circumcircle. For an obtuse triangle this is the midpoint of the longest edge.
-     */
-//    template <typename MT>
-//    inline typename MT::vector3_type min_circle_center(typename MT::vector3_type & a,
-//                                                       typename MT::vector3_type & b,
-//                                                       typename MT::vector3_type & c)
-//    {
-//        typedef typename MT::real_type    T;
-//        typedef typename MT::vector3_type V;
-//        
-//        V eba = b-a,
-//        eca = c-a,
-//        ecb = c-b;
-//        
-//        T c2 = MT::sqr_length(eba),
-//        b2 = MT::sqr_length(eca),
-//        a2 = MT::sqr_length(ecb);
-//        
-//        T alpha = a2 * (b2 + c2 - a2);
-//        T beta  = b2 * (a2 + c2 - b2);
-//        T gamma = c2 * (a2 + b2 - c2);
-//        
-//        T sum = alpha + beta + gamma;
-//        alpha /= sum;	beta /= sum;	gamma /= sum;
-//        
-//        if (alpha <= 0)
-//            return (b+c)/2.0;
-//        if (beta <= 0)
-//            return (a+c)/2.0;
-//        if (gamma <= 0)
-//            return (a+b)/2.0;
-//        
-//        return alpha * a + beta * b + gamma * c;
-//    }
-    
-    /**
-     * Computes the determinant of a 4-by-4 matrix specified by four 4D vectors a, b, c, d
-     */
-    template <typename MT>
-    inline typename MT::real_type determinant(typename MT::vector4_type & a,
-                                              typename MT::vector4_type & b,
-                                              typename MT::vector4_type & c,
-                                              typename MT::vector4_type & d)
-    {
-        typedef typename MT::real_type T;
-        
-        T a1, a2, a3, a4, b1, b2, b3, b4, c1, c2, c3, c4, d1, d2, d3, d4;
-        
-        a1 = a[0];	b1 = b[0];	c1 = c[0];	d1 = d[0];
-        a2 = a[1];	b2 = b[1];	c2 = c[1];	d2 = d[1];
-        a3 = a[2];	b3 = b[2];	c3 = c[2];	d3 = d[2];
-        a4 = a[3];	b4 = b[3];	c4 = c[3];	d4 = d[3];
-        
-        return   a1 * (b2*(c3*d4-d3*c4)-c2*(b3*d4-d3*b4)+d2*(b3*c4-c3*b4))
-        - b1 * (a2*(c3*d4-d3*c4)-c2*(a3*d4-d3*a4)+d2*(a3*c4-c3*a4))
-        + c1 * (a2*(b3*d4-d3*b4)-b2*(a3*d4-d3*a4)+d2*(a3*b4-b3*a4))
-        - d1 * (a2*(b3*c4-c3*b4)-b2*(a3*c4-c3*a4)+c2*(a3*b4-b3*a4));
-    }
-    
-    template <typename MT>
-    inline std::vector<typename MT::vector3_type> find_basis(std::vector<typename MT::vector3_type> & basis, std::vector<typename MT::vector3_type> & points)
-    {
-        typedef typename MT::real_type      T;
-        typedef typename MT::vector3_type   V;
-        V vp = points[0];
-        std::vector<V> b,m;
-        for (int i = 1; i < points.size(); ++i)
-        {
-            m.push_back(points[i]);
-        }
-        
-        if (points.size() == 1)
-        {
-            if (basis.size() == 0)
-            {
-                return points;
-            }
-            for (unsigned int i = 0; i < basis.size(); ++i)
-            {
-                b.push_back(basis[i]);
-            }
-        }
-        else
-            b = find_basis<MT>(basis, m);
-        
-        if (b.size() == 1)
-        {
-            V vq = b[0];
-            if (MT::dot(vq,vp-vq) >= 0)
-            {
-                return b;
-            }
-        }
-        else if (b.size() == 2)
-        {
-            V vq = b[0];
-            V vr = b[1];
-            V vs = vp - vr;
-            V vt = vq - vr;
-            if (MT::dot(MT::cross(vs,vt),MT::cross(vr,vt)) >= 0)
-            {
-                return b;
-            }
-        }
-        else if (b.size() == 3)
-        {
-            V vq = b[0];
-            V vr = b[1];
-            V vs = b[2];
-            if (signed_volume<MT>(vp, vq, vr, vs) * signed_volume<MT>(V(0.0), vq, vr, vs) <= 0)
-            {
-                return b;
-            }
-        }
-        else
-        {
-            return b;
-        }
-        
-        basis.push_back(vp);
-        if (points.size() == 1 || basis.size() == 3)
-        {
-            return basis;
-        }
-        else
-        {
-            return find_basis<MT>(basis, m);
-        }
-    }
-    
-    /**
-     * Finds the minimum convex hull point.
-     */
-    template <typename MT>
-    inline typename MT::vector3_type min_convex_hull_point(std::vector<typename MT::vector3_type> & points)
-    {
-        typedef typename MT::real_type      T;
-        typedef typename MT::vector3_type   V;
-        
-        std::vector<V> basis;
-        std::vector<V> b = find_basis<MT>(basis, points);
-        if (b.size() == 1)
-        {
-            return b[0];
-        }
-        else if (b.size() == 2)
-        {
-            V vp = b[0];
-            V vq = b[1];
-            return vq - (vp-vq)*(MT::dot(vq,vp-vq)/MT::sqr_length(vp-vq));
-        }
-        else if (b.size() == 3)
-        {
-            V vp = b[0];
-            V vq = b[1];
-            V vr = b[2];
-            V vs = vp-vr;
-            V vt = vq-vr;
-            return vr - (MT::dot(MT::cross(vs,vt), MT::cross(vr,vt))/MT::dot(MT::cross(vs,vt),MT::cross(vs,vt)))*vs - (MT::dot(MT::cross(vs,vt),MT::cross(vs,vr))/MT::dot(MT::cross(vs,vt),MT::cross(vs,vt)))*vt;
-        }
-        else
-            return V(0.0);
     }
     
     /**

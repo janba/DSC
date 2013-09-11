@@ -325,8 +325,8 @@ private:
             {
                 for (int k = i+1; k < j; k++)
                 {
-                    T q2 = Util::quality<MT>(get_pos(polygon[i]), get_pos(polygon[k]), get_pos(polygon[j]), verts[1]);
-                    T q1 = Util::quality<MT>(get_pos(polygon[k]), get_pos(polygon[i]), get_pos(polygon[j]), verts[0]);
+                    T q2 = Util::quality<T>(get_pos(polygon[i]), get_pos(polygon[k]), get_pos(polygon[j]), verts[1]);
+                    T q1 = Util::quality<T>(get_pos(polygon[k]), get_pos(polygon[i]), get_pos(polygon[j]), verts[0]);
                     T q = std::min(q1, q2);
                     if (k < j-1)
                     {
@@ -584,7 +584,7 @@ private:
     {
         edge_key e = Complex::get_edge(u,w);
         face_key g = get_neighbour(f, e);
-        T q = Util::quality<MT>(get_pos(a), get_pos(b), get_pos(u), get_pos(w));
+        T q = Util::quality<T>(get_pos(a), get_pos(b), get_pos(u), get_pos(w));
         
         if(g != Complex::NULL_FACE && !is_boundary(e) && !is_interface(e))
         {
@@ -595,8 +595,8 @@ private:
             
             if((V_uv > 0. && V_vw > 0.) || (V_vw > 0. && V_wu > 0.) || (V_wu > 0. && V_uv > 0.))
             {
-                q_old = std::min(Util::quality<MT>(get_pos(a), get_pos(u), get_pos(v), get_pos(w)),
-                                 Util::quality<MT>(get_pos(u), get_pos(v), get_pos(w), get_pos(b)));
+                q_old = std::min(Util::quality<T>(get_pos(a), get_pos(u), get_pos(v), get_pos(w)),
+                                 Util::quality<T>(get_pos(u), get_pos(v), get_pos(w), get_pos(b)));
                 
                 T q_uv_old, q_uv_new, q_vw_old, q_vw_new;
                 auto uv_edges = test_neighbour(g, a, b, u, v, q_uv_old, q_uv_new);
@@ -1940,7 +1940,7 @@ public:
     T quality(const tet_key& t)
     {
         auto verts = get_pos(t);
-        return Util::quality<MT>(verts[0], verts[1], verts[2], verts[3]);
+        return Util::quality<T>(verts[0], verts[1], verts[2], verts[3]);
     }
     
     T min_angle(const face_key& f)
@@ -2034,7 +2034,7 @@ public:
         for(auto fit = set.faces_begin(); fit != set.faces_end(); fit++)
         {
             auto verts = get_pos(*fit);
-            min_q = std::min(min_q, std::abs(Util::quality<MT>(verts[0], verts[1], verts[2], pos)));
+            min_q = std::min(min_q, std::abs(Util::quality<T>(verts[0], verts[1], verts[2], pos)));
         }
         return min_q;
     }
