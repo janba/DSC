@@ -32,8 +32,8 @@ constexpr double INFINITY = 1e32;
 
 namespace Util
 {
-    template <typename MT>
-    inline typename MT::vector3_type normal_direction(typename MT::vector3_type const & a, typename MT::vector3_type const & b, typename MT::vector3_type const & c);
+    template <typename vec3>
+    inline vec3 normal_direction(const vec3& a, const vec3& b, const vec3& c);
     
     
     template <typename real>
@@ -76,53 +76,41 @@ namespace Util
     /**
      * Calculates the cosine of the angle between the line segments |ab| and |ac|.
      */
-    template <typename MT>
-    inline typename MT::real_type cos_angle(typename MT::vector3_type const & a,
-                                            typename MT::vector3_type const & b,
-                                            typename MT::vector3_type const & c)
+    template <typename real, typename vec3>
+    inline real cos_angle(const vec3& a, const vec3& b, const vec3& c)
     {
-        typedef typename MT::vector3_type V;
-        V ab = MT::normalize(b - a);
-        V ac = MT::normalize(c - a);
-        return MT::dot(ab, ac);
+        vec3 ab = normalize(b - a);
+        vec3 ac = normalize(c - a);
+        return dot(ab, ac);
     }
     
     /**
      * Calculates the angle between the line segments |ab| and |ac|.
      */
-    template <typename MT>
-    inline typename MT::real_type angle(typename MT::vector3_type const & a,
-                                        typename MT::vector3_type const & b,
-                                        typename MT::vector3_type const & c)
+    template <typename real, typename vec3>
+    inline real angle(const vec3& a, const vec3& b, const vec3& c)
     {
-        return acos(cos_angle<MT>(a, b, c));
+        return acos(cos_angle<real>(a, b, c));
     }
     
     /**
      * Calculate the cosine of angles in the triangle defined by the vertices a, b and c.
      */
-    template <class MT>
-    inline std::vector<typename MT::real_type> cos_angles(typename MT::vector3_type const & a,
-                                                          typename MT::vector3_type const & b,
-                                                          typename MT::vector3_type const & c)
+    template <typename real, typename vec3>
+    inline std::vector<real> cos_angles(const vec3& a, const vec3& b, const vec3& c)
     {
-        typedef typename MT::real_type T;
-        
-        std::vector<T> cosines(3);
-        cosines[0] = cos_angle<MT>(a, b, c);
-        cosines[1] = cos_angle<MT>(b, c, a);
-        cosines[2] = cos_angle<MT>(c, a, b);
+        std::vector<real> cosines(3);
+        cosines[0] = cos_angle<real>(a, b, c);
+        cosines[1] = cos_angle<real>(b, c, a);
+        cosines[2] = cos_angle<real>(c, a, b);
         return cosines;
     }
     
-    template<typename MT>
-    inline typename MT::real_type min_angle(typename MT::vector3_type const & a,
-                                            typename MT::vector3_type const & b,
-                                            typename MT::vector3_type const & c)
+    template <typename real, typename vec3>
+    inline real min_angle(const vec3& a, const vec3& b, const vec3& c)
     {
-        typedef typename MT::real_type T;
-        std::vector<T> cosines = cos_angles<MT>(a, b, c);
-        T max_cos = -1.;
+        std::vector<real> cosines = cos_angles<real>(a, b, c);
+        real max_cos = -1.;
         for(auto cos : cosines)
         {
             max_cos = std::max(cos, max_cos);
@@ -130,65 +118,27 @@ namespace Util
         return acos(max_cos);
     }
     
-    template<typename MT>
-    inline typename MT::real_type max_angle(typename MT::vector3_type const & a,
-                                            typename MT::vector3_type const & b,
-                                            typename MT::vector3_type const & c)
+    template <typename real, typename vec3>
+    inline real max_angle(const vec3& a, const vec3& b, const vec3& c)
     {
-        typedef typename MT::real_type T;
-        std::vector<T> cosines = cos_angles<MT>(a, b, c);
+        std::vector<real> cosines = cos_angles<real>(a, b, c);
         double min_cos = 1.;
         for(auto cos : cosines)
         {
             min_cos = std::min(cos, min_cos);
         }
-        return acos(min_cos);
-    }
-    
-    /**
-     * Find cosines of angles between edges connecting v with triangle's vertices and triangle's edges.
-     * Used for determining whether v lies very close to the edge -- in that case we do not want to use cap or sliver removal
-     * (it would introduce a very low quality tetrahedron).
-     */
-    template <typename MT>
-    inline void cosines(typename MT::vector3_type & v,
-                            std::vector<typename MT::vector3_type> & verts,
-                            std::vector<typename MT::real_type> & cosines)
-    {
-        typedef typename MT::vector3_type V;
-        
-        for (int i = 0; i < 3; ++i)
-        {
-            int k = i;
-            int l = (i+1)%3;
-            V p, q;
-            
-            p = v - verts[k];
-            p.normalize();
-            q = verts[l] - verts[k];
-            q.normalize();
-            cosines[2*k] = MT::dot(p,q);
-            
-            p = v - verts[l];
-            p.normalize();
-            q = verts[k] - verts[l];
-            q.normalize();
-            cosines[2*k+1] = MT::dot(p,q);
-        }
+        return std::acos(min_cos);
     }
     
     /**
      * Returns the cosine to the dihedral angle between face |abc| and face |abd|.
      */
-    template<typename MT>
-    inline typename MT::real_type cos_dihedral_angle(const typename MT::vector3_type& a, const typename MT::vector3_type& b, const typename MT::vector3_type& c, const typename MT::vector3_type& d)
-    {
-        typedef typename MT::real_type      T;
-        typedef typename MT::vector3_type   V;
-        
-        V n0 = normal_direction<MT>(a, b, c);
-        V n1 = normal_direction<MT>(b, a, d);
-        T angle = MT::dot(n0, n1);
+    template<typename real, typename vec3>
+    inline real cos_dihedral_angle(const vec3& a, const vec3& b, const vec3& c, const vec3& d)
+    {        
+        vec3 n0 = normal_direction(a, b, c);
+        vec3 n1 = normal_direction(b, a, d);
+        real angle = dot(n0, n1);
 #ifdef DEBUG
         assert(angle < 1. + EPSILON);
         assert(angle > -1. - EPSILON);
@@ -199,10 +149,10 @@ namespace Util
     /**
      * Returns the dihedral angle between face |abc| and face |abd|.
      */
-    template<typename MT>
-    inline typename MT::real_type dihedral_angle(const typename MT::vector3_type& a, const typename MT::vector3_type& b, const typename MT::vector3_type& c, const typename MT::vector3_type& d)
+    template<typename real, typename vec3>
+    inline real dihedral_angle(const vec3& a, const vec3& b, const vec3& c, const vec3& d)
     {
-        return MT::acos(cos_dihedral_angle<MT>(a, b, c, d));
+        return std::acos(cos_dihedral_angle<real>(a, b, c, d));
     }
     
     template <typename MT>
@@ -288,19 +238,16 @@ namespace Util
         }
     }
     
-    template <typename MT>
-    inline typename MT::vector3_type normal_direction(typename MT::vector3_type const & a,
-                                                      typename MT::vector3_type const & b,
-                                                      typename MT::vector3_type const & c)
+    template <typename vec3>
+    inline vec3 normal_direction(const vec3& a, const vec3& b, const vec3& c)
     {
-        typedef typename MT::vector3_type V;
-        V ab = b - a;
-        V ac = c - a;
-        V n = MT::cross(ab, ac);
+        vec3 ab = b - a;
+        vec3 ac = c - a;
+        vec3 n = cross(ab, ac);
 #ifdef DEBUG
         assert(!MT::is_nan(n[0]) && !MT::is_nan(n[1]) && !MT::is_nan(n[2]));
 #endif
-        return MT::normalize(n);
+        return normalize(n);
     }
     
     template <typename MT>
@@ -601,7 +548,7 @@ namespace Util
         typedef typename MT::real_type      T;
         typedef typename MT::vector3_type   V;
         
-        V normal = normal_direction<MT>(v0, v1, v2);
+        V normal = normal_direction(v0, v1, v2);
         T n = MT::dot(normal, v0 - p0);
         T d = MT::dot(normal, p1 - p0);
         

@@ -1853,7 +1853,7 @@ public:
     V get_normal(const face_key & f)
     {
         auto verts = get_pos(f);
-        return Util::normal_direction<MT>(verts[0], verts[1], verts[2]);
+        return Util::normal_direction(verts[0], verts[1], verts[2]);
     }
     
     /**
@@ -1946,14 +1946,14 @@ public:
     T min_angle(const face_key& f)
     {
         auto verts = get_pos(f);
-        return Util::min_angle<MT>(verts[0], verts[1], verts[2]);
+        return Util::min_angle<real>(verts[0], verts[1], verts[2]);
     }
     
     T max_angle(const face_key& f)
     {
         std::vector<V> verts;
         get_pos(f, verts);
-        return Util::max_angle<MT>(verts[0], verts[1], verts[2]);
+        return Util::max_angle<real>(verts[0], verts[1], verts[2]);
     }
     
     /**
@@ -2444,7 +2444,7 @@ public:
             }
         }
         
-        return Util::cos_dihedral_angle<MT>(verts[0], verts[1], apices[0], apices[1]);
+        return Util::cos_dihedral_angle<real>(verts[0], verts[1], apices[0], apices[1]);
     }
     
     /**
@@ -2471,7 +2471,7 @@ public:
                             apices.push_back(k);   
                         }
                     }
-                    angles.push_back(Util::cos_dihedral_angle<MT>(verts[i], verts[j], verts[apices[0]], verts[apices[1]]));
+                    angles.push_back(Util::cos_dihedral_angle<real>(verts[i], verts[j], verts[apices[0]], verts[apices[1]]));
                 }
             }
         }
