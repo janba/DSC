@@ -232,17 +232,13 @@ namespace Util
         return normalize(n);
     }
     
-    template <typename MT>
-    inline typename MT::vector3_type normal_direction(typename MT::vector3_type const & a,
-                                                      typename MT::vector3_type const & b,
-                                                      typename MT::vector3_type const & c,
-                                                      typename MT::vector3_type const & d)
+    template <typename real, typename vec3>
+    inline vec3 normal_direction(const vec3& a, const vec3& b, const vec3& c, const vec3& d)
     {
-        typedef typename MT::vector3_type V;
-        V n = normal_direction<MT>(a, b, c);
-        V bf = barycenter<MT>(a, b, c);
-        V bt = barycenter<MT>(a, b, c, d);
-        V v_out = bf - bt;
+        vec3 n = normal_direction<real>(a, b, c);
+        vec3 bf = barycenter<real>(a, b, c);
+        vec3 bt = barycenter<real>(a, b, c, d);
+        vec3 v_out = bf - bt;
         if (dot(v_out, n) > 0)
             return n;
         else
@@ -250,25 +246,24 @@ namespace Util
     }
     
     /**
-     Returns v projected onto the line spanned by the two points v1 and v2.
+     Returns p projected onto the line spanned by the two points a and b.
      */
-    template <typename MT>
-    inline typename MT::vector3_type project(typename MT::vector3_type const & v, typename MT::vector3_type const & v1,typename MT::vector3_type const & v2)
+    template <typename vec3>
+    inline vec3 project(const vec3& p, const vec3& a, const vec3& b)
     {
-        typedef typename MT::vector3_type V;
-        V a = v - v1;
-        V b = v2 - v1;
-        return v1 + b * MT::dot(a,b)/MT::dot(b, b);
+        vec3 v1 = p - a;
+        vec3 v2 = b - a;
+        return a + v2 * dot(v1,v2)/dot(v2, v2);
     }
     
     /**
-     * Project the point v onto the plane spanned by the three points in verts.
+     * Project the point p onto the plane spanned by the three points a, b and c.
      */
-    template<typename MT>
-    inline typename MT::vector3_type project(typename MT::vector3_type const & v, const std::vector<typename MT::vector3_type>& verts)
+    template<typename vec3>
+    inline vec3 project(const vec3& p, const vec3& a, const vec3& b, const vec3& c)
     {
-        typename MT::vector3_type normal = Util::normal_direction<MT>(verts[0], verts[1], verts[2]);
-        return v - normal * MT::dot(v - verts[0], normal);
+        vec3 normal = normal_direction(a, b, c);
+        return p - normal * dot(p - a, normal);
     }
     
     template <typename MT>
