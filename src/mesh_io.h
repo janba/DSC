@@ -56,8 +56,8 @@ inline void export_tet_mesh(DeformableSimplicialComplex<MT> & dsc, const std::st
 /**
  * Imports a mesh from a .dsc file.
  */
-template <typename MT>
-inline void import_tet_mesh(const std::string & filename, std::vector<typename MT::real_type>& points, std::vector<int>&  tets, std::vector<int>&  labels)
+template <typename real>
+inline void import_tet_mesh(const std::string & filename, std::vector<real>& points, std::vector<int>&  tets, std::vector<int>&  labels)
 {
     
     std::ifstream file(filename.data());
@@ -124,32 +124,6 @@ inline void save_interface(DeformableSimplicialComplex<MT> & dsc, std::string & 
     
 	obj_file.close();
 }
-
-/**
- * Document the mesh by screenshot and/or by saving the mesh.
- */
-/*template <typename MT>
- inline void document(SimplicialComplex<MT> & dsc, int iteration_nr)
- {
- if (iteration_nr%DOCUMENTATION_GAP == 0)
- {
- if(TAKE_SCREENSHOT)
- {
- cout << "Taking screenshot" << endl;
- string str(details::concat4digits("SS/scr_", iteration_nr/DOCUMENTATION_GAP) + ".bmp");
- SOIL_save_screenshot(str.c_str(), SOIL_SAVE_TYPE_BMP, 0, 0, 640, 640 );
- string str1(details::concat4digits("OBJ/mesh_", iteration_nr/DOCUMENTATION_GAP) + ".obj");
- //save_obj(dsc, str1);
- 
- }
- if(SAVE_OBJECT)
- {
- cout << "Saving object" << endl;
- string str(details::concat4digits("OBJ/obj_", iteration_nr/DOCUMENTATION_GAP) + ".obj");
- save_interface(dsc, str);
- }
- }
- }*/
 
 template <typename MT>
 inline void save_obj(DeformableSimplicialComplex<MT> & dsc, std::vector<std::string> const & materials, std::string const & path)
