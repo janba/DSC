@@ -301,51 +301,23 @@ namespace Util
     /**
      * Returns the shortest distance from the point p to the plane spanned by the points a, b and c.
      */
-    template<typename MT>
-    inline typename MT::real_type distance(const typename MT::vector3_type& p, const typename MT::vector3_type& a, const typename MT::vector3_type& b, const typename MT::vector3_type& c)
+    template<typename real, typename vec3>
+    inline real distance(const vec3& p, const vec3& a, const vec3& b, const vec3& c)
     {
-        typedef typename MT::vector3_type   V;
-        
-        V v = p - a;
-        V n = normal_direction<MT>(a, b, c);
-        
-        return std::abs(MT::dot(v, n));
+        vec3 v = p - a;
+        vec3 n = normal_direction(a, b, c);
+        return std::abs(dot(v, n));
     }
     
     /**
-     Returns whether you have to turn left when going from a to b to c.
+     * Calculates the intersection between the line segment |p0 p1| and the plane spanned by the vertices a, b and c. The intersection point is defined by p0 + t*(p1 - p0) and the function returns t. Returns infinity if it does not intersect.
      */
-    template<typename MT>
-    inline bool is_left_of(const typename MT::vector3_type& a, const typename MT::vector3_type& b, const typename MT::vector3_type& c)
+    template<typename real, typename vec3>
+    inline real intersection_ray_plane(const vec3& p0, const vec3& p1, const vec3& a, const vec3& b, const vec3& c)
     {
-        if(signed_area<MT>(a, b, c) > 0.)
-        {
-            return true;
-        }
-        return false;
-    }
-    
-    template<typename MT>
-    inline bool is_between(const typename MT::vector3_type& p, const std::vector<typename MT::vector3_type>& verts)
-    {
-        bool is_l1 = is_left_of<MT>(verts[0], verts[1], p);
-        bool is_l2 = is_left_of<MT>(verts[1], verts[2], p);
-        bool is_l3 = is_left_of<MT>(verts[2], verts[0], p);
-        return (is_l1 && is_l2 && is_l3) | (!is_l1 && !is_l2 && !is_l3);
-    }
-    
-    /**
-     * Calculates the intersection between the line segment |p0 p1| and the plane spanned by the vertices v0, v1 and v2. The intersection point is defined by p0 + t*(p1 - p0) and the function returns t. Returns infinity if it does not intersect.
-     */
-    template<typename MT>
-    typename MT::real_type intersection_ray_plane(const typename MT::vector3_type& p0, const typename MT::vector3_type& p1, const typename MT::vector3_type& v0, const typename MT::vector3_type& v1, const typename MT::vector3_type& v2)
-    {
-        typedef typename MT::real_type      T;
-        typedef typename MT::vector3_type   V;
-        
-        V normal = normal_direction(v0, v1, v2);
-        T n = MT::dot(normal, v0 - p0);
-        T d = MT::dot(normal, p1 - p0);
+        vec3 normal = normal_direction(a, b, c);
+        real n = dot(normal, a - p0);
+        real d = dot(normal, p1 - p0);
         
         if (std::abs(d) < EPSILON) // Plane and line are parallel if true.
         {
@@ -361,22 +333,19 @@ namespace Util
     }
     
     /**
-     * Calculates the intersection between the line segment |p0 p1| and the triangle |v0 v1 v2|. The intersection point is defined by p0 + t*(p1 - p0) and the function returns t. Returns infinity if it does not intersect.
+     * Calculates the intersection between the line segment |p0 p1| and the triangle |a b c|. The intersection point is defined by p0 + t*(p1 - p0) and the function returns t. Returns infinity if it does not intersect.
      */
-    template<typename MT>
-    typename MT::real_type intersection_ray_triangle(const typename MT::vector3_type& p0, const typename MT::vector3_type& p1, const typename MT::vector3_type& v0, const typename MT::vector3_type& v1, const typename MT::vector3_type& v2)
+    template<typename real, typename vec3>
+    inline real intersection_ray_triangle(const vec3& p0, const vec3& p1, const vec3& a, const vec3& b, const vec3& c)
     {
-        typedef typename MT::real_type      T;
-        typedef typename MT::vector3_type   V;
-        
-        T t = intersection_ray_plane<MT>(p0, p1, v0, v1, v2);
+        real t = intersection_ray_plane<real>(p0, p1, a, b, c);
         if(t < 0.) // The ray goes away from the triangle
         {
             return t;
         }
-        V p = p0 + t*(p1 - p0);
+        vec3 p = p0 + t*(p1 - p0);
         
-        std::vector<T> coords = barycentric_coords<real>(p, v0, v1, v2);
+        std::vector<real> coords = barycentric_coords<real>(p, a, b, c);
         if(coords[0] > EPSILON && coords[1] > EPSILON && coords[2] > EPSILON) // The intersection happens inside the triangle.
         {
             return t;

@@ -705,7 +705,7 @@ private:
                 auto nodes = Complex::get_nodes(*f);
                 orient_cc(apex2, nodes);
                 
-                T t = Util::intersection_ray_triangle<MT>(get_pos(apex1), get_pos(apex2), get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
+                T t = Util::intersection_ray_triangle<T>(get_pos(apex1), get_pos(apex2), get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
                 if(0. < t && t < 1.)
                 {
                     if(topological_face_removal(*f))
@@ -1551,7 +1551,7 @@ private:
         for(auto fit = ln.faces_begin(); fit != ln.faces_end(); fit++)
         {
             auto face_pos = get_pos(*fit);
-            T t = Util::intersection_ray_plane<MT>(pos, new_pos, face_pos[0], face_pos[1], face_pos[2]);
+            T t = Util::intersection_ray_plane<T>(pos, new_pos, face_pos[0], face_pos[1], face_pos[2]);
             if (0. <= t)
             {
                 min_t = std::min(t, min_t);
