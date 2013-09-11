@@ -341,7 +341,7 @@ void UI::rotate_cube()
     std::vector<int>  tet_labels;
     
 //    import_tet_mesh<GELTypes>(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
-    Tetralizer<MT> tetralizer(50., 50., 50., DISCRETIZATION);
+    Tetralizer tetralizer(50., 50., 50., DISCRETIZATION);
     tetralizer.tetralize(points, tets, tet_labels);
     
     dsc = new DeformableSimplicialComplex<MT>(DISCRETIZATION, points, tets, tet_labels);

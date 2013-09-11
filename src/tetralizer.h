@@ -18,20 +18,17 @@
 
 #include "util.h"
 
-template<typename MT>
 class Tetralizer {
     
-    typedef typename MT::real_type      T;
-    
-    T DEPTH;
-    T WIDTH;
-    T HEIGHT;
-    T AVG_EDGE_LENGTH;
+    real DEPTH;
+    real WIDTH;
+    real HEIGHT;
+    real AVG_EDGE_LENGTH;
     
     int Ni, Nj, Nk;
     
 public:
-    Tetralizer(T width, T height, T depth, T avg_edge_length): WIDTH(width), HEIGHT(height), DEPTH(depth), AVG_EDGE_LENGTH(avg_edge_length)
+    Tetralizer(real width, real height, real depth, real avg_edge_length): WIDTH(width), HEIGHT(height), DEPTH(depth), AVG_EDGE_LENGTH(avg_edge_length)
     {
         Ni = std::ceil(WIDTH/AVG_EDGE_LENGTH) + 1;
         Nj = std::ceil(HEIGHT/AVG_EDGE_LENGTH) + 1;
@@ -128,7 +125,7 @@ private:
         }
     }
     
-    void create_points(std::vector<T>& points)
+    void create_points(std::vector<real>& points)
     {        
         for (int k = 0; k < Nk; k++) {
             for (int j = 0; j < Nj; j++) {
@@ -167,7 +164,7 @@ private:
     }
     
 public:
-    void tetralize(std::vector<T>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
+    void tetralize(std::vector<real>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
     {
         create_points(points);
         create_tets(tets);
