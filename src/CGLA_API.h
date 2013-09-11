@@ -20,7 +20,6 @@
 #include <CGLA/Vec4d.h>
 #include <CGLA/Mat3x3d.h>
 #include <CGLA/Mat4x4d.h>
-#include <CGLA/eigensolution.h>
 
 typedef double            real;
 typedef CGLA::Vec3d       vec3;
@@ -29,6 +28,12 @@ typedef CGLA::Mat3x3d     mat3;
 typedef CGLA::Mat4x4d     mat4;
 
 typedef CGLA::Axis       AXIS;
+
+
+inline bool is_nan(real const & t)
+{
+    return CGLA::isnan(t);
+}
 
 inline real dot(vec3 const & v1, vec3 const & v2)
 {
@@ -45,9 +50,14 @@ inline real length(vec3 const & v)
     return CGLA::length(v);
 }
 
-inline bool is_nan(real const & t)
+inline real sqr_length(vec3 const & v)
 {
-    return CGLA::isnan(t);
+    return CGLA::sqr_length(v);
+}
+
+inline vec3 normalize(vec3 const & v)
+{
+    return CGLA::normalize(v);
 }
 
 inline real determinant(mat3 const & m)
@@ -60,9 +70,19 @@ inline real determinant(mat4 const & m)
     return CGLA::determinant(m);
 }
 
+inline mat3 transpose(mat3 const & m)
+{
+    return CGLA::transpose(m);
+}
+
 inline mat4 transpose(mat4 const & m)
 {
     return CGLA::transpose(m);
+}
+
+inline mat3 invert(mat3 const & m)
+{
+    return CGLA::invert(m);
 }
 
 inline mat4 invert(mat4 const & m)
@@ -70,27 +90,12 @@ inline mat4 invert(mat4 const & m)
     return CGLA::invert(m);
 }
 
-inline real sqr_length(vec3 const & v)
-{
-    return CGLA::sqr_length(v);
-}
-
-inline vec3 normalize(vec3 const & v)
-{
-    return CGLA::normalize(v);
-}
-
-inline void orthogonal(vec3 const & v1, vec3 & v2, vec3 & v3)
-{
-    CGLA::orthogonal(v1, v2, v3);
-}
-
-inline void eigen(mat3 AA, mat3 Q, mat3 L)
-{
-    CGLA::power_eigensolution(AA, Q, L);
-}
-
-inline mat3 get_rotation_matrix(const CGLA::Axis& axis, const real& angle)
+inline mat3 rotation_mat3(const CGLA::Axis& axis, const real& angle)
 {
     return CGLA::rotation_Mat3x3d(axis, angle);
+}
+
+inline mat4 rotation_mat4(const CGLA::Axis& axis, const real& angle)
+{
+    return CGLA::rotation_Mat4x4d(axis, angle);
 }
