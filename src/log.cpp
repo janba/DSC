@@ -58,22 +58,22 @@ void Log::write_message(const char* message)
 //    write_variable("Total time", vel_fun->get_compute_time() + vel_fun->get_deform_time(), "s");
 //}
 
-void Log::write_variable(const char* name, double value)
+void Log::write_variable(const char* name, real value)
 {
     log << "\t" << name << "\t:\t" << value << std::endl;
 }
 
-void Log::write_variable(const char* name, double value, double change)
+void Log::write_variable(const char* name, real value, real change)
 {
     log << "\t" << name << "\t:\t" << value << "\t\tChange\t:\t" << change << std::endl;
 }
 
-void Log::write_variable(const char* name, double value, const char* unit)
+void Log::write_variable(const char* name, real value, const char* unit)
 {
     log << "\t" << name << "\t:\t" << value << " " << unit << std::endl;
 }
 
-void Log::write_variable(const char* name, const std::vector<double>& values)
+void Log::write_variable(const char* name, const std::vector<real>& values)
 {
     if(values.size() > 0)
     {

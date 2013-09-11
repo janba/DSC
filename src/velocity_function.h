@@ -71,7 +71,7 @@ public:
     /**
      Returns the velocity.
      */
-    double get_velocity() const
+    real get_velocity() const
     {
         return VELOCITY;
     }
@@ -79,7 +79,7 @@ public:
     /**
      Returns the accuracy.
      */
-    double get_accuracy() const
+    real get_accuracy() const
     {
         return ACCURACY;
     }
@@ -87,7 +87,7 @@ public:
     /**
      Returns the time it took to deform the interface in this time step.
      */
-    double get_deform_time() const
+    real get_deform_time() const
     {
         return deform_time;
     }
@@ -95,7 +95,7 @@ public:
     /**
      Returns the time it took to compute the new positions of the interface in this time step.
      */
-    double get_compute_time() const
+    real get_compute_time() const
     {
         return compute_time;
     }
@@ -103,7 +103,7 @@ public:
     /**
      Returns the total time it took to deform the interface.
      */
-    double get_total_deform_time() const
+    real get_total_deform_time() const
     {
         return total_deform_time;
     }
@@ -111,7 +111,7 @@ public:
     /**
      Returns the total time it took to compute the new positions of the interface.
      */
-    double get_total_compute_time() const
+    real get_total_compute_time() const
     {
         return total_compute_time;
     }
@@ -122,7 +122,7 @@ protected:
      */
     void update_compute_time(const std::chrono::time_point<std::chrono::system_clock>& start_time)
     {
-        std::chrono::duration<double> t = std::chrono::system_clock::now() - start_time;
+        std::chrono::duration<real> t = std::chrono::system_clock::now() - start_time;
         compute_time += t.count();
         total_compute_time += t.count();
     }
@@ -131,7 +131,7 @@ protected:
      */
     void update_deform_time(const std::chrono::time_point<std::chrono::system_clock>& start_time)
     {
-        std::chrono::duration<double> t = std::chrono::system_clock::now() - start_time;
+        std::chrono::duration<real> t = std::chrono::system_clock::now() - start_time;
         deform_time += t.count();
         total_deform_time += t.count();
     }

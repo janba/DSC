@@ -122,7 +122,7 @@ namespace Util
     inline real max_angle(const vec3& a, const vec3& b, const vec3& c)
     {
         std::vector<real> cosines = cos_angles<real>(a, b, c);
-        double min_cos = 1.;
+        real min_cos = 1.;
         for(auto cos : cosines)
         {
             min_cos = std::min(cos, min_cos);

@@ -31,7 +31,7 @@ public:
     /**
      Creates a rotating velocity function.
      */
-    RotateFunc(double velocity, double accuracy, int max_time_steps = 500):
+    RotateFunc(real velocity, real accuracy, int max_time_steps = 500):
         VelocityFunc<MT>(M_PI*velocity/(5.*180.), accuracy, max_time_steps)
     {
         

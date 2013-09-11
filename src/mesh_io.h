@@ -68,7 +68,7 @@ inline void import_tet_mesh(const std::string & filename, std::vector<real>& poi
 		file >> c;
 		if (c == 'v')
 		{
-            double x,y,z; // The (x,y,z) coordinates of a vertex.
+            real x,y,z; // The (x,y,z) coordinates of a vertex.
             file >> x;
             file >> y;
             file >> z;

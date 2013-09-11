@@ -51,7 +51,7 @@ inline void print_diff(std::vector<VT> const & a, std::vector<VT> const & b)
 }
 
 template <class VT>
-inline void print_diff(double const & a, double const & b)
+inline void print_diff(real const & a, real const & b)
 {
 	if(abs(a - b) > EPSILON)
 	{

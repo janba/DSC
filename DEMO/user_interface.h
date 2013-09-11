@@ -55,9 +55,9 @@ protected:
     bool RECORD;
     bool QUIT_ON_COMPLETION;
     
-    double VELOCITY;
-    double DISCRETIZATION;
-    double ACCURACY;
+    real VELOCITY;
+    real DISCRETIZATION;
+    real ACCURACY;
     static UI* instance;
     
 #ifdef WIN32

@@ -428,6 +428,7 @@
 			isa = PBXGroup;
 			children = (
 				7A9C205317DFB3C20064171E /* GEL_types.h */,
+				7A9C20DC17DFD4C90064171E /* CGLA_API.h */,
 				7A56303E17D57445005152B6 /* attributes.h */,
 				7AE27ADF17675B04000F8238 /* log.cpp */,
 				7AE27AE017675B04000F8238 /* log.h */,
@@ -438,7 +439,6 @@
 				7AF7E9BE176B4FE400F43714 /* DSC.h */,
 				7A90991B17D7A27000A66365 /* tetralizer.h */,
 				7A90991A17D7A27000A66365 /* tetralizer.cpp */,
-				7A9C20DC17DFD4C90064171E /* CGLA_API.h */,
 			);
 			path = DSC;
 			sourceTree = "<group>";

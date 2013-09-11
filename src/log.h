@@ -55,22 +55,22 @@ protected:
     /**
      Write a variable with name and value to the log.
      */
-    void write_variable(const char* name, double value);
+    void write_variable(const char* name, real value);
     
     /**
      Write a variable with name, value and change in value to the log.
      */
-    void write_variable(const char* name, double value, double change);
+    void write_variable(const char* name, real value, real change);
     
     /**
      Write a variable with name, value and unit of the value to the log.
      */
-    void write_variable(const char* name, double value, const char* unit);
+    void write_variable(const char* name, real value, const char* unit);
     
     /**
      Write a variable with name and values to the log.
      */
-    void write_variable(const char* name, const std::vector<double>& values);
+    void write_variable(const char* name, const std::vector<real>& values);
     
     void write_variable(const char* name, const std::vector<int>& values);
     
@@ -163,8 +163,8 @@ public:
     template<class MT>
     void write_timings(const VelocityFunc<MT> *vel_fun)
     {
-        double deform_time = vel_fun->get_total_deform_time();
-        double compute_time = vel_fun->get_total_compute_time();
+        real deform_time = vel_fun->get_total_deform_time();
+        real compute_time = vel_fun->get_total_compute_time();
         write_message("TIMINGS");
         write_variable("Total time", deform_time + compute_time, "s");
         write_variable("Compute time", compute_time, "s");

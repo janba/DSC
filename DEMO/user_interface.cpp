@@ -336,7 +336,7 @@ void UI::rotate_cube()
 {
     stop();
     // Build the Simplicial Complex
-    std::vector<MT::real_type> points;
+    std::vector<real> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
     
@@ -361,7 +361,7 @@ void UI::smooth_armadillo()
 {
     stop();
     // Build the Simplicial Complex
-    std::vector<MT::real_type> points;
+    std::vector<real> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
     import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
@@ -383,7 +383,7 @@ void UI::expand_armadillo()
 {
     stop();
     // Build the Simplicial Complex
-    std::vector<MT::real_type> points;
+    std::vector<real> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
     import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
