@@ -155,61 +155,41 @@ namespace Util
         return std::acos(cos_dihedral_angle<real>(a, b, c, d));
     }
     
-    template <typename MT>
-    inline typename MT::vector3_type barycenter(typename MT::vector3_type const & a, typename MT::vector3_type const & b)
+    template <typename vec3>
+    inline vec3 barycenter(const vec3& a, const vec3& b)
     {
-        typedef typename MT::vector3_type V;
-        V result(0.);
-        result += a + b;
-        result /= 2.;
-        return result;
+        return (a + b)*0.5;
     }
     
-    template <typename MT>
-    inline typename MT::vector3_type barycenter(typename MT::vector3_type const & a,
-                                                typename MT::vector3_type const & b,
-                                                typename MT::vector3_type const & c)
+    template <typename vec3>
+    inline vec3 barycenter(const vec3& a, const vec3& b, const vec3& c)
     {
-        typedef typename MT::vector3_type V;
-        V result(0.);
-        result += a + b + c;
-        result /= 3.;
-        return result;
+        return (a + b + c)/3.;
     }
     
-    template <typename MT>
-    inline typename MT::vector3_type barycenter(typename MT::vector3_type const & a,
-                                                typename MT::vector3_type const & b,
-                                                typename MT::vector3_type const & c,
-                                                typename MT::vector3_type const & d)
+    template <typename vec3>
+    inline vec3 barycenter(const vec3& a, const vec3& b, const vec3& c, const vec3& d)
     {
-        typedef typename MT::vector3_type V;
-        V result(0.);
-        result += a + b + c + d;
-        result /= 4.;
-        return result;
+        return (a + b + c + d)*0.25;
     }
     
     /**
-     * Finds the barycentric coordinates of point v in a triangle spanned by points v0, v1, v2.
+     * Finds the barycentric coordinates of point v in a triangle spanned by the vertices a, b and c.
      */
-    template <typename MT>
-    inline std::vector<typename MT::real_type> barycentric_coords(typename MT::vector3_type const& p, typename MT::vector3_type const& a, typename MT::vector3_type const& b, typename MT::vector3_type const& c)
+    template <typename real, typename vec3>
+    inline std::vector<real> barycentric_coords(const vec3& p, const vec3& a, const vec3& b, const vec3& c)
     {
-        typedef typename MT::real_type      T;
-        typedef typename MT::vector3_type   V;
+        std::vector<real> coords(3);
         
-        std::vector<T> coords(3);
-        
-        V v0 = b - a;
-        V v1 = c - a;
-        V v2 = p - a;
-        T d00 = MT::dot(v0, v0);
-        T d01 = MT::dot(v0, v1);
-        T d11 = MT::dot(v1, v1);
-        T d20 = MT::dot(v2, v0);
-        T d21 = MT::dot(v2, v1);
-        T denom = d00 * d11 - d01 * d01;        
+        vec3 v0 = b - a;
+        vec3 v1 = c - a;
+        vec3 v2 = p - a;
+        real d00 = dot(v0, v0);
+        real d01 = dot(v0, v1);
+        real d11 = dot(v1, v1);
+        real d20 = dot(v2, v0);
+        real d21 = dot(v2, v1);
+        real denom = d00 * d11 - d01 * d01;
 #ifdef DEBUG
         assert(denom != 0.);
 #endif
@@ -221,21 +201,23 @@ namespace Util
     }
     
     /**
-     * Calculates the barycentric coordinates of a point v in a tetrahedron spanned by the four vertices in verts.
+     * Calculates the barycentric coordinates of a point v in a tetrahedron spanned by the four vertices a, b, c and d.
      */
-    template <typename MT>
-    inline void barycentric_coords(const typename MT::vector3_type& v, const std::vector<typename MT::vector3_type>& verts, std::vector<typename MT::real_type> & coords)
-    {        
-        coords[0] = signed_volume<MT>(v       , verts[1], verts[2], verts[3]);
-        coords[1] = signed_volume<MT>(verts[0], v       , verts[2], verts[3]);
-        coords[2] = signed_volume<MT>(verts[0], verts[1], v       , verts[3]);
-        coords[3] = signed_volume<MT>(verts[0], verts[1], verts[2], v       );
+    template <typename real, typename vec3>
+    inline std::vector<real> barycentric_coords(const vec3& p, const vec3& a, const vec3& b, const vec3& c, const vec3& d)
+    {
+        std::vector<real> coords(4);
+        coords[0] = signed_volume<real>(p, b, c, d);
+        coords[1] = signed_volume<real>(a, p, c, d);
+        coords[2] = signed_volume<real>(a, b, p, d);
+        coords[3] = signed_volume<real>(a, b, c, p);
         
-        typename MT::real_type s = coords[0] + coords[1] + coords[2] + coords[3];
+        real s = coords[0] + coords[1] + coords[2] + coords[3];
         for (unsigned int i = 0; i < 4; ++i)
         {
             coords[i] /= s;
         }
+        return coords;
     }
     
     template <typename vec3>
@@ -581,7 +563,7 @@ namespace Util
         }
         V p = p0 + t*(p1 - p0);
         
-        std::vector<T> coords = barycentric_coords<MT>(p, v0, v1, v2);
+        std::vector<T> coords = barycentric_coords<real>(p, v0, v1, v2);
         if(coords[0] > EPSILON && coords[1] > EPSILON && coords[2] > EPSILON) // The intersection happens inside the triangle.
         {
             return t;

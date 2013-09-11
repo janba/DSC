@@ -1673,11 +1673,11 @@ public:
     node_key split(const edge_key & e)
     {
         auto nodes = Complex::get_nodes(e);
-        V p = Util::barycenter<MT>(get_pos(nodes[0]), get_pos(nodes[1]));
+        V p = Util::barycenter(get_pos(nodes[0]), get_pos(nodes[1]));
         V p_new = p;
         if(is_interface(e))
         {
-            p_new = Util::barycenter<MT>(get_destination(nodes[0]), get_destination(nodes[1]));
+            p_new = Util::barycenter(get_destination(nodes[0]), get_destination(nodes[1]));
         }
         
         node_key n = Complex::split(e);
@@ -1767,11 +1767,11 @@ private:
         
         if (!is_boundary(nodes[0]) && !is_boundary(nodes[1]) && (!safe || (!is_interface(nodes[0]) && !is_interface(nodes[1]))))
         {
-            V p = Util::barycenter<MT>(get_pos(nodes[0]), get_pos(nodes[1]));
+            V p = Util::barycenter(get_pos(nodes[0]), get_pos(nodes[1]));
             T q = min_quality(e, p);
             if (precond_collapse(e, p) && q > q_max)
             {
-                p_new_opt = Util::barycenter<MT>(get_destination(nodes[0]), get_destination(nodes[1]));
+                p_new_opt = Util::barycenter(get_destination(nodes[0]), get_destination(nodes[1]));
                 p_opt = p;
                 q_max = q;
             }
@@ -1946,14 +1946,14 @@ public:
     T min_angle(const face_key& f)
     {
         auto verts = get_pos(f);
-        return Util::min_angle<real>(verts[0], verts[1], verts[2]);
+        return Util::min_angle<T>(verts[0], verts[1], verts[2]);
     }
     
     T max_angle(const face_key& f)
     {
         std::vector<V> verts;
         get_pos(f, verts);
-        return Util::max_angle<real>(verts[0], verts[1], verts[2]);
+        return Util::max_angle<T>(verts[0], verts[1], verts[2]);
     }
     
     /**
@@ -2444,7 +2444,7 @@ public:
             }
         }
         
-        return Util::cos_dihedral_angle<real>(verts[0], verts[1], apices[0], apices[1]);
+        return Util::cos_dihedral_angle<T>(verts[0], verts[1], apices[0], apices[1]);
     }
     
     /**
@@ -2471,7 +2471,7 @@ public:
                             apices.push_back(k);   
                         }
                     }
-                    angles.push_back(Util::cos_dihedral_angle<real>(verts[i], verts[j], verts[apices[0]], verts[apices[1]]));
+                    angles.push_back(Util::cos_dihedral_angle<T>(verts[i], verts[j], verts[apices[0]], verts[apices[1]]));
                 }
             }
         }
