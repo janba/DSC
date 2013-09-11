@@ -227,7 +227,7 @@ namespace Util
         vec3 ac = c - a;
         vec3 n = cross(ab, ac);
 #ifdef DEBUG
-        assert(!MT::is_nan(n[0]) && !MT::is_nan(n[1]) && !MT::is_nan(n[2]));
+        assert(!is_nan(n[0]) && !is_nan(n[1]) && !is_nan(n[2]));
 #endif
         return normalize(n);
     }
