@@ -16,27 +16,23 @@
 
 #pragma once
 
-template<typename MT>
 class NodeAttributes
 {
-    typedef typename MT::real_type      T;
-    typedef typename MT::vector3_type   V;
-    
-    V p;
-    V p_new;
+    vec3 p;
+    vec3 p_new;
     std::bitset<3> flags;
     
 public:
     
     NodeAttributes() : p(0.,0.,0.), p_new(0.,0.,0.) {}
-    NodeAttributes(T const & x, T const & y, T const & z) : p(x,y,z), p_new(x,y,z) {}
+    NodeAttributes(const real& x, const real& y, const real& z) : p(x,y,z), p_new(x,y,z) {}
     
-    V get_pos()
+    vec3 get_pos()
     {
         return p;
     }
     
-    V get_destination()
+    vec3 get_destination()
     {
         return p_new;
     }
@@ -48,12 +44,12 @@ public:
 		flags = t.flags;
     }
     
-    void set_pos(V p_)
+    void set_pos(vec3 p_)
     {
         p = p_;
     }
     
-    void set_destination(V p_)
+    void set_destination(vec3 p_)
     {
         p_new = p_;
     }
