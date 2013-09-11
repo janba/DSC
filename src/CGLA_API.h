@@ -16,12 +16,14 @@
 
 #pragma once
 
+#include <CGLA/Vec2d.h>
 #include <CGLA/Vec3d.h>
 #include <CGLA/Vec4d.h>
 #include <CGLA/Mat3x3d.h>
 #include <CGLA/Mat4x4d.h>
 
 typedef double            real;
+typedef CGLA::Vec2d       vec2;
 typedef CGLA::Vec3d       vec3;
 typedef CGLA::Vec4d       vec4;
 typedef CGLA::Mat3x3d     mat3;
@@ -33,6 +35,26 @@ typedef CGLA::Axis       AXIS;
 inline bool is_nan(real const & t)
 {
     return CGLA::isnan(t);
+}
+
+inline real dot(vec2 const & v1, vec2 const & v2)
+{
+    return CGLA::dot(v1, v2);
+}
+
+inline real length(vec2 const & v)
+{
+    return CGLA::length(v);
+}
+
+inline real sqr_length(vec2 const & v)
+{
+    return CGLA::sqr_length(v);
+}
+
+inline vec2 normalize(vec2 const & v)
+{
+    return CGLA::normalize(v);
 }
 
 inline real dot(vec3 const & v1, vec3 const & v2)
