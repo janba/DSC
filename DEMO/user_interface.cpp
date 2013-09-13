@@ -63,13 +63,13 @@ UI::UI(int &argc, char** argv)
     glutReshapeFunc(reshape_);
 	glutIdleFunc(animate_);
     
-	glewExperimental = GL_TRUE;  // Added because of http://openglbook.com/glgenvertexarrays-access-violationsegfault-with-glew/
-    
+	glewExperimental = GL_TRUE;  // See http://www.opengl.org/wiki/OpenGL_Loading_Library
 	GLint GlewInitResult = glewInit();
 	if (GlewInitResult != GLEW_OK) {
 		printf("ERROR: %s\n", glewGetErrorString(GlewInitResult));
 	}
-        
+    check_gl_error(); // Catches a GL_INVALID_ENUM error. See http://www.opengl.org/wiki/OpenGL_Loading_Library
+    
     painter = new Painter();
     vel_fun = nullptr;
     dsc = nullptr;
