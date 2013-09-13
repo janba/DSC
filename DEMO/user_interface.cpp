@@ -53,7 +53,6 @@ UI::UI(int &argc, char** argv)
     WIN_SIZE_Y = 1000;
 
     glutInit(&argc, argv);
-    glutInitWindowSize(WIN_SIZE_X,WIN_SIZE_Y);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
     glutCreateWindow("");
     
@@ -122,7 +121,9 @@ UI::UI(int &argc, char** argv)
         RECORD = true;
         QUIT_ON_COMPLETION = true;
     }
+    
     update_title();
+	glutReshapeWindow(WIN_SIZE_X, WIN_SIZE_Y);
     check_gl_error();
 }
 
@@ -354,7 +355,7 @@ void UI::rotate_cube()
     basic_log->write_log(vel_fun);
     
     update_title();
-    reshape(WIN_SIZE_X, WIN_SIZE_Y);
+	glutReshapeWindow(WIN_SIZE_X, WIN_SIZE_Y);
 }
 
 void UI::smooth_armadillo()
@@ -376,7 +377,7 @@ void UI::smooth_armadillo()
     basic_log->write_log(vel_fun);
     
     update_title();
-    reshape(WIN_SIZE_X, WIN_SIZE_Y);
+	glutReshapeWindow(WIN_SIZE_X, WIN_SIZE_Y);
 }
 
 void UI::expand_armadillo()
@@ -401,6 +402,6 @@ void UI::expand_armadillo()
     basic_log->write_log(vel_fun);
     
     update_title();
-    reshape(WIN_SIZE_X, WIN_SIZE_Y);
+	glutReshapeWindow(WIN_SIZE_X, WIN_SIZE_Y);
 }
 
