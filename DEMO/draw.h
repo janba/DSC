@@ -158,8 +158,7 @@ public:
     /**
      Draws the simplicial complex.
      */
-    template<typename MT>
-    void draw_complex(DeformableSimplicialComplex<MT> *complex)
+    void draw_complex(DeformableSimplicialComplex<> *complex)
     {
         draw_faces(complex);
 //        draw_nodes(complex);
@@ -172,8 +171,7 @@ public:
     /**
      Draws the bad tetrahedra.
      */
-    template<typename MT>
-    void draw_bad_tetrahedra(DeformableSimplicialComplex<MT> *complex)
+    void draw_bad_tetrahedra(DeformableSimplicialComplex<> *complex)
     {
         bool low_quality, small_angle;
         glLineWidth(LINE_WIDTH);
@@ -195,7 +193,7 @@ public:
                     glColor4fv(&GREEN[0]);
                 }
                 
-                typename DeformableSimplicialComplex<MT>::simplex_set cl_t;
+                typename DeformableSimplicialComplex<>::simplex_set cl_t;
                 complex->closure(tit.key(), cl_t);
                 
                 for (auto fit = cl_t.faces_begin(); fit != cl_t.faces_end(); fit++)
@@ -217,8 +215,7 @@ public:
     /**
      Draws the faces with the colors defined by the get_face_colors function in the simplicial complex.
      */
-    template<typename MT>
-    void draw_faces(DeformableSimplicialComplex<MT> *complex, const float color[] = GRAY)
+    void draw_faces(DeformableSimplicialComplex<> *complex, const float color[] = GRAY)
     {
         glColor3fv(&color[0]);
         glBegin(GL_TRIANGLES);
@@ -240,8 +237,7 @@ public:
         glEnd();
     }
     
-    template<typename MT>
-    void draw_edges(DeformableSimplicialComplex<MT> *complex, const float color[] = BLACK)
+    void draw_edges(DeformableSimplicialComplex<> *complex, const float color[] = BLACK)
     {
         glColor3fv(&color[0]);
         glLineWidth(LINE_WIDTH);
@@ -259,8 +255,7 @@ public:
         glEnd();
     }
     
-    template<typename MT>
-    void draw_nodes(DeformableSimplicialComplex<MT> *complex, const float color[] = BLACK)
+    void draw_nodes(DeformableSimplicialComplex<> *complex, const float color[] = BLACK)
     {
         glColor3fv(&color[0]);
         glPointSize(POINT_SIZE);
@@ -294,8 +289,7 @@ public:
         check_gl_error();
     }
     
-    template<typename MT>
-    void draw_interface(DeformableSimplicialComplex<MT> *complex, const float color[] = GRAY)
+    void draw_interface(DeformableSimplicialComplex<> *complex, const float color[] = GRAY)
     {
         vertexdata.clear();
         for (auto fit = complex->faces_begin(); fit != complex->faces_end(); fit++)

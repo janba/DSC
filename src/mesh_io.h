@@ -26,8 +26,7 @@
 /**
  * Exports the mesh as a .dsc file.
  */
-template <typename MT>
-inline void export_tet_mesh(DeformableSimplicialComplex<MT> & dsc, const std::string & filename)
+inline void export_tet_mesh(DeformableSimplicialComplex<>& dsc, const std::string & filename)
 {
 	std::vector<vec3> points;
     std::vector< std::vector<int> > tets;
@@ -99,8 +98,7 @@ inline void import_tet_mesh(const std::string & filename, std::vector<real>& poi
     file.close();
 }
 
-template <typename MT>
-inline void save_interface(DeformableSimplicialComplex<MT> & dsc, std::string & filename)
+inline void save_interface(DeformableSimplicialComplex<>& dsc, std::string & filename)
 {
 	std::vector<vec3> verts;
 	std::vector<int> indices;

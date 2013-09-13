@@ -84,8 +84,7 @@ public:
     /**
      Write the time step number, timings and additional time step information to the log.
      */
-    template<class MT>
-    void write_timestep(const VelocityFunc<MT> *vel_fun, DeformableSimplicialComplex<MT> *complex)
+    void write_timestep(const VelocityFunc *vel_fun, DeformableSimplicialComplex<> *complex)
     {
         //    std::cout << "\n\n*** Time step #" << vel_fun->get_time_step() << " ***" << std::endl;
         log << std::endl << "*** Time step #" << vel_fun->get_time_step() << " ***" << std::endl;
@@ -106,8 +105,7 @@ public:
     /**
      Writes simplicial complex information to the log.
      */
-    template<class MT>
-    void write_log(DeformableSimplicialComplex<MT> *complex)
+    void write_log(DeformableSimplicialComplex<> *complex)
     {
         write_message("SIMPLICIAL COMPLEX INFO");
 //        write_variable("Size X\t", complex->get_size_x());
@@ -149,8 +147,7 @@ public:
     /**
      Writes velocity function information to the log.
      */
-    template<class MT>
-    void write_log(const VelocityFunc<MT> *vel_fun)
+    void write_log(const VelocityFunc *vel_fun)
     {
         write_message("VELOCITY FUNCTION INFO");
         write_variable("Velocity", vel_fun->get_velocity());
@@ -160,8 +157,7 @@ public:
     /**
      Writes timings to the log.
      */
-    template<class MT>
-    void write_timings(const VelocityFunc<MT> *vel_fun)
+    void write_timings(const VelocityFunc *vel_fun)
     {
         real deform_time = vel_fun->get_total_deform_time();
         real compute_time = vel_fun->get_total_compute_time();

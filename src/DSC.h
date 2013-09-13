@@ -21,7 +21,7 @@
 #include "printing.h"
 #include "attributes.h"
 
-template <typename MT, typename node_att = NodeAttributes, typename edge_att = EdgeAttributes, typename face_att = FaceAttributes, typename tet_att = TetAttributes>
+template <typename node_att = NodeAttributes, typename edge_att = EdgeAttributes, typename face_att = FaceAttributes, typename tet_att = TetAttributes>
 class DeformableSimplicialComplex : public ISMesh<node_att, edge_att, face_att, tet_att>
 {
     typedef ISMesh<node_att, edge_att, face_att, tet_att> Complex;

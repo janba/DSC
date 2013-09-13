@@ -21,8 +21,7 @@
 /**
  A velocity function which moves the interface vertices in the normal direction.
  */
-template<class MT>
-class NormalFunc: public VelocityFunc<MT> {
+class NormalFunc: public VelocityFunc {
     
     
 public:
@@ -30,7 +29,7 @@ public:
      Creates a velocity function which moves the interface vertices in the normal direction.
      */
     NormalFunc(real velocity, real accuracy, int max_time_steps = 500):
-        VelocityFunc<MT>(velocity/10., accuracy, max_time_steps)
+        VelocityFunc(velocity/10., accuracy, max_time_steps)
     {
         
     }
@@ -46,7 +45,7 @@ public:
     /**
      Computes the motion of each interface vertex and stores the new position in new_pos in the simplicial complex class.
      */
-    virtual void deform(DeformableSimplicialComplex<MT>& dsc)
+    virtual void deform(DeformableSimplicialComplex<>& dsc)
     {
         auto init_time = std::chrono::system_clock::now();
         vec3 new_pos;
@@ -54,15 +53,15 @@ public:
         {
             if(nit->is_interface() && !nit->is_crossing())
             {
-                new_pos = dsc.get_pos(nit.key()) + VelocityFunc<MT>::VELOCITY * dsc.get_normal(nit.key());
+                new_pos = dsc.get_pos(nit.key()) + VelocityFunc::VELOCITY * dsc.get_normal(nit.key());
                 dsc.set_destination(nit.key(), new_pos);
             }
         }
-        VelocityFunc<MT>::update_compute_time(init_time);
+        VelocityFunc::update_compute_time(init_time);
         init_time = std::chrono::system_clock::now();
         
         dsc.deform();
         
-        VelocityFunc<MT>::update_deform_time(init_time);
+        VelocityFunc::update_deform_time(init_time);
     }
 };

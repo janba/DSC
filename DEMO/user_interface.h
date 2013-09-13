@@ -24,8 +24,6 @@
 #include <GLUT/glut.h>
 #endif
 
-#include "GEL_types.h"
-
 #include "DSC.h"
 #include "velocity_function.h"
 #include "log.h"
@@ -36,13 +34,11 @@
  */
 class UI
 {
-protected:
-    typedef GELTypes MT;
-    
+protected:    
     float r = 150.;
     
-    VelocityFunc<MT> *vel_fun;
-    DeformableSimplicialComplex<MT> *dsc;
+    VelocityFunc *vel_fun;
+    DeformableSimplicialComplex<> *dsc;
     
     Log *basic_log;
     

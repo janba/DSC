@@ -238,7 +238,7 @@ void UI::keyboard(unsigned char key, int x, int y) {
             {
                 std::cout << "EXPORTING MESH" << std::endl;
                 std::string filepath("data/mesh.dsc");
-                export_tet_mesh<MT>(*dsc, filepath);
+                export_tet_mesh(*dsc, filepath);
             }
             break;
         case '+':
@@ -344,8 +344,8 @@ void UI::rotate_cube()
     Tetralizer tetralizer(50., 50., 50., DISCRETIZATION);
     tetralizer.tetralize(points, tets, tet_labels);
     
-    dsc = new DeformableSimplicialComplex<MT>(DISCRETIZATION, points, tets, tet_labels);
-    vel_fun = new RotateFunc<MT>(VELOCITY, ACCURACY);
+    dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels);
+    vel_fun = new RotateFunc(VELOCITY, ACCURACY);
     
     basic_log = new Log(create_log_path());
     
@@ -366,8 +366,8 @@ void UI::smooth_armadillo()
     std::vector<int>  tet_labels;
     import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
     
-    dsc = new DeformableSimplicialComplex<MT>(DISCRETIZATION, points, tets, tet_labels);
-    vel_fun = new AverageFunc<MT>(VELOCITY, ACCURACY);
+    dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels);
+    vel_fun = new AverageFunc(VELOCITY, ACCURACY);
     
     basic_log = new Log(create_log_path());
     
@@ -391,8 +391,8 @@ void UI::expand_armadillo()
 //    std::vector<GELTypes::vector3_type> pts_inside = {GELTypes::vector3_type( 0.0f, 0.0f, 0.0f)};
 //    build_tetrahedralization<GELTypes>(get_data_file_path("armadillo-very-simple.obj"), points, tets, tet_labels, pts_inside);
     
-    dsc = new DeformableSimplicialComplex<MT>(DISCRETIZATION, points, tets, tet_labels);
-    vel_fun = new NormalFunc<MT>(VELOCITY, ACCURACY);
+    dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels);
+    vel_fun = new NormalFunc(VELOCITY, ACCURACY);
     
     basic_log = new Log(create_log_path());
     

@@ -21,7 +21,6 @@
 /**
  An abstract class which a specific velocity function should enherit from.
  */
-template<class MT>
 class VelocityFunc
 {
     int time_step;
@@ -139,13 +138,13 @@ protected:
     /**
      Computes the motion of each interface vertex and stores the new position in new_pos in the simplicial complex class.
      */
-    virtual void deform(DeformableSimplicialComplex<MT>& dsc) = 0;
+    virtual void deform(DeformableSimplicialComplex<>& dsc) = 0;
     
 public:
     /**
      Returns wether the motion has finished.
      */
-    virtual bool is_motion_finished(const DeformableSimplicialComplex<MT>& dsc)
+    virtual bool is_motion_finished(const DeformableSimplicialComplex<>& dsc)
     {
 //        std::vector<vec3> pos = complex->get_design_variable_positions();
 //        for (auto p = pos.begin(); p != pos.end(); p++)
@@ -173,7 +172,7 @@ public:
     /**
      Takes one time step thereby deforming the simplicial complex according to the velocity function.
      */
-    void take_time_step(DeformableSimplicialComplex<MT>& dsc)
+    void take_time_step(DeformableSimplicialComplex<>& dsc)
     {
         compute_time = 0.;
         deform_time = 0.;
@@ -186,7 +185,7 @@ public:
     /**
      An optional test function which can be used to test some aspect of the velocity function.
      */
-    virtual void test(DeformableSimplicialComplex<MT>& dsc)
+    virtual void test(DeformableSimplicialComplex<>& dsc)
     {
         
     }

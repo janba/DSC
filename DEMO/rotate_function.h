@@ -22,8 +22,7 @@
 /**
  A rotating velocity function.
  */
-template <class MT>
-class RotateFunc: public VelocityFunc<MT>
+class RotateFunc: public VelocityFunc
 {
     
     
@@ -32,7 +31,7 @@ public:
      Creates a rotating velocity function.
      */
     RotateFunc(real velocity, real accuracy, int max_time_steps = 500):
-        VelocityFunc<MT>(M_PI*velocity/(5.*180.), accuracy, max_time_steps)
+        VelocityFunc(M_PI*velocity/(5.*180.), accuracy, max_time_steps)
     {
         
     }
@@ -48,12 +47,12 @@ public:
     /**
      Computes the motion of each interface vertex and stores the new position in new_pos in the simplicial complex class.
      */
-    virtual void deform(DeformableSimplicialComplex<MT>& dsc)
+    virtual void deform(DeformableSimplicialComplex<>& dsc)
     {
         auto init_time = std::chrono::system_clock::now();
         
         vec3 center = dsc.get_center();
-        mat3 mrot = rotation_mat3(AXIS::ZAXIS, VelocityFunc<MT>::VELOCITY);
+        mat3 mrot = rotation_Mat3x3d(CGLA::Axis::ZAXIS, VelocityFunc::VELOCITY);
         vec3 new_pos;
         for(auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
         {
@@ -63,12 +62,12 @@ public:
                 dsc.set_destination(nit.key(), new_pos);
             }
         }
-        VelocityFunc<MT>::update_compute_time(init_time);
+        VelocityFunc::update_compute_time(init_time);
         init_time = std::chrono::system_clock::now();
         
         dsc.deform();
         
-        VelocityFunc<MT>::update_deform_time(init_time);
+        VelocityFunc::update_deform_time(init_time);
     }
     
     /**
@@ -79,9 +78,9 @@ public:
         return false;
     }
     
-    virtual void test(DeformableSimplicialComplex<MT>& dsc)
+    virtual void test(DeformableSimplicialComplex<>& dsc)
     {
-        std::vector<typename DeformableSimplicialComplex<MT>::edge_key> edges;
+        std::vector<typename DeformableSimplicialComplex<>::edge_key> edges;
         for (auto eit = dsc.edges_begin(); eit != dsc.edges_end(); eit++)
         {
             if (eit->is_interface())
