@@ -24,8 +24,6 @@
 template <typename MT, typename node_att = NodeAttributes, typename edge_att = EdgeAttributes, typename face_att = FaceAttributes, typename tet_att = TetAttributes>
 class DeformableSimplicialComplex : public ISMesh<node_att, edge_att, face_att, tet_att>
 {
-    typedef typename MT::real_type      T;
-    
     typedef ISMesh<node_att, edge_att, face_att, tet_att> Complex;
 public:
     
@@ -38,28 +36,28 @@ public:
 private:
     
     // Thresholds on the dihedral angle between two neighbouring faces
-    T DEG_ANGLE;
-    T MIN_ANGLE;
+    real DEG_ANGLE;
+    real MIN_ANGLE;
     
     // Thresholds on the quality of tetrahedra
-    T DEG_TET_QUALITY;
-    T MIN_TET_QUALITY;
+    real DEG_TET_QUALITY;
+    real MIN_TET_QUALITY;
     
     // Thresholds on the volume of tetrahedra
-    T DEG_TET_VOLUME;
-    T MIN_TET_VOLUME;
-    T MAX_TET_VOLUME;
+    real DEG_TET_VOLUME;
+    real MIN_TET_VOLUME;
+    real MAX_TET_VOLUME;
     
     // Thresholds on the length of edges
-    T DEG_EDGE_LENGTH;
-    T MIN_EDGE_LENGTH;
-    T MAX_EDGE_LENGTH;
+    real DEG_EDGE_LENGTH;
+    real MIN_EDGE_LENGTH;
+    real MAX_EDGE_LENGTH;
     
     // User defined parameters
-    T AVG_EDGE_LENGTH;
-    T MIN_DEFORMATION;
+    real AVG_EDGE_LENGTH;
+    real MIN_DEFORMATION;
 
-    T FLIP_EDGE_INTERFACE_FLATNESS;
+    real FLIP_EDGE_INTERFACE_FLATNESS;
         
     int step_no;
     
@@ -70,7 +68,7 @@ private:
 public:
     
     /// SimplicialComplex constructor.
-    DeformableSimplicialComplex(T _AVG_EDGE_LENGTH, std::vector<T> & points, std::vector<int> & tets, std::vector<int> & tet_labels):
+    DeformableSimplicialComplex(real _AVG_EDGE_LENGTH, std::vector<real> & points, std::vector<int> & tets, std::vector<int> & tet_labels):
         ISMesh<node_att, edge_att, face_att, tet_att>(points, tets, tet_labels)
     {
         step_no = 0;
@@ -90,7 +88,7 @@ public:
         MIN_TET_QUALITY = 0.3;
         FLIP_EDGE_INTERFACE_FLATNESS = 0.995;
         
-        T vol_avg = AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*sqrt(2.)/12.;
+        real vol_avg = AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*sqrt(2.)/12.;
         MIN_TET_VOLUME = 0.5*vol_avg;
         MAX_TET_VOLUME = 10.*vol_avg;
         
@@ -275,17 +273,17 @@ public:
         return vec3(0.);
     }
     
-    T get_min_tet_quality() const
+    real get_min_tet_quality() const
     {
         return MIN_TET_QUALITY;
     }
     
-    T get_deg_tet_quality() const
+    real get_deg_tet_quality() const
     {
         return DEG_TET_QUALITY;
     }
     
-    T get_min_angle() const
+    real get_min_angle() const
     {
         return MIN_ANGLE;
     }
@@ -303,13 +301,13 @@ private:
      * Build a table K for the dynamic programming method by Klincsek (see Shewchuk "Two Discrete Optimization Algorithms 
      * for the Topological Improvement of Tetrahedral Meshes" article for details).
      */
-    T build_table(const edge_key& e, const std::vector<node_key>& polygon, std::vector<std::vector<int>>& K)
+    real build_table(const edge_key& e, const std::vector<node_key>& polygon, std::vector<std::vector<int>>& K)
     {
         auto verts = get_pos(e);
         
         const int m = (int) polygon.size();
         
-        auto Q = std::vector<std::vector<T>>(m-1, std::vector<T>(m, 0.));
+        auto Q = std::vector<std::vector<real>>(m-1, std::vector<real>(m, 0.));
         K = std::vector<std::vector<int>>(m-1, std::vector<int>(m, 0) );
         
         for(int i = 0; i < m-1; i++)
@@ -323,9 +321,9 @@ private:
             {
                 for (int k = i+1; k < j; k++)
                 {
-                    T q2 = Util::quality<T>(get_pos(polygon[i]), get_pos(polygon[k]), get_pos(polygon[j]), verts[1]);
-                    T q1 = Util::quality<T>(get_pos(polygon[k]), get_pos(polygon[i]), get_pos(polygon[j]), verts[0]);
-                    T q = std::min(q1, q2);
+                    real q2 = Util::quality<real>(get_pos(polygon[i]), get_pos(polygon[k]), get_pos(polygon[j]), verts[1]);
+                    real q1 = Util::quality<real>(get_pos(polygon[k]), get_pos(polygon[i]), get_pos(polygon[j]), verts[0]);
+                    real q = std::min(q1, q2);
                     if (k < j-1)
                     {
                         q = std::min(q, Q[k][j]);
@@ -438,7 +436,7 @@ private:
     {
         std::vector<node_key> polygon = get_polygon(e);
         std::vector<std::vector<int>> K;
-        T q_new = build_table(e, polygon, K);
+        real q_new = build_table(e, polygon, K);
         
         if (q_new > min_quality(e))
         {
@@ -487,7 +485,7 @@ private:
         }
         
         std::vector<std::vector<int>> K1, K2;
-        T q_new = build_table(e, polygon1, K1);
+        real q_new = build_table(e, polygon1, K1);
         
         if(polygon2.size() > 2)
         {
@@ -578,25 +576,25 @@ private:
         return *st_e.faces_begin();
     }
     
-    std::vector<edge_key> test_neighbour(const face_key& f, const node_key& a, const node_key& b, node_key& u, node_key& w, T& q_old, T& q_new)
+    std::vector<edge_key> test_neighbour(const face_key& f, const node_key& a, const node_key& b, node_key& u, node_key& w, real& q_old, real& q_new)
     {
         edge_key e = Complex::get_edge(u,w);
         face_key g = get_neighbour(f, e);
-        T q = Util::quality<T>(get_pos(a), get_pos(b), get_pos(u), get_pos(w));
+        real q = Util::quality<real>(get_pos(a), get_pos(b), get_pos(u), get_pos(w));
         
         if(g != Complex::NULL_FACE && !is_boundary(e) && !is_interface(e))
         {
             node_key v = Complex::get_apex(g, e);
-            T V_uv = Util::signed_volume<T>(get_pos(a), get_pos(b), get_pos(u), get_pos(v));
-            T V_vw = Util::signed_volume<T>(get_pos(a), get_pos(b), get_pos(v), get_pos(w));
-            T V_wu = Util::signed_volume<T>(get_pos(a), get_pos(b), get_pos(w), get_pos(u));
+            real V_uv = Util::signed_volume<real>(get_pos(a), get_pos(b), get_pos(u), get_pos(v));
+            real V_vw = Util::signed_volume<real>(get_pos(a), get_pos(b), get_pos(v), get_pos(w));
+            real V_wu = Util::signed_volume<real>(get_pos(a), get_pos(b), get_pos(w), get_pos(u));
             
             if((V_uv > 0. && V_vw > 0.) || (V_vw > 0. && V_wu > 0.) || (V_wu > 0. && V_uv > 0.))
             {
-                q_old = std::min(Util::quality<T>(get_pos(a), get_pos(u), get_pos(v), get_pos(w)),
-                                 Util::quality<T>(get_pos(u), get_pos(v), get_pos(w), get_pos(b)));
+                q_old = std::min(Util::quality<real>(get_pos(a), get_pos(u), get_pos(v), get_pos(w)),
+                                 Util::quality<real>(get_pos(u), get_pos(v), get_pos(w), get_pos(b)));
                 
-                T q_uv_old, q_uv_new, q_vw_old, q_vw_new;
+                real q_uv_old, q_uv_new, q_vw_old, q_vw_new;
                 auto uv_edges = test_neighbour(g, a, b, u, v, q_uv_old, q_uv_new);
                 auto vw_edges = test_neighbour(g, a, b, v, w, q_vw_old, q_vw_new);
                 
@@ -625,7 +623,7 @@ private:
         vec3 x = get_pos(a) - get_pos(nodes[0]);
         vec3 y = get_pos(nodes[1]) - get_pos(nodes[0]);
         vec3 z = get_pos(nodes[2]) - get_pos(nodes[0]);
-        T val = MT::dot(x, MT::cross(y,z));
+        real val = MT::dot(x, MT::cross(y,z));
 #ifdef DEBUG
         assert(val != 0.);
 #endif
@@ -646,13 +644,13 @@ private:
         auto nodes = Complex::get_nodes(f);
         orient_cc(apices[0], nodes);
         
-        T q_01_new, q_01_old, q_12_new, q_12_old, q_20_new, q_20_old;
+        real q_01_new, q_01_old, q_12_new, q_12_old, q_20_new, q_20_old;
         auto e01 = test_neighbour(f, apices[0], apices[1], nodes[0], nodes[1], q_01_old, q_01_new);
         auto e12 = test_neighbour(f, apices[0], apices[1], nodes[1], nodes[2], q_12_old, q_12_new);
         auto e20 = test_neighbour(f, apices[0], apices[1], nodes[2], nodes[0], q_20_old, q_20_new);
         
-        T q_old = std::min(std::min(std::min(min_quality(f), q_01_old), q_12_old), q_20_old);
-        T q_new = std::min(std::min(q_01_new, q_12_new), q_20_new);
+        real q_old = std::min(std::min(std::min(min_quality(f), q_01_old), q_12_old), q_20_old);
+        real q_new = std::min(std::min(q_01_new, q_12_new), q_20_new);
         
         if(q_new > q_old)
         {
@@ -703,7 +701,7 @@ private:
                 auto nodes = Complex::get_nodes(*f);
                 orient_cc(apex2, nodes);
                 
-                T t = Util::intersection_ray_triangle<T>(get_pos(apex1), get_pos(apex2), get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
+                real t = Util::intersection_ray_triangle<real>(get_pos(apex1), get_pos(apex2), get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
                 if(0. < t && t < 1.)
                 {
                     if(topological_face_removal(*f))
@@ -1192,7 +1190,7 @@ private:
         vec3 proj_apex = Util::project<MT>(get_pos(apex), verts);
         
         // Find barycentric coordinates
-        std::vector<T> barycentric_coords = Util::barycentric_coords<MT>(proj_apex, verts[0], verts[1], verts[2]);
+        std::vector<real> barycentric_coords = Util::barycentric_coords<MT>(proj_apex, verts[0], verts[1], verts[2]);
         
         if(barycentric_coords[0] > 0.2 && barycentric_coords[1] > 0.2 && barycentric_coords[2] > 0.2) // The tetrahedron is a cap
         {
@@ -1203,7 +1201,7 @@ private:
             return remove_sliver(t);
         }
         
-        T mean_dist = 0.;
+        real mean_dist = 0.;
         for(vec3 &p : verts)
         {
             mean_dist += (p-proj_apex).length()/3.;
@@ -1265,14 +1263,14 @@ private:
     /**
      * Performs Laplacian smoothing if it improves the minimum tetrahedron quality locally.
      */
-    bool smart_laplacian(const node_key& n, T alpha = 1.)
+    bool smart_laplacian(const node_key& n, real alpha = 1.)
     {
-        T q_old = min_quality(n);
+        real q_old = min_quality(n);
         vec3 old_pos = get_pos(n);
         vec3 avg_pos = get_barycenter(n);
         set_pos(n, old_pos + alpha * (avg_pos - old_pos));
         
-        T q_new = min_quality(n);
+        real q_new = min_quality(n);
         if (q_new < q_old)
         {
             set_pos(n, old_pos);
@@ -1319,13 +1317,13 @@ private:
         
         // Find the face (f) of t that lies on the interface and has the biggest area (max_area).
         // Compute the total area of all faces of t (total_area).
-        T max_area = 0.;
-        T total_area = 0.;
+        real max_area = 0.;
+        real total_area = 0.;
         simplex_set cl_t;
         Complex::closure(t, cl_t);
         for (auto fit = cl_t.faces_begin(); fit != cl_t.faces_end(); fit++)
         {
-            T a = area(*fit);
+            real a = area(*fit);
             total_area += a;
             
             if (is_interface(*fit) && !is_boundary(*fit) && a > max_area)
@@ -1516,16 +1514,16 @@ private:
     {
         vec3 pos = get_pos(n);
         vec3 destination = get_destination(n);
-        T l = MT::length(destination - pos);
+        real l = MT::length(destination - pos);
         
         if (l < EPSILON) // The vertex is not moved
         {
             return true;
         }
         
-        T t = intersection_with_link(n, destination);
+        real t = intersection_with_link(n, destination);
         
-        l = std::max(std::min(l*t - l*MIN_DEFORMATION, l), static_cast<T>(0.));
+        l = std::max(std::min(l*t - l*MIN_DEFORMATION, l), static_cast<real>(0.));
         set_pos(n, pos + l*MT::normalize(destination - pos));
         
         if (MT::length(destination - get_pos(n)) < EPSILON)
@@ -1540,16 +1538,16 @@ private:
      * Returns the intersection point (= pos + t*(new_pos-pos)) with the link of the node n and
      * when moving the node n to the new position new_pos.
      */
-    T intersection_with_link(const node_key & n, const vec3& new_pos)
+    real intersection_with_link(const node_key & n, const vec3& new_pos)
     {
         vec3 pos = get_pos(n);
         simplex_set ln;
         Complex::link(n,ln);
-        T min_t = INFINITY;
+        real min_t = INFINITY;
         for(auto fit = ln.faces_begin(); fit != ln.faces_end(); fit++)
         {
             auto face_pos = get_pos(*fit);
-            T t = Util::intersection_ray_plane<T>(pos, new_pos, face_pos[0], face_pos[1], face_pos[2]);
+            real t = Util::intersection_ray_plane<real>(pos, new_pos, face_pos[0], face_pos[1], face_pos[2]);
             if (0. <= t)
             {
                 min_t = std::min(t, min_t);
@@ -1589,7 +1587,7 @@ private:
         assert(faces.size() == 2);
 #endif
         
-        T angle = cos_dihedral_angle(faces[0], faces[1]);
+        real angle = cos_dihedral_angle(faces[0], faces[1]);
         if(angle > FLIP_EDGE_INTERFACE_FLATNESS)
         {
             return true;
@@ -1731,7 +1729,7 @@ private:
     /**
      * Returns the minimum quality of neighbouring tetrahedra if the edge e is collapsed and the resulting node is moved to v_new.
      */
-    T min_quality(const edge_key& e, const vec3& v_new)
+    real min_quality(const edge_key& e, const vec3& v_new)
     {
         auto nodes = Complex::get_nodes(e);
         
@@ -1761,12 +1759,12 @@ private:
         auto nodes = Complex::get_nodes(e);
         
         vec3 p_opt, p_new_opt;
-        T q_max = 0.;
+        real q_max = 0.;
         
         if (!is_boundary(nodes[0]) && !is_boundary(nodes[1]) && (!safe || (!is_interface(nodes[0]) && !is_interface(nodes[1]))))
         {
             vec3 p = Util::barycenter(get_pos(nodes[0]), get_pos(nodes[1]));
-            T q = min_quality(e, p);
+            real q = min_quality(e, p);
             if (precond_collapse(e, p) && q > q_max)
             {
                 p_new_opt = Util::barycenter(get_destination(nodes[0]), get_destination(nodes[1]));
@@ -1778,7 +1776,7 @@ private:
         if (!is_boundary(nodes[0]) && (!safe || !is_interface(nodes[0])))
         {
             vec3 p = get_pos(nodes[1]);
-            T q = min_quality(e, p);
+            real q = min_quality(e, p);
             
             if (precond_collapse(e, p) && q > q_max)
             {
@@ -1791,7 +1789,7 @@ private:
         if (!is_boundary(nodes[1]) && (!safe || !is_interface(nodes[1])))
         {
             vec3 p = get_pos(nodes[0]);
-            T q = min_quality(e, p);
+            real q = min_quality(e, p);
             
             if (precond_collapse(e, p) && q > q_max)
             {
@@ -1800,7 +1798,7 @@ private:
                 q_max = q;
             }
         }
-        T q = std::min(min_quality(nodes[0]), min_quality(nodes[1]));
+        real q = std::min(min_quality(nodes[0]), min_quality(nodes[1]));
         if((!safe && q_max > EPSILON) || q_max > std::min(q, MIN_TET_QUALITY))
         {
             return collapse(e, p_opt, p_new_opt);
@@ -1901,7 +1899,7 @@ public:
 #ifdef DEBUG
         assert(i != 0);
 #endif
-        return avg_pos / static_cast<T>(i);
+        return avg_pos / static_cast<real>(i);
     }
     
     ///////////////////////
@@ -1910,48 +1908,48 @@ public:
     
 public:
     
-    T length(const edge_key& e)
+    real length(const edge_key& e)
     {
         auto verts = get_pos(e);
         return MT::length(verts[0] - verts[1]);
     }
     
-    T area(const face_key& f)
+    real area(const face_key& f)
     {
         std::vector<vec3> verts;
         get_pos(f,verts);
         return Util::area<MT>(verts);
     }
     
-    T volume(const tet_key& t)
+    real volume(const tet_key& t)
     {
         auto verts = get_pos(t);
-        return Util::volume<T>(verts[0], verts[1], verts[2], verts[3]);
+        return Util::volume<real>(verts[0], verts[1], verts[2], verts[3]);
     }
     
-    T signed_volume(const tet_key& t)
+    real signed_volume(const tet_key& t)
     {
         auto verts = get_pos(t);
-        return Util::signed_volume<T>(verts[0], verts[1], verts[2], verts[3]);
+        return Util::signed_volume<real>(verts[0], verts[1], verts[2], verts[3]);
     }
     
-    T quality(const tet_key& t)
+    real quality(const tet_key& t)
     {
         auto verts = get_pos(t);
-        return Util::quality<T>(verts[0], verts[1], verts[2], verts[3]);
+        return Util::quality<real>(verts[0], verts[1], verts[2], verts[3]);
     }
     
-    T min_angle(const face_key& f)
+    real min_angle(const face_key& f)
     {
         auto verts = get_pos(f);
-        return Util::min_angle<T>(verts[0], verts[1], verts[2]);
+        return Util::min_angle<real>(verts[0], verts[1], verts[2]);
     }
     
-    T max_angle(const face_key& f)
+    real max_angle(const face_key& f)
     {
         std::vector<vec3> verts;
         get_pos(f, verts);
-        return Util::max_angle<T>(verts[0], verts[1], verts[2]);
+        return Util::max_angle<real>(verts[0], verts[1], verts[2]);
     }
     
     /**
@@ -1959,11 +1957,11 @@ public:
      */
     face_key largest_face(simplex_set& set)
     {
-        T max_a = -INFINITY;
+        real max_a = -INFINITY;
         face_key max_f;
         for(auto f = set.faces_begin(); f != set.faces_end(); f++)
         {
-            T a = area(*f);
+            real a = area(*f);
             if(a > max_a)
             {
                 max_a = a;
@@ -1978,11 +1976,11 @@ public:
      */
     edge_key shortest_edge(simplex_set& set)
     {
-        T min_l = INFINITY;
+        real min_l = INFINITY;
         edge_key min_e;
         for(auto e = set.edges_begin(); e != set.edges_end(); e++)
         {
-            T l = length(*e);
+            real l = length(*e);
             if(l < min_l)
             {
                 min_l = l;
@@ -1997,11 +1995,11 @@ public:
      */
     edge_key longest_edge(simplex_set& set)
     {
-        T max_l = -INFINITY;
+        real max_l = -INFINITY;
         edge_key max_e;
         for(auto e = set.edges_begin(); e != set.edges_end(); e++)
         {
-            T l = length(*e);
+            real l = length(*e);
             if(l > max_l)
             {
                 max_l = l;
@@ -2013,9 +2011,9 @@ public:
         /**
      * Returns the minimum quality of the tetrahedra in simplex set s.
      */
-    T min_quality(simplex_set& set)
+    real min_quality(simplex_set& set)
     {
-        T q_min = INFINITY;
+        real q_min = INFINITY;
         for (auto tit = set.tetrahedra_begin(); tit != set.tetrahedra_end(); tit++)
         {
             q_min = std::min(quality(*tit), q_min);
@@ -2026,13 +2024,13 @@ public:
     /**
      * Returns the minimum quality of the tetrahedra spanned by the vertices of the faces in s and pos.
      */
-    T min_quality(simplex_set& set, const vec3& pos)
+    real min_quality(simplex_set& set, const vec3& pos)
     {
-        T min_q = INFINITY;
+        real min_q = INFINITY;
         for(auto fit = set.faces_begin(); fit != set.faces_end(); fit++)
         {
             auto verts = get_pos(*fit);
-            min_q = std::min(min_q, std::abs(Util::quality<T>(verts[0], verts[1], verts[2], pos)));
+            min_q = std::min(min_q, std::abs(Util::quality<real>(verts[0], verts[1], verts[2], pos)));
         }
         return min_q;
     }
@@ -2040,7 +2038,7 @@ public:
     /**
      * Returns the minimum quality among tetrahedra in the star of n.
      */
-    T min_quality(const node_key& n)
+    real min_quality(const node_key& n)
     {
         simplex_set st_n;
         Complex::star(n, st_n);
@@ -2050,7 +2048,7 @@ public:
     /**
      * Returns the minimum quality among tetrahedra in the star of each end node of the edge e.
      */
-    T min_quality(const edge_key& e)
+    real min_quality(const edge_key& e)
     {
         simplex_set st_e;
         Complex::star(e, st_e);
@@ -2060,7 +2058,7 @@ public:
     /**
      * Returns minimum quality among the tetrahedra adjacent to face f.
      */
-    T min_quality(const face_key& f)
+    real min_quality(const face_key& f)
     {
         simplex_set st_f;
         Complex::star(f, st_f);
@@ -2068,9 +2066,9 @@ public:
     }
     
     // The minimum quality among tetrahedra that would be produced by connecting apices with the edges on mf_boundary.
-    T edge_remove_quality(simplex_set& mf_boundary, std::vector<vec3> & apices)
+    real edge_remove_quality(simplex_set& mf_boundary, std::vector<vec3> & apices)
     {
-        T q_min = 1e99;
+        real q_min = 1e99;
         unsigned int n = static_cast<unsigned int>(mf_boundary.size_nodes());
         
         assert ( n > 2 || !"Too few vertices in the multi-face boundary!" );
@@ -2082,7 +2080,7 @@ public:
         
         for (unsigned int i = 0; i < n; ++i)
         {
-            T q = Util::quality<MT>(apices[1], apices[0], get_pos(polygon[i]), get_pos(polygon[(i+1)%n]));
+            real q = Util::quality<MT>(apices[1], apices[0], get_pos(polygon[i]), get_pos(polygon[(i+1)%n]));
             if (q < q_min) q_min = q;
         }
         
@@ -2090,9 +2088,9 @@ public:
     }
     
     /// Computes the difference in the volume enclosed by the interface after collapsing edge e.
-    T volume_difference(edge_key & e, node_key & n0, node_key & n1)
+    real volume_difference(edge_key & e, node_key & n0, node_key & n1)
     {
-        T result = 0.0;
+        real result = 0.0;
         simplex_set st0, st1, lk0, st_u, patch, cl_patch;
         
         Complex::star(n0, st0);
@@ -2148,10 +2146,10 @@ private:
             vp[i] = get_pos(polygon[i]);
         }
         
-        T sum = 0;
+        real sum = 0;
         for (unsigned int i = 0; i < n; ++i)
         {
-            sum += Util::signed_volume<T>(vv[0], vv[1], vp[(i+1)%n], vp[i]);
+            sum += Util::signed_volume<real>(vv[0], vv[1], vp[(i+1)%n], vp[i]);
         }
         
         if (sum < 0.)
@@ -2227,8 +2225,8 @@ private:
         for(auto fit = set.faces_begin(); fit != set.faces_end(); fit++)
         {
             auto verts = get_pos(*fit);
-            T vol1 = Util::signed_volume<T>(verts[0], verts[1], verts[2], p);
-            T vol2 = Util::signed_volume<T>(verts[0], verts[1], verts[2], p_new);
+            real vol1 = Util::signed_volume<real>(verts[0], verts[1], verts[2], p);
+            real vol2 = Util::signed_volume<real>(verts[0], verts[1], verts[2], p_new);
             if(Util::sign(vol1) !=  Util::sign(vol2))
             {
                 return true;
@@ -2415,7 +2413,7 @@ public:
     /**
      * Returns the cosine to the dihedral angle between face f1 and face f2.
      */
-    T cos_dihedral_angle(const face_key& f1, const face_key& f2)
+    real cos_dihedral_angle(const face_key& f1, const face_key& f2)
     {
         auto nodes = Complex::get_nodes(f1);
         auto temp = Complex::get_nodes(f2);
@@ -2442,21 +2440,21 @@ public:
             }
         }
         
-        return Util::cos_dihedral_angle<T>(verts[0], verts[1], apices[0], apices[1]);
+        return Util::cos_dihedral_angle<real>(verts[0], verts[1], apices[0], apices[1]);
     }
     
     /**
      * Returns the dihedral angle between face f1 and face f2.
      */
-    T dihedral_angle(const face_key& f1, const face_key& f2)
+    real dihedral_angle(const face_key& f1, const face_key& f2)
     {
         return acos(cos_dihedral_angle(f1, f2));
     }
     
-    std::vector<T> cos_dihedral_angles(const tet_key& t)
+    std::vector<real> cos_dihedral_angles(const tet_key& t)
     {
         auto verts = get_pos(t);
-        std::vector<T> angles;
+        std::vector<real> angles;
         std::vector<int> apices;
         for (int i = 0; i < verts.size(); i++) {
             for (int j = 0; j < verts.size(); j++) {
@@ -2469,7 +2467,7 @@ public:
                             apices.push_back(k);   
                         }
                     }
-                    angles.push_back(Util::cos_dihedral_angle<T>(verts[i], verts[j], verts[apices[0]], verts[apices[1]]));
+                    angles.push_back(Util::cos_dihedral_angle<real>(verts[i], verts[j], verts[apices[0]], verts[apices[1]]));
                 }
             }
         }
@@ -2479,10 +2477,10 @@ public:
     /**
      * Returns the cosine of the minimum dihedral angle between the faces of tetrahedron t.
      */
-    T min_cos_dihedral_angle(const tet_key& t)
+    real min_cos_dihedral_angle(const tet_key& t)
     {
-        T min_angle = -1.;
-        std::vector<T> angles = cos_dihedral_angles(t);
+        real min_angle = -1.;
+        std::vector<real> angles = cos_dihedral_angles(t);
         for(auto a : angles)
         {
             min_angle = std::max(min_angle, a);
@@ -2493,12 +2491,12 @@ public:
     /**
      * Returns the minimum dihedral angle between the faces of tetrahedron t.
      */
-    T min_dihedral_angle(const tet_key& t)
+    real min_dihedral_angle(const tet_key& t)
     {
         return acos(min_cos_dihedral_angle(t));
     }
     
-    void get_qualities(std::vector<int>& histogram, T& min_quality)
+    void get_qualities(std::vector<int>& histogram, real& min_quality)
     {
         min_quality = INFINITY;
         
@@ -2510,7 +2508,7 @@ public:
         
         for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
         {
-            T q = quality(tit.key());
+            real q = quality(tit.key());
             min_quality = std::min(min_quality, q);
             histogram[(int)floor(q*100.)] += 1;
         }
@@ -2520,7 +2518,7 @@ public:
      * Calculates the dihedral angles in the SimplicialComplex and returns these in a histogram,
      * along with the minimum and maximum dihedral angles.
      */
-    void get_dihedral_angles(std::vector<int> & histogram, T & min_angle, T & max_angle)
+    void get_dihedral_angles(std::vector<int> & histogram, real & min_angle, real & max_angle)
     {
         max_angle = -INFINITY, min_angle = INFINITY;
         
@@ -2532,10 +2530,10 @@ public:
         
         for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
         {
-            std::vector<T> angles = cos_dihedral_angles(tit.key());
+            std::vector<real> angles = cos_dihedral_angles(tit.key());
             for(auto cos_a : angles)
             {
-                T a = acos(cos_a)*180./M_PI;
+                real a = acos(cos_a)*180./M_PI;
                 min_angle = std::min(min_angle, a);
                 max_angle = std::max(max_angle, a);
                 histogram[(int)floor(a)] += 1;
@@ -2543,9 +2541,9 @@ public:
         }
     }
     
-    T min_quality()
+    real min_quality()
     {
-        T min_q = INFINITY;
+        real min_q = INFINITY;
         for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
         {
             min_q = std::min(min_q, quality(tit.key()));
