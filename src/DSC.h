@@ -198,7 +198,7 @@ public:
     {
         vec3 p = Complex::get(n).get_pos();
 #ifdef DEBUG
-        assert(!MT::is_nan(p[0]) && !MT::is_nan(p[1]) && !MT::is_nan(p[2]));
+        assert(!Util::isnan(p[0]) && !Util::isnan(p[1]) && !Util::isnan(p[2]));
 #endif
         return p;
     }
@@ -623,7 +623,7 @@ private:
         vec3 x = get_pos(a) - get_pos(nodes[0]);
         vec3 y = get_pos(nodes[1]) - get_pos(nodes[0]);
         vec3 z = get_pos(nodes[2]) - get_pos(nodes[0]);
-        real val = MT::dot(x, MT::cross(y,z));
+        real val = Util::dot(x, Util::cross(y,z));
 #ifdef DEBUG
         assert(val != 0.);
 #endif
@@ -1000,7 +1000,7 @@ private:
         // Find the projected position of the apex
         std::vector<vec3> verts;
         get_pos(e, verts);
-        vec3 p = Util::project<MT>(get_pos(apex), verts[0], verts[1]);
+        vec3 p = Util::project(get_pos(apex), verts[0], verts[1]);
         
         // Split longest edge
         node_key n = split(e);
@@ -1104,7 +1104,7 @@ private:
         // Project the apex
         std::vector<vec3> verts;
         get_pos(f, verts);
-        vec3 p = Util::project<MT>(get_pos(apex), verts);
+        vec3 p = Util::project(get_pos(apex), verts);
         
         // Split the face
         node_key n = split(f);
@@ -1187,10 +1187,10 @@ private:
         // Project the apex
         std::vector<vec3> verts;
         get_pos(f, verts);
-        vec3 proj_apex = Util::project<MT>(get_pos(apex), verts);
+        vec3 proj_apex = Util::project(get_pos(apex), verts);
         
         // Find barycentric coordinates
-        std::vector<real> barycentric_coords = Util::barycentric_coords<MT>(proj_apex, verts[0], verts[1], verts[2]);
+        std::vector<real> barycentric_coords = Util::barycentric_coords<real>(proj_apex, verts[0], verts[1], verts[2]);
         
         if(barycentric_coords[0] > 0.2 && barycentric_coords[1] > 0.2 && barycentric_coords[2] > 0.2) // The tetrahedron is a cap
         {
@@ -1345,7 +1345,7 @@ private:
             for(auto nit = lk_f.nodes_begin(); nit != lk_f.nodes_end(); nit++)
             {
                 if (cl_t.contains(*nit) && is_interface(*nit) &&
-                    Util::distance<MT>(get_pos(*nit), verts[0], verts[1], verts[2]) < MIN_EDGE_LENGTH)
+                    Util::distance(get_pos(*nit), verts[0], verts[1], verts[2]) < MIN_EDGE_LENGTH)
                 {
                     return true;
                 }
@@ -1514,7 +1514,7 @@ private:
     {
         vec3 pos = get_pos(n);
         vec3 destination = get_destination(n);
-        real l = MT::length(destination - pos);
+        real l = Util::length(destination - pos);
         
         if (l < EPSILON) // The vertex is not moved
         {
@@ -1524,9 +1524,9 @@ private:
         real t = intersection_with_link(n, destination);
         
         l = std::max(std::min(l*t - l*MIN_DEFORMATION, l), static_cast<real>(0.));
-        set_pos(n, pos + l*MT::normalize(destination - pos));
+        set_pos(n, pos + l*Util::normalize(destination - pos));
         
-        if (MT::length(destination - get_pos(n)) < EPSILON)
+        if (Util::length(destination - get_pos(n)) < EPSILON)
         {
             return true;
         }
@@ -1634,7 +1634,7 @@ public:
     {
         std::vector<vec3> verts;
         get_pos(t, verts);
-        vec3 p = Util::barycenter<MT>(verts[0], verts[1], verts[2], verts[3]);
+        vec3 p = Util::barycenter(verts[0], verts[1], verts[2], verts[3]);
         
         node_key n = Complex::split(t);
         set_pos(n, p);
@@ -1649,11 +1649,11 @@ public:
     {   
         std::vector<node_key> nodes;
         Complex::get_nodes(f, nodes);
-        vec3 p = Util::barycenter<MT>(get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
+        vec3 p = Util::barycenter(get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
         vec3 p_new = p;
         if(is_interface(f))
         {
-            p_new = Util::barycenter<MT>(get_destination(nodes[0]), get_destination(nodes[1]), get_destination(nodes[2]));
+            p_new = Util::barycenter(get_destination(nodes[0]), get_destination(nodes[1]), get_destination(nodes[2]));
         }
         
         node_key n = Complex::split(f);
@@ -1868,13 +1868,13 @@ public:
                 result += get_normal(*fit);
             }
         }
-        if (MT::length(result) < EPSILON) {
+        if (Util::length(result) < EPSILON) {
             return vec3(0.);
         }
 #ifdef DEBUG
-        assert(!MT::is_nan(result[0]) && !MT::is_nan(result[1]) && !MT::is_nan(result[2]));
+        assert(!Util::isnan(result[0]) && !Util::isnan(result[1]) && !Util::isnan(result[2]));
 #endif
-        return MT::normalize(result);
+        return Util::normalize(result);
     }
     
     /**
@@ -1911,14 +1911,13 @@ public:
     real length(const edge_key& e)
     {
         auto verts = get_pos(e);
-        return MT::length(verts[0] - verts[1]);
+        return Util::length(verts[0] - verts[1]);
     }
     
     real area(const face_key& f)
     {
-        std::vector<vec3> verts;
-        get_pos(f,verts);
-        return Util::area<MT>(verts);
+        auto verts = get_pos(f);
+        return Util::area<real>(verts[0], verts[1], verts[2]);
     }
     
     real volume(const tet_key& t)
@@ -2080,7 +2079,7 @@ public:
         
         for (unsigned int i = 0; i < n; ++i)
         {
-            real q = Util::quality<MT>(apices[1], apices[0], get_pos(polygon[i]), get_pos(polygon[(i+1)%n]));
+            real q = Util::quality(apices[1], apices[0], get_pos(polygon[i]), get_pos(polygon[(i+1)%n]));
             if (q < q_min) q_min = q;
         }
         
@@ -2124,7 +2123,7 @@ public:
         for (auto eit = cl_patch.edges_begin(); eit != cl_patch.edges_end(); eit++)
         {
             get_pos(*eit, pos);
-            result += Util::volume<MT>(get_pos(n0), get_pos(n1), pos[0], pos[1]);
+            result += Util::volume(get_pos(n0), get_pos(n1), pos[0], pos[1]);
         }
         
         return result;
@@ -2354,7 +2353,7 @@ private:
     ////////////////////////
 public:
     ///
-    void extract_interface(std::vector<typename MT::vector3_type> & verts, std::vector<int> & indices)
+    void extract_interface(std::vector<vec3>& verts, std::vector<int>& indices)
     {
         std::map<node_key, int> vert_index;
         
@@ -2363,7 +2362,7 @@ public:
         {
             if (nit->is_interface())
             {
-                verts.push_back(nit->v);
+                verts.push_back(get_pos(nit.key()));
                 vert_index[nit.key()] = verts.size();
             }
         }
@@ -2373,8 +2372,7 @@ public:
         {
             if (fit->is_interface())
             {
-                std::vector<node_key> nodes;
-                Complex::get_nodes(fit.key(), nodes);
+                auto nodes = Complex::get_nodes(fit.key());
                 
                 indices.push_back(vert_index[nodes[0]]);
                 indices.push_back(vert_index[nodes[1]]);
@@ -2383,7 +2381,7 @@ public:
         }
     } // extract_interface
     
-    void extract_tet_mesh(std::vector<typename MT::vector3_type> & points, std::vector< std::vector<int> > & tets)
+    void extract_tet_mesh(std::vector<vec3>& points, std::vector< std::vector<int> >& tets)
     {
         Complex::garbage_collect();
         

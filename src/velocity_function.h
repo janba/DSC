@@ -147,7 +147,7 @@ public:
      */
     virtual bool is_motion_finished(const DeformableSimplicialComplex<MT>& dsc)
     {
-//        std::vector<typename MT::vector3_type> pos = complex->get_design_variable_positions();
+//        std::vector<vec3> pos = complex->get_design_variable_positions();
 //        for (auto p = pos.begin(); p != pos.end(); p++)
 //        {
 //            bool match = false;

@@ -22,16 +22,30 @@
 #include <cmath>
 #include <cassert>
 
-#include "CGLA_API.h"
+#include <CGLA/Vec3d.h>
+#include <CGLA/Vec4d.h>
+#include <CGLA/Mat3x3d.h>
+#include <CGLA/Mat4x4d.h>
 
-constexpr double EPSILON = 1e-8;
+typedef double            real;
+typedef CGLA::Vec3d       vec3;
+typedef CGLA::Mat3x3d     mat3;
+
+constexpr real EPSILON = 1e-8;
 
 #ifndef INFINITY
-constexpr double INFINITY = 1e32;
+constexpr real INFINITY = 1e32;
 #endif
 
 namespace Util
 {
+    using CGLA::isnan;
+    using CGLA::dot;
+    using CGLA::cross;
+    using CGLA::length;
+    using CGLA::sqr_length;
+    using CGLA::normalize;
+    
     template <typename vec3>
     inline vec3 normal_direction(const vec3& a, const vec3& b, const vec3& c);
     
@@ -227,7 +241,7 @@ namespace Util
         vec3 ac = c - a;
         vec3 n = cross(ab, ac);
 #ifdef DEBUG
-        assert(!is_nan(n[0]) && !is_nan(n[1]) && !is_nan(n[2]));
+        assert(!isnan(n[0]) && !isnan(n[1]) && !isnan(n[2]));
 #endif
         return normalize(n);
     }
@@ -293,7 +307,7 @@ namespace Util
         
         real q = 8.48528 * v / (lrms * lrms * lrms);
 #ifdef DEBUG
-        assert(!is_nan(q));
+        assert(!isnan(q));
 #endif
         return q;
     }

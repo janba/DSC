@@ -302,8 +302,7 @@ public:
         {
             if (fit->is_interface())
             {
-                std::vector<vec3> verts;
-                complex->get_pos(fit.key(), verts);
+                auto verts = complex->get_pos(fit.key());
                 vec3 n = complex->get_normal(fit.key());
                 
                 for(auto &v : verts)
