@@ -22,7 +22,7 @@
 /**
  A rotating velocity function.
  */
-class RotateFunc: public VelocityFunc
+class RotateFunc: public DSC::VelocityFunc
 {
     
     
@@ -30,7 +30,7 @@ public:
     /**
      Creates a rotating velocity function.
      */
-    RotateFunc(real velocity, real accuracy, int max_time_steps = 500):
+    RotateFunc(DSC::real velocity, DSC::real accuracy, int max_time_steps = 500):
         VelocityFunc(M_PI*velocity/(5.*180.), accuracy, max_time_steps)
     {
         
@@ -47,18 +47,18 @@ public:
     /**
      Computes the motion of each interface vertex and stores the new position in new_pos in the simplicial complex class.
      */
-    virtual void deform(DeformableSimplicialComplex<>& dsc)
+    virtual void deform(DSC::DeformableSimplicialComplex<>& dsc)
     {
         auto init_time = std::chrono::system_clock::now();
         
-        vec3 center = dsc.get_center();
-        mat3 mrot = rotation_Mat3x3d(CGLA::Axis::ZAXIS, VelocityFunc::VELOCITY);
-        vec3 new_pos;
+        DSC::vec3 center = dsc.get_center();
+        DSC::mat3 mrot = rotation_Mat3x3d(CGLA::Axis::ZAXIS, VelocityFunc::VELOCITY);
+        DSC::vec3 new_pos;
         for(auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
         {
             if(nit->is_interface() && !nit->is_crossing())
             {
-                vec3 new_pos = center + mrot * (dsc.get_pos(nit.key()) - center);
+                DSC::vec3 new_pos = center + mrot * (dsc.get_pos(nit.key()) - center);
                 dsc.set_destination(nit.key(), new_pos);
             }
         }
@@ -78,9 +78,9 @@ public:
         return false;
     }
     
-    virtual void test(DeformableSimplicialComplex<>& dsc)
+    virtual void test(DSC::DeformableSimplicialComplex<>& dsc)
     {
-        std::vector<typename DeformableSimplicialComplex<>::edge_key> edges;
+        std::vector<typename DSC::DeformableSimplicialComplex<>::edge_key> edges;
         for (auto eit = dsc.edges_begin(); eit != dsc.edges_end(); eit++)
         {
             if (eit->is_interface())

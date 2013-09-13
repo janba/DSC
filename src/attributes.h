@@ -16,157 +16,161 @@
 
 #pragma once
 
-class NodeAttributes
-{
-    vec3 p;
-    vec3 p_new;
-    std::bitset<3> flags;
+namespace DSC {
     
-public:
-    
-    NodeAttributes() : p(0.,0.,0.), p_new(0.,0.,0.) {}
-    NodeAttributes(const real& x, const real& y, const real& z) : p(x,y,z), p_new(x,y,z) {}
-    
-    vec3 get_pos()
+    class NodeAttributes
     {
-        return p;
-    }
-    
-    vec3 get_destination()
-    {
-        return p_new;
-    }
-    
-    void set(const NodeAttributes& t)
-    {
-	    p = t.p;
-        p_new = t.p_new;
-		flags = t.flags;
-    }
-    
-    void set_pos(vec3 p_)
-    {
-        p = p_;
-    }
-    
-    void set_destination(vec3 p_)
-    {
-        p_new = p_;
-    }
-    
-    bool is_crossing()
-    {
-        return flags[2];
-    }
-    
-    bool is_boundary()
-    {
-        return flags[1];
-    }
-    
-    bool is_interface()
-    {
-        return flags[0];
-    }
-    
-    void set_crossing(bool b)
-    {
-        flags[2] = b;
-    }
-    
-    void set_boundary(bool b)
-    {
-		flags[1] = b;
-    }
-    
-    void set_interface(bool b)
-    {
-		flags[0] = b;
-    }
-};
-
-class EdgeAttributes
-{
-    std::bitset<3> flags;
-    
-public:
-    EdgeAttributes() {}
-    
-    
-    bool is_crossing()
-    {
-        return flags[2];
-    }
-    
-    bool is_boundary()
-    {
-        return flags[1];
-    }
-    
-    bool is_interface()
-    {
-        return flags[0];
-    }
-    
-    void set_crossing(bool b)
-    {
-        flags[2] = b;
-    }
-    
-    void set_boundary(bool b)
-    {
-		flags[1] = b;
-    }
-    
-    void set_interface(bool b)
-    {
-		flags[0] = b;
-    }
-};
-
-class FaceAttributes
-{
-    std::bitset<2> flags;
-    
-public:
-    FaceAttributes() {}
+        vec3 p;
+        vec3 p_new;
+        std::bitset<3> flags;
         
-    bool is_boundary()
-    {
-        return flags[1];
-    }
+    public:
+        
+        NodeAttributes() : p(0.,0.,0.), p_new(0.,0.,0.) {}
+        NodeAttributes(const real& x, const real& y, const real& z) : p(x,y,z), p_new(x,y,z) {}
+        
+        vec3 get_pos()
+        {
+            return p;
+        }
+        
+        vec3 get_destination()
+        {
+            return p_new;
+        }
+        
+        void set(const NodeAttributes& t)
+        {
+            p = t.p;
+            p_new = t.p_new;
+            flags = t.flags;
+        }
+        
+        void set_pos(vec3 p_)
+        {
+            p = p_;
+        }
+        
+        void set_destination(vec3 p_)
+        {
+            p_new = p_;
+        }
+        
+        bool is_crossing()
+        {
+            return flags[2];
+        }
+        
+        bool is_boundary()
+        {
+            return flags[1];
+        }
+        
+        bool is_interface()
+        {
+            return flags[0];
+        }
+        
+        void set_crossing(bool b)
+        {
+            flags[2] = b;
+        }
+        
+        void set_boundary(bool b)
+        {
+            flags[1] = b;
+        }
+        
+        void set_interface(bool b)
+        {
+            flags[0] = b;
+        }
+    };
     
-    bool is_interface()
+    class EdgeAttributes
     {
-        return flags[0];
-    }
+        std::bitset<3> flags;
+        
+    public:
+        EdgeAttributes() {}
+        
+        
+        bool is_crossing()
+        {
+            return flags[2];
+        }
+        
+        bool is_boundary()
+        {
+            return flags[1];
+        }
+        
+        bool is_interface()
+        {
+            return flags[0];
+        }
+        
+        void set_crossing(bool b)
+        {
+            flags[2] = b;
+        }
+        
+        void set_boundary(bool b)
+        {
+            flags[1] = b;
+        }
+        
+        void set_interface(bool b)
+        {
+            flags[0] = b;
+        }
+    };
     
-    void set_boundary(bool b)
+    class FaceAttributes
     {
-		flags[1] = b;
-    }
+        std::bitset<2> flags;
+        
+    public:
+        FaceAttributes() {}
+        
+        bool is_boundary()
+        {
+            return flags[1];
+        }
+        
+        bool is_interface()
+        {
+            return flags[0];
+        }
+        
+        void set_boundary(bool b)
+        {
+            flags[1] = b;
+        }
+        
+        void set_interface(bool b)
+        {
+            flags[0] = b;
+        }
+    };
     
-    void set_interface(bool b)
+    class TetAttributes
     {
-		flags[0] = b;
-    }
-};
-
-class TetAttributes
-{
-    unsigned int l;
+        unsigned int l;
+        
+    public:
+        TetAttributes() : l(0) {}
+        
+        int label()
+        {
+            return l;
+        }
+        
+        void label(unsigned int _label)
+        {
+            l = _label;
+        }
+        
+    };
     
-public:
-    TetAttributes() : l(0) {}
-    
-    int label()
-    {
-        return l;
-    }
-    
-    void label(unsigned int _label)
-    {
-        l = _label;
-    }
-
-};
+}

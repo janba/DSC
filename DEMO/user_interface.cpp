@@ -19,10 +19,10 @@
 #include "average_function.h"
 #include "normal_function.h"
 
-//#include "tetrahedralize.h"
 #include "mesh_io.h"
 #include "tetralizer.h"
 
+using namespace DSC;
 
 void display_(){
     UI::get_instance()->display();

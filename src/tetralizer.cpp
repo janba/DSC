@@ -15,3 +15,8 @@
 //  See licence.txt for a copy of the GNU General Public License.
 
 #include "tetralizer.h"
+
+namespace DSC {
+
+
+}

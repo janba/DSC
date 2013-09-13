@@ -37,10 +37,10 @@ class UI
 protected:    
     float r = 150.;
     
-    VelocityFunc *vel_fun;
-    DeformableSimplicialComplex<> *dsc;
+    DSC::VelocityFunc *vel_fun;
+    DSC::DeformableSimplicialComplex<> *dsc;
     
-    Log *basic_log;
+    DSC::Log *basic_log;
     
     Painter *painter;
     
@@ -51,9 +51,9 @@ protected:
     bool RECORD;
     bool QUIT_ON_COMPLETION;
     
-    real VELOCITY;
-    real DISCRETIZATION;
-    real ACCURACY;
+    DSC::real VELOCITY;
+    DSC::real DISCRETIZATION;
+    DSC::real ACCURACY;
     static UI* instance;
     
 #ifdef WIN32

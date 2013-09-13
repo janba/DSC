@@ -21,14 +21,14 @@
 /**
  A velocity function which moves the interface vertices in the normal direction.
  */
-class NormalFunc: public VelocityFunc {
+class NormalFunc: public DSC::VelocityFunc {
     
     
 public:
     /**
      Creates a velocity function which moves the interface vertices in the normal direction.
      */
-    NormalFunc(real velocity, real accuracy, int max_time_steps = 500):
+    NormalFunc(DSC::real velocity, DSC::real accuracy, int max_time_steps = 500):
         VelocityFunc(velocity/10., accuracy, max_time_steps)
     {
         
@@ -45,10 +45,10 @@ public:
     /**
      Computes the motion of each interface vertex and stores the new position in new_pos in the simplicial complex class.
      */
-    virtual void deform(DeformableSimplicialComplex<>& dsc)
+    virtual void deform(DSC::DeformableSimplicialComplex<>& dsc)
     {
         auto init_time = std::chrono::system_clock::now();
-        vec3 new_pos;
+        DSC::vec3 new_pos;
         for(auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
         {
             if(nit->is_interface() && !nit->is_crossing())

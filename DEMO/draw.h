@@ -74,7 +74,7 @@ class Painter {
     GLuint VertexArrayID;
     GLuint vertexbuffer;
     
-    std::vector<vec3> vertexdata;
+    std::vector<DSC::vec3> vertexdata;
     
     GLuint positionAttribute;
     
@@ -126,7 +126,7 @@ public:
         
         if (time_step >= 0)
         {
-            s << std::string(Util::concat4digits("_", time_step));
+            s << std::string(DSC::Util::concat4digits("_", time_step));
         }
         s << ".png";
         int success = SOIL_save_screenshot(s.str().c_str(), SOIL_SAVE_TYPE_PNG, 0, 0, width, height);
@@ -158,7 +158,7 @@ public:
     /**
      Draws the simplicial complex.
      */
-    void draw_complex(DeformableSimplicialComplex<> *complex)
+    void draw_complex(DSC::DeformableSimplicialComplex<> *complex)
     {
         draw_faces(complex);
 //        draw_nodes(complex);
@@ -171,7 +171,7 @@ public:
     /**
      Draws the bad tetrahedra.
      */
-    void draw_bad_tetrahedra(DeformableSimplicialComplex<> *complex)
+    void draw_bad_tetrahedra(DSC::DeformableSimplicialComplex<> *complex)
     {
         bool low_quality, small_angle;
         glLineWidth(LINE_WIDTH);
@@ -193,12 +193,12 @@ public:
                     glColor4fv(&GREEN[0]);
                 }
                 
-                typename DeformableSimplicialComplex<>::simplex_set cl_t;
+                typename DSC::DeformableSimplicialComplex<>::simplex_set cl_t;
                 complex->closure(tit.key(), cl_t);
                 
                 for (auto fit = cl_t.faces_begin(); fit != cl_t.faces_end(); fit++)
                 {
-                    vec3 n = complex->get_normal(*fit);
+                    DSC::vec3 n = complex->get_normal(*fit);
                     auto verts = complex->get_pos(*fit);
                     glVertex3d(static_cast<double>(verts[0][0]), static_cast<double>(verts[0][1]), static_cast<double>(verts[0][2]));
                     glVertex3d(static_cast<double>(verts[1][0]), static_cast<double>(verts[1][1]), static_cast<double>(verts[1][2]));
@@ -215,7 +215,7 @@ public:
     /**
      Draws the faces with the colors defined by the get_face_colors function in the simplicial complex.
      */
-    void draw_faces(DeformableSimplicialComplex<> *complex, const float color[] = GRAY)
+    void draw_faces(DSC::DeformableSimplicialComplex<> *complex, const float color[] = GRAY)
     {
         glColor3fv(&color[0]);
         glBegin(GL_TRIANGLES);
@@ -224,7 +224,7 @@ public:
             if (fit->is_interface())
             {
                 auto verts = complex->get_pos(fit.key());
-                vec3 n = complex->get_normal(fit.key());
+                DSC::vec3 n = complex->get_normal(fit.key());
                 
                 for (int i = 0; i < 3; ++i)
                 {
@@ -237,11 +237,11 @@ public:
         glEnd();
     }
     
-    void draw_edges(DeformableSimplicialComplex<> *complex, const float color[] = BLACK)
+    void draw_edges(DSC::DeformableSimplicialComplex<> *complex, const float color[] = BLACK)
     {
         glColor3fv(&color[0]);
         glLineWidth(LINE_WIDTH);
-        vec3 p1, p2;
+        DSC::vec3 p1, p2;
         glBegin(GL_LINES);
         for(auto eit = complex->edges_begin(); eit != complex->edges_end(); eit++)
         {
@@ -255,12 +255,12 @@ public:
         glEnd();
     }
     
-    void draw_nodes(DeformableSimplicialComplex<> *complex, const float color[] = BLACK)
+    void draw_nodes(DSC::DeformableSimplicialComplex<> *complex, const float color[] = BLACK)
     {
         glColor3fv(&color[0]);
         glPointSize(POINT_SIZE);
         glBegin(GL_POINTS);
-        vec3 p;
+        DSC::vec3 p;
         for(auto nit = complex->nodes_begin(); nit != complex->nodes_end(); nit++)
         {
             if (nit->is_interface()) {
@@ -278,7 +278,7 @@ public:
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(real)*3*vertexdata.size(), &vertexdata[0], GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::real)*3*vertexdata.size(), &vertexdata[0], GL_STATIC_DRAW);
         
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3*static_cast<int>(vertexdata.size()), GL_FLOAT, GL_FALSE, 3, (void*)0);
@@ -289,7 +289,7 @@ public:
         check_gl_error();
     }
     
-    void draw_interface(DeformableSimplicialComplex<> *complex, const float color[] = GRAY)
+    void draw_interface(DSC::DeformableSimplicialComplex<> *complex, const float color[] = GRAY)
     {
         vertexdata.clear();
         for (auto fit = complex->faces_begin(); fit != complex->faces_end(); fit++)
@@ -297,7 +297,7 @@ public:
             if (fit->is_interface())
             {
                 auto verts = complex->get_pos(fit.key());
-                vec3 n = complex->get_normal(fit.key());
+                DSC::vec3 n = complex->get_normal(fit.key());
                 
                 for(auto &v : verts)
                 {
