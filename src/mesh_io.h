@@ -29,7 +29,7 @@
 template <typename MT>
 inline void export_tet_mesh(DeformableSimplicialComplex<MT> & dsc, const std::string & filename)
 {
-	std::vector<typename MT::vector3_type> points;
+	std::vector<vec3> points;
     std::vector< std::vector<int> > tets;
 	dsc.extract_tet_mesh(points, tets);
     
@@ -102,7 +102,7 @@ inline void import_tet_mesh(const std::string & filename, std::vector<real>& poi
 template <typename MT>
 inline void save_interface(DeformableSimplicialComplex<MT> & dsc, std::string & filename)
 {
-	std::vector<typename MT::vector3_type> verts;
+	std::vector<vec3> verts;
 	std::vector<int> indices;
 	dsc.extract_interface(verts, indices);
     
@@ -123,78 +123,4 @@ inline void save_interface(DeformableSimplicialComplex<MT> & dsc, std::string & 
 	}
     
 	obj_file.close();
-}
-
-template <typename MT>
-inline void save_obj(DeformableSimplicialComplex<MT> & dsc, std::vector<std::string> const & materials, std::string const & path)
-{
-    typedef typename MT::real_type      T;
-    typedef typename MT::vector3_type   V;
-    
-    std::vector<V> verts;
-    std::vector<V> normals;
-    std::vector<int> labels;
-    std::vector<int> indices;
-    std::map<typename DeformableSimplicialComplex<MT>::node_key_type, int> vert_index;
-    std::map<typename DeformableSimplicialComplex<MT>::edge_key_type, int> edge_index;
-    
-    typename DeformableSimplicialComplex<MT>::node_iterator nit = dsc.nodes_begin();
-    typename DeformableSimplicialComplex<MT>::node_iterator nn_it = dsc.nodes_end();
-    
-    while (nit != nn_it)
-    {
-        if (nit->is_interface())
-        {
-            verts.push_back(nit->v);
-            vert_index[nit.key()] = verts.size();
-        }
-        ++nit;
-    }
-    
-    typename DeformableSimplicialComplex<MT>::face_iterator fit = dsc.faces_begin();
-    typename DeformableSimplicialComplex<MT>::face_iterator ff_it = dsc.faces_end();
-    
-    while (fit != ff_it)
-    {
-        if (fit->is_interface())
-        {
-            int l = enforce_orientation(dsc, fit.key());
-            
-            std::vector<typename DeformableSimplicialComplex<MT>::node_key_type> nodes(3);
-            dsc.vertices(fit.key(), nodes);
-            
-            indices.push_back(vert_index[nodes[0]]);
-            indices.push_back(vert_index[nodes[1]]);
-            indices.push_back(vert_index[nodes[2]]);
-            
-            labels.push_back(l);
-        }
-        ++fit;
-    }
-    
-    std::ofstream obj_file;
-    obj_file.open(path.data());
-    
-    obj_file << "mtllib dsc_test.mtl" << std::endl;
-    
-    for (int i = 0; i < verts.size(); ++i)
-        obj_file << "v "  <<   verts[i][0] << " " <<   verts[i][1] << " " <<   verts[i][2] << std::endl;
-    
-    int last_label = -1;
-    for (int i = 0; i < indices.size() / 3; ++i)
-    {
-        int label = labels[i];
-        if (label != last_label)
-        {
-            last_label = label;
-            obj_file << "usemtl " << materials[label-1] << std::endl;
-        }
-        
-        obj_file << "f " << indices[3*i  ] << " " <<
-        indices[3*i+1] << " " <<
-        indices[3*i+2] << std::endl;
-    }
-    
-    obj_file.close();
-    
 }
