@@ -25,8 +25,6 @@ template <typename MT, typename node_att = NodeAttributes, typename edge_att = E
 class DeformableSimplicialComplex : public ISMesh<node_att, edge_att, face_att, tet_att>
 {
     typedef typename MT::real_type      T;
-    typedef typename MT::vector3_type   V;
-    typedef typename MT::vector4_type   V4;
     
     typedef ISMesh<node_att, edge_att, face_att, tet_att> Complex;
 public:
@@ -108,8 +106,8 @@ private:
     void print(const node_key& n)
     {
         std::cout << "Node: " << n << std::endl;
-        V p = get_pos(n);
-        V d = get_destination(n);
+        vec3 p = get_pos(n);
+        vec3 d = get_destination(n);
         std::cout << "P = " << p[0] << ", " << p[1] << ", " << p[2] << std::endl;
         std::cout << "D = " << d[0] << ", " << d[1] << ", " << d[2]  << std::endl;
         
@@ -119,8 +117,8 @@ private:
         for(auto eit = st_n.edges_begin(); eit != st_n.edges_end(); eit++)
         {
             auto verts = get_pos(*eit);
-            V p1 = verts[0];
-            V p2 = verts[1];
+            vec3 p1 = verts[0];
+            vec3 p2 = verts[1];
             std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
             std::cout << p2[0] << ", " << p2[1] << ", " << p2[2] << "; " << std::endl;
         }
@@ -132,8 +130,8 @@ private:
             if(is_interface(*eit))
             {
                 auto verts = get_pos(*eit);
-                V p1 = verts[0];
-                V p2 = verts[1];
+                vec3 p1 = verts[0];
+                vec3 p2 = verts[1];
                 std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
                 std::cout << p2[0] << ", " << p2[1] << ", " << p2[2] << "; " << std::endl;
             }
@@ -146,8 +144,8 @@ private:
         for(auto eit = set.edges_begin(); eit != set.edges_end(); eit++)
         {
             auto verts = get_pos(*eit);
-            V p1 = verts[0];
-            V p2 = verts[1];
+            vec3 p1 = verts[0];
+            vec3 p2 = verts[1];
             std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
             std::cout << p2[0] << ", " << p2[1] << ", " << p2[2] << "; " << std::endl;
         }
@@ -159,8 +157,8 @@ private:
             if(is_interface(*eit))
             {
                 auto verts = get_pos(*eit);
-                V p1 = verts[0];
-                V p2 = verts[1];
+                vec3 p1 = verts[0];
+                vec3 p2 = verts[1];
                 std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
                 std::cout << p2[0] << ", " << p2[1] << ", " << p2[2] << "; " << std::endl;
             }
@@ -198,9 +196,9 @@ public:
     /**
      * Returns the position of node n.
      */
-    V get_pos(const node_key& n)
+    vec3 get_pos(const node_key& n)
     {
-        V p = Complex::get(n).get_pos();
+        vec3 p = Complex::get(n).get_pos();
 #ifdef DEBUG
         assert(!MT::is_nan(p[0]) && !MT::is_nan(p[1]) && !MT::is_nan(p[2]));
 #endif
@@ -208,9 +206,9 @@ public:
     }
     
     /// Returns the positions of the nodes of edge e in verts.
-    std::vector<V> get_pos(const edge_key & e)
+    std::vector<vec3> get_pos(const edge_key & e)
     {
-        std::vector<V> verts(2);
+        std::vector<vec3> verts(2);
         auto nodes = Complex::get_nodes(e);
         for (int k = 0; k < 2; ++k)
         {
@@ -220,9 +218,9 @@ public:
     }
     
     /// Returns the positions of the nodes of face f in verts.
-    std::vector<V> get_pos(const face_key & f)
+    std::vector<vec3> get_pos(const face_key & f)
     {
-        std::vector<V> verts(3);
+        std::vector<vec3> verts(3);
         Complex::orient_face(f);
         auto nodes = Complex::get_nodes(f);
         for (int k = 0; k < 3; ++k)
@@ -233,9 +231,9 @@ public:
     }
     
     /// Returns the positions of the nodes of tetrahedron t in verts.
-    std::vector<V> get_pos(const tet_key& t)
+    std::vector<vec3> get_pos(const tet_key& t)
     {
-        std::vector<V> verts(4);
+        std::vector<vec3> verts(4);
         auto nodes = Complex::get_nodes(t);
         for (int k = 0; k < 4; ++k)
         {
@@ -248,13 +246,13 @@ protected:
     /**
      * Sets the position of node n.
      */
-    void set_pos(const node_key& n, V p)
+    void set_pos(const node_key& n, vec3 p)
     {
         Complex::get(n).set_pos(p);
     }
     
 public:
-    V get_destination(const node_key& n)
+    vec3 get_destination(const node_key& n)
     {
         return Complex::get(n).get_destination();
     }
@@ -262,7 +260,7 @@ public:
     /**
      * Sets the destination where the node n is moved to when deform() is called.
      */
-    void set_destination(const node_key& n, V p)
+    void set_destination(const node_key& n, vec3 p)
     {
         Complex::get(n).set_destination(p);
     }  
@@ -272,9 +270,9 @@ public:
     /////////////
 public:
     
-    V get_center() const
+    vec3 get_center() const
     {
-        return V(0., 0., 0.);
+        return vec3(0.);
     }
     
     T get_min_tet_quality() const
@@ -624,9 +622,9 @@ private:
      */
     void orient_cc(const node_key& a, std::vector<node_key>& nodes)
     {
-        V x = get_pos(a) - get_pos(nodes[0]);
-        V y = get_pos(nodes[1]) - get_pos(nodes[0]);
-        V z = get_pos(nodes[2]) - get_pos(nodes[0]);
+        vec3 x = get_pos(a) - get_pos(nodes[0]);
+        vec3 y = get_pos(nodes[1]) - get_pos(nodes[0]);
+        vec3 z = get_pos(nodes[2]) - get_pos(nodes[0]);
         T val = MT::dot(x, MT::cross(y,z));
 #ifdef DEBUG
         assert(val != 0.);
@@ -1002,9 +1000,9 @@ private:
         node_key apex = *cl_f.nodes_begin();
         
         // Find the projected position of the apex
-        std::vector<V> verts;
+        std::vector<vec3> verts;
         get_pos(e, verts);
-        V p = Util::project<MT>(get_pos(apex), verts[0], verts[1]);
+        vec3 p = Util::project<MT>(get_pos(apex), verts[0], verts[1]);
         
         // Split longest edge
         node_key n = split(e);
@@ -1106,9 +1104,9 @@ private:
         node_key apex = Complex::get_apex(t, f);
         
         // Project the apex
-        std::vector<V> verts;
+        std::vector<vec3> verts;
         get_pos(f, verts);
-        V p = Util::project<MT>(get_pos(apex), verts);
+        vec3 p = Util::project<MT>(get_pos(apex), verts);
         
         // Split the face
         node_key n = split(f);
@@ -1189,9 +1187,9 @@ private:
         node_key apex = Complex::get_apex(t, f);
         
         // Project the apex
-        std::vector<V> verts;
+        std::vector<vec3> verts;
         get_pos(f, verts);
-        V proj_apex = Util::project<MT>(get_pos(apex), verts);
+        vec3 proj_apex = Util::project<MT>(get_pos(apex), verts);
         
         // Find barycentric coordinates
         std::vector<T> barycentric_coords = Util::barycentric_coords<MT>(proj_apex, verts[0], verts[1], verts[2]);
@@ -1206,12 +1204,12 @@ private:
         }
         
         T mean_dist = 0.;
-        for(V &p : verts)
+        for(vec3 &p : verts)
         {
             mean_dist += (p-proj_apex).length()/3.;
         }
         int close = 0;
-        for(V &p : verts)
+        for(vec3 &p : verts)
         {
             if((p-proj_apex).length() < mean_dist)
             {
@@ -1270,8 +1268,8 @@ private:
     bool smart_laplacian(const node_key& n, T alpha = 1.)
     {
         T q_old = min_quality(n);
-        V old_pos = get_pos(n);
-        V avg_pos = get_barycenter(n);
+        vec3 old_pos = get_pos(n);
+        vec3 avg_pos = get_barycenter(n);
         set_pos(n, old_pos + alpha * (avg_pos - old_pos));
         
         T q_new = min_quality(n);
@@ -1341,7 +1339,7 @@ private:
         // and if the vertex opposite to this face also lies on the interface.
         if (max_area > 0.48*total_area)
         {
-            std::vector<V> verts;
+            std::vector<vec3> verts;
             get_pos(f, verts);
             
             simplex_set lk_f;
@@ -1516,8 +1514,8 @@ private:
      */
     bool move_vertex(const node_key & n)
     {
-        V pos = get_pos(n);
-        V destination = get_destination(n);
+        vec3 pos = get_pos(n);
+        vec3 destination = get_destination(n);
         T l = MT::length(destination - pos);
         
         if (l < EPSILON) // The vertex is not moved
@@ -1542,9 +1540,9 @@ private:
      * Returns the intersection point (= pos + t*(new_pos-pos)) with the link of the node n and
      * when moving the node n to the new position new_pos.
      */
-    T intersection_with_link(const node_key & n, const V& new_pos)
+    T intersection_with_link(const node_key & n, const vec3& new_pos)
     {
-        V pos = get_pos(n);
+        vec3 pos = get_pos(n);
         simplex_set ln;
         Complex::link(n,ln);
         T min_t = INFINITY;
@@ -1636,9 +1634,9 @@ public:
      */
     node_key split(const tet_key& t)
     {
-        std::vector<V> verts;
+        std::vector<vec3> verts;
         get_pos(t, verts);
-        V p = Util::barycenter<MT>(verts[0], verts[1], verts[2], verts[3]);
+        vec3 p = Util::barycenter<MT>(verts[0], verts[1], verts[2], verts[3]);
         
         node_key n = Complex::split(t);
         set_pos(n, p);
@@ -1653,8 +1651,8 @@ public:
     {   
         std::vector<node_key> nodes;
         Complex::get_nodes(f, nodes);
-        V p = Util::barycenter<MT>(get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
-        V p_new = p;
+        vec3 p = Util::barycenter<MT>(get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
+        vec3 p_new = p;
         if(is_interface(f))
         {
             p_new = Util::barycenter<MT>(get_destination(nodes[0]), get_destination(nodes[1]), get_destination(nodes[2]));
@@ -1673,8 +1671,8 @@ public:
     node_key split(const edge_key & e)
     {
         auto nodes = Complex::get_nodes(e);
-        V p = Util::barycenter(get_pos(nodes[0]), get_pos(nodes[1]));
-        V p_new = p;
+        vec3 p = Util::barycenter(get_pos(nodes[0]), get_pos(nodes[1]));
+        vec3 p_new = p;
         if(is_interface(e))
         {
             p_new = Util::barycenter(get_destination(nodes[0]), get_destination(nodes[1]));
@@ -1693,7 +1691,7 @@ private:
     /**
      * Collapses the edge e and moves the resulting node to the position p. Returns the new node if successful, otherwise NULL_NODE.
      */
-    node_key collapse(edge_key& e, const V& p, const V& p_new)
+    node_key collapse(edge_key& e, const vec3& p, const vec3& p_new)
     {
         node_key n_new = Complex::collapse(e);
         
@@ -1709,7 +1707,7 @@ private:
      * Returns true if the collapse of the edge e does not result in any inverted tetrahedra.
      * The merged nodes are assumed moved to p after the collapse.
      */
-    bool precond_collapse(const edge_key& e, const V& p)
+    bool precond_collapse(const edge_key& e, const vec3& p)
     {
         auto nodes = Complex::get_nodes(e);
         
@@ -1733,7 +1731,7 @@ private:
     /**
      * Returns the minimum quality of neighbouring tetrahedra if the edge e is collapsed and the resulting node is moved to v_new.
      */
-    T min_quality(const edge_key& e, const V& v_new)
+    T min_quality(const edge_key& e, const vec3& v_new)
     {
         auto nodes = Complex::get_nodes(e);
         
@@ -1762,12 +1760,12 @@ private:
         }
         auto nodes = Complex::get_nodes(e);
         
-        V p_opt, p_new_opt;
+        vec3 p_opt, p_new_opt;
         T q_max = 0.;
         
         if (!is_boundary(nodes[0]) && !is_boundary(nodes[1]) && (!safe || (!is_interface(nodes[0]) && !is_interface(nodes[1]))))
         {
-            V p = Util::barycenter(get_pos(nodes[0]), get_pos(nodes[1]));
+            vec3 p = Util::barycenter(get_pos(nodes[0]), get_pos(nodes[1]));
             T q = min_quality(e, p);
             if (precond_collapse(e, p) && q > q_max)
             {
@@ -1779,7 +1777,7 @@ private:
         
         if (!is_boundary(nodes[0]) && (!safe || !is_interface(nodes[0])))
         {
-            V p = get_pos(nodes[1]);
+            vec3 p = get_pos(nodes[1]);
             T q = min_quality(e, p);
             
             if (precond_collapse(e, p) && q > q_max)
@@ -1792,7 +1790,7 @@ private:
         
         if (!is_boundary(nodes[1]) && (!safe || !is_interface(nodes[1])))
         {
-            V p = get_pos(nodes[0]);
+            vec3 p = get_pos(nodes[0]);
             T q = min_quality(e, p);
             
             if (precond_collapse(e, p) && q > q_max)
@@ -1850,7 +1848,7 @@ public:
     /**
      Returns the normal to interface face f.
      */
-    V get_normal(const face_key & f)
+    vec3 get_normal(const face_key & f)
     {
         auto verts = get_pos(f);
         return Util::normal_direction(verts[0], verts[1], verts[2]);
@@ -1859,12 +1857,12 @@ public:
     /**
      Returns the normal to interface node n.
      */
-    V get_normal(const node_key & n)
+    vec3 get_normal(const node_key & n)
     {
         simplex_set st;
         Complex::star(n, st);
         
-        V result(0.);
+        vec3 result(0.);
         for (auto fit = st.faces_begin(); fit != st.faces_end(); fit++)
         {
             if (is_interface(*fit))
@@ -1873,7 +1871,7 @@ public:
             }
         }
         if (MT::length(result) < EPSILON) {
-            return V(0.);
+            return vec3(0.);
         }
 #ifdef DEBUG
         assert(!MT::is_nan(result[0]) && !MT::is_nan(result[1]) && !MT::is_nan(result[2]));
@@ -1885,12 +1883,12 @@ public:
      * Calculates the average position of the neighbouring nodes to node n.
      * If interface is true, the average position is only calculated among the neighbouring nodes which are interface.
      */
-    V get_barycenter(const node_key& n, bool interface = false)
+    vec3 get_barycenter(const node_key& n, bool interface = false)
     {
         simplex_set lk_n;
         Complex::link(n, lk_n);
         
-        V avg_pos(0.);
+        vec3 avg_pos(0.);
         int i = 0;
         for (auto nit = lk_n.nodes_begin(); nit != lk_n.nodes_end(); nit++)
         {
@@ -1920,7 +1918,7 @@ public:
     
     T area(const face_key& f)
     {
-        std::vector<V> verts;
+        std::vector<vec3> verts;
         get_pos(f,verts);
         return Util::area<MT>(verts);
     }
@@ -1951,7 +1949,7 @@ public:
     
     T max_angle(const face_key& f)
     {
-        std::vector<V> verts;
+        std::vector<vec3> verts;
         get_pos(f, verts);
         return Util::max_angle<T>(verts[0], verts[1], verts[2]);
     }
@@ -2028,7 +2026,7 @@ public:
     /**
      * Returns the minimum quality of the tetrahedra spanned by the vertices of the faces in s and pos.
      */
-    T min_quality(simplex_set& set, const V& pos)
+    T min_quality(simplex_set& set, const vec3& pos)
     {
         T min_q = INFINITY;
         for(auto fit = set.faces_begin(); fit != set.faces_end(); fit++)
@@ -2070,7 +2068,7 @@ public:
     }
     
     // The minimum quality among tetrahedra that would be produced by connecting apices with the edges on mf_boundary.
-    T edge_remove_quality(simplex_set& mf_boundary, std::vector<V> & apices)
+    T edge_remove_quality(simplex_set& mf_boundary, std::vector<vec3> & apices)
     {
         T q_min = 1e99;
         unsigned int n = static_cast<unsigned int>(mf_boundary.size_nodes());
@@ -2124,7 +2122,7 @@ public:
         cl_patch.difference(st_u);
         cl_patch.difference(lk0);
         
-        std::vector<V> pos;
+        std::vector<vec3> pos;
         for (auto eit = cl_patch.edges_begin(); eit != cl_patch.edges_end(); eit++)
         {
             get_pos(*eit, pos);
@@ -2140,10 +2138,10 @@ private:
      * Check if the sequence of vertices in polygon is consistent with positive orientation of tetrahedra in the mesh
      * with respect to the ordered pair of vertices in vv. If not, reverse the order of vertices in polygon.
      */
-    void check_consistency(std::vector<V> & vv, std::vector<node_key> & polygon)
+    void check_consistency(std::vector<vec3> & vv, std::vector<node_key> & polygon)
     {
         unsigned int n = static_cast<unsigned int>(polygon.size());
-        std::vector<V> vp(n);
+        std::vector<vec3> vp(n);
         
         for (unsigned int i = 0; i < n; ++i)
         {
@@ -2174,7 +2172,7 @@ private:
     void check_consistency(edge_key const & e, std::vector<node_key> & polygon)
     {
         auto verts = get_pos(e);
-        std::vector<V> vv(2);
+        std::vector<vec3> vv(2);
         vv[1] = verts[0]; // VERTEX FLIP
         vv[0] = verts[1];
         
@@ -2223,9 +2221,9 @@ private:
     /**
      * Returns whether any of the tetrahedra in the simplex set will invert if node n is moved to p_new.
      */
-    bool will_invert(const node_key& n, const V p_new, simplex_set& set)
+    bool will_invert(const node_key& n, const vec3 p_new, simplex_set& set)
     {
-        V p = get_pos(n);
+        vec3 p = get_pos(n);
         for(auto fit = set.faces_begin(); fit != set.faces_end(); fit++)
         {
             auto verts = get_pos(*fit);
@@ -2242,7 +2240,7 @@ private:
     /**
      * Returns whether any of the tetrahedra in the star of n will invert if node n is moved to p_new.
      */
-//    bool will_invert(const node_key& n, const V p_new)
+//    bool will_invert(const node_key& n, const vec3 p_new)
 //    {
 //        simplex_set st_n, cl_st_n;
 //        Complex::star(n, st_n);
@@ -2423,7 +2421,7 @@ public:
         auto temp = Complex::get_nodes(f2);
         nodes.insert(nodes.end(), temp.begin(), temp.end());
         
-        std::vector<V> verts, apices;
+        std::vector<vec3> verts, apices;
         for(int i = 0; i < nodes.size(); i++)
         {
             bool found = false;
