@@ -31,7 +31,9 @@ namespace DSC {
     
     typedef double            real;
     typedef CGLA::Vec3d       vec3;
+    typedef CGLA::Vec4d       vec4;
     typedef CGLA::Mat3x3d     mat3;
+    typedef CGLA::Mat4x4d     mat4;
     
     constexpr real EPSILON = 1e-8;
     
