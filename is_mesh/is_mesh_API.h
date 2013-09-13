@@ -12,14 +12,11 @@
 #include <is_mesh/io/is_mesh_lists_read.h>
 
 
-template <typename MT, typename node_traits, typename edge_traits, typename face_traits, typename tet_traits>
+template <typename node_traits, typename edge_traits, typename face_traits, typename tet_traits>
 class ISMesh
 {
     typedef typename OpenTissue::is_mesh::t4mesh< node_traits, tet_traits, edge_traits, face_traits> Mesh;
-    
-    typedef typename MT::real_type      T;
-    typedef typename MT::vector3_type   V;
-    
+        
 public:
     typedef typename Mesh::node_key_type            node_key;
     typedef typename Mesh::edge_key_type            edge_key;
@@ -37,7 +34,8 @@ private:
     Mesh mesh;
     
 public:
-    ISMesh(std::vector<T> & points, std::vector<int> & tets, std::vector<int> & tet_labels): NULL_NODE(-1), NULL_EDGE(-1), NULL_FACE(-1), NULL_TETRAHEDRON(-1)
+    template<typename real>
+    ISMesh(std::vector<real> & points, std::vector<int> & tets, std::vector<int> & tet_labels): NULL_NODE(-1), NULL_EDGE(-1), NULL_FACE(-1), NULL_TETRAHEDRON(-1)
     {
         vectors_read(points, tets, mesh);
         
