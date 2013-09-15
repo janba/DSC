@@ -333,6 +333,17 @@ void UI::stop()
     }
 }
 
+void UI::start()
+{
+    basic_log->write_message(vel_fun->get_name().c_str());
+    basic_log->write_log(dsc);
+    basic_log->write_log(vel_fun);
+    
+    update_title();
+	glutReshapeWindow(WIN_SIZE_X, WIN_SIZE_Y);
+    
+}
+
 void UI::rotate_cube()
 {
     stop();
@@ -347,15 +358,9 @@ void UI::rotate_cube()
     
     dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels);
     vel_fun = new RotateFunc(VELOCITY, ACCURACY);
-    
     basic_log = new Log(create_log_path());
     
-    basic_log->write_message(vel_fun->get_name().c_str());
-    basic_log->write_log(dsc);
-    basic_log->write_log(vel_fun);
-    
-    update_title();
-	glutReshapeWindow(WIN_SIZE_X, WIN_SIZE_Y);
+    start();
 }
 
 void UI::smooth_armadillo()
@@ -369,15 +374,9 @@ void UI::smooth_armadillo()
     
     dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels);
     vel_fun = new AverageFunc(VELOCITY, ACCURACY);
-    
     basic_log = new Log(create_log_path());
     
-    basic_log->write_message(vel_fun->get_name().c_str());
-    basic_log->write_log(dsc);
-    basic_log->write_log(vel_fun);
-    
-    update_title();
-	glutReshapeWindow(WIN_SIZE_X, WIN_SIZE_Y);
+    start();
 }
 
 void UI::expand_armadillo()
@@ -389,19 +388,10 @@ void UI::expand_armadillo()
     std::vector<int>  tet_labels;
     import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
     
-//    std::vector<GELTypes::vector3_type> pts_inside = {GELTypes::vector3_type( 0.0f, 0.0f, 0.0f)};
-//    build_tetrahedralization<GELTypes>(get_data_file_path("armadillo-very-simple.obj"), points, tets, tet_labels, pts_inside);
-    
     dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels);
     vel_fun = new NormalFunc(VELOCITY, ACCURACY);
-    
     basic_log = new Log(create_log_path());
     
-    basic_log->write_message(vel_fun->get_name().c_str());
-    basic_log->write_log(dsc);
-    basic_log->write_log(vel_fun);
-    
-    update_title();
-	glutReshapeWindow(WIN_SIZE_X, WIN_SIZE_Y);
+    start();
 }
 

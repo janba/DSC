@@ -161,6 +161,11 @@ public:
     virtual void draw();
     
     /**
+     Starts the motion.
+     */
+    virtual void start();
+    
+    /**
      Stops the motion and deletes the DSC object.
      */
     virtual void stop();
