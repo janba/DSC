@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		7A0AB5C217D908E10058910E /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0AB5C017D9082A0058910E /* CoreFoundation.framework */; };
 		7A30ED1A17D951EB0051E6C0 /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A30ED1917D951EB0051E6C0 /* libGLEW.a */; };
+		7A38E82C17E3B35A0075DC24 /* interface.frag in Sources */ = {isa = PBXBuildFile; fileRef = 7A38E82A17E3B35A0075DC24 /* interface.frag */; };
+		7A38E82D17E3B35A0075DC24 /* interface.vert in Sources */ = {isa = PBXBuildFile; fileRef = 7A38E82B17E3B35A0075DC24 /* interface.vert */; };
 		7A45DB96176E122100B9B388 /* configuration.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB88176E122100B9B388 /* configuration.h */; };
 		7A45DB97176E122100B9B388 /* is_mesh_lists_read.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8A176E122100B9B388 /* is_mesh_lists_read.h */; };
 		7A45DB98176E122100B9B388 /* is_mesh_lists_write.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8B176E122100B9B388 /* is_mesh_lists_write.h */; };
@@ -130,6 +132,8 @@
 		7A0AB5A517D906AD0058910E /* libSOIL.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSOIL.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A0AB5C017D9082A0058910E /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		7A30ED1917D951EB0051E6C0 /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = ../../../../../usr/local/lib/libGLEW.a; sourceTree = "<group>"; };
+		7A38E82A17E3B35A0075DC24 /* interface.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = interface.frag; sourceTree = "<group>"; };
+		7A38E82B17E3B35A0075DC24 /* interface.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = interface.vert; sourceTree = "<group>"; };
 		7A45DB88176E122100B9B388 /* configuration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = configuration.h; path = is_mesh/configuration.h; sourceTree = "<group>"; };
 		7A45DB8A176E122100B9B388 /* is_mesh_lists_read.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = is_mesh_lists_read.h; sourceTree = "<group>"; };
 		7A45DB8B176E122100B9B388 /* is_mesh_lists_write.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = is_mesh_lists_write.h; sourceTree = "<group>"; };
@@ -297,6 +301,15 @@
 			name = ISMesh;
 			sourceTree = "<group>";
 		};
+		7A38E82917E3B35A0075DC24 /* shaders */ = {
+			isa = PBXGroup;
+			children = (
+				7A38E82A17E3B35A0075DC24 /* interface.frag */,
+				7A38E82B17E3B35A0075DC24 /* interface.vert */,
+			);
+			path = shaders;
+			sourceTree = "<group>";
+		};
 		7A45DB89176E122100B9B388 /* io */ = {
 			isa = PBXGroup;
 			children = (
@@ -405,6 +418,7 @@
 				7A553EC117DA724800125178 /* SOIL */,
 				7A07B9B1176B23A8006589A4 /* ISMesh */,
 				7AE27AB917675A1E000F8238 /* DSC */,
+				7A38E82917E3B35A0075DC24 /* shaders */,
 				7AE27B0E17675CEA000F8238 /* DEMO */,
 				7AE27AB817675A1E000F8238 /* Products */,
 			);
@@ -701,6 +715,8 @@
 				7AE27B1517675CEA000F8238 /* demo.cpp in Sources */,
 				7AF7E9BA176B402200F43714 /* user_interface.cpp in Sources */,
 				7AF7E9BD176B412900F43714 /* draw.cpp in Sources */,
+				7A38E82C17E3B35A0075DC24 /* interface.frag in Sources */,
+				7A38E82D17E3B35A0075DC24 /* interface.vert in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
