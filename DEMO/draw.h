@@ -24,6 +24,8 @@
 #include <GLUT/glut.h>
 #endif
 
+#include <CGLA/Mat4x4f.h>
+
 const static float ALPHA = 0.2;
 const static float BACKGROUND_COLOR[] = {0.7, 0.7, 0.7, 0.};
 const static float INVISIBLE[] = {-1., -1., -1.};
@@ -76,24 +78,14 @@ class Painter {
     
     std::vector<DSC::vec3> vertexdata;
     
+    GLuint MVPUniform;
+    
     GLuint positionAttribute;
     
 public:
     
     Painter()
     {
-//        load_shader();
-//        glGenVertexArrays(1, &VertexArrayID);
-//        check_gl_error();
-//        glBindVertexArray(VertexArrayID);
-//        check_gl_error();
-//        
-//        glGenBuffers(1, &vertexbuffer);
-//        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-//        
-//        glEnableVertexAttribArray(positionAttribute);
-        
-        
         glEnable(GL_DEPTH_TEST);
         glDepthMask(GL_TRUE);
         
@@ -107,6 +99,49 @@ public:
         
         glEnable (GL_BLEND);
         glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        
+        check_gl_error();
+    }
+    
+    Painter(int WIN_SIZE_X, int WIN_SIZE_Y, double r)
+    {
+        load_shader();
+        
+        // Test data
+        vertexdata.clear();
+        vertexdata.push_back(DSC::vec3(-0.5, -0.5, 0.));
+        vertexdata.push_back(DSC::vec3(0.5, -0.5, 0.));
+        vertexdata.push_back(DSC::vec3(0., 0.5, 0.));
+        
+        // Generate arrays and buffers
+        glGenVertexArrays(1, &VertexArrayID);
+        glBindVertexArray(VertexArrayID);
+        
+        glGenBuffers(1, &vertexbuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*vertexdata.size(), &vertexdata[0], GL_STATIC_DRAW); // Visualize test data
+        
+        glEnableVertexAttribArray(positionAttribute);
+        glVertexAttribPointer(positionAttribute, 3, GL_DOUBLE, GL_FALSE, sizeof(double)*3, (const GLvoid *)0); // Visualize test data
+        
+        // Set up model view projection matrix
+        CGLA::Mat4x4f projection = CGLA::perspective_Mat4x4f(53.f, WIN_SIZE_X/float(WIN_SIZE_Y), 0.01*r, 3.*r); // Projection matrix
+        CGLA::Mat4x4f view = CGLA::lookAt_Mat4x4f(CGLA::Vec3f(0., 0., -r), CGLA::Vec3f(0.), CGLA::Vec3f(0., 1., 0.)); // View matrix
+        CGLA::Mat4x4f model = CGLA::identity_Mat4x4f();
+        CGLA::Mat4x4f modelViewProjection = projection * view * model;
+        
+        // Send model view projection matrix to shader.
+        glUniformMatrix4fv(MVPUniform, 1, GL_FALSE, (const GLfloat *)& modelViewProjection);
+        
+        // Enable states
+        glEnable(GL_DEPTH_TEST);
+        glDepthMask(GL_TRUE);
+
+//        glEnable(GL_CULL_FACE);
+//        glCullFace(GL_BACK);
+//        
+//        glEnable (GL_BLEND);
+//        glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
         check_gl_error();
     }
@@ -277,11 +312,7 @@ public:
         glClearColor(BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2],BACKGROUND_COLOR[3]);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::real)*3*vertexdata.size(), &vertexdata[0], GL_STATIC_DRAW);
-        
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3*static_cast<int>(vertexdata.size()), GL_FLOAT, GL_FALSE, 3, (void*)0);
+        glUseProgram(shaderProgram);
         
         glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertexdata.size()));
         
@@ -289,15 +320,16 @@ public:
         check_gl_error();
     }
     
-    void draw_interface(DSC::DeformableSimplicialComplex<> *complex, const float color[] = GRAY)
+    void update_interface(DSC::DeformableSimplicialComplex<>& complex, const float color[] = GRAY)
     {
+        // Extract interface data
         vertexdata.clear();
-        for (auto fit = complex->faces_begin(); fit != complex->faces_end(); fit++)
+        for (auto fit = complex.faces_begin(); fit != complex.faces_end(); fit++)
         {
             if (fit->is_interface())
             {
-                auto verts = complex->get_pos(fit.key());
-                DSC::vec3 n = complex->get_normal(fit.key());
+                auto verts = complex.get_pos(fit.key());
+                DSC::vec3 n = complex.get_normal(fit.key());
                 
                 for(auto &v : verts)
                 {
@@ -305,14 +337,24 @@ public:
                 }
             }
         }
-        draw_new();
+        
+        // Send interface data to shader
+        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*vertexdata.size(), &vertexdata[0], GL_STATIC_DRAW);
+        
+        glEnableVertexAttribArray(positionAttribute);
+        glVertexAttribPointer(positionAttribute, 3, GL_DOUBLE, GL_FALSE, sizeof(DSC::vec3), (const GLvoid *)0);
     }
     
     void load_shader()
     {
-        shaderProgram = InitShader("beelsebob.vert",  "beelsebob.frag", "fragColour");
+        shaderProgram = InitShader("shaders/interface.vert",  "shaders/interface.frag", "fragColour");
+        MVPUniform = glGetUniformLocation(shaderProgram, "MVP");
+        if (MVPUniform > 10000) {
+            std::cerr << "Shader did not contain the 'modelView' uniform."<<std::endl;
+        }
         positionAttribute = glGetAttribLocation(shaderProgram, "position");
-        if (positionAttribute < 0) {
+        if (positionAttribute > 10000) {
             std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
         }
     }
