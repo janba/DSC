@@ -26,6 +26,7 @@ namespace DSC {
     template <typename node_att = NodeAttributes, typename edge_att = EdgeAttributes, typename face_att = FaceAttributes, typename tet_att = TetAttributes>
     class DeformableSimplicialComplex : public ISMesh<node_att, edge_att, face_att, tet_att>
     {
+        friend class ObjectGenerator;
         typedef ISMesh<node_att, edge_att, face_att, tet_att> Complex;
     public:
         

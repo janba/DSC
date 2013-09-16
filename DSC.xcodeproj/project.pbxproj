@@ -96,6 +96,10 @@
 		7A9C20D617DFB4D40064171E /* Vec4i.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9C209917DFB4D40064171E /* Vec4i.h */; };
 		7A9C20D717DFB4D40064171E /* Vec4uc.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9C209A17DFB4D40064171E /* Vec4uc.h */; };
 		7A9C20D817DFB51C0064171E /* libCGLA.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A9C205917DFB4CB0064171E /* libCGLA.a */; };
+		7A9F2A9217E7548900259577 /* boundary_conditions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A9F2A8E17E7548900259577 /* boundary_conditions.cpp */; };
+		7A9F2A9317E7548900259577 /* boundary_conditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9F2A8F17E7548900259577 /* boundary_conditions.h */; };
+		7A9F2A9417E7548900259577 /* object_generator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A9F2A9017E7548900259577 /* object_generator.cpp */; };
+		7A9F2A9517E7548900259577 /* object_generator.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9F2A9117E7548900259577 /* object_generator.h */; };
 		7ACA21D917DE37C5005E9309 /* stb_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ACA21D717DE37C5005E9309 /* stb_image.c */; };
 		7ACA21DA17DE37C5005E9309 /* stb_image.h in Headers */ = {isa = PBXBuildFile; fileRef = 7ACA21D817DE37C5005E9309 /* stb_image.h */; };
 		7AE27AEF17675B04000F8238 /* log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AE27ADF17675B04000F8238 /* log.cpp */; };
@@ -218,6 +222,10 @@
 		7A9C209817DFB4D40064171E /* Vec4f.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec4f.h; sourceTree = "<group>"; };
 		7A9C209917DFB4D40064171E /* Vec4i.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec4i.h; sourceTree = "<group>"; };
 		7A9C209A17DFB4D40064171E /* Vec4uc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec4uc.h; sourceTree = "<group>"; };
+		7A9F2A8E17E7548900259577 /* boundary_conditions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = boundary_conditions.cpp; path = src/boundary_conditions.cpp; sourceTree = SOURCE_ROOT; };
+		7A9F2A8F17E7548900259577 /* boundary_conditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = boundary_conditions.h; path = src/boundary_conditions.h; sourceTree = SOURCE_ROOT; };
+		7A9F2A9017E7548900259577 /* object_generator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = object_generator.cpp; path = src/object_generator.cpp; sourceTree = SOURCE_ROOT; };
+		7A9F2A9117E7548900259577 /* object_generator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = object_generator.h; path = src/object_generator.h; sourceTree = SOURCE_ROOT; };
 		7ACA21D717DE37C5005E9309 /* stb_image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image.c; sourceTree = "<group>"; };
 		7ACA21D817DE37C5005E9309 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
 		7AE27AD617675AE8000F8238 /* libDSC.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDSC.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -436,6 +444,10 @@
 		7AE27AB917675A1E000F8238 /* DSC */ = {
 			isa = PBXGroup;
 			children = (
+				7A9F2A8E17E7548900259577 /* boundary_conditions.cpp */,
+				7A9F2A8F17E7548900259577 /* boundary_conditions.h */,
+				7A9F2A9017E7548900259577 /* object_generator.cpp */,
+				7A9F2A9117E7548900259577 /* object_generator.h */,
 				7A56303E17D57445005152B6 /* attributes.h */,
 				7AE27ADF17675B04000F8238 /* log.cpp */,
 				7AE27AE017675B04000F8238 /* log.h */,
@@ -559,6 +571,8 @@
 				7A45DBA2176E122100B9B388 /* simplex_set.h in Headers */,
 				7A56303F17D57445005152B6 /* attributes.h in Headers */,
 				7A90991D17D7A27000A66365 /* tetralizer.h in Headers */,
+				7A9F2A9317E7548900259577 /* boundary_conditions.h in Headers */,
+				7A9F2A9517E7548900259577 /* object_generator.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -703,6 +717,8 @@
 			files = (
 				7AE27AEF17675B04000F8238 /* log.cpp in Sources */,
 				7A90991C17D7A27000A66365 /* tetralizer.cpp in Sources */,
+				7A9F2A9217E7548900259577 /* boundary_conditions.cpp in Sources */,
+				7A9F2A9417E7548900259577 /* object_generator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
