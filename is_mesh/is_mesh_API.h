@@ -35,13 +35,11 @@ private:
     
 public:
     template<typename real>
-    ISMesh(std::vector<real> & points, std::vector<int> & tets, std::vector<int> & tet_labels): NULL_NODE(-1), NULL_EDGE(-1), NULL_FACE(-1), NULL_TETRAHEDRON(-1)
+    ISMesh(std::vector<real> & points, std::vector<int> & tets): NULL_NODE(-1), NULL_EDGE(-1), NULL_FACE(-1), NULL_TETRAHEDRON(-1)
     {
         vectors_read(points, tets, mesh);
         
         check_validity();
-        check_validity();
-        init(tet_labels);
     }
     
     ///////////////
@@ -144,36 +142,6 @@ public:
     }
     
 private:
-    /**
-     * Label all tetrahedra according to tet_labels and perform an initial update
-     * of flags and attributes of all simplices
-     */
-    void init(std::vector<int> & tet_labels)
-    {
-        // Label all tetrahedra
-        for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
-        {
-            tit->label(tet_labels[tit.key()]);
-        }
-        
-        // Update all faces
-        for (auto fit = faces_begin(); fit != faces_end(); fit++)
-        {
-            update_flag(fit.key());
-        }
-        
-        // Update all edges
-        for (auto eit = edges_begin(); eit != edges_end(); eit++)
-        {
-            update_flag(eit.key());
-        }
-        
-        // Update all nodes
-        for (auto nit = nodes_begin(); nit != nodes_end(); nit++)
-        {
-            update_flag(nit.key());
-        }
-    }
     
     /**
      * Updates the flags (is interface, is boundary, is locked) of simplices in set.
