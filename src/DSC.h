@@ -2275,15 +2275,34 @@ namespace DSC {
             }
             assert(valid);
             
-            for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
-            {
-                valid = valid & Complex::exists(eit.key());
-            }
-            assert(valid);
-            
             for (auto nit = Complex::nodes_begin(); nit != Complex::nodes_end(); nit++)
             {
                 valid = valid & Complex::exists(nit.key());
+                valid = valid & !(is_interface(nit.key()) && is_boundary(nit.key())); // Check that the interface has not reached the boundary
+            }
+            assert(valid);
+            
+            for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
+            {
+                valid = valid & Complex::exists(eit.key());
+                simplex_set st_e;
+                Complex::star(eit.key(), st_e);
+                int boundary = 0;
+                int interface = 0;
+                for (auto fit = st_e.faces_begin(); fit != st_e.faces_end(); fit++) {
+                    if(is_boundary(*fit))
+                    {
+                        boundary++;
+                    }
+                    if(is_interface(*fit))
+                    {
+                        interface++;
+                    }
+                }
+                valid = valid & ((is_interface(eit.key()) && interface >= 2) || (!is_interface(eit.key()) && interface == 0)); // Check that the interface is not corrupted
+                assert(valid);
+                valid = valid & ((is_boundary(eit.key()) && boundary == 2) || (!is_boundary(eit.key()) && boundary == 0)); // Check that the boundary is not corrupted
+                assert(valid);
             }
             assert(valid);
         }
