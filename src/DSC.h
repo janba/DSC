@@ -1429,13 +1429,13 @@ namespace DSC {
             
             print_out("Smooth.");
             smooth();
-            validity_check();
+//            validity_check();
             
             print_out("Topological removals.");
             topological_edge_removal();
-            validity_check();
+//            validity_check();
             topological_face_removal();
-            validity_check();
+//            validity_check();
             
             //        print_out("Low quality removal.");
             //        remove_tets();
@@ -1447,9 +1447,9 @@ namespace DSC {
             
             print_out("Degeneracy removal.");
             remove_degenerate_tets();
-            validity_check();
+//            validity_check();
             remove_degenerate_faces();
-            validity_check();
+//            validity_check();
             remove_degenerate_edges();
             validity_check();
         }
@@ -1458,7 +1458,7 @@ namespace DSC {
         {
             print_out("Thickening interface pass.");
             thickening_interface();
-            validity_check();
+//            validity_check();
             
             //        print_out("Thinning interface pass.");
             //        thinning_interface();
@@ -1470,7 +1470,7 @@ namespace DSC {
             
             print_out("Thinning pass.");
             thinning();
-            validity_check();
+//            validity_check();
             
             fix_complex();
         }
