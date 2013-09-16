@@ -199,6 +199,9 @@ void UI::keyboard(unsigned char key, int x, int y) {
             smooth_armadillo();
             break;
         case '3':
+            expand_sphere();
+            break;
+        case '4':
             expand_armadillo();
             break;
         case ' ':
@@ -357,9 +360,6 @@ void UI::rotate_cube()
     // Build the Simplicial Complex
     std::vector<real> points;
     std::vector<int>  tets;
-    std::vector<int>  tet_labels;
-    
-//    import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
     Tetralizer::tetralize(vec3(50.), DISCRETIZATION, points, tets);
     
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(40.));
@@ -370,7 +370,6 @@ void UI::rotate_cube()
     
     double size = 35.;
     ObjectGenerator::create_cube(*dsc, vec3(-size/2.), vec3(size), 1);
-//    ObjectGenerator::create_sphere(*dsc, vec3(0.), size, 2);
     
     start();
 }
@@ -389,6 +388,25 @@ void UI::smooth_armadillo()
     basic_log = new Log(create_log_path());
     
     ObjectGenerator::create(*dsc, tet_labels);
+    
+    start();
+}
+
+void UI::expand_sphere()
+{
+    stop();
+    // Build the Simplicial Complex
+    std::vector<real> points;
+    std::vector<int>  tets;
+    Tetralizer::tetralize(vec3(50.), DISCRETIZATION, points, tets);
+    
+    DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(40.));
+    
+    dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain);
+    vel_fun = new NormalFunc(VELOCITY, ACCURACY);
+    basic_log = new Log(create_log_path());
+    
+    ObjectGenerator::create_sphere(*dsc, vec3(0.), 20., 1);
     
     start();
 }

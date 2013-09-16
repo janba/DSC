@@ -140,6 +140,8 @@ public:
     
     void smooth_armadillo();
     
+    void expand_sphere();
+    
     void expand_armadillo();
     
     /**
