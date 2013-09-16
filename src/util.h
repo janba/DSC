@@ -317,6 +317,19 @@ namespace DSC {
         }
         
         /**
+         * Returns whether the point p is on the inside (in the direction away from the normal) from the plane defined by the point a and the normal.
+         */
+        template<typename vec3>
+        inline bool is_inside(const vec3& p, const vec3& a, const vec3& normal)
+        {
+            if(sqr_length(p-a) == 0.)
+            {
+                return true;
+            }
+            return dot(p-a, normal) <= 0.;
+        }
+        
+        /**
          * Returns the shortest distance from the point p to the plane spanned by the points a, b and c.
          */
         template<typename real, typename vec3>
@@ -328,12 +341,11 @@ namespace DSC {
         }
         
         /**
-         * Calculates the intersection between the line segment |p0 p1| and the plane spanned by the vertices a, b and c. The intersection point is defined by p0 + t*(p1 - p0) and the function returns t. Returns infinity if it does not intersect.
+         * Calculates the intersection between the line segment |p0 p1| and the plane defined by the point a and the normal. The intersection point is defined by p0 + t*(p1 - p0) and the function returns t. Returns infinity if it does not intersect.
          */
         template<typename real, typename vec3>
-        inline real intersection_ray_plane(const vec3& p0, const vec3& p1, const vec3& a, const vec3& b, const vec3& c)
+        inline real intersection_ray_plane(const vec3& p0, const vec3& p1, const vec3& a, const vec3& normal)
         {
-            vec3 normal = normal_direction(a, b, c);
             real n = dot(normal, a - p0);
             real d = dot(normal, p1 - p0);
             
@@ -348,6 +360,16 @@ namespace DSC {
             
             // Compute the t value for the directed line ray intersecting the plane.
             return n / d;
+        }
+        
+        /**
+         * Calculates the intersection between the line segment |p0 p1| and the plane spanned by the vertices a, b and c. The intersection point is defined by p0 + t*(p1 - p0) and the function returns t. Returns infinity if it does not intersect.
+         */
+        template<typename real, typename vec3>
+        inline real intersection_ray_plane(const vec3& p0, const vec3& p1, const vec3& a, const vec3& b, const vec3& c)
+        {
+            vec3 normal = normal_direction(a, b, c);
+            return intersection_ray_plane<real>(p0, p1, a, normal);
         }
         
         /**
