@@ -22,109 +22,14 @@ namespace DSC {
     
     class Tetralizer {
         
-    private:
-        static int get_index(int i, int j, int k, int Ni, int Nj, int Nk)
-        {
-            return i + j*Ni + k*Ni*Nj;
-        }
+    private:        
+        static void tetralize_cube1(int i, int j, int k, int Ni, int Nj, int Nk, std::vector<int>& tets);
         
-        static void tetralize_cube1(int i, int j, int k, int Ni, int Nj, int Nk, std::vector<int>& tets)
-        {
-            // First tetrahedron:
-            tets.push_back(get_index(i, j, k, Ni, Nj, Nk));
-            tets.push_back(get_index(i, j, k+1, Ni, Nj, Nk));
-            tets.push_back(get_index(i+1, j, k+1, Ni, Nj, Nk));
-            tets.push_back(get_index(i, j+1, k+1, Ni, Nj, Nk));
-            
-            // Second tetrahedron:
-            tets.push_back(get_index(i, j, k, Ni, Nj, Nk));
-            tets.push_back(get_index(i, j+1, k+1, Ni, Nj, Nk));
-            tets.push_back(get_index(i+1, j+1, k, Ni, Nj, Nk));
-            tets.push_back(get_index(i, j+1, k, Ni, Nj, Nk));
-            
-            // Third tetrahedron:
-            tets.push_back(get_index(i, j, k, Ni, Nj, Nk));
-            tets.push_back(get_index(i+1, j, k, Ni, Nj, Nk));
-            tets.push_back(get_index(i+1, j+1, k, Ni, Nj, Nk));
-            tets.push_back(get_index(i+1, j, k+1, Ni, Nj, Nk));
-            
-            // Fourth tetrahedron:
-            tets.push_back(get_index(i+1, j+1, k+1, Ni, Nj, Nk));
-            tets.push_back(get_index(i+1, j, k+1, Ni, Nj, Nk));
-            tets.push_back(get_index(i, j+1, k+1, Ni, Nj, Nk));
-            tets.push_back(get_index(i+1, j+1, k, Ni, Nj, Nk));
-            
-            // Fifth tetrahedron:
-            tets.push_back(get_index(i, j, k, Ni, Nj, Nk));
-            tets.push_back(get_index(i+1, j+1, k, Ni, Nj, Nk));
-            tets.push_back(get_index(i, j+1, k+1, Ni, Nj, Nk));
-            tets.push_back(get_index(i+1, j, k+1, Ni, Nj, Nk));
-        }
+        static void tetralize_cube2(int i, int j, int k, int Ni, int Nj, int Nk, std::vector<int>& tets);
         
-        static void tetralize_cube2(int i, int j, int k, int Ni, int Nj, int Nk, std::vector<int>& tets)
-        {
-            // First tetrahedron:
-            tets.push_back(get_index(i, j, k, Ni, Nj, Nk));
-            tets.push_back(get_index(i, j, k+1, Ni, Nj, Nk));
-            tets.push_back(get_index(i+1, j, k, Ni, Nj, Nk));
-            tets.push_back(get_index(i, j+1, k, Ni, Nj, Nk));
-            
-            // Second tetrahedron:
-            tets.push_back(get_index(i, j+1, k, Ni, Nj, Nk));
-            tets.push_back(get_index(i+1, j+1, k, Ni, Nj, Nk));
-            tets.push_back(get_index(i+1, j+1, k+1, Ni, Nj, Nk));
-            tets.push_back(get_index(i+1, j, k, Ni, Nj, Nk));
-            
-            // Third tetrahedron:
-            tets.push_back(get_index(i, j+1, k+1, Ni, Nj, Nk));
-            tets.push_back(get_index(i, j+1, k, Ni, Nj, Nk));
-            tets.push_back(get_index(i+1, j+1, k+1, Ni, Nj, Nk));
-            tets.push_back(get_index(i, j, k+1, Ni, Nj, Nk));
-            
-            // Fourth tetrahedron:
-            tets.push_back(get_index(i+1, j, k+1, Ni, Nj, Nk));
-            tets.push_back(get_index(i+1, j, k, Ni, Nj, Nk));
-            tets.push_back(get_index(i, j, k+1, Ni, Nj, Nk));
-            tets.push_back(get_index(i+1, j+1, k+1, Ni, Nj, Nk));
-            
-            // Fifth tetrahedron:
-            tets.push_back(get_index(i, j, k+1, Ni, Nj, Nk));
-            tets.push_back(get_index(i+1, j, k, Ni, Nj, Nk));
-            tets.push_back(get_index(i, j+1, k, Ni, Nj, Nk));
-            tets.push_back(get_index(i+1, j+1, k+1, Ni, Nj, Nk));
-        }
+        static void create_tets(int Ni, int Nj, int Nk, std::vector<int>& tets);
         
-        static void create_tets(int Ni, int Nj, int Nk, std::vector<int>& tets)
-        {
-            for (int k = 0; k < Nk-1; k++) {
-                for (int j = 0; j < Nj-1; j++) {
-                    for (int i = 0; i < Ni-1; i++)
-                    {
-                        if((i + j + k)%2 == 0)
-                        {
-                            tetralize_cube1(i, j, k, Ni, Nj, Nk, tets);
-                        }
-                        else {
-                            tetralize_cube2(i, j, k, Ni, Nj, Nk, tets);
-                        }
-                    }
-                }
-            }
-        }
-        
-        static void create_points(const vec3& size, real avg_edge_length, int Ni, int Nj, int Nk, std::vector<real>& points)
-        {
-            for (int k = 0; k < Nk; k++) {
-                for (int j = 0; j < Nj; j++) {
-                    for (int i = 0; i < Ni; i++)
-                    {
-                        points.push_back(std::min(i*avg_edge_length, size[0]) - size[0]/2.);
-                        points.push_back(std::min(j*avg_edge_length, size[1]) - size[1]/2.);
-                        points.push_back(std::min(k*avg_edge_length, size[2]) - size[2]/2.);
-                    }
-                }
-            }
-        }
+        static void create_points(const vec3& size, real avg_edge_length, int Ni, int Nj, int Nk, std::vector<real>& points);
         
     public:
         static void tetralize(const vec3& size, real avg_edge_length, std::vector<real>& points, std::vector<int>& tets)
