@@ -54,6 +54,7 @@ UI::UI(int &argc, char** argv)
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
+//    glutInitDisplayMode(GLUT_3_2_CORE_PROFILE | GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
     glutCreateWindow("");
     
     glutDisplayFunc(display_);
@@ -70,6 +71,7 @@ UI::UI(int &argc, char** argv)
 	}
     check_gl_error(); // Catches a GL_INVALID_ENUM error. See http://www.opengl.org/wiki/OpenGL_Loading_Library
     
+//    painter = new Painter(WIN_SIZE_X, WIN_SIZE_Y, r);
     painter = new Painter();
     vel_fun = nullptr;
     dsc = nullptr;
@@ -167,6 +169,7 @@ void UI::animate()
     if(vel_fun && CONTINUOUS)
     {
         vel_fun->take_time_step(*dsc);
+//        painter->update_interface(*dsc);
         basic_log->write_timestep(vel_fun, dsc);
         if (vel_fun->is_motion_finished(*dsc))
         {
@@ -299,6 +302,7 @@ void UI::visible(int v)
 void UI::draw()
 {
     painter->begin();
+//    painter->draw_new();
     if (dsc)
     {
         glMatrixMode(GL_MODELVIEW);
@@ -335,6 +339,8 @@ void UI::stop()
 
 void UI::start()
 {
+//    painter->update_interface(*dsc);
+    
     basic_log->write_message(vel_fun->get_name().c_str());
     basic_log->write_log(dsc);
     basic_log->write_log(vel_fun);

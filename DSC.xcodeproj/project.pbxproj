@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		7A0AB5C217D908E10058910E /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0AB5C017D9082A0058910E /* CoreFoundation.framework */; };
 		7A30ED1A17D951EB0051E6C0 /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A30ED1917D951EB0051E6C0 /* libGLEW.a */; };
-		7A38E82C17E3B35A0075DC24 /* interface.frag in Sources */ = {isa = PBXBuildFile; fileRef = 7A38E82A17E3B35A0075DC24 /* interface.frag */; };
-		7A38E82D17E3B35A0075DC24 /* interface.vert in Sources */ = {isa = PBXBuildFile; fileRef = 7A38E82B17E3B35A0075DC24 /* interface.vert */; };
 		7A45DB96176E122100B9B388 /* configuration.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB88176E122100B9B388 /* configuration.h */; };
 		7A45DB97176E122100B9B388 /* is_mesh_lists_read.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8A176E122100B9B388 /* is_mesh_lists_read.h */; };
 		7A45DB98176E122100B9B388 /* is_mesh_lists_write.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8B176E122100B9B388 /* is_mesh_lists_write.h */; };
@@ -715,8 +713,6 @@
 				7AE27B1517675CEA000F8238 /* demo.cpp in Sources */,
 				7AF7E9BA176B402200F43714 /* user_interface.cpp in Sources */,
 				7AF7E9BD176B412900F43714 /* draw.cpp in Sources */,
-				7A38E82C17E3B35A0075DC24 /* interface.frag in Sources */,
-				7A38E82D17E3B35A0075DC24 /* interface.vert in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
