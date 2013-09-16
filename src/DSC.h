@@ -270,10 +270,16 @@ namespace DSC {
         {
             if(is_interface(n) && !is_crossing(n))
             {
-                vec3 p = get_pos(n);
-                vec3 vec = dest - p;
-                design_domain->clamp_vector(p, vec);
-                Complex::get(n).set_destination(p + vec);
+                if(design_domain)
+                {
+                    vec3 p = get_pos(n);
+                    vec3 vec = dest - p;
+                    design_domain->clamp_vector(p, vec);
+                    Complex::get(n).set_destination(p + vec);
+                }
+                else {
+                    Complex::get(n).set_destination(dest);
+                }
             }
         }
         
