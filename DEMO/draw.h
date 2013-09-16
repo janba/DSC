@@ -78,9 +78,9 @@ class Painter {
     
     std::vector<DSC::vec3> vertexdata;
     
-    GLuint MVPUniform;
+    GLuint MVMatrixUniform, MVPMatrixUniform, NormalMatrixUniform, lightPosUniform;
     
-    GLuint positionAttribute;
+    GLuint positionAttribute, normalAttribute;
     
 public:
     
@@ -110,8 +110,31 @@ public:
         // Test data
         vertexdata.clear();
         vertexdata.push_back(DSC::vec3(-0.5, -0.5, 0.));
+        vertexdata.push_back(DSC::vec3(0., 0., 1.));
+        
         vertexdata.push_back(DSC::vec3(0.5, -0.5, 0.));
+        vertexdata.push_back(DSC::vec3(0., 0., 1.));
+        
         vertexdata.push_back(DSC::vec3(0., 0.5, 0.));
+        vertexdata.push_back(DSC::vec3(0., 0., 1.));
+        
+        vertexdata.push_back(DSC::vec3(-0.5, -0.5, 0.));
+        vertexdata.push_back(DSC::vec3(0.3, 0., 1.));
+        
+        vertexdata.push_back(DSC::vec3(-0.5, 0.5, 0.3));
+        vertexdata.push_back(DSC::vec3(0.3, 0., 1.));
+        
+        vertexdata.push_back(DSC::vec3(0., 0.5, 0.));
+        vertexdata.push_back(DSC::vec3(0.3, 0., 1.));
+        
+        vertexdata.push_back(DSC::vec3(-0.5, -0.5, 0.));
+        vertexdata.push_back(DSC::vec3(0., 0.3, 1.));
+        
+        vertexdata.push_back(DSC::vec3(-0.5, 0.5, 0.3));
+        vertexdata.push_back(DSC::vec3(0.3, 0.3, 1.));
+        
+        vertexdata.push_back(DSC::vec3(-1., 0.5, 0.));
+        vertexdata.push_back(DSC::vec3(0., 0.3, 1.));
         
         // Generate arrays and buffers
         glGenVertexArrays(1, &VertexArrayID);
@@ -122,16 +145,34 @@ public:
         glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*vertexdata.size(), &vertexdata[0], GL_STATIC_DRAW); // Visualize test data
         
         glEnableVertexAttribArray(positionAttribute);
-        glVertexAttribPointer(positionAttribute, 3, GL_DOUBLE, GL_FALSE, sizeof(double)*3, (const GLvoid *)0); // Visualize test data
+        glEnableVertexAttribArray(normalAttribute);
+        
+        glVertexAttribPointer(positionAttribute, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0); // Visualize test data
+        glVertexAttribPointer(normalAttribute, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3)); // Visualize test data
         
         // Set up model view projection matrix
         CGLA::Mat4x4f projection = CGLA::perspective_Mat4x4f(53.f, WIN_SIZE_X/float(WIN_SIZE_Y), 0.01*r, 3.*r); // Projection matrix
-        CGLA::Mat4x4f view = CGLA::lookAt_Mat4x4f(CGLA::Vec3f(0., 0., -r), CGLA::Vec3f(0.), CGLA::Vec3f(0., 1., 0.)); // View matrix
+//        projection = CGLA::ortho_Mat4x4f(-r, r, -r, r, 0.01*r, 3.*r);
+        CGLA::Mat4x4f view = CGLA::lookAt_Mat4x4f(CGLA::Vec3f(0., 0., r), CGLA::Vec3f(0.), CGLA::Vec3f(0., 1., 0.)); // View matrix
         CGLA::Mat4x4f model = CGLA::identity_Mat4x4f();
-        CGLA::Mat4x4f modelViewProjection = projection * view * model;
         
-        // Send model view projection matrix to shader.
-        glUniformMatrix4fv(MVPUniform, 1, GL_FALSE, (const GLfloat *)& modelViewProjection);
+        // Send model view projection matrix
+        CGLA::Mat4x4f modelViewProjection = projection * view * model;
+        glUniformMatrix4fv(MVPMatrixUniform, 1, GL_FALSE, (const GLfloat *)& modelViewProjection);
+        
+        // Send model view matrix
+        CGLA::Mat4x4f modelView = view * model;
+        glUniformMatrix4fv(MVMatrixUniform, 1, GL_FALSE, (const GLfloat *)& modelView);
+        
+        // Set up normal matrix
+        CGLA::Mat4x4f normalMatrix = CGLA::transpose(CGLA::invert_ortho(view * model));
+        
+        // Send model matrix
+        glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, (const GLfloat *)& normalMatrix);
+        check_gl_error();
+        
+        CGLA::Vec3f light_pos(0., 0.5*r, r);
+        glUniform3fv(lightPosUniform, 1, (const GLfloat *)& light_pos);
         
         // Enable states
         glEnable(GL_DEPTH_TEST);
@@ -314,7 +355,10 @@ public:
         
         glUseProgram(shaderProgram);
         
-        glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertexdata.size()));
+        if(vertexdata.size() != 0)
+        {
+            glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertexdata.size())/2);
+        }
         
         glutSwapBuffers();
         check_gl_error();
@@ -322,18 +366,22 @@ public:
     
     void update_interface(DSC::DeformableSimplicialComplex<>& complex, const float color[] = GRAY)
     {
+        std::cout << complex.get_center() << std::endl;
         // Extract interface data
         vertexdata.clear();
         for (auto fit = complex.faces_begin(); fit != complex.faces_end(); fit++)
         {
             if (fit->is_interface())
             {
-                auto verts = complex.get_pos(fit.key());
-                DSC::vec3 n = complex.get_normal(fit.key());
+                auto nodes = complex.get_nodes(fit.key());
                 
-                for(auto &v : verts)
+//                auto verts = complex.get_pos(fit.key());
+                DSC::vec3 normal = complex.get_normal(fit.key());
+                
+                for(auto &n : nodes)
                 {
-                    vertexdata.push_back(v);
+                    vertexdata.push_back(complex.get_pos(n));
+                    vertexdata.push_back(normal);
                 }
             }
         }
@@ -343,19 +391,37 @@ public:
         glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*vertexdata.size(), &vertexdata[0], GL_STATIC_DRAW);
         
         glEnableVertexAttribArray(positionAttribute);
-        glVertexAttribPointer(positionAttribute, 3, GL_DOUBLE, GL_FALSE, sizeof(DSC::vec3), (const GLvoid *)0);
+        glEnableVertexAttribArray(normalAttribute);
+        glVertexAttribPointer(positionAttribute, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0);
+        glVertexAttribPointer(normalAttribute, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3));
     }
     
     void load_shader()
     {
         shaderProgram = InitShader("shaders/interface.vert",  "shaders/interface.frag", "fragColour");
-        MVPUniform = glGetUniformLocation(shaderProgram, "MVP");
-        if (MVPUniform > 10000) {
-            std::cerr << "Shader did not contain the 'modelView' uniform."<<std::endl;
+        MVMatrixUniform = glGetUniformLocation(shaderProgram, "MVMatrix");
+        if (MVMatrixUniform > 10000) {
+            std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
+        }
+        MVPMatrixUniform = glGetUniformLocation(shaderProgram, "MVPMatrix");
+        if (MVPMatrixUniform > 10000) {
+            std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
+        }
+        NormalMatrixUniform = glGetUniformLocation(shaderProgram, "NormalMatrix");
+        if (NormalMatrixUniform > 10000) {
+            std::cerr << "Shader did not contain the 'NormalMatrix' uniform."<<std::endl;
+        }
+        lightPosUniform = glGetUniformLocation(shaderProgram, "lightPos");
+        if (lightPosUniform > 10000) {
+            std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
         }
         positionAttribute = glGetAttribLocation(shaderProgram, "position");
         if (positionAttribute > 10000) {
             std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
+        }
+        normalAttribute = glGetAttribLocation(shaderProgram, "normal");
+        if (normalAttribute > 10000) {
+            std::cerr << "Shader did not contain the 'normal' attribute." << std::endl;
         }
     }
     
