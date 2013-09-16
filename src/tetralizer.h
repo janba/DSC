@@ -141,36 +141,11 @@ namespace DSC {
             }
         }
         
-        void label_tets(std::vector<int>& tet_labels)
-        {
-            for (int k = 0; k < Nk-1; k++) {
-                for (int j = 0; j < Nj-1; j++) {
-                    for (int i = 0; i < Ni-1; i++)
-                    {
-                        if(i > Ni*3./10. && i < Ni*7./10. && j > Nj*3./10. && j < Nj*7./10. && k > Nk*3./10. && k < Nk*7./10.)
-                        {
-                            for(int t = 0; t < 5; t++)
-                            {
-                                tet_labels.push_back(1);
-                            }
-                        }
-                        else {
-                            for(int t = 0; t < 5; t++)
-                            {
-                                tet_labels.push_back(0);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
     public:
-        void tetralize(std::vector<real>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
+        void tetralize(std::vector<real>& points, std::vector<int>& tets)
         {
             create_points(points);
             create_tets(tets);
-            label_tets(tet_labels);
         }
     };
     

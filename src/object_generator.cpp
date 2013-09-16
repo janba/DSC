@@ -18,34 +18,9 @@
 
 namespace DSC {
     
-    void ObjectGenerator::fit_mesh_to_object(DeformableSimplicialComplex<>& dsc, const std::vector<vec3>& corners)
+    void ObjectGenerator::fit_mesh_to_object(DeformableSimplicialComplex<>& dsc)
     {
         
-    }
-    
-    void ObjectGenerator::label_faces(DeformableSimplicialComplex<>& dsc, const std::vector<vec3>& corners, int label)
-    {
-//        for (auto fi = dsc.faces_begin(); fi != dsc.faces_end(); fi++)
-//        {
-//            auto verts = dsc.get_pos(fi.key());
-//            if(Util::is_inside(verts[0], corners) &&
-//               Util::is_inside(verts[1], corners) &&
-//               Util::is_inside(verts[2], corners)) // Face is inside the object.
-//            {
-//                dsc.update_attributes(*fi, label);
-//            }
-//        }
-    }
-    
-    void ObjectGenerator::create_object(DeformableSimplicialComplex<>& dsc, const std::vector<vec3>& corners, int label)
-    {
-//        dsc.init_attributes(); // Maybe not necessary??
-        
-        fit_mesh_to_object(dsc, corners);
-        label_faces(dsc, corners, label);
-//        dsc.update_attributes(); // Maybe not necessary??
-        
-        dsc.fix_complex();
     }
     
 }
