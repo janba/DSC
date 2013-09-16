@@ -58,66 +58,25 @@ namespace DSC {
     {
         if(!is_inside(p+v))
         {
-//            vec2 c0, c1;
-//            real t;
-//            for (int i = 0; i < corners.size(); i++)
-//            {
-//                c0 = corners[i];
-//                c1 = corners[(i+1)%corners.size()];
-//                t = Util::intersection(p, v, c0, c1 - c0);
-//                if(t >= 0. && t < 1.)
-//                {
-//                    v = t*v;
-//                }
-//            }
+            for (auto &plane : planes) {
+                
+                real t = Util::intersection_ray_plane<real>(p, v, plane.p, plane.n);
+                if(t >= 0. && t < 1.)
+                {
+                    v = t*v;
+                }
+            }
         }
     }
     
     bool DesignDomain::is_inside(const vec3& p) const
     {
-//        return Util::is_inside(p, corners);
-    }
-    
-    std::vector<vec3> DesignDomain::get_corners() const
-    {
-        return corners;
-    }
-    
-    vec3 DesignDomain::get_center()
-    {
-        vec3 center(0.);
-        for (int i = 0; i < corners.size(); i++)
-        {
-            center += corners[i];
+        for (auto &plane : planes) {
+            if (!Util::is_inside(p, plane.p, plane.n)) {
+                return false;
+            }
         }
-        return center/static_cast<real>(corners.size());
-    }
-    
-    real DesignDomain::get_volume()
-    {
-        if(volume < 0.)
-        {
-//            volume = 0.;
-//            std::vector<vec3> c(corners);
-//            vec3 c0, c1, c2;
-//            while(c.size() > 2)
-//            {
-//                int i = 0;
-//                do {
-//#ifdef DEBUG
-//                    assert(i < c.size());
-//#endif
-//                    c0 = c[i];
-//                    c1 = c[(i+1)%c.size()];
-//                    c2 = c[(i+2)%c.size()];
-//                    i++;
-//                } while (Util::is_left_of(c0,c1,c2));
-//                
-//                volume += std::abs(Util::signed_area(c0, c1, c2));
-//                c.erase(c.begin() + (i%c.size()));
-//            }
-        }
-        return volume;
+        return true;
     }
     
 }

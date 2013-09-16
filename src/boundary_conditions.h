@@ -25,66 +25,40 @@ namespace DSC {
      */
     class DesignDomain
     {
-        std::vector<vec3> corners; // Specified in a clockwise order
-        real volume = -1.;
+        struct Plane {
+            vec3 p;
+            vec3 n;
+        };
+        
+        std::vector<Plane> planes;
         
     public:
-        enum DESIGN_DOMAIN_TYPE {RECTANGLE, L, ESO};
+        enum DESIGN_DOMAIN_TYPE {CUBE};
         
         /**
          Creates a design domain defined by the design domain type and size. It is possible to specify a boundary gap which translates the entire domain by the amount specified by the input parameter.
          */
-        DesignDomain(DESIGN_DOMAIN_TYPE design, int SIZE_X, int SIZE_Y, real boundary)
+        DesignDomain(DESIGN_DOMAIN_TYPE design, const vec3& size)
         {
+            vec3 center(0.);
             switch (design) {
-                case RECTANGLE:
-//                    corners.push_back(vec2(0.,0.));
-//                    corners.push_back(vec2(0., SIZE_Y));
-//                    corners.push_back(vec2(SIZE_X, SIZE_Y));
-//                    corners.push_back(vec2(SIZE_X, 0.));
+                case CUBE:
+                    for (int i = 0; i < 3; i++) {
+                        vec3 point1 = center;
+                        vec3 normal1(0.);
+                        point1[i] += size[i]/2.;
+                        normal1[i] = 1.;
+                        planes.push_back({point1, normal1});
+                        
+                        vec3 point2 = center;
+                        vec3 normal2(0.);
+                        point2[i] -= size[i]/2.;
+                        normal2[i] = -1.;
+                        planes.push_back({point2, normal2});
+                    }
                     break;
-                case L:
-//                    corners.push_back(vec2(0.,0.));
-//                    corners.push_back(vec2(0., SIZE_Y));
-//                    corners.push_back(vec2(SIZE_X/2., SIZE_Y));
-//                    corners.push_back(vec2(SIZE_X/2., SIZE_Y/2.));
-//                    corners.push_back(vec2(SIZE_X, SIZE_Y/2.));
-//                    corners.push_back(vec2(SIZE_X, 0.));
-                    break;
-                case ESO:
-//                    corners.push_back(vec2(0.,0.));
-//                    corners.push_back(vec2(0., 3.*SIZE_Y/7.));
-//                    corners.push_back(vec2(30.*SIZE_X/32., 3.*SIZE_Y/7.));
-//                    corners.push_back(vec2(30.*SIZE_X/32., SIZE_Y));
-//                    corners.push_back(vec2(31.*SIZE_X/32., SIZE_Y));
-//                    corners.push_back(vec2(31.*SIZE_X/32., 3.*SIZE_Y/7.));
-//                    corners.push_back(vec2(SIZE_X, 3.*SIZE_Y/7.));
-//                    corners.push_back(vec2(SIZE_X, 0.));
-                    break;
-            }
-            
-            for(auto &c : corners)
-            {
-                c[0] += boundary;
-                c[1] += boundary;
-                c[2] += boundary;
             }
         }
-        
-        /**
-         Returns the corners of the design domain.
-         */
-        std::vector<vec3> get_corners() const;
-        
-        /**
-         Returns an approximate center of the design domain.
-         */
-        vec3 get_center();
-        
-        /**
-         Returns the total volume of the domain.
-         */
-        real get_volume();
         
         /**
          Clamps the position pos to be within the domain.
