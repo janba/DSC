@@ -362,11 +362,13 @@ void UI::rotate_cube()
 //    import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
     Tetralizer::tetralize(vec3(50.), DISCRETIZATION, points, tets);
     
-    dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets);
+    DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(40.));
+    
+    dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain);
     vel_fun = new RotateFunc(VELOCITY, ACCURACY);
     basic_log = new Log(create_log_path());
     
-    double size = 20.;
+    double size = 35.;
     ObjectGenerator::create_cube(*dsc, vec3(-size/2.), vec3(size), 1);
 //    ObjectGenerator::create_sphere(*dsc, vec3(0.), size, 2);
     

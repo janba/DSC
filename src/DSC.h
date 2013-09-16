@@ -20,6 +20,7 @@
 #include "util.h"
 #include "printing.h"
 #include "attributes.h"
+#include "boundary_conditions.h"
 
 namespace DSC {
     
@@ -37,6 +38,7 @@ namespace DSC {
         typedef typename Complex::simplex_set   simplex_set;
         
     private:
+        DesignDomain *design_domain;
         
         // Thresholds on the dihedral angle between two neighbouring faces
         real DEG_ANGLE;
@@ -71,8 +73,8 @@ namespace DSC {
     public:
         
         /// SimplicialComplex constructor.
-        DeformableSimplicialComplex(real _AVG_EDGE_LENGTH, std::vector<real> & points, std::vector<int> & tets):
-        ISMesh<node_att, edge_att, face_att, tet_att>(points, tets)
+        DeformableSimplicialComplex(real _AVG_EDGE_LENGTH, std::vector<real> & points, std::vector<int> & tets, DesignDomain *domain = nullptr):
+        ISMesh<node_att, edge_att, face_att, tet_att>(points, tets), design_domain(domain)
         {
             step_no = 0;
             
@@ -99,7 +101,10 @@ namespace DSC {
             //        resize_complex();
         }
         
-        DeformableSimplicialComplex() {}
+        DeformableSimplicialComplex()
+        {
+            delete design_domain;
+        }
         
     private:
         
@@ -261,9 +266,15 @@ namespace DSC {
         /**
          * Sets the destination where the node n is moved to when deform() is called.
          */
-        void set_destination(const node_key& n, vec3 p)
+        void set_destination(const node_key& n, vec3 dest)
         {
-            Complex::get(n).set_destination(p);
+            if(is_interface(n) && !is_crossing(n))
+            {
+                vec3 p = get_pos(n);
+                vec3 vec = dest - p;
+                design_domain->clamp_vector(p, vec);
+                Complex::get(n).set_destination(p + vec);
+            }
         }
         
         /////////////
