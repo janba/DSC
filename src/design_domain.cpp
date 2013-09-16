@@ -14,7 +14,7 @@
 //
 //  See licence.txt for a copy of the GNU General Public License.
 
-#include "boundary_conditions.h"
+#include "design_domain.h"
 
 namespace DSC {
     

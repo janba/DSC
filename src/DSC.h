@@ -20,7 +20,7 @@
 #include "util.h"
 #include "printing.h"
 #include "attributes.h"
-#include "boundary_conditions.h"
+#include "design_domain.h"
 
 namespace DSC {
     
