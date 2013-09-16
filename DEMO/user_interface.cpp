@@ -360,8 +360,7 @@ void UI::rotate_cube()
     std::vector<int>  tet_labels;
     
 //    import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
-    Tetralizer tetralizer(50., 50., 50., DISCRETIZATION);
-    tetralizer.tetralize(points, tets);
+    Tetralizer::tetralize(vec3(50.), DISCRETIZATION, points, tets);
     
     dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets);
     vel_fun = new RotateFunc(VELOCITY, ACCURACY);
