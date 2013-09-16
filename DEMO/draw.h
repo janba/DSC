@@ -152,27 +152,24 @@ public:
         
         // Set up model view projection matrix
         CGLA::Mat4x4f projection = CGLA::perspective_Mat4x4f(53.f, WIN_SIZE_X/float(WIN_SIZE_Y), 0.01*r, 3.*r); // Projection matrix
-//        projection = CGLA::ortho_Mat4x4f(-r, r, -r, r, 0.01*r, 3.*r);
         CGLA::Mat4x4f view = CGLA::lookAt_Mat4x4f(CGLA::Vec3f(0., 0., r), CGLA::Vec3f(0.), CGLA::Vec3f(0., 1., 0.)); // View matrix
         CGLA::Mat4x4f model = CGLA::identity_Mat4x4f();
         
         // Send model view projection matrix
         CGLA::Mat4x4f modelViewProjection = projection * view * model;
-        glUniformMatrix4fv(MVPMatrixUniform, 1, GL_FALSE, (const GLfloat *)& modelViewProjection);
+        glUniformMatrix4fv(MVPMatrixUniform, 1, GL_FALSE, &modelViewProjection[0][0]);
         
         // Send model view matrix
         CGLA::Mat4x4f modelView = view * model;
-        glUniformMatrix4fv(MVMatrixUniform, 1, GL_FALSE, (const GLfloat *)& modelView);
+        glUniformMatrix4fv(MVMatrixUniform, 1, GL_FALSE, &modelView[0][0]);
         
-        // Set up normal matrix
+        // Send normal matrix
         CGLA::Mat4x4f normalMatrix = CGLA::transpose(CGLA::invert_ortho(view * model));
+        glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, &normalMatrix[0][0]);
         
-        // Send model matrix
-        glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, (const GLfloat *)& normalMatrix);
-        check_gl_error();
-        
+        // Send light position
         CGLA::Vec3f light_pos(0., 0.5*r, r);
-        glUniform3fv(lightPosUniform, 1, (const GLfloat *)& light_pos);
+        glUniform3fv(lightPosUniform, 1, &light_pos[0]);
         
         // Enable states
         glEnable(GL_DEPTH_TEST);
@@ -366,7 +363,6 @@ public:
     
     void update_interface(DSC::DeformableSimplicialComplex<>& complex, const float color[] = GRAY)
     {
-        std::cout << complex.get_center() << std::endl;
         // Extract interface data
         vertexdata.clear();
         for (auto fit = complex.faces_begin(); fit != complex.faces_end(); fit++)
