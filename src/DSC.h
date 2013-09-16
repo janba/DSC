@@ -2377,7 +2377,7 @@ namespace DSC {
                 if (nit->is_interface())
                 {
                     verts.push_back(get_pos(nit.key()));
-                    vert_index[nit.key()] = verts.size();
+                    vert_index[nit.key()] = static_cast<int>(verts.size());
                 }
             }
             

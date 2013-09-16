@@ -439,12 +439,12 @@ public:
 			if (filePointer != NULL) {
                 
 				fseek(filePointer, 0, SEEK_END);
-				count = ftell(filePointer);
+				count = static_cast<int>(ftell(filePointer));
 				rewind(filePointer);
                 
 				if (count > 0) {
 					content = (char *)malloc(sizeof(char) * (count+1));
-					count = fread(content,sizeof(char),count,filePointer);
+					count = static_cast<int>(fread(content,sizeof(char),count,filePointer));
 					content[count] = '\0';
 				}
 				fclose(filePointer);
