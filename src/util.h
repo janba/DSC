@@ -330,14 +330,23 @@ namespace DSC {
         }
         
         /**
+         * Returns the shortest distance from the point p to the plane defined by the point a and the normal.
+         */
+        template<typename real, typename vec3>
+        inline real distance(const vec3& p, const vec3& a, const vec3& normal)
+        {
+            vec3 v = p - a;
+            return std::abs(dot(v, normal));
+        }
+        
+        /**
          * Returns the shortest distance from the point p to the plane spanned by the points a, b and c.
          */
         template<typename real, typename vec3>
         inline real distance(const vec3& p, const vec3& a, const vec3& b, const vec3& c)
         {
-            vec3 v = p - a;
             vec3 n = normal_direction(a, b, c);
-            return std::abs(dot(v, n));
+            return distance<real>(p, a, n);
         }
         
         /**
