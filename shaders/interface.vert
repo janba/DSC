@@ -13,10 +13,10 @@ out vec4 colourV;
 void main()
 {
     // Define material specs
-    float specPow = 3.;
-    vec4 ambientMat = vec4(0.5, 0.5, 0.5, 1.);
-    vec4 diffuseMat = vec4(1., 0., 0., 1.);
-    vec4 specMat = vec4(0.1, 0.1, 0.1, 1.);
+    float specPow = 5.;
+    vec4 ambientMat = vec4(0.3, 0.3, 0.3, 1.);
+    vec4 diffuseMat = vec4(0.5, 0.5, .5, 1.);
+    vec4 specMat = vec4(0.2, 0.2, 0.2, 1.);
     
     // Compute vectors
     vec4 p = MVMatrix * vec4(position.xyz, 1.);
