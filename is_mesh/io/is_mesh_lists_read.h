@@ -193,7 +193,8 @@ namespace OpenTissue
         y = points[3*i+1];
         z = points[3*i+2];
         mesh.insert_node();
-        mesh.find_node(cnt_nodes).set(typename mesh_type::node_traits(x,y,z));
+        mesh.find_node(cnt_nodes).set_pos(x,y,z);
+        mesh.find_node(cnt_nodes).set_destination(x,y,z);
         ++cnt_nodes;
       }
 

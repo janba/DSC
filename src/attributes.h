@@ -27,7 +27,6 @@ namespace DSC {
     public:
         
         NodeAttributes() : p(0.,0.,0.), p_new(0.,0.,0.) {}
-        NodeAttributes(const real& x, const real& y, const real& z) : p(x,y,z), p_new(x,y,z) {}
         
         vec3 get_pos()
         {
@@ -39,16 +38,19 @@ namespace DSC {
             return p_new;
         }
         
-        void set(const NodeAttributes& t)
+        void set_pos(real x, real y, real z)
         {
-            p = t.p;
-            p_new = t.p_new;
-            flags = t.flags;
+            p = vec3(x,y,z);
         }
         
         void set_pos(vec3 p_)
         {
             p = p_;
+        }
+        
+        void set_destination(real x, real y, real z)
+        {
+            p_new = vec3(x,y,z);
         }
         
         void set_destination(vec3 p_)
