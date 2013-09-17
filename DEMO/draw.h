@@ -16,13 +16,14 @@
 
 #pragma once
 
-#include <SOIL/SOIL.h>
-
+#include <GL/glew.h>
 #ifdef WIN32
 #include <GL/glut.h>
 #else
 #include <GLUT/glut.h>
 #endif
+
+#include <SOIL/SOIL.h>
 
 #include <CGLA/Mat4x4f.h>
 

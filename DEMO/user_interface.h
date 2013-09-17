@@ -16,14 +16,6 @@
 
 #pragma once
 
-#include <GL/glew.h>
-
-#ifdef WIN32
-#include <GL/glut.h>
-#else
-#include <GLUT/glut.h>
-#endif
-
 #include "DSC.h"
 #include "velocity_function.h"
 #include "log.h"
