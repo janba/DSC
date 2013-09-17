@@ -108,64 +108,31 @@ public:
     {
         load_shader();
         
-        // Test data
-        vertexdata.clear();
-        vertexdata.push_back(DSC::vec3(-0.5, -0.5, 0.));
-        vertexdata.push_back(DSC::vec3(0., 0., 1.));
-        
-        vertexdata.push_back(DSC::vec3(0.5, -0.5, 0.));
-        vertexdata.push_back(DSC::vec3(0., 0., 1.));
-        
-        vertexdata.push_back(DSC::vec3(0., 0.5, 0.));
-        vertexdata.push_back(DSC::vec3(0., 0., 1.));
-        
-        vertexdata.push_back(DSC::vec3(-0.5, -0.5, 0.));
-        vertexdata.push_back(DSC::vec3(0.3, 0., 1.));
-        
-        vertexdata.push_back(DSC::vec3(-0.5, 0.5, 0.3));
-        vertexdata.push_back(DSC::vec3(0.3, 0., 1.));
-        
-        vertexdata.push_back(DSC::vec3(0., 0.5, 0.));
-        vertexdata.push_back(DSC::vec3(0.3, 0., 1.));
-        
-        vertexdata.push_back(DSC::vec3(-0.5, -0.5, 0.));
-        vertexdata.push_back(DSC::vec3(0., 0.3, 1.));
-        
-        vertexdata.push_back(DSC::vec3(-0.5, 0.5, 0.3));
-        vertexdata.push_back(DSC::vec3(0.3, 0.3, 1.));
-        
-        vertexdata.push_back(DSC::vec3(-1., 0.5, 0.));
-        vertexdata.push_back(DSC::vec3(0., 0.3, 1.));
-        
         // Generate arrays and buffers
         glGenVertexArrays(1, &VertexArrayID);
         glBindVertexArray(VertexArrayID);
         
         glGenBuffers(1, &vertexbuffer);
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*vertexdata.size(), &vertexdata[0], GL_STATIC_DRAW); // Visualize test data
         
         glEnableVertexAttribArray(positionAttribute);
         glEnableVertexAttribArray(normalAttribute);
         
-        glVertexAttribPointer(positionAttribute, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0); // Visualize test data
-        glVertexAttribPointer(normalAttribute, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3)); // Visualize test data
-        
         // Set up model view projection matrix
         CGLA::Mat4x4f projection = CGLA::perspective_Mat4x4f(53.f, WIN_SIZE_X/float(WIN_SIZE_Y), 0.01*r, 3.*r); // Projection matrix
         CGLA::Mat4x4f view = CGLA::lookAt_Mat4x4f(CGLA::Vec3f(0., 0., r), CGLA::Vec3f(0.), CGLA::Vec3f(0., 1., 0.)); // View matrix
-        CGLA::Mat4x4f model = CGLA::identity_Mat4x4f();
+        CGLA::Mat4x4f model = CGLA::rotation_Mat4x4f(CGLA::YAXIS, M_PI);
         
         // Send model view projection matrix
         CGLA::Mat4x4f modelViewProjection = projection * view * model;
-        glUniformMatrix4fv(MVPMatrixUniform, 1, GL_FALSE, &modelViewProjection[0][0]);
+        glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjection[0][0]);
         
         // Send model view matrix
         CGLA::Mat4x4f modelView = view * model;
-        glUniformMatrix4fv(MVMatrixUniform, 1, GL_FALSE, &modelView[0][0]);
+        glUniformMatrix4fv(MVMatrixUniform, 1, GL_TRUE, &modelView[0][0]);
         
         // Send normal matrix
-        CGLA::Mat4x4f normalMatrix = CGLA::transpose(CGLA::invert_ortho(view * model));
+        CGLA::Mat4x4f normalMatrix = CGLA::invert_ortho(view * model);
         glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, &normalMatrix[0][0]);
         
         // Send light position

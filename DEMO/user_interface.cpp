@@ -54,8 +54,7 @@ UI::UI(int &argc, char** argv)
     WIN_SIZE_Y = 1000;
 
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
-//    glutInitDisplayMode(GLUT_3_2_CORE_PROFILE | GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
+    glutInitDisplayMode(GLUT_3_2_CORE_PROFILE | GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
     glutCreateWindow("");
     
     glutDisplayFunc(display_);
@@ -72,8 +71,7 @@ UI::UI(int &argc, char** argv)
 	}
     check_gl_error(); // Catches a GL_INVALID_ENUM error. See http://www.opengl.org/wiki/OpenGL_Loading_Library
     
-//    painter = new Painter(WIN_SIZE_X, WIN_SIZE_Y, r);
-    painter = new Painter();
+    painter = new Painter(WIN_SIZE_X, WIN_SIZE_Y, r);
     vel_fun = nullptr;
     dsc = nullptr;
     
@@ -159,10 +157,6 @@ void UI::reshape(int width, int height)
     WIN_SIZE_X = width;
     WIN_SIZE_Y = height;
 	glViewport(0, 0, WIN_SIZE_X, WIN_SIZE_Y);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(53, WIN_SIZE_X/float(WIN_SIZE_Y), 0.01*r, 3.*r);
-    glMatrixMode(GL_MODELVIEW);
 }
 
 void UI::animate()
@@ -170,7 +164,7 @@ void UI::animate()
     if(vel_fun && CONTINUOUS)
     {
         vel_fun->take_time_step(*dsc);
-//        painter->update_interface(*dsc);
+        painter->update_interface(*dsc);
         basic_log->write_timestep(vel_fun, dsc);
         if (vel_fun->is_motion_finished(*dsc))
         {
@@ -305,22 +299,14 @@ void UI::visible(int v)
 
 void UI::draw()
 {
-    painter->begin();
-//    painter->draw_new();
+    painter->draw_new();
     if (dsc)
     {
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        auto center = dsc->get_center();
-        gluLookAt(0., 0., -r, center[0], center[1], center[2], 0., 1., 0.);
-        
-        painter->draw_complex(dsc);
         if(vel_fun && RECORD && CONTINUOUS)
         {
             painter->save_painting(WIN_SIZE_X, WIN_SIZE_Y, basic_log->get_path(), vel_fun->get_time_step());
         }
     }
-    painter->end();
 }
 
 void UI::stop()
@@ -343,7 +329,7 @@ void UI::stop()
 
 void UI::start()
 {
-//    painter->update_interface(*dsc);
+    painter->update_interface(*dsc);
     
     basic_log->write_message(vel_fun->get_name().c_str());
     basic_log->write_log(dsc);
