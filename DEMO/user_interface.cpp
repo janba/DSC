@@ -299,13 +299,10 @@ void UI::visible(int v)
 
 void UI::draw()
 {
-    painter->draw_new();
-    if (dsc)
+    painter->draw();
+    if(vel_fun && RECORD && CONTINUOUS)
     {
-        if(vel_fun && RECORD && CONTINUOUS)
-        {
-            painter->save_painting(WIN_SIZE_X, WIN_SIZE_Y, basic_log->get_path(), vel_fun->get_time_step());
-        }
+        painter->save_painting(WIN_SIZE_X, WIN_SIZE_Y, basic_log->get_path(), vel_fun->get_time_step());
     }
 }
 

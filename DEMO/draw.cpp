@@ -14,221 +14,201 @@
 //
 //  See licence.txt for a copy of the GNU General Public License.
 //
-//#include "draw.h"
-//
-//#ifdef WIN32
-//#include <GL/glew.h>
-//#include <GL/glut.h>
-//#include <GLGraphics/SOIL.h>
-//#else
-//#include <GEL/GL/glew.h>
-//#include <GLUT/glut.h>
-//#include <GEL/GLGraphics/SOIL.h>
-//#endif
-//
-//
-//void Painter::save_painting(int width, int height, std::string folder, int time_step)
-//{
-//    std::ostringstream s;
-//    if (folder.length() == 0) {
-//        s << "scr";
-//    }
-//    else {
-//        s << folder << "/scr";
-//    }
-//    
-//    if (time_step >= 0)
-//    {
-//        s << std::string(Util::concat4digits("_", time_step));
-//    }
-//    s << ".png";
-//    glPixelStorei(GL_PACK_ALIGNMENT, 1);
-//    int success = SOIL_save_screenshot(s.str().c_str(), SOIL_SAVE_TYPE_PNG, 0, 0, width, height);
-//    if(!success)
-//    {
-//        std::cout << "ERROR: Failed to take screen shot: " << s.str().c_str() << std::endl;
-//        return;
-//    }
-//}
-//
-//
-//void Painter::begin()
-//{
-//    glClearColor(BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2],0);
-//    glClear(GL_COLOR_BUFFER_BIT);
-//}
-//
-//void Painter::end()
-//{
-//    glFinish();
-//    glutSwapBuffers();
-//}
-//
-//
-//void Painter::draw_complex(const SimplicialComplex *complex)
-//{
-//    draw_domain(complex->get_design_domain());
-//    std::vector<Domain*> objects = complex->get_object_domains();
-////    for (auto obj = objects.begin(); obj != objects.end(); obj++)
-////    {
-////        draw_domain(*obj, DARK_GRAY);
-////    }
-//    draw_faces(complex);
-//    draw_edges(complex);
-//    draw_vertices(complex);
-//}
-//
-//void Painter::draw_domain(const Domain *domain, CGLA::Vec3d color)
-//{
-//    std::vector<CGLA::Vec2d> corners = domain->get_corners();
-//    glColor3dv(&color[0]);
-//    CGLA::Vec3d cor;
-//    glBegin(GL_POLYGON);
-//    for (int j = 0; j < corners.size(); j++)
-//    {
-//        cor = CGLA::Vec3d(corners[j][0], corners[j][1], 0.);
-//        glVertex3dv(&cor[0]);
-//    }
-//    glEnd();
-//}
-//
-//void Painter::draw_vertices(const SimplicialComplex *complex)
-//{
-//    HMesh::VertexAttributeVector<CGLA::Vec3d> colors = complex->get_vertex_colors();
-//    glPointSize(std::max(std::floor(POINT_SIZE*complex->get_avg_edge_length()), 1.));
-//	glBegin(GL_POINTS);
-//    CGLA::Vec3d p;
-//	for(HMesh::VertexIDIterator vi = complex->vertices_begin(); vi != complex->vertices_end(); ++vi)
-//    {
-//        p = CGLA::Vec3d(complex->get_pos(*vi)[0], complex->get_pos(*vi)[1], 0.);
-//        glColor3dv(&colors[*vi][0]);
-//        glVertex3dv(&p[0]);
-//    }
-//	glEnd();
-//}
-//
-//void Painter::draw_interface(const SimplicialComplex *complex, CGLA::Vec3d color)
-//{
-//    glPointSize(std::max(std::floor(POINT_SIZE*complex->get_avg_edge_length()), 1.));
-//	glBegin(GL_POINTS);
-//    CGLA::Vec3d p;
-//    glColor3dv(&color[0]);
-//	for(HMesh::VertexIDIterator vi = complex->vertices_begin(); vi != complex->vertices_end(); ++vi)
-//    {
-//        if (complex->is_movable(*vi)) {
-//            CGLA::Vec3d temp(complex->get_pos_new(*vi)[0], complex->get_pos_new(*vi)[1], 0.);
-//            glVertex3dv(&temp[0]);
-//        }
-//    }
-//	glEnd();
-//    glLineWidth(std::max(std::floor(LINE_WIDTH*complex->get_avg_edge_length()), 1.));
-//    CGLA::Vec3d p1, p2;
-//	glBegin(GL_LINES);
-//    for(HMesh::HalfEdgeIDIterator hei = complex->halfedges_begin(); hei != complex->halfedges_end(); ++hei)
-//    {
-//        HMesh::Walker hew = complex->walker(*hei);
-//        if (complex->is_movable(hew.halfedge()) && (complex->is_movable(hew.vertex()) || complex->is_movable(hew.opp().vertex())))
-//        {
-//            p1 = CGLA::Vec3d(complex->get_pos_new(hew.vertex())[0], complex->get_pos_new(hew.vertex())[1], 0.);
-//            p2 = CGLA::Vec3d(complex->get_pos_new(hew.opp().vertex())[0], complex->get_pos_new(hew.opp().vertex())[1], 0.);
-//            glVertex3dv(&p1[0]);
-//            glVertex3dv(&p2[0]);
-//        }
-//    }
-//	glEnd();
-//}
-//
-//void Painter::draw_arrows(const SimplicialComplex *complex, const HMesh::VertexAttributeVector<CGLA::Vec2d> &arrows, CGLA::Vec3d color)
-//{
-//    glColor3dv(&color[0]);
-//    glLineWidth(std::max(std::floor(LINE_WIDTH*complex->get_avg_edge_length()), 1.));
-//    CGLA::Vec3d arrow, a_hat, p;
-//    for(HMesh::VertexIDIterator vi = complex->vertices_begin(); vi != complex->vertices_end(); ++vi)
-//    {
-//        arrow = CGLA::Vec3d(arrows[*vi][0], arrows[*vi][1], 0.f);
-//        if(arrow.length() > EPSILON)
-//        {
-//            a_hat = CGLA::Vec3d(-arrow[1], arrow[0], 0.f);
-//            p = CGLA::Vec3d(complex->get_pos(*vi)[0], complex->get_pos(*vi)[1], 0.);
-//#ifdef DEBUG
-//            if (complex->is_movable(*vi)) {
-//                p = CGLA::Vec3d(complex->get_pos_new(*vi)[0], complex->get_pos_new(*vi)[1], 0.);
-//            }
-//#endif
-//            glBegin(GL_LINES);
-//            glVertex3dv(&p[0]);
-//            glVertex3dv(&(p + 0.7*arrow)[0]);
-//            glEnd();
-//            
-//            glBegin(GL_POLYGON);
-//            glVertex3dv(&(p + arrow)[0]);
-//            glVertex3dv(&(p + 0.6*arrow + 0.13*a_hat)[0]);
-//            glVertex3dv(&(p + 0.6*arrow - 0.13*a_hat)[0]);
-//            glEnd();
-//        }
-//    }
-//}
-//
-//
-//void Painter::draw_lines(const SimplicialComplex *complex, const HMesh::VertexAttributeVector<CGLA::Vec2d> &lines, CGLA::Vec3d color)
-//{
-//    glColor3dv(&color[0]);
-//    glLineWidth(std::max(std::floor(LINE_WIDTH*complex->get_avg_edge_length()), 1.));
-//    CGLA::Vec3d line, p;
-//    for(HMesh::VertexIDIterator vi = complex->vertices_begin(); vi != complex->vertices_end(); ++vi)
-//    {
-//        line = CGLA::Vec3d(lines[*vi][0], lines[*vi][1], 0.f);
-//        if(line.length() > EPSILON)
-//        {
-//            p = CGLA::Vec3d(complex->get_pos(*vi)[0], complex->get_pos(*vi)[1], 0.);
-//            
-//            glBegin(GL_LINES);
-//            glVertex3dv(&p[0]);
-//            glVertex3dv(&(p + line)[0]);
-//            glEnd();
-//        }
-//    }
-//}
-//
-//void Painter::draw_edges(const SimplicialComplex *complex)
-//{
-//    HMesh::HalfEdgeAttributeVector<CGLA::Vec3d> colors = complex->get_edge_colors();
-//    glLineWidth(std::max(std::floor(LINE_WIDTH*complex->get_avg_edge_length()), 1.));
-//    CGLA::Vec3d p1, p2;
-//	glBegin(GL_LINES);
-//	for(HMesh::HalfEdgeIDIterator hei = complex->halfedges_begin(); hei != complex->halfedges_end(); ++hei)
-//    {
-//        glColor3dv(&colors[*hei][0]);
-//        
-//        HMesh::Walker hew = complex->walker(*hei);
-//        p1 = CGLA::Vec3d(complex->get_pos(hew.vertex())[0], complex->get_pos(hew.vertex())[1], 0.);
-//        p2 = CGLA::Vec3d(complex->get_pos(hew.opp().vertex())[0], complex->get_pos(hew.opp().vertex())[1], 0.);
-//        glVertex3dv(&p1[0]);
-//        glVertex3dv(&p2[0]);
-//    }
-//	glEnd();
-//}
-//
-//void Painter::draw_faces(const SimplicialComplex *complex)
-//{
-//    HMesh::FaceAttributeVector<CGLA::Vec3d> colors = complex->get_face_colors();
-//    draw_faces(complex, colors);
-//}
-//
-//void Painter::draw_faces(const SimplicialComplex *complex, const HMesh::FaceAttributeVector<CGLA::Vec3d> &colors)
-//{
-//	for(HMesh::FaceIDIterator fi = complex->faces_begin(); fi != complex->faces_end(); ++fi)
-//    {
-//        if(colors[*fi] != INVISIBLE)
-//        {
-//            glColor3dv(&colors[*fi][0]);
-//            glBegin(GL_POLYGON);
-//            for (HMesh::Walker hew = complex->walker(*fi); !hew.full_circle(); hew = hew.circulate_face_cw())
-//            {
-//                glVertex3dv(&complex->get_pos(hew.vertex())[0]);
-//            }
-//            glEnd();
-//        }
-//    }
-//}
-//
+#include "draw.h"
+
+
+// Create a NULL-terminated string by reading the provided file
+char* readShaderSource(const char* shaderFile)
+{
+    FILE *filePointer;
+    char *content = NULL;
+    
+    int count=0;
+    
+    if (shaderFile != NULL) {
+        filePointer = fopen(shaderFile,"rt");
+        
+        if (filePointer != NULL) {
+            
+            fseek(filePointer, 0, SEEK_END);
+            count = static_cast<int>(ftell(filePointer));
+            rewind(filePointer);
+            
+            if (count > 0) {
+                content = (char *)malloc(sizeof(char) * (count+1));
+                count = static_cast<int>(fread(content,sizeof(char),count,filePointer));
+                content[count] = '\0';
+            }
+            fclose(filePointer);
+        }
+    }
+    return content;
+}
+
+// Create a GLSL program object from vertex and fragment shader files
+GLuint InitShader(const char* vShaderFile, const char* fShaderFile, const char* outputAttributeName)
+{
+    struct Shader {
+        const char*  filename;
+        GLenum       type;
+        GLchar*      source;
+    }  shaders[2] = {
+        { vShaderFile, GL_VERTEX_SHADER, NULL },
+        { fShaderFile, GL_FRAGMENT_SHADER, NULL }
+    };
+    
+    GLuint program = glCreateProgram();
+    
+    for ( int i = 0; i < 2; ++i ) {
+        Shader& s = shaders[i];
+        s.source = readShaderSource( s.filename );
+        if ( shaders[i].source == NULL ) {
+            std::cerr << "Failed to read " << s.filename << std::endl;
+            exit( EXIT_FAILURE );
+        }
+        GLuint shader = glCreateShader( s.type );
+        glShaderSource( shader, 1, (const GLchar**) &s.source, NULL );
+        glCompileShader( shader );
+        
+        GLint  compiled;
+        glGetShaderiv( shader, GL_COMPILE_STATUS, &compiled );
+        if ( !compiled ) {
+            std::cerr << s.filename << " failed to compile:" << std::endl;
+            GLint  logSize;
+            glGetShaderiv( shader, GL_INFO_LOG_LENGTH, &logSize );
+            char* logMsg = new char[logSize];
+            glGetShaderInfoLog( shader, logSize, NULL, logMsg );
+            std::cerr << logMsg << std::endl;
+            delete [] logMsg;
+            
+            exit( EXIT_FAILURE );
+        }
+        
+        delete [] s.source;
+        
+        glAttachShader( program, shader );
+    }
+    
+    /* Link output */
+    glBindFragDataLocation(program, 0, outputAttributeName);
+    
+    /* link  and error check */
+    glLinkProgram(program);
+    
+    GLint  linked;
+    glGetProgramiv( program, GL_LINK_STATUS, &linked );
+    if ( !linked ) {
+        std::cerr << "Shader program failed to link" << std::endl;
+        GLint  logSize;
+        glGetProgramiv( program, GL_INFO_LOG_LENGTH, &logSize);
+        char* logMsg = new char[logSize];
+        glGetProgramInfoLog( program, logSize, NULL, logMsg );
+        std::cerr << logMsg << std::endl;
+        delete [] logMsg;
+        
+        exit( EXIT_FAILURE );
+    }
+    
+    /* use program object */
+    glUseProgram(program);
+    
+    return program;
+}
+
+void Painter::load_shader()
+{
+    shaderProgram = InitShader("shaders/interface.vert",  "shaders/interface.frag", "fragColour");
+    MVMatrixUniform = glGetUniformLocation(shaderProgram, "MVMatrix");
+    if (MVMatrixUniform > 10000) {
+        std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
+    }
+    MVPMatrixUniform = glGetUniformLocation(shaderProgram, "MVPMatrix");
+    if (MVPMatrixUniform > 10000) {
+        std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
+    }
+    NormalMatrixUniform = glGetUniformLocation(shaderProgram, "NormalMatrix");
+    if (NormalMatrixUniform > 10000) {
+        std::cerr << "Shader did not contain the 'NormalMatrix' uniform."<<std::endl;
+    }
+    lightPosUniform = glGetUniformLocation(shaderProgram, "lightPos");
+    if (lightPosUniform > 10000) {
+        std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
+    }
+    positionAttribute = glGetAttribLocation(shaderProgram, "position");
+    if (positionAttribute > 10000) {
+        std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
+    }
+    normalAttribute = glGetAttribLocation(shaderProgram, "normal");
+    if (normalAttribute > 10000) {
+        std::cerr << "Shader did not contain the 'normal' attribute." << std::endl;
+    }
+}
+
+void Painter::save_painting(int width, int height, std::string folder, int time_step)
+{
+    std::ostringstream s;
+    if (folder.length() == 0) {
+        s << "scr";
+    }
+    else {
+        s << folder << "/scr";
+    }
+    
+    if (time_step >= 0)
+    {
+        s << std::string(DSC::Util::concat4digits("_", time_step));
+    }
+    s << ".png";
+    int success = SOIL_save_screenshot(s.str().c_str(), SOIL_SAVE_TYPE_PNG, 0, 0, width, height);
+    if(!success)
+    {
+        std::cout << "ERROR: Failed to take screen shot: " << s.str().c_str() << std::endl;
+        return;
+    }
+}
+
+void Painter::draw()
+{
+    glClearColor(BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2],BACKGROUND_COLOR[3]);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    glUseProgram(shaderProgram);
+    
+    if(vertexdata.size() != 0)
+    {
+        glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertexdata.size())/2);
+    }
+    
+    glutSwapBuffers();
+    check_gl_error();
+}
+
+void Painter::update_interface(DSC::DeformableSimplicialComplex<>& complex)
+{
+    // Extract interface data
+    vertexdata.clear();
+    for (auto fit = complex.faces_begin(); fit != complex.faces_end(); fit++)
+    {
+        if (fit->is_interface())
+        {
+            auto nodes = complex.get_nodes(fit.key());
+            DSC::vec3 normal = complex.get_normal(fit.key());
+            
+            for(auto &n : nodes)
+            {
+                vertexdata.push_back(complex.get_pos(n));
+                vertexdata.push_back(normal);
+            }
+        }
+    }
+    
+    // Send interface data to shader
+    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*vertexdata.size(), &vertexdata[0], GL_STATIC_DRAW);
+    
+    glEnableVertexAttribArray(positionAttribute);
+    glEnableVertexAttribArray(normalAttribute);
+    glVertexAttribPointer(positionAttribute, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0);
+    glVertexAttribPointer(normalAttribute, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3));
+}
+

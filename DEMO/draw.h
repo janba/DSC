@@ -24,8 +24,9 @@
 #endif
 
 #include <SOIL/SOIL.h>
-
 #include <CGLA/Mat4x4f.h>
+
+#include "DSC.h"
 
 const static float ALPHA = 0.2;
 const static float BACKGROUND_COLOR[] = {0.7, 0.7, 0.7, 0.};
@@ -85,25 +86,6 @@ class Painter {
     
 public:
     
-    Painter()
-    {
-        glEnable(GL_DEPTH_TEST);
-        glDepthMask(GL_TRUE);
-        
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-        
-        glEnable(GL_LIGHTING);
-        glEnable(GL_LIGHT0);
-        glShadeModel(GL_FLAT);
-        glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
-        
-        glEnable (GL_BLEND);
-        glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        
-        check_gl_error();
-    }
-    
     Painter(int WIN_SIZE_X, int WIN_SIZE_Y, double r)
     {
         load_shader();
@@ -120,7 +102,7 @@ public:
         
         // Set up model view projection matrix
         CGLA::Mat4x4f projection = CGLA::perspective_Mat4x4f(53.f, WIN_SIZE_X/float(WIN_SIZE_Y), 0.01*r, 3.*r); // Projection matrix
-        CGLA::Mat4x4f view = CGLA::lookAt_Mat4x4f(CGLA::Vec3f(0., 0., r), CGLA::Vec3f(0.), CGLA::Vec3f(0., 1., 0.)); // View matrix
+        CGLA::Mat4x4f view = CGLA::lookAt_Mat4x4f(CGLA::Vec3f(0.3*r, 0.3*r, r), CGLA::Vec3f(0.), CGLA::Vec3f(0., 1., 0.)); // View matrix
         CGLA::Mat4x4f model = CGLA::rotation_Mat4x4f(CGLA::YAXIS, M_PI);
         
         // Send model view projection matrix
@@ -145,70 +127,19 @@ public:
 
 //        glEnable(GL_CULL_FACE);
 //        glCullFace(GL_BACK);
-//        
-//        glEnable (GL_BLEND);
-//        glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        glEnable (GL_BLEND);
+        glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
         check_gl_error();
     }
     
+private:
     /**
-     Saves the current painting to the selected folder.
+     Loads the shaders.
      */
-    void save_painting(int width, int height, std::string folder = std::string(""), int time_step = -1)
-    {
-        std::ostringstream s;
-        if (folder.length() == 0) {
-            s << "scr";
-        }
-        else {
-            s << folder << "/scr";
-        }
+    void load_shader();
         
-        if (time_step >= 0)
-        {
-            s << std::string(DSC::Util::concat4digits("_", time_step));
-        }
-        s << ".png";
-        int success = SOIL_save_screenshot(s.str().c_str(), SOIL_SAVE_TYPE_PNG, 0, 0, width, height);
-        if(!success)
-        {
-            std::cout << "ERROR: Failed to take screen shot: " << s.str().c_str() << std::endl;
-            return;
-        }
-    }
-    
-    /**
-     Begins drawing.
-     */
-    void begin()
-    {
-        glClearColor(BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2],BACKGROUND_COLOR[3]);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    }
-    
-    /**
-     Ends drawing.
-     */
-    void end()
-    {
-        glFlush();
-        glutSwapBuffers();
-    }
-    
-    /**
-     Draws the simplicial complex.
-     */
-    void draw_complex(DSC::DeformableSimplicialComplex<> *complex)
-    {
-        draw_faces(complex);
-//        draw_nodes(complex);
-        draw_edges(complex);
-        glDisable(GL_LIGHTING);
-        draw_bad_tetrahedra(complex);
-        glEnable(GL_LIGHTING);
-    }
-    
     /**
      Draws the bad tetrahedra.
      */
@@ -312,179 +243,20 @@ public:
         glEnd();
     }
     
-    // NEW OPENGL STUFF
-    void draw_new()
-    {
-        glClearColor(BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2],BACKGROUND_COLOR[3]);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-        glUseProgram(shaderProgram);
-        
-        if(vertexdata.size() != 0)
-        {
-            glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertexdata.size())/2);
-        }
-        
-        glutSwapBuffers();
-        check_gl_error();
-    }
+public:
+    /**
+     Draws the simplicial complex.
+     */
+    void draw();
     
-    void update_interface(DSC::DeformableSimplicialComplex<>& complex, const float color[] = GRAY)
-    {
-        // Extract interface data
-        vertexdata.clear();
-        for (auto fit = complex.faces_begin(); fit != complex.faces_end(); fit++)
-        {
-            if (fit->is_interface())
-            {
-                auto nodes = complex.get_nodes(fit.key());
-                
-//                auto verts = complex.get_pos(fit.key());
-                DSC::vec3 normal = complex.get_normal(fit.key());
-                
-                for(auto &n : nodes)
-                {
-                    vertexdata.push_back(complex.get_pos(n));
-                    vertexdata.push_back(normal);
-                }
-            }
-        }
-        
-        // Send interface data to shader
-        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*vertexdata.size(), &vertexdata[0], GL_STATIC_DRAW);
-        
-        glEnableVertexAttribArray(positionAttribute);
-        glEnableVertexAttribArray(normalAttribute);
-        glVertexAttribPointer(positionAttribute, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0);
-        glVertexAttribPointer(normalAttribute, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3));
-    }
+    /**
+     Updates the drawn interface.
+     */
+    void update_interface(DSC::DeformableSimplicialComplex<>& complex);
     
-    void load_shader()
-    {
-        shaderProgram = InitShader("shaders/interface.vert",  "shaders/interface.frag", "fragColour");
-        MVMatrixUniform = glGetUniformLocation(shaderProgram, "MVMatrix");
-        if (MVMatrixUniform > 10000) {
-            std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
-        }
-        MVPMatrixUniform = glGetUniformLocation(shaderProgram, "MVPMatrix");
-        if (MVPMatrixUniform > 10000) {
-            std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
-        }
-        NormalMatrixUniform = glGetUniformLocation(shaderProgram, "NormalMatrix");
-        if (NormalMatrixUniform > 10000) {
-            std::cerr << "Shader did not contain the 'NormalMatrix' uniform."<<std::endl;
-        }
-        lightPosUniform = glGetUniformLocation(shaderProgram, "lightPos");
-        if (lightPosUniform > 10000) {
-            std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
-        }
-        positionAttribute = glGetAttribLocation(shaderProgram, "position");
-        if (positionAttribute > 10000) {
-            std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
-        }
-        normalAttribute = glGetAttribLocation(shaderProgram, "normal");
-        if (normalAttribute > 10000) {
-            std::cerr << "Shader did not contain the 'normal' attribute." << std::endl;
-        }
-    }
     
-    // Create a NULL-terminated string by reading the provided file
-	char* readShaderSource(const char* shaderFile)
-	{
-		FILE *filePointer;
-		char *content = NULL;
-        
-		int count=0;
-        
-		if (shaderFile != NULL) {
-			filePointer = fopen(shaderFile,"rt");
-            
-			if (filePointer != NULL) {
-                
-				fseek(filePointer, 0, SEEK_END);
-				count = static_cast<int>(ftell(filePointer));
-				rewind(filePointer);
-                
-				if (count > 0) {
-					content = (char *)malloc(sizeof(char) * (count+1));
-					count = static_cast<int>(fread(content,sizeof(char),count,filePointer));
-					content[count] = '\0';
-				}
-				fclose(filePointer);
-			}
-		}
-		return content;
-	}
-    
-	// Create a GLSL program object from vertex and fragment shader files
-	GLuint InitShader(const char* vShaderFile, const char* fShaderFile, const char* outputAttributeName)
-    {
-		struct Shader {
-			const char*  filename;
-			GLenum       type;
-			GLchar*      source;
-		}  shaders[2] = {
-			{ vShaderFile, GL_VERTEX_SHADER, NULL },
-			{ fShaderFile, GL_FRAGMENT_SHADER, NULL }
-		};
-        
-		GLuint program = glCreateProgram();
-        
-		for ( int i = 0; i < 2; ++i ) {
-			Shader& s = shaders[i];
-			s.source = readShaderSource( s.filename );
-			if ( shaders[i].source == NULL ) {
-				std::cerr << "Failed to read " << s.filename << std::endl;
-				exit( EXIT_FAILURE );
-			}
-			GLuint shader = glCreateShader( s.type );
-			glShaderSource( shader, 1, (const GLchar**) &s.source, NULL );
-			glCompileShader( shader );
-            
-			GLint  compiled;
-			glGetShaderiv( shader, GL_COMPILE_STATUS, &compiled );
-			if ( !compiled ) {
-				std::cerr << s.filename << " failed to compile:" << std::endl;
-				GLint  logSize;
-				glGetShaderiv( shader, GL_INFO_LOG_LENGTH, &logSize );
-				char* logMsg = new char[logSize];
-				glGetShaderInfoLog( shader, logSize, NULL, logMsg );
-				std::cerr << logMsg << std::endl;
-				delete [] logMsg;
-                
-				exit( EXIT_FAILURE );
-			}
-            
-			delete [] s.source;
-            
-			glAttachShader( program, shader );
-		}
-        
-		/* Link output */
-		glBindFragDataLocation(program, 0, outputAttributeName);
-        
-		/* link  and error check */
-		glLinkProgram(program);
-        
-		GLint  linked;
-		glGetProgramiv( program, GL_LINK_STATUS, &linked );
-		if ( !linked ) {
-			std::cerr << "Shader program failed to link" << std::endl;
-			GLint  logSize;
-			glGetProgramiv( program, GL_INFO_LOG_LENGTH, &logSize);
-			char* logMsg = new char[logSize];
-			glGetProgramInfoLog( program, logSize, NULL, logMsg );
-			std::cerr << logMsg << std::endl;
-			delete [] logMsg;
-            
-			exit( EXIT_FAILURE );
-		}
-		
-		/* use program object */
-		glUseProgram(program);
-        
-		return program;
-	}
-    
+    /**
+     Saves the current painting to the selected folder.
+     */
+    void save_painting(int width, int height, std::string folder = std::string(""), int time_step = -1);
 };
