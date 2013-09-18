@@ -330,10 +330,52 @@ namespace DSC {
         }
         
         /**
+         Returns whether you have to turn left when going from a to b to c.
+         */
+        template<typename real, typename vec3>
+        inline bool is_left_of(vec3 a, vec3 b, vec3 c)
+        {
+            if(Util::signed_area<real>(a,b,c) > 0.)
+            {
+                return true;
+            }
+            return false;
+        }
+        
+        /**
+         Returns whether the point p is between the points in the vector corners.
+         */
+        template<typename real, typename vec3>
+        inline bool is_inside(const vec3& p, std::vector<vec3> corners)
+        {
+            vec3 c0, c1, c2;
+            while(corners.size() > 2)
+            {
+                int i = 0;
+                do {
+#ifdef DEBUG
+                    assert(i < corners.size());
+#endif
+                    c0 = corners[i];
+                    c1 = corners[(i+1)%corners.size()];
+                    c2 = corners[(i+2)%corners.size()];
+                    i++;
+                } while (Util::is_left_of<real>(c0,c1,c2));
+                
+                if(!Util::is_left_of<real>(c0, c1, p) && !Util::is_left_of<real>(c1, c2, p) && !Util::is_left_of<real>(c2, c0, p))
+                {
+                    return true;
+                }
+                corners.erase(corners.begin() + (i%corners.size()));
+            }
+            return false;
+        }
+        
+        /**
          * Returns the shortest distance from the point p to the plane defined by the point a and the normal.
          */
         template<typename real, typename vec3>
-        inline real distance(const vec3& p, const vec3& a, const vec3& normal)
+        inline real distance_plane(const vec3& p, const vec3& a, const vec3& normal)
         {
             vec3 v = p - a;
             return std::abs(dot(v, normal));
@@ -343,10 +385,10 @@ namespace DSC {
          * Returns the shortest distance from the point p to the plane spanned by the points a, b and c.
          */
         template<typename real, typename vec3>
-        inline real distance(const vec3& p, const vec3& a, const vec3& b, const vec3& c)
+        inline real distance_plane(const vec3& p, const vec3& a, const vec3& b, const vec3& c)
         {
             vec3 n = normal_direction(a, b, c);
-            return distance<real>(p, a, n);
+            return distance_plane<real>(p, a, n);
         }
         
         /**

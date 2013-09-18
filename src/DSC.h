@@ -1365,7 +1365,7 @@ namespace DSC {
                 for(auto nit = lk_f.nodes_begin(); nit != lk_f.nodes_end(); nit++)
                 {
                     if (cl_t.contains(*nit) && is_interface(*nit) &&
-                        Util::distance(get_pos(*nit), verts[0], verts[1], verts[2]) < MIN_EDGE_LENGTH)
+                        Util::distance_plane(get_pos(*nit), verts[0], verts[1], verts[2]) < MIN_EDGE_LENGTH)
                     {
                         return true;
                     }
