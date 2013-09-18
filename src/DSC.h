@@ -2313,41 +2313,6 @@ namespace DSC {
             assert(valid);
         }
         
-        
-        /// Remove the simplices that are no longer represented in the mesh from set.
-        void cleanup_set(simplex_set& set)
-        {
-            simplex_set unused_simplices;
-            
-            for (auto nit = set.nodes_begin(); nit != set.nodes_end(); nit++)
-            {
-                if (!Complex::exists(*nit))
-                    unused_simplices.insert(*nit);
-            }
-            
-            for (auto eit = set.edges_begin(); eit != set.edges_end(); eit++)
-            {
-                if (!Complex::exists(*eit))
-                    unused_simplices.insert(*eit);
-            }
-            
-            for (auto fit = set.faces_begin(); fit != set.faces_end(); fit++)
-            {
-                if (!Complex::exists(*fit))
-                    unused_simplices.insert(*fit);
-            }
-            
-            for (auto tit = set.tetrahedra_begin(); tit != set.tetrahedra_end(); tit++)
-            {
-                if (!Complex::exists(*tit))
-                {
-                    unused_simplices.insert(*tit);
-                }
-            }
-            
-            set.difference(unused_simplices);
-        }
-        
         /**
          * Sort the vertices from set according to their connectivity and returned the sorted vertices in sorted_vertices.
          */
