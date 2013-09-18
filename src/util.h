@@ -50,6 +50,16 @@ namespace DSC {
         using CGLA::sqr_length;
         using CGLA::normalize;
         
+        inline real min(real x, real y)
+        {
+            return std::min(x, y);
+        }
+        
+        inline real max(real x, real y)
+        {
+            return std::max(x, y);
+        }
+        
         template <typename vec3>
         inline vec3 normal_direction(const vec3& a, const vec3& b, const vec3& c);
         

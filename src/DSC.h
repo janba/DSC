@@ -362,14 +362,14 @@ namespace DSC {
                     {
                         real q2 = Util::quality<real>(get_pos(polygon[i]), get_pos(polygon[k]), get_pos(polygon[j]), verts[1]);
                         real q1 = Util::quality<real>(get_pos(polygon[k]), get_pos(polygon[i]), get_pos(polygon[j]), verts[0]);
-                        real q = std::min(q1, q2);
+                        real q = Util::min(q1, q2);
                         if (k < j-1)
                         {
-                            q = std::min(q, Q[k][j]);
+                            q = Util::min(q, Q[k][j]);
                         }
                         if (k > i+1)
                         {
-                            q = std::min(q, Q[i][k]);
+                            q = Util::min(q, Q[i][k]);
                         }
                         
                         if (k == i+1 || q > Q[i][j])
@@ -528,7 +528,7 @@ namespace DSC {
             
             if(polygon2.size() > 2)
             {
-                q_new = std::min(q_new, build_table(e, polygon2, K2));
+                q_new = Util::min(q_new, build_table(e, polygon2, K2));
             }
             
             if (q_new > min_quality(e))
@@ -630,15 +630,15 @@ namespace DSC {
                 
                 if((V_uv > 0. && V_vw > 0.) || (V_vw > 0. && V_wu > 0.) || (V_wu > 0. && V_uv > 0.))
                 {
-                    q_old = std::min(Util::quality<real>(get_pos(a), get_pos(u), get_pos(v), get_pos(w)),
+                    q_old = Util::min(Util::quality<real>(get_pos(a), get_pos(u), get_pos(v), get_pos(w)),
                                      Util::quality<real>(get_pos(u), get_pos(v), get_pos(w), get_pos(b)));
                     
                     real q_uv_old, q_uv_new, q_vw_old, q_vw_new;
                     auto uv_edges = test_neighbour(g, a, b, u, v, q_uv_old, q_uv_new);
                     auto vw_edges = test_neighbour(g, a, b, v, w, q_vw_old, q_vw_new);
                     
-                    q_old = std::min(std::min(q_old, q_uv_old), q_vw_old);
-                    q_new = std::min(q_uv_new, q_vw_new);
+                    q_old = Util::min(Util::min(q_old, q_uv_old), q_vw_old);
+                    q_new = Util::min(q_uv_new, q_vw_new);
                     
                     if(q_new > q_old || q_new > q)
                     {
@@ -688,8 +688,8 @@ namespace DSC {
             auto e12 = test_neighbour(f, apices[0], apices[1], nodes[1], nodes[2], q_12_old, q_12_new);
             auto e20 = test_neighbour(f, apices[0], apices[1], nodes[2], nodes[0], q_20_old, q_20_new);
             
-            real q_old = std::min(std::min(std::min(min_quality(f), q_01_old), q_12_old), q_20_old);
-            real q_new = std::min(std::min(q_01_new, q_12_new), q_20_new);
+            real q_old = Util::min(Util::min(Util::min(min_quality(f), q_01_old), q_12_old), q_20_old);
+            real q_new = Util::min(Util::min(q_01_new, q_12_new), q_20_new);
             
             if(q_new > q_old)
             {
@@ -1453,7 +1453,7 @@ namespace DSC {
             
             real t = intersection_with_link(n, destination);
             
-            l = std::max(std::min(l*t - l*MIN_DEFORMATION, l), static_cast<real>(0.));
+            l = Util::max(Util::min(l*t - l*MIN_DEFORMATION, l), 0.);
             set_pos(n, pos + l*Util::normalize(destination - pos));
             
             if (Util::length(destination - get_pos(n)) < EPSILON)
@@ -1464,6 +1464,7 @@ namespace DSC {
         }
         
         
+    public:
         /**
          * Returns the intersection point (= pos + t*(new_pos-pos)) with the link of the node n and
          * when moving the node n to the new position new_pos.
@@ -1480,7 +1481,7 @@ namespace DSC {
                 real t = Util::intersection_ray_plane<real>(pos, new_pos, face_pos[0], face_pos[1], face_pos[2]);
                 if (0. <= t)
                 {
-                    min_t = std::min(t, min_t);
+                    min_t = Util::min(t, min_t);
                 }
             }
             assert(min_t < INFINITY);
@@ -1728,8 +1729,8 @@ namespace DSC {
                     q_max = q;
                 }
             }
-            real q = std::min(min_quality(nodes[0]), min_quality(nodes[1]));
-            if((!safe && q_max > EPSILON) || q_max > std::min(q, MIN_TET_QUALITY))
+            real q = Util::min(min_quality(nodes[0]), min_quality(nodes[1]));
+            if((!safe && q_max > EPSILON) || q_max > Util::min(q, MIN_TET_QUALITY))
             {
                 return collapse(e, p_opt, p_new_opt);
             }
@@ -1945,7 +1946,7 @@ namespace DSC {
             real q_min = INFINITY;
             for (auto tit = set.tetrahedra_begin(); tit != set.tetrahedra_end(); tit++)
             {
-                q_min = std::min(quality(*tit), q_min);
+                q_min = Util::min(quality(*tit), q_min);
             }
             return q_min;
         }
@@ -1959,7 +1960,7 @@ namespace DSC {
             for(auto fit = set.faces_begin(); fit != set.faces_end(); fit++)
             {
                 auto verts = get_pos(*fit);
-                min_q = std::min(min_q, std::abs(Util::quality<real>(verts[0], verts[1], verts[2], pos)));
+                min_q = Util::min(min_q, std::abs(Util::quality<real>(verts[0], verts[1], verts[2], pos)));
             }
             return min_q;
         }
@@ -2395,7 +2396,7 @@ namespace DSC {
             std::vector<real> angles = cos_dihedral_angles(t);
             for(auto a : angles)
             {
-                min_angle = std::max(min_angle, a);
+                min_angle = Util::max(min_angle, a);
             }
             return min_angle;
         }
@@ -2421,7 +2422,7 @@ namespace DSC {
             for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
             {
                 real q = quality(tit.key());
-                min_quality = std::min(min_quality, q);
+                min_quality = Util::min(min_quality, q);
                 histogram[(int)floor(q*100.)] += 1;
             }
         }
@@ -2446,8 +2447,8 @@ namespace DSC {
                 for(auto cos_a : angles)
                 {
                     real a = acos(cos_a)*180./M_PI;
-                    min_angle = std::min(min_angle, a);
-                    max_angle = std::max(max_angle, a);
+                    min_angle = Util::min(min_angle, a);
+                    max_angle = Util::max(max_angle, a);
                     histogram[(int)floor(a)] += 1;
                 }
             }
@@ -2458,7 +2459,7 @@ namespace DSC {
             real min_q = INFINITY;
             for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
             {
-                min_q = std::min(min_q, quality(tit.key()));
+                min_q = Util::min(min_q, quality(tit.key()));
             }
             return min_q;
         }

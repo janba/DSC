@@ -113,9 +113,9 @@ namespace DSC {
             for (int j = 0; j < Nj; j++) {
                 for (int i = 0; i < Ni; i++)
                 {
-                    points.push_back(std::min(i*avg_edge_length, size[0]) - size[0]/2.);
-                    points.push_back(std::min(j*avg_edge_length, size[1]) - size[1]/2.);
-                    points.push_back(std::min(k*avg_edge_length, size[2]) - size[2]/2.);
+                    points.push_back(Util::min(i*avg_edge_length, size[0]) - size[0]/2.);
+                    points.push_back(Util::min(j*avg_edge_length, size[1]) - size[1]/2.);
+                    points.push_back(Util::min(k*avg_edge_length, size[2]) - size[2]/2.);
                 }
             }
         }
