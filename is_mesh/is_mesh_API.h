@@ -86,6 +86,47 @@ public:
         return mesh.tetrahedra_end();
     }
     
+    
+    const typename Mesh::node_iterator nodes_begin() const
+    {
+        return mesh.nodes_begin();
+    }
+    
+    const typename Mesh::node_iterator nodes_end() const
+    {
+        return mesh.nodes_end();
+    }
+    
+    const typename Mesh::edge_iterator edges_begin() const
+    {
+        return mesh.edges_begin();
+    }
+    
+    const typename Mesh::edge_iterator edges_end() const
+    {
+        return mesh.edges_end();
+    }
+    
+    const typename Mesh::face_iterator faces_begin() const
+    {
+        return mesh.faces_begin();
+    }
+    
+    const typename Mesh::face_iterator faces_end() const
+    {
+        return mesh.faces_end();
+    }
+    
+    const typename Mesh::tetrahedron_iterator tetrahedra_begin() const
+    {
+        return mesh.tetrahedra_begin();
+    }
+    
+    const typename Mesh::tetrahedron_iterator tetrahedra_end() const
+    {
+        return mesh.tetrahedra_end();
+    }
+    
     /////////////////////
     // LABEL FUNCTIONS //
     /////////////////////
