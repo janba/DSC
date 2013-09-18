@@ -343,11 +343,35 @@ public:
         return nodes;
     }
     
-    std::vector<node_key> get_nodes(const tet_key& t)
+    std::vector<node_key> get_nodes(const tet_key& tid)
     {
         std::vector<node_key> nodes(4);
-        mesh.vertices(t, nodes);
+        mesh.vertices(tid, nodes);
         return nodes;
+    }
+    
+    std::vector<edge_key> get_edges(const face_key& fid)
+    {
+        std::vector<edge_key> edges;
+        simplex_set cl_f;
+        closure(fid, cl_f);
+        for(auto eit = cl_f.edges_begin(); eit != cl_f.edges_end(); eit++)
+        {
+            edges.push_back(*eit);
+        }
+        return edges;
+    }
+    
+    std::vector<edge_key> get_edges(const tet_key& tid)
+    {
+        std::vector<edge_key> edges;
+        simplex_set cl_t;
+        closure(tid, cl_t);
+        for(auto eit = cl_t.edges_begin(); eit != cl_t.edges_end(); eit++)
+        {
+            edges.push_back(*eit);
+        }
+        return edges;
     }
     
     edge_key get_edge(const node_key& n1, const node_key& n2)
