@@ -313,6 +313,11 @@ namespace DSC {
             return MIN_ANGLE;
         }
         
+        real get_avg_edge_length() const
+        {
+            return AVG_EDGE_LENGTH;
+        }
+        
         /////////////////////
         // GARBAGE COLLECT //
         /////////////////////
