@@ -17,43 +17,7 @@
 #include "design_domain.h"
 
 namespace DSC {
-    
-    void DesignDomain::clamp_position(vec3& p) const
-    {
-        if(!is_inside(p))
-        {
-//            vec2 c0, c1, b, p_proj, p_int1, p_int2;
-//            real length, dist1 = INFINITY, dist2 = INFINITY;
-//            for (int i = 0; i < corners.size(); i++)
-//            {
-//                c0 = corners[i];
-//                c1 = corners[(i+1)%corners.size()];
-//                b = Util::normalize(c1 - c0);
-//                p_proj = c0 + Util::dot(p - c0, b)*b;
-//                length = Util::sqr_length(p - p_proj);
-//                if (length < dist1)
-//                {
-//                    p_int2 = p_int1;
-//                    p_int1 = p_proj;
-//                    dist2 = dist1;
-//                    dist1 = length;
-//                }
-//                else if(length < dist2)
-//                {
-//                    p_int2 = p_proj;
-//                    dist2 = length;
-//                }
-//            }
-//            if(!is_inside(p_int1))
-//            {
-//                p = p_int1 + (p_int2 - p);
-//            }
-//            else {
-//                p = p_int1;
-//            }
-        }
-    }
-    
+        
     void DesignDomain::clamp_vector(const vec3& p, vec3& v) const
     {
         if(!is_inside(p+v))

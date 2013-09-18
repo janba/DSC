@@ -61,11 +61,6 @@ namespace DSC {
         }
         
         /**
-         Clamps the position pos to be within the domain.
-         */
-        void clamp_position(vec3& p) const;
-        
-        /**
          Clamps p + v to be within the domain by scaling the vector v if p is inside the domain. The position p is therefore not garanteed to be within the domain.
          */
         void clamp_vector(const vec3& p, vec3& v) const;
