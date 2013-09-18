@@ -318,6 +318,11 @@ namespace DSC {
             return AVG_EDGE_LENGTH;
         }
         
+        const DesignDomain* get_design_domain() const
+        {
+            return design_domain;
+        }
+        
         /////////////////////
         // GARBAGE COLLECT //
         /////////////////////
