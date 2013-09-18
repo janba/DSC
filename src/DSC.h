@@ -188,6 +188,11 @@ namespace DSC {
             return Complex::is_boundary(k);
         }
         
+        virtual bool is_movable(const node_key& n)
+        {
+            return !is_boundary(n) && is_interface(n);
+        }
+        
         template<typename key>
         bool is_crossing(const key& k)
         {
