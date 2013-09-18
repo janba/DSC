@@ -113,7 +113,7 @@ namespace DSC {
         {
             std::cout << "Node: " << n << std::endl;
             vec3 p = get_pos(n);
-            vec3 d = get_destination(n);
+            vec3 d = get_dest(n);
             std::cout << "P = " << p[0] << ", " << p[1] << ", " << p[2] << std::endl;
             std::cout << "D = " << d[0] << ", " << d[1] << ", " << d[2]  << std::endl;
             
@@ -216,7 +216,7 @@ namespace DSC {
             return p;
         }
         
-        /// Returns the positions of the nodes of edge e in verts.
+        /// Returns the positions of the nodes of edge e.
         std::vector<vec3> get_pos(const edge_key & e)
         {
             std::vector<vec3> verts(2);
@@ -228,7 +228,7 @@ namespace DSC {
             return verts;
         }
         
-        /// Returns the positions of the nodes of face f in verts.
+        /// Returns the positions of the nodes of face f.
         std::vector<vec3> get_pos(const face_key & f)
         {
             std::vector<vec3> verts(3);
@@ -241,7 +241,7 @@ namespace DSC {
             return verts;
         }
         
-        /// Returns the positions of the nodes of tetrahedron t in verts.
+        /// Returns the positions of the nodes of tetrahedron t.
         std::vector<vec3> get_pos(const tet_key& t)
         {
             std::vector<vec3> verts(4);
@@ -263,9 +263,50 @@ namespace DSC {
         }
         
     public:
-        vec3 get_destination(const node_key& n)
+        vec3 get_dest(const node_key& n)
         {
-            return Complex::get(n).get_destination();
+            if(is_movable(n))
+            {
+                return Complex::get(n).get_destination();
+            }
+            return get_pos(n);
+        }
+        
+        /// Returns the destinations of the nodes of edge e.
+        std::vector<vec3> get_dest(const edge_key & e)
+        {
+            std::vector<vec3> verts(2);
+            auto nodes = Complex::get_nodes(e);
+            for (int k = 0; k < 2; ++k)
+            {
+                verts[k] = get_dest(nodes[k]);
+            }
+            return verts;
+        }
+        
+        /// Returns the destinations of the nodes of face f.
+        std::vector<vec3> get_dest(const face_key & f)
+        {
+            std::vector<vec3> verts(3);
+            Complex::orient_face(f);
+            auto nodes = Complex::get_nodes(f);
+            for (int k = 0; k < 3; ++k)
+            {
+                verts[k] = get_dest(nodes[k]);
+            }
+            return verts;
+        }
+        
+        /// Returns the destinations of the nodes of tetrahedron t.
+        std::vector<vec3> get_dest(const tet_key& t)
+        {
+            std::vector<vec3> verts(4);
+            auto nodes = Complex::get_nodes(t);
+            for (int k = 0; k < 4; ++k)
+            {
+                verts[k] = get_dest(nodes[k]);
+            }
+            return verts;
         }
         
         /**
@@ -1448,7 +1489,7 @@ namespace DSC {
         bool move_vertex(const node_key & n)
         {
             vec3 pos = get_pos(n);
-            vec3 destination = get_destination(n);
+            vec3 destination = get_dest(n);
             real l = Util::length(destination - pos);
             
             if (l < EPSILON) // The vertex is not moved
@@ -1604,12 +1645,13 @@ namespace DSC {
          */
         node_key split(const edge_key & e)
         {
-            auto nodes = Complex::get_nodes(e);
-            vec3 p = Util::barycenter(get_pos(nodes[0]), get_pos(nodes[1]));
+            auto verts = get_pos(e);
+            vec3 p = Util::barycenter(verts[0], verts[1]);
             vec3 p_new = p;
             if(is_interface(e))
             {
-                p_new = Util::barycenter(get_destination(nodes[0]), get_destination(nodes[1]));
+                auto dests = get_dest(e);
+                p_new = Util::barycenter(dests[0], dests[1]);
             }
             
             node_key n = Complex::split(e);
@@ -1703,7 +1745,7 @@ namespace DSC {
                 real q = min_quality(e, p);
                 if (precond_collapse(e, p) && q > q_max)
                 {
-                    p_new_opt = Util::barycenter(get_destination(nodes[0]), get_destination(nodes[1]));
+                    p_new_opt = Util::barycenter(get_dest(nodes[0]), get_dest(nodes[1]));
                     p_opt = p;
                     q_max = q;
                 }
@@ -1716,7 +1758,7 @@ namespace DSC {
                 
                 if (precond_collapse(e, p) && q > q_max)
                 {
-                    p_new_opt = get_destination(nodes[1]);
+                    p_new_opt = get_dest(nodes[1]);
                     p_opt = p;
                     q_max = q;
                 }
@@ -1729,7 +1771,7 @@ namespace DSC {
                 
                 if (precond_collapse(e, p) && q > q_max)
                 {
-                    p_new_opt = get_destination(nodes[0]);
+                    p_new_opt = get_dest(nodes[0]);
                     p_opt = p;
                     q_max = q;
                 }
@@ -1883,6 +1925,12 @@ namespace DSC {
         {
             auto verts = get_pos(t);
             return Util::volume<real>(verts[0], verts[1], verts[2], verts[3]);
+        }
+        
+        real volume_destination(const tet_key& t)
+        {
+            auto dests = get_dest(t);
+            return Util::volume<real>(dests[0], dests[1], dests[2], dests[3]);
         }
         
         real signed_volume(const tet_key& t)
