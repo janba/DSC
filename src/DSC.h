@@ -1909,39 +1909,51 @@ namespace DSC {
         
     public:
         
-        real length(const edge_key& e)
+        real length(const edge_key& eid)
         {
-            auto verts = get_pos(e);
+            auto verts = get_pos(eid);
             return Util::length(verts[0] - verts[1]);
         }
         
-        real area(const face_key& f)
+        real length_destination(const edge_key& eid)
         {
-            auto verts = get_pos(f);
+            auto dests = get_dest(eid);
+            return Util::length(dests[0] - dests[1]);
+        }
+        
+        real area(const face_key& fid)
+        {
+            auto verts = get_pos(fid);
             return Util::area<real>(verts[0], verts[1], verts[2]);
         }
         
-        real volume(const tet_key& t)
+        real area_destination(const face_key& fid)
         {
-            auto verts = get_pos(t);
+            auto dests = get_dest(fid);
+            return Util::volume<real>(dests[0], dests[1], dests[2]);
+        }
+        
+        real volume(const tet_key& tid)
+        {
+            auto verts = get_pos(tid);
             return Util::volume<real>(verts[0], verts[1], verts[2], verts[3]);
         }
         
-        real volume_destination(const tet_key& t)
+        real volume_destination(const tet_key& tid)
         {
-            auto dests = get_dest(t);
+            auto dests = get_dest(tid);
             return Util::volume<real>(dests[0], dests[1], dests[2], dests[3]);
         }
         
-        real signed_volume(const tet_key& t)
+        real signed_volume(const tet_key& tid)
         {
-            auto verts = get_pos(t);
+            auto verts = get_pos(tid);
             return Util::signed_volume<real>(verts[0], verts[1], verts[2], verts[3]);
         }
         
-        real quality(const tet_key& t)
+        real quality(const tet_key& tid)
         {
-            auto verts = get_pos(t);
+            auto verts = get_pos(tid);
             return Util::quality<real>(verts[0], verts[1], verts[2], verts[3]);
         }
         
