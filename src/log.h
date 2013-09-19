@@ -31,8 +31,9 @@ namespace DSC {
     
     class Log {
         
-        std::ofstream log;
         std::string path;
+    protected:
+        std::ofstream log;
         
     public:
         /**
