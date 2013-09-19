@@ -1910,7 +1910,7 @@ namespace DSC {
         real area_destination(const face_key& fid)
         {
             auto dests = get_dest(fid);
-            return Util::volume<real>(dests[0], dests[1], dests[2]);
+            return Util::area<real>(dests[0], dests[1], dests[2]);
         }
         
         real volume(const tet_key& tid)
