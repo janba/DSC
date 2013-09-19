@@ -1820,30 +1820,6 @@ namespace DSC {
         // GETTER FUNCTIONS //
         //////////////////////
     public:
-        
-        vec3 get_avg_pos(const node_key& n, bool interface)
-        {
-            if(interface && !is_interface(n))
-            {
-                return get_pos(n);
-            }
-            
-            vec3 avg_pos(0.);
-            int count = 0;
-            
-            simplex_set lk_n;
-            Complex::link(n, lk_n);
-            for (auto nit = lk_n.nodes_begin(); nit != lk_n.nodes_end(); nit++)
-            {
-                if(is_interface(*nit) || !interface)
-                {
-                    avg_pos += get_pos(*nit);
-                    count++;
-                }
-            }
-            return avg_pos/count;
-        }
-        
         /**
          Returns the normal to interface face f.
          */
@@ -1884,6 +1860,10 @@ namespace DSC {
          */
         vec3 get_barycenter(const node_key& n, bool interface = false)
         {
+            if(interface && !is_interface(n))
+            {
+                return get_pos(n);
+            }
             simplex_set lk_n;
             Complex::link(n, lk_n);
             
