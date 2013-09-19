@@ -188,15 +188,58 @@ namespace DSC {
             return Complex::is_boundary(k);
         }
         
-        virtual bool is_movable(const node_key& n)
-        {
-            return !is_boundary(n) && is_interface(n);
-        }
-        
         template<typename key>
         bool is_crossing(const key& k)
         {
             return Complex::is_crossing(k);
+        }
+        
+    protected:
+        
+        virtual bool is_unsafe_editable(const node_key& nid)
+        {
+            return Complex::exists(nid) && !is_boundary(nid);
+        }
+        
+        virtual bool is_unsafe_editable(const edge_key& eid)
+        {
+            return Complex::exists(eid) && !is_boundary(eid);
+        }
+        
+        virtual bool is_unsafe_editable(const face_key& fid)
+        {
+            return Complex::exists(fid) && !is_boundary(fid);
+        }
+        
+        virtual bool is_unsafe_editable(const tet_key& tid)
+        {
+            return Complex::exists(tid);
+        }
+        
+        virtual bool is_safe_editable(const node_key& nid)
+        {
+            return is_unsafe_editable(nid) && !is_interface(nid);
+        }
+        
+        virtual bool is_safe_editable(const edge_key& eid)
+        {
+            return is_unsafe_editable(eid) && !is_interface(eid);
+        }
+        
+        virtual bool is_safe_editable(const face_key& fid)
+        {
+            return is_unsafe_editable(fid) && !is_interface(fid);
+        }
+        
+        virtual bool is_safe_editable(const tet_key& tid)
+        {
+            return is_unsafe_editable(tid);
+        }
+        
+    public:
+        virtual bool is_movable(const node_key& nid)
+        {
+            return is_unsafe_editable(nid) && is_interface(nid) && !is_crossing(nid);
         }
         
         int get_label(const tet_key& t)
@@ -312,19 +355,19 @@ namespace DSC {
         /**
          * Sets the destination where the node n is moved to when deform() is called.
          */
-        void set_destination(const node_key& n, vec3 dest)
+        void set_destination(const node_key& nid, vec3 dest)
         {
-            if(is_interface(n) && !is_crossing(n))
+            if(is_movable(nid))
             {
                 if(design_domain)
                 {
-                    vec3 p = get_pos(n);
+                    vec3 p = get_pos(nid);
                     vec3 vec = dest - p;
                     design_domain->clamp_vector(p, vec);
-                    Complex::get(n).set_destination(p + vec);
+                    Complex::get(nid).set_destination(p + vec);
                 }
                 else {
-                    Complex::get(n).set_destination(dest);
+                    Complex::get(nid).set_destination(dest);
                 }
             }
         }
@@ -614,7 +657,7 @@ namespace DSC {
                     {
                         if (Complex::exists(*eit))
                         {
-                            if(!is_interface(*eit) && !is_boundary(*eit))
+                            if(is_safe_editable(*eit))
                             {
                                 if(topological_edge_removal(*eit))
                                 {
@@ -667,7 +710,7 @@ namespace DSC {
             face_key g = get_neighbour(f, e);
             real q = Util::quality<real>(get_pos(a), get_pos(b), get_pos(u), get_pos(w));
             
-            if(g != Complex::NULL_FACE && !is_boundary(e) && !is_interface(e))
+            if(g != Complex::NULL_FACE && is_safe_editable(e))
             {
                 node_key v = Complex::get_apex(g, e);
                 real V_uv = Util::signed_volume<real>(get_pos(a), get_pos(b), get_pos(u), get_pos(v));
@@ -781,7 +824,7 @@ namespace DSC {
             lk_n1.intersection(lk_n2);
             for(auto f = lk_n1.faces_begin(); f != lk_n1.faces_end(); f++)
             {
-                if(!is_boundary(*f) && !is_interface(*f))
+                if(is_safe_editable(*f))
                 {
                     auto nodes = Complex::get_nodes(*f);
                     orient_cc(apex2, nodes);
@@ -826,7 +869,7 @@ namespace DSC {
                     
                     for (auto fit = cl_t.faces_begin(); fit != cl_t.faces_end(); fit++)
                     {
-                        if (Complex::exists(*fit) && !is_interface(*fit) && !is_boundary(*fit))
+                        if (is_safe_editable(*fit))
                         {
                             auto apices = Complex::get_apices(*fit);
                             if(topological_face_removal(apices[0], apices[1]))
@@ -855,7 +898,7 @@ namespace DSC {
             std::vector<edge_key> edges;
             for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
             {
-                if (is_interface(eit.key()) && length(eit.key()) > MAX_EDGE_LENGTH)
+                if (is_unsafe_editable(eit.key()) && is_interface(eit.key()) && length(eit.key()) > MAX_EDGE_LENGTH)
                 {
                     edges.push_back(eit.key());
                 }
@@ -863,7 +906,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto &e : edges)
             {
-                if (Complex::exists(e) && is_interface(e) && length(e) > MAX_EDGE_LENGTH)
+                if (is_unsafe_editable(e) && is_interface(e) && length(e) > MAX_EDGE_LENGTH)
                 {
                     if(split(e) != Complex::NULL_NODE)
                     {
@@ -1369,7 +1412,7 @@ namespace DSC {
             int i = 0, j = 0;
             for (auto nit = Complex::nodes_begin(); nit != Complex::nodes_end(); nit++)
             {
-                if (Complex::exists(nit.key()) && !is_boundary(nit.key()) && !is_interface(nit.key()))
+                if (is_safe_editable(nit.key()))
                 {
                     if (smart_laplacian(nit.key()))
                     {
@@ -1454,7 +1497,7 @@ namespace DSC {
                 int movable = 0;
                 for (auto nit = Complex::nodes_begin(); nit != Complex::nodes_end(); nit++)
                 {
-                    if (Complex::exists(nit.key()) && !nit->is_crossing() && nit->is_interface())
+                    if (is_movable(nit.key()))
                     {
                         if(!move_vertex(nit.key()))
                         {
