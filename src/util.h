@@ -470,6 +470,22 @@ namespace DSC {
                 s << name << number;
             return s.str();
         }
+        
+        /**
+         Returns the maximum difference between the values x[i] and y[i] for all i less than the size of x and y.
+         */
+        template<typename real>
+        inline real max_diff(const std::vector<real>& x, const std::vector<real>& y)
+        {
+            real max_diff = -INFINITY;
+            for (int i = 0; i < x.size(); i++)
+            {
+                if (i < y.size()) {
+                    max_diff = max(std::abs(x[i] - y[i]), max_diff);
+                }
+            }
+            return max_diff;
+        }
     }
     
 }
