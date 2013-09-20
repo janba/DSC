@@ -255,6 +255,7 @@ void Painter::draw()
     glClearColor(BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2],BACKGROUND_COLOR[3]);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
+    glCullFace(GL_BACK);
     if(interface_data.size() != 0)
     {
         glUseProgram(interface_shader);
@@ -267,6 +268,7 @@ void Painter::draw()
         glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(interface_data.size())/2);
     }
     
+    glCullFace(GL_FRONT);
     if(boundary_data.size() != 0)
     {
         glUseProgram(boundary_shader);

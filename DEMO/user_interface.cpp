@@ -320,6 +320,7 @@ void UI::stop()
 void UI::start()
 {
     painter->update_interface(*dsc);
+    painter->update_boundary(*dsc);
     
     basic_log->write_message(vel_fun->get_name().c_str());
     basic_log->write_log(dsc);
