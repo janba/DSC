@@ -22,7 +22,7 @@
 /**
  A rotating velocity function.
  */
-class RotateFunc: public DSC::VelocityFunc
+class RotateFunc: public DSC::VelocityFunc<>
 {
     
     
@@ -31,7 +31,7 @@ public:
      Creates a rotating velocity function.
      */
     RotateFunc(DSC::real velocity, DSC::real accuracy, int max_time_steps = 500):
-        VelocityFunc(M_PI*velocity/(5.*180.), accuracy, max_time_steps)
+        VelocityFunc<>(M_PI*velocity/(5.*180.), accuracy, max_time_steps)
     {
         
     }
@@ -52,7 +52,7 @@ public:
         auto init_time = std::chrono::system_clock::now();
         
         DSC::vec3 center = dsc.get_center();
-        DSC::mat3 mrot = rotation_Mat3x3d(CGLA::Axis::ZAXIS, VelocityFunc::VELOCITY);
+        DSC::mat3 mrot = rotation_Mat3x3d(CGLA::Axis::ZAXIS, VELOCITY);
         DSC::vec3 new_pos;
         for(auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
         {
@@ -62,12 +62,12 @@ public:
                 dsc.set_destination(nit.key(), new_pos);
             }
         }
-        VelocityFunc::update_compute_time(init_time);
+        update_compute_time(init_time);
         init_time = std::chrono::system_clock::now();
         
         dsc.deform();
         
-        VelocityFunc::update_deform_time(init_time);
+        update_deform_time(init_time);
     }
     
     /**

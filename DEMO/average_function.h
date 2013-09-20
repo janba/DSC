@@ -21,14 +21,14 @@
 /**
  A velocity function which moves the interface vertices towards the average of their neighbouring interface vertices, i.e. a constant smoothing of the interface.
  */
-class AverageFunc: public DSC::VelocityFunc {
+class AverageFunc: public DSC::VelocityFunc<> {
     
 public:
     /**
      Creates a velocity function which smooths the interface.
      */
     AverageFunc(DSC::real velocity, DSC::real accuracy, int max_time_steps = 500):
-        VelocityFunc(velocity/10., accuracy/100., max_time_steps)
+        VelocityFunc<>(velocity/10., accuracy/100., max_time_steps)
     {
         
     }
@@ -53,15 +53,15 @@ public:
             if(nit->is_interface() && !nit->is_crossing())
             {
                 p = dsc.get_pos(nit.key());
-                new_pos = p + VelocityFunc::VELOCITY * (dsc.get_barycenter(nit.key(), true) - p);
+                new_pos = p + VELOCITY * (dsc.get_barycenter(nit.key(), true) - p);
                 dsc.set_destination(nit.key(), new_pos);
             }
         }
-        VelocityFunc::update_compute_time(init_time);
+        update_compute_time(init_time);
         init_time = std::chrono::system_clock::now();
         
         dsc.deform();
         
-        VelocityFunc::update_deform_time(init_time);
+        update_deform_time(init_time);
     }
 };

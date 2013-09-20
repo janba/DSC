@@ -29,7 +29,7 @@ class UI
 protected:    
     float r = 150.;
     
-    DSC::VelocityFunc *vel_fun;
+    DSC::VelocityFunc<> *vel_fun;
     DSC::DeformableSimplicialComplex<> *dsc;
     
     DSC::Log<> *basic_log;

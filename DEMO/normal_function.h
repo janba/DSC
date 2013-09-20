@@ -21,7 +21,7 @@
 /**
  A velocity function which moves the interface vertices in the normal direction.
  */
-class NormalFunc: public DSC::VelocityFunc {
+class NormalFunc: public DSC::VelocityFunc<> {
     
     
 public:
@@ -29,7 +29,7 @@ public:
      Creates a velocity function which moves the interface vertices in the normal direction.
      */
     NormalFunc(DSC::real velocity, DSC::real accuracy, int max_time_steps = 500):
-        VelocityFunc(velocity/10., accuracy, max_time_steps)
+        VelocityFunc<>(velocity/10., accuracy, max_time_steps)
     {
         
     }
@@ -53,15 +53,15 @@ public:
         {
             if(nit->is_interface() && !nit->is_crossing())
             {
-                new_pos = dsc.get_pos(nit.key()) + VelocityFunc::VELOCITY * dsc.get_normal(nit.key());
+                new_pos = dsc.get_pos(nit.key()) + VELOCITY * dsc.get_normal(nit.key());
                 dsc.set_destination(nit.key(), new_pos);
             }
         }
-        VelocityFunc::update_compute_time(init_time);
+        update_compute_time(init_time);
         init_time = std::chrono::system_clock::now();
         
         dsc.deform();
         
-        VelocityFunc::update_deform_time(init_time);
+        update_deform_time(init_time);
     }
 };
