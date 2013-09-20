@@ -73,16 +73,18 @@ inline void _check_gl_error(const char *file, int line)
  */
 class Painter {
     
-    GLuint shaderProgram;
+    const static unsigned int NULL_LOCATION = -1;
+    
+    GLuint interface_shader;
     
     GLuint VertexArrayID;
     GLuint vertexbuffer;
     
     std::vector<DSC::vec3> vertexdata;
     
-    GLuint MVMatrixUniform, MVPMatrixUniform, NormalMatrixUniform, lightPosUniform;
-    
     GLuint positionAttribute, normalAttribute;
+    
+    GLuint MVMatrixUniform, MVPMatrixUniform, NormalMatrixUniform, lightPosUniform;
     
 public:
     

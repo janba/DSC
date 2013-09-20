@@ -117,29 +117,29 @@ GLuint InitShader(const char* vShaderFile, const char* fShaderFile, const char* 
 
 void Painter::load_shader()
 {
-    shaderProgram = InitShader("shaders/interface.vert",  "shaders/interface.frag", "fragColour");
-    MVMatrixUniform = glGetUniformLocation(shaderProgram, "MVMatrix");
-    if (MVMatrixUniform > 10000) {
+    interface_shader = InitShader("shaders/interface.vert",  "shaders/interface.frag", "fragColour");
+    MVMatrixUniform = glGetUniformLocation(interface_shader, "MVMatrix");
+    if (MVMatrixUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
     }
-    MVPMatrixUniform = glGetUniformLocation(shaderProgram, "MVPMatrix");
-    if (MVPMatrixUniform > 10000) {
+    MVPMatrixUniform = glGetUniformLocation(interface_shader, "MVPMatrix");
+    if (MVPMatrixUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
     }
-    NormalMatrixUniform = glGetUniformLocation(shaderProgram, "NormalMatrix");
-    if (NormalMatrixUniform > 10000) {
+    NormalMatrixUniform = glGetUniformLocation(interface_shader, "NormalMatrix");
+    if (NormalMatrixUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'NormalMatrix' uniform."<<std::endl;
     }
-    lightPosUniform = glGetUniformLocation(shaderProgram, "lightPos");
-    if (lightPosUniform > 10000) {
+    lightPosUniform = glGetUniformLocation(interface_shader, "lightPos");
+    if (lightPosUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
     }
-    positionAttribute = glGetAttribLocation(shaderProgram, "position");
-    if (positionAttribute > 10000) {
+    positionAttribute = glGetAttribLocation(interface_shader, "position");
+    if (positionAttribute == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
     }
-    normalAttribute = glGetAttribLocation(shaderProgram, "normal");
-    if (normalAttribute > 10000) {
+    normalAttribute = glGetAttribLocation(interface_shader, "normal");
+    if (normalAttribute == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'normal' attribute." << std::endl;
     }
 }
@@ -172,7 +172,7 @@ void Painter::draw()
     glClearColor(BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2],BACKGROUND_COLOR[3]);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    glUseProgram(shaderProgram);
+    glUseProgram(interface_shader);
     
     if(vertexdata.size() != 0)
     {
