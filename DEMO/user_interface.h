@@ -150,11 +150,6 @@ public:
     }
     
     /**
-     Draws the simplicial complex.
-     */
-    virtual void draw();
-    
-    /**
      Starts the motion.
      */
     virtual void start();

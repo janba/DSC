@@ -147,7 +147,11 @@ void UI::display()
     if (glutGet(GLUT_WINDOW_WIDTH) != WIN_SIZE_X || glutGet(GLUT_WINDOW_HEIGHT) != WIN_SIZE_Y) {
         return;
     }
-    draw();
+    painter->draw();
+    if(vel_fun && RECORD && CONTINUOUS)
+    {
+        painter->save_painting(WIN_SIZE_X, WIN_SIZE_Y, basic_log->get_path(), vel_fun->get_time_step());
+    }
     update_title();
     check_gl_error();
 }
@@ -286,7 +290,6 @@ void UI::keyboard(unsigned char key, int x, int y) {
             }
             break;
     }
-    draw();
 }
 
 void UI::visible(int v)
@@ -297,20 +300,10 @@ void UI::visible(int v)
         glutIdleFunc(0);
 }
 
-void UI::draw()
-{
-    painter->draw();
-    if(vel_fun && RECORD && CONTINUOUS)
-    {
-        painter->save_painting(WIN_SIZE_X, WIN_SIZE_Y, basic_log->get_path(), vel_fun->get_time_step());
-    }
-}
-
 void UI::stop()
 {
     if(vel_fun)
     {
-        draw();
         basic_log->write_message("MOTION STOPPED");
         basic_log->write_log(dsc);
         basic_log->write_log(vel_fun);
@@ -334,7 +327,7 @@ void UI::start()
     
     update_title();
 	glutReshapeWindow(WIN_SIZE_X, WIN_SIZE_Y);
-    
+    glutPostRedisplay();
 }
 
 void UI::rotate_cube()
