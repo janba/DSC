@@ -71,7 +71,7 @@ UI::UI(int &argc, char** argv)
 	}
     check_gl_error(); // Catches a GL_INVALID_ENUM error. See http://www.opengl.org/wiki/OpenGL_Loading_Library
     
-    painter = new Painter(WIN_SIZE_X, WIN_SIZE_Y, r);
+    painter = new Painter(WIN_SIZE_X, WIN_SIZE_Y);
     vel_fun = nullptr;
     dsc = nullptr;
     

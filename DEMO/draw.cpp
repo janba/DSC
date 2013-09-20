@@ -115,25 +115,46 @@ GLuint InitShader(const char* vShaderFile, const char* fShaderFile, const char* 
     return program;
 }
 
-void Painter::load_shader()
+void Painter::init_interface()
 {
+    // Generate arrays and buffers for visualising the interface
+    glGenVertexArrays(1, &interface_array);
+    glBindVertexArray(interface_array);
+    
+    glGenBuffers(1, &interface_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, interface_buffer);
+    check_gl_error();
+    
+    // Load the interface shader
     interface_shader = InitShader("shaders/interface.vert",  "shaders/interface.frag", "fragColour");
-    MVMatrixUniform = glGetUniformLocation(interface_shader, "MVMatrix");
+    
+    // Send uniforms to the shader
+    GLuint MVMatrixUniform = glGetUniformLocation(interface_shader, "MVMatrix");
     if (MVMatrixUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
     }
-    MVPMatrixUniform = glGetUniformLocation(interface_shader, "MVPMatrix");
+    glUniformMatrix4fv(MVMatrixUniform, 1, GL_TRUE, &modelViewMatrix[0][0]);
+    
+    GLuint MVPMatrixUniform = glGetUniformLocation(interface_shader, "MVPMatrix");
     if (MVPMatrixUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
     }
-    NormalMatrixUniform = glGetUniformLocation(interface_shader, "NormalMatrix");
+    glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
+    
+    GLuint NormalMatrixUniform = glGetUniformLocation(interface_shader, "NormalMatrix");
     if (NormalMatrixUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'NormalMatrix' uniform."<<std::endl;
     }
-    lightPosUniform = glGetUniformLocation(interface_shader, "lightPos");
+    glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, &normalMatrix[0][0]);
+    
+    GLuint lightPosUniform = glGetUniformLocation(interface_shader, "lightPos");
     if (lightPosUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
     }
+    glUniform3fv(lightPosUniform, 1, &light_pos[0]);
+    check_gl_error();
+    
+    // Initialize shader attributes
     interface_position_att = glGetAttribLocation(interface_shader, "position");
     if (interface_position_att == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
@@ -142,6 +163,11 @@ void Painter::load_shader()
     if (interface_normal_att == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'normal' attribute." << std::endl;
     }
+    
+    glEnableVertexAttribArray(interface_position_att);
+    glEnableVertexAttribArray(interface_normal_att);
+    check_gl_error();
+}
 }
 
 void Painter::save_painting(int width, int height, std::string folder, int time_step)
@@ -172,10 +198,15 @@ void Painter::draw()
     glClearColor(BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2],BACKGROUND_COLOR[3]);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    glUseProgram(interface_shader);
-    
     if(interface_data.size() != 0)
     {
+        glUseProgram(interface_shader);
+        glBindBuffer(GL_ARRAY_BUFFER, interface_buffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*interface_data.size(), &interface_data[0], GL_STATIC_DRAW);
+        
+        glVertexAttribPointer(interface_position_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0);
+        glVertexAttribPointer(interface_normal_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3));
+        
         glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(interface_data.size())/2);
     }
     
@@ -201,14 +232,5 @@ void Painter::update_interface(DSC::DeformableSimplicialComplex<>& complex)
             }
         }
     }
-    
-    // Send interface data to shader
-    glBindBuffer(GL_ARRAY_BUFFER, interface_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*interface_data.size(), &interface_data[0], GL_STATIC_DRAW);
-    
-    glEnableVertexAttribArray(positionAttribute);
-    glEnableVertexAttribArray(normalAttribute);
-    glVertexAttribPointer(interface_position_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0);
-    glVertexAttribPointer(interface_normal_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3));
 }
 

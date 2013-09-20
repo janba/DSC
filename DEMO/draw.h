@@ -74,51 +74,34 @@ inline void _check_gl_error(const char *file, int line)
 class Painter {
     
     const static unsigned int NULL_LOCATION = -1;
+    constexpr const static double r = 150.;
     
+    // Interface variables:
     GLuint interface_shader;
     GLuint interface_array, interface_buffer;
     std::vector<DSC::vec3> interface_data;
-    
     GLuint interface_position_att, interface_normal_att;
     
-    GLuint MVMatrixUniform, MVPMatrixUniform, NormalMatrixUniform, lightPosUniform;
+    // Uniform variables
+    CGLA::Mat4x4f modelViewProjectionMatrix, modelViewMatrix, normalMatrix;
+    CGLA::Vec3f light_pos;
     
 public:
     
-    Painter(int WIN_SIZE_X, int WIN_SIZE_Y, double r)
+    Painter(int WIN_SIZE_X, int WIN_SIZE_Y)
     {
-        load_shader();
-        
-        // Generate arrays and buffers
-        glGenVertexArrays(1, &interface_array);
-        glBindVertexArray(interface_array);
-        
-        glGenBuffers(1, &interface_buffer);
-        glBindBuffer(GL_ARRAY_BUFFER, interface_buffer);
-        
-        glEnableVertexAttribArray(interface_position_att);
-        glEnableVertexAttribArray(interface_normal_att);
-        
-        // Set up model view projection matrix
+        // Initialize uniforms
         CGLA::Mat4x4f projection = CGLA::perspective_Mat4x4f(53.f, WIN_SIZE_X/float(WIN_SIZE_Y), 0.01*r, 3.*r); // Projection matrix
         CGLA::Mat4x4f view = CGLA::lookAt_Mat4x4f(CGLA::Vec3f(0.3*r, 0.3*r, r), CGLA::Vec3f(0.), CGLA::Vec3f(0., 1., 0.)); // View matrix
         CGLA::Mat4x4f model = CGLA::rotation_Mat4x4f(CGLA::YAXIS, M_PI);
         
-        // Send model view projection matrix
-        CGLA::Mat4x4f modelViewProjection = projection * view * model;
-        glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjection[0][0]);
+        modelViewProjectionMatrix = projection * view * model;
+        modelViewMatrix = view * model;
+        normalMatrix = CGLA::invert_ortho(view * model);
         
-        // Send model view matrix
-        CGLA::Mat4x4f modelView = view * model;
-        glUniformMatrix4fv(MVMatrixUniform, 1, GL_TRUE, &modelView[0][0]);
+        light_pos = CGLA::Vec3f(0., 0.5*r, r);
         
-        // Send normal matrix
-        CGLA::Mat4x4f normalMatrix = CGLA::invert_ortho(view * model);
-        glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, &normalMatrix[0][0]);
-        
-        // Send light position
-        CGLA::Vec3f light_pos(0., 0.5*r, r);
-        glUniform3fv(lightPosUniform, 1, &light_pos[0]);
+        init_interface();
         
         // Enable states
         glEnable(GL_DEPTH_TEST);
@@ -134,10 +117,14 @@ public:
     }
     
 private:
+    
     /**
-     Loads the shaders.
+     Initialize drawing of the interface.
      */
-    void load_shader();
+    void init_interface();
+    
+    /**
+     */
         
     /**
      Draws the bad tetrahedra.

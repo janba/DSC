@@ -26,9 +26,7 @@
  */
 class UI
 {
-protected:    
-    float r = 150.;
-    
+protected:
     DSC::VelocityFunc<> *vel_fun;
     DSC::DeformableSimplicialComplex<> *dsc;
     
