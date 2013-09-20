@@ -23,12 +23,19 @@
 #include <fstream>
 #include <string>
 
+#ifdef WIN32
+#include <direct.h>
+#else
+#include <sys/stat.h>
+#include <sys/types.h>
+#endif
+
 namespace DSC {
     
     /**
      A class for logging information.
      */
-    
+    template <typename DeformableSimplicialComplex = DeformableSimplicialComplex<>, typename VelocityFunc = VelocityFunc<>>
     class Log {
         
         std::string path;
@@ -39,7 +46,23 @@ namespace DSC {
         /**
          Creates a log at the path given as input.
          */
-        Log(std::string path);
+        Log(std::string path_)
+        {
+            std::string temp;
+            int error;
+            int i = 0;
+            do {
+                temp = Util::concat4digits(path_ + "_test",i);
+#ifdef WIN32
+                error = _mkdir(temp.c_str());
+#else
+                error = mkdir(temp.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+#endif
+                i++;
+            } while (error != 0 && i < 1000);
+            path = temp;
+            log.open(path + "/log.txt");
+        }
         
         ~Log()
         {
@@ -58,36 +81,79 @@ namespace DSC {
         /**
          Write a variable with name and value to the log.
          */
-        void write_variable(const char* name, real value);
+        void write_variable(const char* name, real value)
+        {
+            log << "\t" << name << "\t:\t" << value << std::endl;
+        }
         
         /**
          Write a variable with name, value and change in value to the log.
          */
-        void write_variable(const char* name, real value, real change);
+        void write_variable(const char* name, real value, real change)
+        {
+            log << "\t" << name << "\t:\t" << value << "\t\tChange\t:\t" << change << std::endl;
+        }
         
         /**
          Write a variable with name, value and unit of the value to the log.
          */
-        void write_variable(const char* name, real value, const char* unit);
+        void write_variable(const char* name, real value, const char* unit)
+        {
+            log << "\t" << name << "\t:\t" << value << " " << unit << std::endl;
+        }
         
         /**
          Write a variable with name and values to the log.
          */
-        void write_variable(const char* name, const std::vector<real>& values);
+        void write_variable(const char* name, const std::vector<real>& values)
+        {
+            if(values.size() > 0)
+            {
+                log << "\t" << name << " = [";
+                for (auto val = values.begin(); val != values.end(); val++)
+                {
+                    log << *val;
+                    if(val + 1 != values.end())
+                    {
+                        log << ",\t";
+                    }
+                }
+                log << "];" << std::endl << std::endl;
+            }
+        }
         
-        void write_variable(const char* name, const std::vector<int>& values);
-        
+        void write_variable(const char* name, const std::vector<int>& values)
+        {
+            if(values.size() > 0)
+            {
+                log << "\t" << name << " = [";
+                for (auto val = values.begin(); val != values.end(); val++)
+                {
+                    log << *val;
+                    if(val + 1 != values.end())
+                    {
+                        log << ",\t";
+                    }
+                }
+                log << "];" << std::endl << std::endl;
+            }
+        }
+
     public:
         
         /**
          Write a message to the terminal and the log.
          */
-        virtual void write_message(const char* message);
+        virtual void write_message(const char* message)
+        {
+            log << std::endl  << "*** " << message << " ***" << std::endl;
+            std::cout << "*** " << message << " ***" << std::endl;
+        }
         
         /**
          Write the time step number, timings and additional time step information to the log.
          */
-        void write_timestep(const VelocityFunc *vel_fun, DeformableSimplicialComplex<> *complex)
+        void write_timestep(const VelocityFunc *vel_fun, DeformableSimplicialComplex *complex)
         {
             //    std::cout << "\n\n*** Time step #" << vel_fun->get_time_step() << " ***" << std::endl;
             log << std::endl << "*** Time step #" << vel_fun->get_time_step() << " ***" << std::endl;
@@ -108,7 +174,7 @@ namespace DSC {
         /**
          Writes simplicial complex information to the log.
          */
-        void write_log(DeformableSimplicialComplex<> *complex)
+        void write_log(DeformableSimplicialComplex *complex)
         {
             write_message("SIMPLICIAL COMPLEX INFO");
             //        write_variable("Size X\t", complex->get_size_x());
