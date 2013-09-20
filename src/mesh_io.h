@@ -27,7 +27,8 @@ namespace DSC {
     /**
      * Exports the mesh as a .dsc file.
      */
-    inline void export_tet_mesh(DeformableSimplicialComplex<>& dsc, const std::string & filename)
+    template <typename DeformableSimplicialComplex>
+    inline void export_tet_mesh(DeformableSimplicialComplex& dsc, const std::string & filename)
     {
         std::vector<vec3> points;
         std::vector< std::vector<int> > tets;
@@ -99,7 +100,8 @@ namespace DSC {
         file.close();
     }
     
-    inline void save_interface(DeformableSimplicialComplex<>& dsc, std::string & filename)
+    template <typename DeformableSimplicialComplex>
+    inline void save_interface(DeformableSimplicialComplex& dsc, std::string & filename)
     {
         std::vector<vec3> verts;
         std::vector<int> indices;
