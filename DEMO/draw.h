@@ -76,11 +76,8 @@ class Painter {
     const static unsigned int NULL_LOCATION = -1;
     
     GLuint interface_shader;
-    
-    GLuint VertexArrayID;
-    GLuint vertexbuffer;
-    
-    std::vector<DSC::vec3> vertexdata;
+    GLuint interface_array, interface_buffer;
+    std::vector<DSC::vec3> interface_data;
     
     GLuint positionAttribute, normalAttribute;
     
@@ -93,11 +90,11 @@ public:
         load_shader();
         
         // Generate arrays and buffers
-        glGenVertexArrays(1, &VertexArrayID);
-        glBindVertexArray(VertexArrayID);
+        glGenVertexArrays(1, &interface_array);
+        glBindVertexArray(interface_array);
         
-        glGenBuffers(1, &vertexbuffer);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+        glGenBuffers(1, &interface_buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, interface_buffer);
         
         glEnableVertexAttribArray(positionAttribute);
         glEnableVertexAttribArray(normalAttribute);

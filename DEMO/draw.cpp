@@ -174,9 +174,9 @@ void Painter::draw()
     
     glUseProgram(interface_shader);
     
-    if(vertexdata.size() != 0)
+    if(interface_data.size() != 0)
     {
-        glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertexdata.size())/2);
+        glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(interface_data.size())/2);
     }
     
     glutSwapBuffers();
@@ -186,7 +186,7 @@ void Painter::draw()
 void Painter::update_interface(DSC::DeformableSimplicialComplex<>& complex)
 {
     // Extract interface data
-    vertexdata.clear();
+    interface_data.clear();
     for (auto fit = complex.faces_begin(); fit != complex.faces_end(); fit++)
     {
         if (fit->is_interface())
@@ -196,15 +196,15 @@ void Painter::update_interface(DSC::DeformableSimplicialComplex<>& complex)
             
             for(auto &n : nodes)
             {
-                vertexdata.push_back(complex.get_pos(n));
-                vertexdata.push_back(normal);
+                interface_data.push_back(complex.get_pos(n));
+                interface_data.push_back(normal);
             }
         }
     }
     
     // Send interface data to shader
-    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*vertexdata.size(), &vertexdata[0], GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, interface_buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*interface_data.size(), &interface_data[0], GL_STATIC_DRAW);
     
     glEnableVertexAttribArray(positionAttribute);
     glEnableVertexAttribArray(normalAttribute);
