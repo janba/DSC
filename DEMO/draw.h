@@ -79,7 +79,7 @@ class Painter {
     GLuint interface_array, interface_buffer;
     std::vector<DSC::vec3> interface_data;
     
-    GLuint positionAttribute, normalAttribute;
+    GLuint interface_position_att, interface_normal_att;
     
     GLuint MVMatrixUniform, MVPMatrixUniform, NormalMatrixUniform, lightPosUniform;
     
@@ -96,8 +96,8 @@ public:
         glGenBuffers(1, &interface_buffer);
         glBindBuffer(GL_ARRAY_BUFFER, interface_buffer);
         
-        glEnableVertexAttribArray(positionAttribute);
-        glEnableVertexAttribArray(normalAttribute);
+        glEnableVertexAttribArray(interface_position_att);
+        glEnableVertexAttribArray(interface_normal_att);
         
         // Set up model view projection matrix
         CGLA::Mat4x4f projection = CGLA::perspective_Mat4x4f(53.f, WIN_SIZE_X/float(WIN_SIZE_Y), 0.01*r, 3.*r); // Projection matrix

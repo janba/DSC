@@ -134,12 +134,12 @@ void Painter::load_shader()
     if (lightPosUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
     }
-    positionAttribute = glGetAttribLocation(interface_shader, "position");
-    if (positionAttribute == NULL_LOCATION) {
+    interface_position_att = glGetAttribLocation(interface_shader, "position");
+    if (interface_position_att == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
     }
-    normalAttribute = glGetAttribLocation(interface_shader, "normal");
-    if (normalAttribute == NULL_LOCATION) {
+    interface_normal_att = glGetAttribLocation(interface_shader, "normal");
+    if (interface_normal_att == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'normal' attribute." << std::endl;
     }
 }
@@ -208,7 +208,7 @@ void Painter::update_interface(DSC::DeformableSimplicialComplex<>& complex)
     
     glEnableVertexAttribArray(positionAttribute);
     glEnableVertexAttribArray(normalAttribute);
-    glVertexAttribPointer(positionAttribute, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0);
-    glVertexAttribPointer(normalAttribute, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3));
+    glVertexAttribPointer(interface_position_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0);
+    glVertexAttribPointer(interface_normal_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3));
 }
 
