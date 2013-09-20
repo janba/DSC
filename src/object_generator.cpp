@@ -18,9 +18,5 @@
 
 namespace DSC {
     
-    void ObjectGenerator::fit_mesh_to_object(DeformableSimplicialComplex<>& dsc)
-    {
-        
-    }
     
 }

@@ -24,7 +24,11 @@ namespace DSC {
     class ObjectGenerator {
         
         // TODO:
-        static void fit_mesh_to_object(DeformableSimplicialComplex<>& dsc);
+        template <typename DeformableSimplicialComplex>
+        static void fit_mesh_to_object(DeformableSimplicialComplex& dsc)
+        {
+            
+        }
         
                 
     public:
@@ -32,7 +36,8 @@ namespace DSC {
          * Label all tetrahedra according to tet_labels and perform an initial update
          * of flags and attributes of all simplices.
          */
-        static void create(DeformableSimplicialComplex<>& dsc, const std::vector<int>& tet_labels)
+        template <typename DeformableSimplicialComplex>
+        static void create(DeformableSimplicialComplex& dsc, const std::vector<int>& tet_labels)
         {
             for (auto tit = dsc.tetrahedra_begin(); tit != dsc.tetrahedra_end(); tit++)
             {
@@ -40,7 +45,8 @@ namespace DSC {
             }
         }
         
-        static void create_sphere(DeformableSimplicialComplex<>& dsc, const vec3& center, const real& radius, int label)
+        template <typename DeformableSimplicialComplex>
+        static void create_sphere(DeformableSimplicialComplex& dsc, const vec3& center, const real& radius, int label)
         {
             for (auto tit = dsc.tetrahedra_begin(); tit != dsc.tetrahedra_end(); tit++)
             {
@@ -61,7 +67,8 @@ namespace DSC {
             }
         }
         
-        static void create_cube(DeformableSimplicialComplex<>& dsc, const vec3& origin, const vec3& size, int label)
+        template <typename DeformableSimplicialComplex>
+        static void create_cube(DeformableSimplicialComplex& dsc, const vec3& origin, const vec3& size, int label)
         {
             vec3 max_pos = origin + size;
             for (auto tit = dsc.tetrahedra_begin(); tit != dsc.tetrahedra_end(); tit++)
