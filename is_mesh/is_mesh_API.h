@@ -38,7 +38,7 @@ public:
     ISMesh(std::vector<real> & points, std::vector<int> & tets): NULL_NODE(-1), NULL_EDGE(-1), NULL_FACE(-1), NULL_TETRAHEDRON(-1)
     {
         vectors_read(points, tets, mesh);
-        
+        init();
         check_validity();
     }
     
@@ -142,9 +142,29 @@ public:
     }
     
 private:
+    /**
+     * Perform an initial update of flags for all nodes, edges and faces.
+     */
+    void init()
+    {        
+        for (auto fit = faces_begin(); fit != faces_end(); fit++)
+        {
+            update_flag(fit.key());
+        }
+        
+        for (auto eit = edges_begin(); eit != edges_end(); eit++)
+        {
+            update_flag(eit.key());
+        }
+        
+        for (auto nit = nodes_begin(); nit != nodes_end(); nit++)
+        {
+            update_flag(nit.key());
+        }
+    }
     
     /**
-     * Updates the flags (is interface, is boundary, is locked) of simplices in set.
+     * Updates the flags (is interface, is boundary, is crossing) of simplices in set.
      */
     void update(simplex_set & set)
     {

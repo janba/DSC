@@ -158,10 +158,10 @@ namespace DSC {
     
     class TetAttributes
     {
-        unsigned int l;
+        unsigned int l = 0;
         
     public:
-        TetAttributes() : l(0) {}
+        TetAttributes() {}
         
         int label()
         {
