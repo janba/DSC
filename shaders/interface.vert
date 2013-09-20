@@ -4,6 +4,7 @@ uniform mat4 MVMatrix;
 uniform mat4 MVPMatrix;
 uniform mat4 NormalMatrix;
 uniform vec3 lightPos;
+uniform vec3 eyePos;
 
 in vec3 position;
 in vec3 normal;
@@ -22,7 +23,7 @@ void main()
     vec4 p = MVMatrix * vec4(position.xyz, 1.);
     vec3 N = normalize(mat3(NormalMatrix) * normal);
     vec3 L = normalize(lightPos - p.xyz);
-    vec3 E = normalize(-p.xyz);
+    vec3 E = normalize(eyePos - p.xyz);
     vec3 R = normalize(reflect(-L,N));
     
     // Calculate colour

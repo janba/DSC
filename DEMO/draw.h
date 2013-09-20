@@ -73,8 +73,8 @@ inline void _check_gl_error(const char *file, int line)
  */
 class Painter {
     
+    constexpr static float dist = 120.;
     const static unsigned int NULL_LOCATION = -1;
-    constexpr const static double r = 150.;
     
     // Interface variables:
     GLuint interface_shader;
@@ -90,23 +90,22 @@ class Painter {
     
     // Uniform variables
     CGLA::Mat4x4f modelViewProjectionMatrix, modelViewMatrix, normalMatrix;
-    CGLA::Vec3f light_pos;
+    CGLA::Vec3f light_pos = CGLA::Vec3f(0.f, 0.5*dist, dist);
+    CGLA::Vec3f eye_pos = CGLA::Vec3f(0.3*dist, 0.3*dist, dist);
     
 public:
     
     Painter(int WIN_SIZE_X, int WIN_SIZE_Y)
     {
         // Initialize uniforms
-        CGLA::Mat4x4f projection = CGLA::perspective_Mat4x4f(53.f, WIN_SIZE_X/float(WIN_SIZE_Y), 0.01*r, 3.*r); // Projection matrix
-        CGLA::Mat4x4f view = CGLA::lookAt_Mat4x4f(CGLA::Vec3f(0.3*r, 0.3*r, r), CGLA::Vec3f(0.), CGLA::Vec3f(0., 1., 0.)); // View matrix
+        CGLA::Mat4x4f projection = CGLA::perspective_Mat4x4f(53.f, WIN_SIZE_X/float(WIN_SIZE_Y), 0.01*dist, 3.*dist); // Projection matrix
+        CGLA::Mat4x4f view = CGLA::lookAt_Mat4x4f(eye_pos, CGLA::Vec3f(0.), CGLA::Vec3f(0., 1., 0.)); // View matrix
         CGLA::Mat4x4f model = CGLA::rotation_Mat4x4f(CGLA::YAXIS, M_PI);
         
         modelViewProjectionMatrix = projection * view * model;
         modelViewMatrix = view * model;
         normalMatrix = CGLA::invert_ortho(view * model);
-        
-        light_pos = CGLA::Vec3f(0., 0.5*r, r);
-        
+                
         init_interface();
         init_boundary();
         

@@ -154,6 +154,12 @@ void Painter::init_interface()
     glUniform3fv(lightPosUniform, 1, &light_pos[0]);
     check_gl_error();
     
+    GLuint eyePosUniform = glGetUniformLocation(interface_shader, "eyePos");
+    if (eyePosUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'eyePos' uniform."<<std::endl;
+    }
+    glUniform3fv(eyePosUniform, 1, &eye_pos[0]);
+    
     // Initialize shader attributes
     interface_position_att = glGetAttribLocation(interface_shader, "position");
     if (interface_position_att == NULL_LOCATION) {
