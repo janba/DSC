@@ -18,7 +18,6 @@
 
 #include "is_mesh_API.h"
 #include "util.h"
-#include "printing.h"
 #include "attributes.h"
 #include "design_domain.h"
 
@@ -1432,17 +1431,17 @@ namespace DSC {
         {
             simplex_set region;
             
-            print_out("Smooth.");
+            std::cout << "Smooth." << std::endl;
             smooth();
 //            validity_check();
             
-            print_out("Topological removals.");
+            std::cout << "Topological removals." << std::endl;
             topological_edge_removal();
 //            validity_check();
             topological_face_removal();
 //            validity_check();
             
-            //        print_out("Low quality removal.");
+            //        std::cout << "Low quality removal." << std::endl;
             //        remove_tets();
             //        validity_check();
             //        remove_faces();
@@ -1450,7 +1449,7 @@ namespace DSC {
             //        remove_edges();
             //        validity_check();
             
-            print_out("Degeneracy removal.");
+            std::cout << "Degeneracy removal." << std::endl;
             remove_degenerate_tets();
 //            validity_check();
             remove_degenerate_faces();
@@ -1461,19 +1460,19 @@ namespace DSC {
         
         void resize_complex()
         {
-            print_out("Thickening interface pass.");
+            std::cout << "Thickening interface pass." << std::endl;
             thickening_interface();
 //            validity_check();
             
-            //        print_out("Thinning interface pass.");
+            //        std::cout << "Thinning interface pass." << std::endl;
             //        thinning_interface();
             //        validity_check();
             
-            //        print_out("Thickening pass.");
+            //        std::cout << "Thickening pass." << std::endl;
             //        thickening();
             //        validity_check();
             
-            print_out("Thinning pass.");
+            std::cout << "Thinning pass." << std::endl;
             thinning();
 //            validity_check();
             
