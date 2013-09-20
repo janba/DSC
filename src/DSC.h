@@ -1673,7 +1673,7 @@ namespace DSC {
             vec3 p_new = p;
             if(is_interface(f))
             {
-                p_new = Util::barycenter(get_destination(nodes[0]), get_destination(nodes[1]), get_destination(nodes[2]));
+                p_new = Util::barycenter(get_dest(nodes[0]), get_dest(nodes[1]), get_dest(nodes[2]));
             }
             
             node_key n = Complex::split(f);
