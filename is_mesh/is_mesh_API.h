@@ -358,6 +358,7 @@ public:
     
     std::vector<node_key> get_nodes(const face_key& f)
     {
+        orient_face(f);
         std::vector<node_key> nodes(3);
         mesh.vertices(f, nodes);
         return nodes;
@@ -586,12 +587,18 @@ public:
     /**
      * Ensures consistent orientation of all faces to the two tetrahedra which are in the star of f.
      */
-    void orient_face(const face_key& f)
+    void orient_face(const face_key& fid)
     {
-        if (get(f).is_interface())
+        if (is_boundary(fid))
         {
             simplex_set st_f;
-            star(f, st_f);
+            star(fid, st_f);
+            mesh.orient_faces_consistently(*st_f.tetrahedra_begin());
+        }
+        else if (is_interface(fid))
+        {
+            simplex_set st_f;
+            star(fid, st_f);
             int label = -100;
             for (auto tit = st_f.tetrahedra_begin(); tit != st_f.tetrahedra_end(); tit++)
             {

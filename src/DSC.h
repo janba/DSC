@@ -274,7 +274,6 @@ namespace DSC {
         std::vector<vec3> get_pos(const face_key & f)
         {
             std::vector<vec3> verts(3);
-            Complex::orient_face(f);
             auto nodes = Complex::get_nodes(f);
             for (int k = 0; k < 3; ++k)
             {
@@ -1863,12 +1862,12 @@ namespace DSC {
         //////////////////////
     public:
         /**
-         Returns the normal to interface face f.
+         Returns the normal to interface face fid.
          */
-        vec3 get_normal(const face_key & f)
+        vec3 get_normal(const face_key& fid)
         {
-            auto verts = get_pos(f);
-            return Util::normal_direction(verts[0], verts[1], verts[2]);
+            auto pos = get_pos(fid);
+            return Util::normal_direction(pos[0], pos[1], pos[2]);
         }
         
         /**
