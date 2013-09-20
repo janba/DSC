@@ -43,8 +43,9 @@ namespace DSC {
             {
                 dsc.set_label(tit.key(), tet_labels[tit.key()]);
             }
+            dsc.garbage_collect();
         }
-        
+
         template <typename DeformableSimplicialComplex>
         static void create_sphere(DeformableSimplicialComplex& dsc, const vec3& center, const real& radius, int label)
         {
@@ -65,6 +66,7 @@ namespace DSC {
                     dsc.set_label(tit.key(), label);
                 }
             }
+            dsc.garbage_collect();
         }
         
         template <typename DeformableSimplicialComplex>
@@ -91,6 +93,7 @@ namespace DSC {
                     dsc.set_label(tit.key(), label);
                 }
             }
+            dsc.garbage_collect();
         }
     };
     
