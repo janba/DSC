@@ -89,7 +89,6 @@ class Painter {
     GLuint boundary_position_att, boundary_normal_att;
     
     // Design domain variables:
-    GLuint domain_shader;
     GLuint domain_array, domain_buffer;
     std::vector<DSC::vec3> domain_data;
     GLuint domain_position_att, domain_normal_att;

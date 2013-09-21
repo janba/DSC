@@ -227,8 +227,6 @@
 		7A9F2A9117E7548900259577 /* object_generator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = object_generator.h; path = src/object_generator.h; sourceTree = SOURCE_ROOT; };
 		7ACA21D717DE37C5005E9309 /* stb_image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image.c; sourceTree = "<group>"; };
 		7ACA21D817DE37C5005E9309 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
-		7AE0A83217ECC8D200343AA9 /* domain.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = domain.frag; sourceTree = "<group>"; };
-		7AE0A83317ECC8D200343AA9 /* domain.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = domain.vert; sourceTree = "<group>"; };
 		7AE27AD617675AE8000F8238 /* libDSC.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDSC.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AE27ADF17675B04000F8238 /* log.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = log.cpp; path = src/log.cpp; sourceTree = SOURCE_ROOT; };
 		7AE27AE017675B04000F8238 /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = log.h; path = src/log.h; sourceTree = SOURCE_ROOT; };
@@ -310,8 +308,6 @@
 		7A38E82917E3B35A0075DC24 /* shaders */ = {
 			isa = PBXGroup;
 			children = (
-				7AE0A83217ECC8D200343AA9 /* domain.frag */,
-				7AE0A83317ECC8D200343AA9 /* domain.vert */,
 				7A38E82A17E3B35A0075DC24 /* gouraud.frag */,
 				7A38E82B17E3B35A0075DC24 /* gouraud.vert */,
 			);

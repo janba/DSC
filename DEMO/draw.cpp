@@ -205,7 +205,6 @@ void Painter::init_boundary()
 
 void Painter::init_tetrahedra()
 {
-    
     // Generate arrays and buffers for visualising the boundary
     glGenVertexArrays(1, &tetrahedra_array);
     glBindVertexArray(tetrahedra_array);
@@ -237,40 +236,12 @@ void Painter::init_domain()
     glGenBuffers(1, &domain_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, domain_buffer);
     
-    // Load the boundary shader
-    domain_shader = InitShader("shaders/domain.vert",  "shaders/domain.frag", "fragColour");
-    
-    // Send uniforms to the shader
-    GLuint MVMatrixUniform = glGetUniformLocation(domain_shader, "MVMatrix");
-    if (MVMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(MVMatrixUniform, 1, GL_TRUE, &modelViewMatrix[0][0]);
-    
-    GLuint MVPMatrixUniform = glGetUniformLocation(domain_shader, "MVPMatrix");
-    if (MVPMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
-    
-    GLuint NormalMatrixUniform = glGetUniformLocation(domain_shader, "NormalMatrix");
-    if (NormalMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'NormalMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, &normalMatrix[0][0]);
-    
-    GLuint lightPosUniform = glGetUniformLocation(domain_shader, "lightPos");
-    if (lightPosUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
-    }
-    glUniform3fv(lightPosUniform, 1, &light_pos[0]);
-    
     // Initialize shader attributes
-    domain_position_att = glGetAttribLocation(domain_shader, "position");
+    domain_position_att = glGetAttribLocation(gouraud_shader, "position");
     if (boundary_position_att == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
     }
-    domain_normal_att = glGetAttribLocation(domain_shader, "normal");
+    domain_normal_att = glGetAttribLocation(gouraud_shader, "normal");
     if (domain_normal_att == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'normal' attribute." << std::endl;
     }
@@ -349,7 +320,6 @@ void Painter::draw()
     
     if(domain_data.size() != 0)
     {
-        glUseProgram(domain_shader);
         glBindBuffer(GL_ARRAY_BUFFER, domain_buffer);
         
         glVertexAttribPointer(domain_position_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0);
