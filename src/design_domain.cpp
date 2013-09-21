@@ -43,4 +43,16 @@ namespace DSC {
         return true;
     }
     
+    
+    
+    bool DesignDomain::is_inside(const std::vector<vec3>& verts) const
+    {
+        for (auto &p : verts) {
+            if (!is_inside(p)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
 }

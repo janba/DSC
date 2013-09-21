@@ -69,6 +69,12 @@ namespace DSC {
          Returns whether the position p is inside the domain.
          */
         bool is_inside(const vec3& p) const;
+        
+        
+        /**
+         Returns whether the positions in verts are inside the domain.
+         */
+        bool is_inside(const std::vector<vec3>& verts) const;
     };
     
 }
