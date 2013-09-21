@@ -122,6 +122,7 @@ public:
         
         interface = std::unique_ptr<GLObject>(new GLObject(shader));
         boundary = std::unique_ptr<GLObject>(new GLObject(shader));
+        domain = std::unique_ptr<GLObject>(new GLObject(shader));
         tetrahedra = std::unique_ptr<GLObject>(new GLObject(shader));
         
         // Enable states

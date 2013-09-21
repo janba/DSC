@@ -253,12 +253,15 @@ void Painter::draw()
     interface->draw();
     
     glDisable(GL_CULL_FACE);
-    interface->use_material({0.3, 0.1, 0.1, 0.1}, {0.6, 0.4, 0.4, 0.2}, {0., 0., 0., 0.});
+    tetrahedra->use_material({0.3, 0.1, 0.1, 0.1}, {0.6, 0.4, 0.4, 0.2}, {0., 0., 0., 0.});
     tetrahedra->draw();
     glEnable(GL_CULL_FACE);
     
     glCullFace(GL_FRONT);
-    interface->use_material({0.3, 0.3, 0.3, 1.}, {0.3, 0.3, 0.3, 1.});
+    domain->use_material({0.3, 0.3, 0.3, 0.3}, {0.3, 0.3, 0.3, 0.3});
+    domain->draw();
+    
+    boundary->use_material({0.3, 0.3, 0.3, 1.}, {0.3, 0.3, 0.3, 1.});
     boundary->draw();
     
     glutSwapBuffers();
