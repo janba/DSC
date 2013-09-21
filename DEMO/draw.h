@@ -72,31 +72,32 @@ inline void _check_gl_error(const char *file, int line)
  A painter handles all draw functionality using OpenGL.
  */
 class Painter {
-    
-    constexpr static float dist = 120.;
     const static unsigned int NULL_LOCATION = -1;
     
-    GLuint gouraud_shader;
+    class GLObject {
+        
+        GLuint shader;
+        
+        std::vector<DSC::vec3> data;
+        
+        GLuint array_id, buffer_id;
+        GLuint position_att, normal_att;
+        
+    public:
+        
+        GLObject(GLuint _shader);
+        
+        void use_material(const CGLA::Vec4f& ambient_mat = {0.f, 0.f, 0.f, 1.f}, const CGLA::Vec4f& diffuse_mat = {0.f, 0.f, 0.f, 1.f}, const CGLA::Vec4f& specular_mat = {0.f, 0.f, 0.f, 1.f});
+        
+        void add_data(std::vector<DSC::vec3> _data);
+        
+        void draw();
+        
+    };
     
-    // Interface variables:
-    GLuint interface_array, interface_buffer;
-    std::vector<DSC::vec3> interface_data;
-    GLuint interface_position_att, interface_normal_att;
+    constexpr static float dist = 120.;
     
-    // Boundary variables:
-    GLuint boundary_array, boundary_buffer;
-    std::vector<DSC::vec3> boundary_data;
-    GLuint boundary_position_att, boundary_normal_att;
-    
-    // Design domain variables:
-    GLuint domain_array, domain_buffer;
-    std::vector<DSC::vec3> domain_data;
-    GLuint domain_position_att, domain_normal_att;
-    
-    // Tetrahedra variables:
-    GLuint tetrahedra_array, tetrahedra_buffer;
-    std::vector<DSC::vec3> tetrahedra_data;
-    GLuint tetrahedra_position_att, tetrahedra_normal_att;
+    std::unique_ptr<GLObject> interface, boundary, domain, tetrahedra;
     
     // Uniform variables
     CGLA::Mat4x4f modelViewProjectionMatrix, modelViewMatrix, normalMatrix;
@@ -116,11 +117,12 @@ public:
         modelViewMatrix = view * model;
         normalMatrix = CGLA::invert_ortho(view * model);
         
-        init_gouraud_shader();
+        // Initialize shader
+        GLuint shader = init_gouraud_shader();
         
-        init_interface();
-        init_boundary();
-        init_tetrahedra();
+        interface = std::unique_ptr<GLObject>(new GLObject(shader));
+        boundary = std::unique_ptr<GLObject>(new GLObject(shader));
+        tetrahedra = std::unique_ptr<GLObject>(new GLObject(shader));
         
         // Enable states
         glEnable(GL_DEPTH_TEST);
@@ -136,75 +138,7 @@ public:
     
 private:
     
-    void init_gouraud_shader();
-    
-    /**
-     Initialize drawing of the interface.
-     */
-    void init_interface();
-    
-    /**
-     Initialize drawing of the boundary.
-     */
-    void init_boundary();
-
-    /**
-     Initialize drawing of the design domain.
-     */
-    void init_domain();
-    
-    void init_tetrahedra();
-    
-    
-    void use_solid_material()
-    {
-        CGLA::Vec4f ambientMat(0.1, 0.3, 0.1, 1.);
-        CGLA::Vec4f diffuseMat(0.5, 0.5, 0.5, 1.);
-        CGLA::Vec4f specMat(0.2, 0.2, 0.2, 1.);
-        
-        GLuint uniform = glGetUniformLocation(gouraud_shader, "ambientMat");
-        if (uniform == NULL_LOCATION) {
-            std::cerr << "Shader did not contain the 'ambientMat' uniform."<<std::endl;
-        }
-        glUniform4fv(uniform, 1, &ambientMat[0]);
-        
-        uniform = glGetUniformLocation(gouraud_shader, "diffuseMat");
-        if (uniform == NULL_LOCATION) {
-            std::cerr << "Shader did not contain the 'diffuseMat' uniform."<<std::endl;
-        }
-        glUniform4fv(uniform, 1, &diffuseMat[0]);
-        
-        uniform = glGetUniformLocation(gouraud_shader, "specMat");
-        if (uniform == NULL_LOCATION) {
-            std::cerr << "Shader did not contain the 'specMat' uniform."<<std::endl;
-        }
-        glUniform4fv(uniform, 1, &specMat[0]);
-    }
-    
-    void use_transparent_material()
-    {
-        CGLA::Vec4f ambientMat(0.4, 0.2, 0.2, 0.1);
-        CGLA::Vec4f diffuseMat(0.5, 0.4, 0.4, 0.2);
-        CGLA::Vec4f specMat(0.0, 0.0, 0.0, 0.);
-        
-        GLuint uniform = glGetUniformLocation(gouraud_shader, "ambientMat");
-        if (uniform == NULL_LOCATION) {
-            std::cerr << "Shader did not contain the 'ambientMat' uniform."<<std::endl;
-        }
-        glUniform4fv(uniform, 1, &ambientMat[0]);
-        
-        uniform = glGetUniformLocation(gouraud_shader, "diffuseMat");
-        if (uniform == NULL_LOCATION) {
-            std::cerr << "Shader did not contain the 'diffuseMat' uniform."<<std::endl;
-        }
-        glUniform4fv(uniform, 1, &diffuseMat[0]);
-        
-        uniform = glGetUniformLocation(gouraud_shader, "specMat");
-        if (uniform == NULL_LOCATION) {
-            std::cerr << "Shader did not contain the 'specMat' uniform."<<std::endl;
-        }
-        glUniform4fv(uniform, 1, &specMat[0]);
-    }
+    GLuint init_gouraud_shader();
     
 public:
     /**
@@ -218,12 +152,18 @@ public:
     void update_interface(DSC::DeformableSimplicialComplex<>& dsc);
     
     /**
-     Updates the drawn design domain.
+     Updates the drawn boundary.
      */
     void update_boundary(DSC::DeformableSimplicialComplex<>& dsc);
     
+    /**
+     Updates the drawn design domain.
+     */
     void update_design_domain(DSC::DeformableSimplicialComplex<>& dsc);
     
+    /**
+     Updates the drawn tetrahedra.
+     */
     void update_tetrahedra(DSC::DeformableSimplicialComplex<>& dsc);
     
     /**

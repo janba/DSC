@@ -16,6 +16,71 @@
 //
 #include "draw.h"
 
+Painter::GLObject::GLObject(GLuint _shader) : shader(_shader)
+{
+    // Generate arrays and buffers for visualising the interface
+    glGenVertexArrays(1, &array_id);
+    glBindVertexArray(array_id);
+    
+    glGenBuffers(1, &buffer_id);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
+    
+    // Initialize shader attributes
+    position_att = glGetAttribLocation(shader, "position");
+    if (position_att == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
+    }
+    normal_att = glGetAttribLocation(shader, "normal");
+    if (normal_att == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'normal' attribute." << std::endl;
+    }
+    
+    glEnableVertexAttribArray(position_att);
+    glEnableVertexAttribArray(normal_att);
+    check_gl_error();
+}
+
+void Painter::GLObject::use_material(const CGLA::Vec4f& ambient_mat, const CGLA::Vec4f& diffuse_mat, const CGLA::Vec4f& specular_mat)
+{
+    GLuint uniform = glGetUniformLocation(shader, "ambientMat");
+    if (uniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'ambientMat' uniform."<<std::endl;
+    }
+    glUniform4fv(uniform, 1, &ambient_mat[0]);
+    
+    uniform = glGetUniformLocation(shader, "diffuseMat");
+    if (uniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'diffuseMat' uniform."<<std::endl;
+    }
+    glUniform4fv(uniform, 1, &diffuse_mat[0]);
+    
+    uniform = glGetUniformLocation(shader, "specMat");
+    if (uniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'specMat' uniform."<<std::endl;
+    }
+    glUniform4fv(uniform, 1, &specular_mat[0]);
+}
+
+void Painter::GLObject::add_data(std::vector<DSC::vec3> _data)
+{
+    data = std::vector<DSC::vec3>(_data);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*data.size(), &data[0], GL_STATIC_DRAW);
+}
+
+void Painter::GLObject::draw()
+{
+    if(data.size() != 0)
+    {
+        glUseProgram(shader);
+        glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
+        
+        glVertexAttribPointer(position_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0);
+        glVertexAttribPointer(normal_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3));
+        
+        glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(data.size())/2);
+    }
+}
 
 // Create a NULL-terminated string by reading the provided file
 char* readShaderSource(const char* shaderFile)
@@ -115,10 +180,10 @@ GLuint InitShader(const char* vShaderFile, const char* fShaderFile, const char* 
     return program;
 }
 
-void Painter::init_gouraud_shader()
+GLuint Painter::init_gouraud_shader()
 {
     // Load the interface shader
-    gouraud_shader = InitShader("shaders/gouraud.vert",  "shaders/gouraud.frag", "fragColour");
+    GLuint gouraud_shader = InitShader("shaders/gouraud.vert",  "shaders/gouraud.frag", "fragColour");
     
     // Send uniforms to the shader
     GLuint MVMatrixUniform = glGetUniformLocation(gouraud_shader, "MVMatrix");
@@ -152,103 +217,7 @@ void Painter::init_gouraud_shader()
     }
     glUniform3fv(eyePosUniform, 1, &eye_pos[0]);
     
-}
-
-void Painter::init_interface()
-{
-    // Generate arrays and buffers for visualising the interface
-    glGenVertexArrays(1, &interface_array);
-    glBindVertexArray(interface_array);
-    
-    glGenBuffers(1, &interface_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, interface_buffer);
-    check_gl_error();
-    
-    // Initialize shader attributes
-    interface_position_att = glGetAttribLocation(gouraud_shader, "position");
-    if (interface_position_att == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
-    }
-    interface_normal_att = glGetAttribLocation(gouraud_shader, "normal");
-    if (interface_normal_att == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'normal' attribute." << std::endl;
-    }
-    
-    glEnableVertexAttribArray(interface_position_att);
-    glEnableVertexAttribArray(interface_normal_att);
-    check_gl_error();
-}
-
-void Painter::init_boundary()
-{
-    // Generate arrays and buffers for visualising the boundary
-    glGenVertexArrays(1, &boundary_array);
-    glBindVertexArray(boundary_array);
-    
-    glGenBuffers(1, &boundary_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, boundary_buffer);
-    
-    // Initialize shader attributes
-    boundary_position_att = glGetAttribLocation(gouraud_shader, "position");
-    if (boundary_position_att == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
-    }
-    boundary_normal_att = glGetAttribLocation(gouraud_shader, "normal");
-    if (boundary_normal_att == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'normal' attribute." << std::endl;
-    }
-    
-    glEnableVertexAttribArray(boundary_position_att);
-    glEnableVertexAttribArray(boundary_normal_att);
-    check_gl_error();
-}
-
-void Painter::init_tetrahedra()
-{
-    // Generate arrays and buffers for visualising the boundary
-    glGenVertexArrays(1, &tetrahedra_array);
-    glBindVertexArray(tetrahedra_array);
-    
-    glGenBuffers(1, &tetrahedra_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, tetrahedra_buffer);
-    
-    // Initialize shader attributes
-    tetrahedra_position_att = glGetAttribLocation(gouraud_shader, "position");
-    if (tetrahedra_position_att == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
-    }
-    tetrahedra_normal_att = glGetAttribLocation(gouraud_shader, "normal");
-    if (tetrahedra_normal_att == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'normal' attribute." << std::endl;
-    }
-    
-    glEnableVertexAttribArray(tetrahedra_position_att);
-    glEnableVertexAttribArray(tetrahedra_normal_att);
-    check_gl_error();
-}
-
-void Painter::init_domain()
-{
-    // Generate arrays and buffers for visualising the boundary
-    glGenVertexArrays(1, &domain_array);
-    glBindVertexArray(domain_array);
-    
-    glGenBuffers(1, &domain_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, domain_buffer);
-    
-    // Initialize shader attributes
-    domain_position_att = glGetAttribLocation(gouraud_shader, "position");
-    if (boundary_position_att == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
-    }
-    domain_normal_att = glGetAttribLocation(gouraud_shader, "normal");
-    if (domain_normal_att == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'normal' attribute." << std::endl;
-    }
-    
-    glEnableVertexAttribArray(domain_position_att);
-    glEnableVertexAttribArray(domain_normal_att);
-    check_gl_error();
+    return gouraud_shader;
 }
 
 void Painter::save_painting(int width, int height, std::string folder, int time_step)
@@ -279,54 +248,18 @@ void Painter::draw()
     glClearColor(BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2],BACKGROUND_COLOR[3]);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    glUseProgram(gouraud_shader);
-    use_solid_material();
-    
     glCullFace(GL_BACK);
-    if(interface_data.size() != 0)
-    {
-        glBindBuffer(GL_ARRAY_BUFFER, interface_buffer);
-        
-        glVertexAttribPointer(interface_position_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0);
-        glVertexAttribPointer(interface_normal_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3));
-        
-        glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(interface_data.size())/2);
-    }
+    interface->use_material({0.1, 0.3, 0.1, 1.}, {0.5, 0.5, 0.5, 1.}, {0.3, 0.3, 0.3, 1.});
+    interface->draw();
     
-    if(tetrahedra_data.size() != 0)
-    {
-        use_transparent_material();
-        glDisable(GL_CULL_FACE);
-        glBindBuffer(GL_ARRAY_BUFFER, tetrahedra_buffer);
-        
-        glVertexAttribPointer(tetrahedra_position_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0);
-        glVertexAttribPointer(tetrahedra_normal_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3));
-        
-        glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(tetrahedra_data.size())/2);
-        glEnable(GL_CULL_FACE);
-        use_solid_material();
-    }
+    glDisable(GL_CULL_FACE);
+    interface->use_material({0.3, 0.1, 0.1, 0.1}, {0.6, 0.4, 0.4, 0.2}, {0., 0., 0., 0.});
+    tetrahedra->draw();
+    glEnable(GL_CULL_FACE);
     
     glCullFace(GL_FRONT);
-    if(boundary_data.size() != 0)
-    {
-        glBindBuffer(GL_ARRAY_BUFFER, boundary_buffer);
-        
-        glVertexAttribPointer(boundary_position_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0);
-        glVertexAttribPointer(boundary_normal_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3));
-        
-        glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(boundary_data.size())/2);
-    }
-    
-    if(domain_data.size() != 0)
-    {
-        glBindBuffer(GL_ARRAY_BUFFER, domain_buffer);
-        
-        glVertexAttribPointer(domain_position_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0);
-        glVertexAttribPointer(domain_normal_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3));
-        
-        glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(domain_data.size())/2);
-    }
+    interface->use_material({0.3, 0.3, 0.3, 1.}, {0.3, 0.3, 0.3, 1.});
+    boundary->draw();
     
     glutSwapBuffers();
     check_gl_error();
@@ -334,7 +267,7 @@ void Painter::draw()
 
 void Painter::update_interface(DSC::DeformableSimplicialComplex<>& dsc)
 {
-    interface_data.clear();
+    std::vector<DSC::vec3> data;
     for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
     {
         if (fit->is_interface())
@@ -344,18 +277,17 @@ void Painter::update_interface(DSC::DeformableSimplicialComplex<>& dsc)
             
             for(auto &n : nodes)
             {
-                interface_data.push_back(dsc.get_pos(n));
-                interface_data.push_back(normal);
+                data.push_back(dsc.get_pos(n));
+                data.push_back(normal);
             }
         }
     }
-    glBindBuffer(GL_ARRAY_BUFFER, interface_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*interface_data.size(), &interface_data[0], GL_STATIC_DRAW);
+    interface->add_data(data);
 }
 
 void Painter::update_boundary(DSC::DeformableSimplicialComplex<>& dsc)
 {
-    boundary_data.clear();
+    std::vector<DSC::vec3> data;
     for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
     {
         if (fit->is_boundary())
@@ -365,28 +297,26 @@ void Painter::update_boundary(DSC::DeformableSimplicialComplex<>& dsc)
             
             for(auto &n : nodes)
             {
-                boundary_data.push_back(dsc.get_pos(n));
-                boundary_data.push_back(normal);
+                data.push_back(dsc.get_pos(n));
+                data.push_back(normal);
             }
         }
     }
-    glBindBuffer(GL_ARRAY_BUFFER, boundary_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*boundary_data.size(), &boundary_data[0], GL_STATIC_DRAW);
+    boundary->add_data(data);
 }
 
 
 void Painter::update_design_domain(DSC::DeformableSimplicialComplex<>& dsc)
 {
-    domain_data.clear();
-    const DSC::DesignDomain *domain = dsc.get_design_domain();
+    std::vector<DSC::vec3> data;
+    const DSC::DesignDomain *d = dsc.get_design_domain();
     
-    glBindBuffer(GL_ARRAY_BUFFER, domain_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*domain_data.size(), &domain_data[0], GL_STATIC_DRAW);
+    domain->add_data(data);
 }
 
 void Painter::update_tetrahedra(DSC::DeformableSimplicialComplex<>& dsc)
 {
-    tetrahedra_data.clear();
+    std::vector<DSC::vec3> data;
     for (auto tit = dsc.tetrahedra_begin(); tit != dsc.tetrahedra_end(); tit++)
     {
         bool low_quality = dsc.quality(tit.key()) < dsc.get_min_tet_quality();
@@ -404,13 +334,12 @@ void Painter::update_tetrahedra(DSC::DeformableSimplicialComplex<>& dsc)
                 
                 for(auto &n : nodes)
                 {
-                    tetrahedra_data.push_back(dsc.get_pos(n));
-                    tetrahedra_data.push_back(normal);
+                    data.push_back(dsc.get_pos(n));
+                    data.push_back(normal);
                 }
             }
         }
     }
-    glBindBuffer(GL_ARRAY_BUFFER, tetrahedra_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*tetrahedra_data.size(), &tetrahedra_data[0], GL_STATIC_DRAW);
+    tetrahedra->add_data(data);
 }
 
