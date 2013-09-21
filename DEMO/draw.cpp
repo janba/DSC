@@ -115,6 +115,45 @@ GLuint InitShader(const char* vShaderFile, const char* fShaderFile, const char* 
     return program;
 }
 
+void Painter::init_gouraud_shader()
+{
+    // Load the interface shader
+    gouraud_shader = InitShader("shaders/gouraud.vert",  "shaders/gouraud.frag", "fragColour");
+    
+    // Send uniforms to the shader
+    GLuint MVMatrixUniform = glGetUniformLocation(gouraud_shader, "MVMatrix");
+    if (MVMatrixUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
+    }
+    glUniformMatrix4fv(MVMatrixUniform, 1, GL_TRUE, &modelViewMatrix[0][0]);
+    
+    GLuint MVPMatrixUniform = glGetUniformLocation(gouraud_shader, "MVPMatrix");
+    if (MVPMatrixUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
+    }
+    glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
+    
+    GLuint NormalMatrixUniform = glGetUniformLocation(gouraud_shader, "NormalMatrix");
+    if (NormalMatrixUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'NormalMatrix' uniform."<<std::endl;
+    }
+    glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, &normalMatrix[0][0]);
+    
+    GLuint lightPosUniform = glGetUniformLocation(gouraud_shader, "lightPos");
+    if (lightPosUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
+    }
+    glUniform3fv(lightPosUniform, 1, &light_pos[0]);
+    check_gl_error();
+    
+    GLuint eyePosUniform = glGetUniformLocation(gouraud_shader, "eyePos");
+    if (eyePosUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'eyePos' uniform."<<std::endl;
+    }
+    glUniform3fv(eyePosUniform, 1, &eye_pos[0]);
+    
+}
+
 void Painter::init_interface()
 {
     // Generate arrays and buffers for visualising the interface
@@ -125,47 +164,12 @@ void Painter::init_interface()
     glBindBuffer(GL_ARRAY_BUFFER, interface_buffer);
     check_gl_error();
     
-    // Load the interface shader
-    interface_shader = InitShader("shaders/interface.vert",  "shaders/interface.frag", "fragColour");
-    
-    // Send uniforms to the shader
-    GLuint MVMatrixUniform = glGetUniformLocation(interface_shader, "MVMatrix");
-    if (MVMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(MVMatrixUniform, 1, GL_TRUE, &modelViewMatrix[0][0]);
-    
-    GLuint MVPMatrixUniform = glGetUniformLocation(interface_shader, "MVPMatrix");
-    if (MVPMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
-    
-    GLuint NormalMatrixUniform = glGetUniformLocation(interface_shader, "NormalMatrix");
-    if (NormalMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'NormalMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, &normalMatrix[0][0]);
-    
-    GLuint lightPosUniform = glGetUniformLocation(interface_shader, "lightPos");
-    if (lightPosUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
-    }
-    glUniform3fv(lightPosUniform, 1, &light_pos[0]);
-    check_gl_error();
-    
-    GLuint eyePosUniform = glGetUniformLocation(interface_shader, "eyePos");
-    if (eyePosUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'eyePos' uniform."<<std::endl;
-    }
-    glUniform3fv(eyePosUniform, 1, &eye_pos[0]);
-    
     // Initialize shader attributes
-    interface_position_att = glGetAttribLocation(interface_shader, "position");
+    interface_position_att = glGetAttribLocation(gouraud_shader, "position");
     if (interface_position_att == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
     }
-    interface_normal_att = glGetAttribLocation(interface_shader, "normal");
+    interface_normal_att = glGetAttribLocation(gouraud_shader, "normal");
     if (interface_normal_att == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'normal' attribute." << std::endl;
     }
@@ -184,46 +188,70 @@ void Painter::init_boundary()
     glGenBuffers(1, &boundary_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, boundary_buffer);
     
-    // Load the boundary shader
-    boundary_shader = InitShader("shaders/boundary.vert",  "shaders/boundary.frag", "fragColour");
-    
-    // Send uniforms to the shader
-    GLuint MVMatrixUniform = glGetUniformLocation(boundary_shader, "MVMatrix");
-    if (MVMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(MVMatrixUniform, 1, GL_TRUE, &modelViewMatrix[0][0]);
-    
-    GLuint MVPMatrixUniform = glGetUniformLocation(boundary_shader, "MVPMatrix");
-    if (MVPMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
-    
-    GLuint NormalMatrixUniform = glGetUniformLocation(boundary_shader, "NormalMatrix");
-    if (NormalMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'NormalMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, &normalMatrix[0][0]);
-    
-    GLuint lightPosUniform = glGetUniformLocation(boundary_shader, "lightPos");
-    if (lightPosUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
-    }
-    glUniform3fv(lightPosUniform, 1, &light_pos[0]);
-    
     // Initialize shader attributes
-    boundary_position_att = glGetAttribLocation(boundary_shader, "position");
+    boundary_position_att = glGetAttribLocation(gouraud_shader, "position");
     if (boundary_position_att == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
     }
-    boundary_normal_att = glGetAttribLocation(boundary_shader, "normal");
+    boundary_normal_att = glGetAttribLocation(gouraud_shader, "normal");
     if (boundary_normal_att == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'normal' attribute." << std::endl;
     }
     
     glEnableVertexAttribArray(boundary_position_att);
     glEnableVertexAttribArray(boundary_normal_att);
+    check_gl_error();
+}
+
+void Painter::init_domain()
+{
+    // Generate arrays and buffers for visualising the boundary
+    glGenVertexArrays(1, &domain_array);
+    glBindVertexArray(domain_array);
+    
+    glGenBuffers(1, &domain_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, domain_buffer);
+    
+    // Load the boundary shader
+    domain_shader = InitShader("shaders/domain.vert",  "shaders/domain.frag", "fragColour");
+    
+    // Send uniforms to the shader
+    GLuint MVMatrixUniform = glGetUniformLocation(domain_shader, "MVMatrix");
+    if (MVMatrixUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
+    }
+    glUniformMatrix4fv(MVMatrixUniform, 1, GL_TRUE, &modelViewMatrix[0][0]);
+    
+    GLuint MVPMatrixUniform = glGetUniformLocation(domain_shader, "MVPMatrix");
+    if (MVPMatrixUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
+    }
+    glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
+    
+    GLuint NormalMatrixUniform = glGetUniformLocation(domain_shader, "NormalMatrix");
+    if (NormalMatrixUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'NormalMatrix' uniform."<<std::endl;
+    }
+    glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, &normalMatrix[0][0]);
+    
+    GLuint lightPosUniform = glGetUniformLocation(domain_shader, "lightPos");
+    if (lightPosUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
+    }
+    glUniform3fv(lightPosUniform, 1, &light_pos[0]);
+    
+    // Initialize shader attributes
+    domain_position_att = glGetAttribLocation(domain_shader, "position");
+    if (boundary_position_att == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
+    }
+    domain_normal_att = glGetAttribLocation(domain_shader, "normal");
+    if (domain_normal_att == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'normal' attribute." << std::endl;
+    }
+    
+    glEnableVertexAttribArray(domain_position_att);
+    glEnableVertexAttribArray(domain_normal_att);
     check_gl_error();
 }
 
@@ -255,10 +283,11 @@ void Painter::draw()
     glClearColor(BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2],BACKGROUND_COLOR[3]);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
+    glUseProgram(gouraud_shader);
+    
     glCullFace(GL_BACK);
     if(interface_data.size() != 0)
     {
-        glUseProgram(interface_shader);
         glBindBuffer(GL_ARRAY_BUFFER, interface_buffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*interface_data.size(), &interface_data[0], GL_STATIC_DRAW);
         
@@ -271,7 +300,6 @@ void Painter::draw()
     glCullFace(GL_FRONT);
     if(boundary_data.size() != 0)
     {
-        glUseProgram(boundary_shader);
         glBindBuffer(GL_ARRAY_BUFFER, boundary_buffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*boundary_data.size(), &boundary_data[0], GL_STATIC_DRAW);
         
@@ -281,44 +309,54 @@ void Painter::draw()
         glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(boundary_data.size())/2);
     }
     
+    if(domain_data.size() != 0)
+    {
+        glUseProgram(domain_shader);
+        glBindBuffer(GL_ARRAY_BUFFER, domain_buffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*domain_data.size(), &domain_data[0], GL_STATIC_DRAW);
+        
+        glVertexAttribPointer(domain_position_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0);
+        glVertexAttribPointer(domain_normal_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3));
+        
+        glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(domain_data.size())/2);
+    }
+    
     glutSwapBuffers();
     check_gl_error();
 }
 
-void Painter::update_interface(DSC::DeformableSimplicialComplex<>& complex)
+void Painter::update_interface(DSC::DeformableSimplicialComplex<>& dsc)
 {
-    // Extract interface data
     interface_data.clear();
-    for (auto fit = complex.faces_begin(); fit != complex.faces_end(); fit++)
+    for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
     {
         if (fit->is_interface())
         {
-            auto nodes = complex.get_nodes(fit.key());
-            DSC::vec3 normal = complex.get_normal(fit.key());
+            auto nodes = dsc.get_nodes(fit.key());
+            DSC::vec3 normal = dsc.get_normal(fit.key());
             
             for(auto &n : nodes)
             {
-                interface_data.push_back(complex.get_pos(n));
+                interface_data.push_back(dsc.get_pos(n));
                 interface_data.push_back(normal);
             }
         }
     }
 }
 
-void Painter::update_boundary(DSC::DeformableSimplicialComplex<>& complex)
+void Painter::update_boundary(DSC::DeformableSimplicialComplex<>& dsc)
 {
-    // Extract interface data
     boundary_data.clear();
-    for (auto fit = complex.faces_begin(); fit != complex.faces_end(); fit++)
+    for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
     {
         if (fit->is_boundary())
         {
-            auto nodes = complex.get_nodes(fit.key());
-            DSC::vec3 normal = complex.get_normal(fit.key());
+            auto nodes = dsc.get_nodes(fit.key());
+            DSC::vec3 normal = dsc.get_normal(fit.key());
             
             for(auto &n : nodes)
             {
-                boundary_data.push_back(complex.get_pos(n));
+                boundary_data.push_back(dsc.get_pos(n));
                 boundary_data.push_back(normal);
             }
         }
@@ -326,3 +364,9 @@ void Painter::update_boundary(DSC::DeformableSimplicialComplex<>& complex)
 }
 
 
+void Painter::update_design_domain(DSC::DeformableSimplicialComplex<>& dsc)
+{
+    domain_data.clear();
+    const DSC::DesignDomain *domain = dsc.get_design_domain();
+    
+}

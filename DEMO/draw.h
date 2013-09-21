@@ -76,17 +76,23 @@ class Painter {
     constexpr static float dist = 120.;
     const static unsigned int NULL_LOCATION = -1;
     
+    GLuint gouraud_shader;
+    
     // Interface variables:
-    GLuint interface_shader;
     GLuint interface_array, interface_buffer;
     std::vector<DSC::vec3> interface_data;
     GLuint interface_position_att, interface_normal_att;
     
     // Boundary variables:
-    GLuint boundary_shader;
     GLuint boundary_array, boundary_buffer;
     std::vector<DSC::vec3> boundary_data;
     GLuint boundary_position_att, boundary_normal_att;
+    
+    // Design domain variables:
+    GLuint domain_shader;
+    GLuint domain_array, domain_buffer;
+    std::vector<DSC::vec3> domain_data;
+    GLuint domain_position_att, domain_normal_att;
     
     // Uniform variables
     CGLA::Mat4x4f modelViewProjectionMatrix, modelViewMatrix, normalMatrix;
@@ -105,7 +111,9 @@ public:
         modelViewProjectionMatrix = projection * view * model;
         modelViewMatrix = view * model;
         normalMatrix = CGLA::invert_ortho(view * model);
-                
+        
+        init_gouraud_shader();
+        
         init_interface();
         init_boundary();
         
@@ -123,6 +131,8 @@ public:
     
 private:
     
+    void init_gouraud_shader();
+    
     /**
      Initialize drawing of the interface.
      */
@@ -132,7 +142,12 @@ private:
      Initialize drawing of the boundary.
      */
     void init_boundary();
-        
+
+    /**
+     Initialize drawing of the design domain.
+     */
+    void init_domain();
+    
     /**
      Draws the bad tetrahedra.
      */
@@ -245,12 +260,14 @@ public:
     /**
      Updates the drawn interface.
      */
-    void update_interface(DSC::DeformableSimplicialComplex<>& complex);
+    void update_interface(DSC::DeformableSimplicialComplex<>& dsc);
     
     /**
      Updates the drawn design domain.
      */
-    void update_boundary(DSC::DeformableSimplicialComplex<>& complex);
+    void update_boundary(DSC::DeformableSimplicialComplex<>& dsc);
+    
+    void update_design_domain(DSC::DeformableSimplicialComplex<>& dsc);
     
     /**
      Saves the current painting to the selected folder.
