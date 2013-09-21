@@ -1471,8 +1471,8 @@ namespace DSC {
             //        thickening();
             //        validity_check();
             
-            std::cout << "Thinning pass." << std::endl;
-            thinning();
+//            std::cout << "Thinning pass." << std::endl;
+//            thinning();
 //            validity_check();
             
             fix_complex();
