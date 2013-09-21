@@ -309,6 +309,7 @@ void Painter::draw()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     glUseProgram(gouraud_shader);
+    use_solid_material();
     
     glCullFace(GL_BACK);
     if(interface_data.size() != 0)

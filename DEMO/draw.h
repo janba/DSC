@@ -156,6 +156,57 @@ private:
     
     void init_tetrahedra();
     
+    
+    void use_solid_material()
+    {
+        CGLA::Vec4f ambientMat(0.1, 0.3, 0.1, 1.);
+        CGLA::Vec4f diffuseMat(0.5, 0.5, 0.5, 1.);
+        CGLA::Vec4f specMat(0.2, 0.2, 0.2, 1.);
+        
+        GLuint uniform = glGetUniformLocation(gouraud_shader, "ambientMat");
+        if (uniform == NULL_LOCATION) {
+            std::cerr << "Shader did not contain the 'ambientMat' uniform."<<std::endl;
+        }
+        glUniform4fv(uniform, 1, &ambientMat[0]);
+        
+        uniform = glGetUniformLocation(gouraud_shader, "diffuseMat");
+        if (uniform == NULL_LOCATION) {
+            std::cerr << "Shader did not contain the 'diffuseMat' uniform."<<std::endl;
+        }
+        glUniform4fv(uniform, 1, &diffuseMat[0]);
+        
+        uniform = glGetUniformLocation(gouraud_shader, "specMat");
+        if (uniform == NULL_LOCATION) {
+            std::cerr << "Shader did not contain the 'specMat' uniform."<<std::endl;
+        }
+        glUniform4fv(uniform, 1, &specMat[0]);
+    }
+    
+    void use_transparent_material()
+    {
+        CGLA::Vec4f ambientMat(0.4, 0.2, 0.2, 0.1);
+        CGLA::Vec4f diffuseMat(0.5, 0.4, 0.4, 0.2);
+        CGLA::Vec4f specMat(0.0, 0.0, 0.0, 0.);
+        
+        GLuint uniform = glGetUniformLocation(gouraud_shader, "ambientMat");
+        if (uniform == NULL_LOCATION) {
+            std::cerr << "Shader did not contain the 'ambientMat' uniform."<<std::endl;
+        }
+        glUniform4fv(uniform, 1, &ambientMat[0]);
+        
+        uniform = glGetUniformLocation(gouraud_shader, "diffuseMat");
+        if (uniform == NULL_LOCATION) {
+            std::cerr << "Shader did not contain the 'diffuseMat' uniform."<<std::endl;
+        }
+        glUniform4fv(uniform, 1, &diffuseMat[0]);
+        
+        uniform = glGetUniformLocation(gouraud_shader, "specMat");
+        if (uniform == NULL_LOCATION) {
+            std::cerr << "Shader did not contain the 'specMat' uniform."<<std::endl;
+        }
+        glUniform4fv(uniform, 1, &specMat[0]);
+    }
+    
     /**
      Draws the bad tetrahedra.
      */
