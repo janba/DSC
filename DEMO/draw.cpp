@@ -16,7 +16,7 @@
 //
 #include "draw.h"
 
-Painter::GLObject::GLObject(GLuint _shader) : shader(_shader)
+Painter::GLObject::GLObject(GLuint _shader, const CGLA::Vec4f& ambient_mat_, const CGLA::Vec4f& diffuse_mat_, const CGLA::Vec4f& specular_mat_) : shader(_shader), ambient_mat(ambient_mat_), diffuse_mat(diffuse_mat_), specular_mat(specular_mat_)
 {
     // Generate arrays and buffers for visualising the interface
     glGenVertexArrays(1, &array_id);
@@ -40,27 +40,6 @@ Painter::GLObject::GLObject(GLuint _shader) : shader(_shader)
     check_gl_error();
 }
 
-void Painter::GLObject::use_material(const CGLA::Vec4f& ambient_mat, const CGLA::Vec4f& diffuse_mat, const CGLA::Vec4f& specular_mat)
-{
-    GLuint uniform = glGetUniformLocation(shader, "ambientMat");
-    if (uniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'ambientMat' uniform."<<std::endl;
-    }
-    glUniform4fv(uniform, 1, &ambient_mat[0]);
-    
-    uniform = glGetUniformLocation(shader, "diffuseMat");
-    if (uniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'diffuseMat' uniform."<<std::endl;
-    }
-    glUniform4fv(uniform, 1, &diffuse_mat[0]);
-    
-    uniform = glGetUniformLocation(shader, "specMat");
-    if (uniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'specMat' uniform."<<std::endl;
-    }
-    glUniform4fv(uniform, 1, &specular_mat[0]);
-}
-
 void Painter::GLObject::add_data(std::vector<DSC::vec3> _data)
 {
     data = std::vector<DSC::vec3>(_data);
@@ -72,6 +51,24 @@ void Painter::GLObject::draw()
 {
     if(data.size() != 0)
     {
+        GLuint uniform = glGetUniformLocation(shader, "ambientMat");
+        if (uniform == NULL_LOCATION) {
+            std::cerr << "Shader did not contain the 'ambientMat' uniform."<<std::endl;
+        }
+        glUniform4fv(uniform, 1, &ambient_mat[0]);
+        
+        uniform = glGetUniformLocation(shader, "diffuseMat");
+        if (uniform == NULL_LOCATION) {
+            std::cerr << "Shader did not contain the 'diffuseMat' uniform."<<std::endl;
+        }
+        glUniform4fv(uniform, 1, &diffuse_mat[0]);
+        
+        uniform = glGetUniformLocation(shader, "specMat");
+        if (uniform == NULL_LOCATION) {
+            std::cerr << "Shader did not contain the 'specMat' uniform."<<std::endl;
+        }
+        glUniform4fv(uniform, 1, &specular_mat[0]);
+        
         glUseProgram(shader);
         glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
         
@@ -249,19 +246,15 @@ void Painter::draw()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     glCullFace(GL_BACK);
-    interface->use_material({0.1, 0.3, 0.1, 1.}, {0.5, 0.5, 0.5, 1.}, {0.3, 0.3, 0.3, 1.});
     interface->draw();
     
     glDisable(GL_CULL_FACE);
-    tetrahedra->use_material({0.3, 0.1, 0.1, 0.1}, {0.6, 0.4, 0.4, 0.2}, {0., 0., 0., 0.});
     tetrahedra->draw();
     glEnable(GL_CULL_FACE);
     
     glCullFace(GL_FRONT);
-    domain->use_material({0.3, 0.3, 0.3, 0.3}, {0.3, 0.3, 0.3, 0.3});
     domain->draw();
     
-    boundary->use_material({0.3, 0.3, 0.3, 1.}, {0.3, 0.3, 0.3, 1.});
     boundary->draw();
     
     glutSwapBuffers();

@@ -83,11 +83,11 @@ class Painter {
         GLuint array_id, buffer_id;
         GLuint position_att, normal_att;
         
+        CGLA::Vec4f ambient_mat, diffuse_mat, specular_mat;
+        
     public:
         
-        GLObject(GLuint _shader);
-        
-        void use_material(const CGLA::Vec4f& ambient_mat = {0.f, 0.f, 0.f, 1.f}, const CGLA::Vec4f& diffuse_mat = {0.f, 0.f, 0.f, 1.f}, const CGLA::Vec4f& specular_mat = {0.f, 0.f, 0.f, 1.f});
+        GLObject(GLuint _shader, const CGLA::Vec4f& ambient_mat = CGLA::Vec4f(1.f), const CGLA::Vec4f& diffuse_mat = CGLA::Vec4f(0.f), const CGLA::Vec4f& specular_mat = CGLA::Vec4f(0.f));
         
         void add_data(std::vector<DSC::vec3> _data);
         
@@ -120,10 +120,10 @@ public:
         // Initialize shader
         GLuint shader = init_gouraud_shader();
         
-        interface = std::unique_ptr<GLObject>(new GLObject(shader));
-        boundary = std::unique_ptr<GLObject>(new GLObject(shader));
-        domain = std::unique_ptr<GLObject>(new GLObject(shader));
-        tetrahedra = std::unique_ptr<GLObject>(new GLObject(shader));
+        interface = std::unique_ptr<GLObject>(new GLObject(shader, {0.1, 0.3, 0.1, 1.}, {0.5, 0.5, 0.5, 1.}, {0.3, 0.3, 0.3, 1.}));
+        boundary = std::unique_ptr<GLObject>(new GLObject(shader, {0.3, 0.3, 0.3, 1.}, {0.3, 0.3, 0.3, 1.}, {0.3, 0.3, 0.3, 1.}));
+        domain = std::unique_ptr<GLObject>(new GLObject(shader, {0.3, 0.3, 0.3, 0.3}, {0.3, 0.3, 0.3, 0.3}, {0.3, 0.3, 0.3, 0.3}));
+        tetrahedra = std::unique_ptr<GLObject>(new GLObject(shader, {0.3, 0.1, 0.1, 0.1}, {0.6, 0.4, 0.4, 0.2}, {0., 0., 0., 0.}));
         
         // Enable states
         glEnable(GL_DEPTH_TEST);
