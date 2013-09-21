@@ -94,6 +94,11 @@ class Painter {
     std::vector<DSC::vec3> domain_data;
     GLuint domain_position_att, domain_normal_att;
     
+    // Tetrahedra variables:
+    GLuint tetrahedra_array, tetrahedra_buffer;
+    std::vector<DSC::vec3> tetrahedra_data;
+    GLuint tetrahedra_position_att, tetrahedra_normal_att;
+    
     // Uniform variables
     CGLA::Mat4x4f modelViewProjectionMatrix, modelViewMatrix, normalMatrix;
     CGLA::Vec3f light_pos = CGLA::Vec3f(0.f, 0.5*dist, dist);
@@ -116,14 +121,15 @@ public:
         
         init_interface();
         init_boundary();
+        init_tetrahedra();
         
         // Enable states
         glEnable(GL_DEPTH_TEST);
         glDepthMask(GL_TRUE);
 
         glEnable(GL_CULL_FACE);
-
-        glEnable (GL_BLEND);
+        
+        glEnable(GL_BLEND);
         glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
         check_gl_error();
@@ -147,6 +153,8 @@ private:
      Initialize drawing of the design domain.
      */
     void init_domain();
+    
+    void init_tetrahedra();
     
     /**
      Draws the bad tetrahedra.
@@ -268,6 +276,8 @@ public:
     void update_boundary(DSC::DeformableSimplicialComplex<>& dsc);
     
     void update_design_domain(DSC::DeformableSimplicialComplex<>& dsc);
+    
+    void update_tetrahedra(DSC::DeformableSimplicialComplex<>& dsc);
     
     /**
      Saves the current painting to the selected folder.

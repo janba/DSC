@@ -203,6 +203,31 @@ void Painter::init_boundary()
     check_gl_error();
 }
 
+void Painter::init_tetrahedra()
+{
+    
+    // Generate arrays and buffers for visualising the boundary
+    glGenVertexArrays(1, &tetrahedra_array);
+    glBindVertexArray(tetrahedra_array);
+    
+    glGenBuffers(1, &tetrahedra_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, tetrahedra_buffer);
+    
+    // Initialize shader attributes
+    tetrahedra_position_att = glGetAttribLocation(gouraud_shader, "position");
+    if (tetrahedra_position_att == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
+    }
+    tetrahedra_normal_att = glGetAttribLocation(gouraud_shader, "normal");
+    if (tetrahedra_normal_att == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'normal' attribute." << std::endl;
+    }
+    
+    glEnableVertexAttribArray(tetrahedra_position_att);
+    glEnableVertexAttribArray(tetrahedra_normal_att);
+    check_gl_error();
+}
+
 void Painter::init_domain()
 {
     // Generate arrays and buffers for visualising the boundary
@@ -296,6 +321,20 @@ void Painter::draw()
         glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(interface_data.size())/2);
     }
     
+    if(tetrahedra_data.size() != 0)
+    {
+        use_transparent_material();
+        glDisable(GL_CULL_FACE);
+        glBindBuffer(GL_ARRAY_BUFFER, tetrahedra_buffer);
+        
+        glVertexAttribPointer(tetrahedra_position_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0);
+        glVertexAttribPointer(tetrahedra_normal_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3));
+        
+        glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(tetrahedra_data.size())/2);
+        glEnable(GL_CULL_FACE);
+        use_solid_material();
+    }
+    
     glCullFace(GL_FRONT);
     if(boundary_data.size() != 0)
     {
@@ -374,5 +413,33 @@ void Painter::update_design_domain(DSC::DeformableSimplicialComplex<>& dsc)
     glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*domain_data.size(), &domain_data[0], GL_STATIC_DRAW);
 }
 
-
+void Painter::update_tetrahedra(DSC::DeformableSimplicialComplex<>& dsc)
+{
+    tetrahedra_data.clear();
+    for (auto tit = dsc.tetrahedra_begin(); tit != dsc.tetrahedra_end(); tit++)
+    {
+        bool low_quality = dsc.quality(tit.key()) < dsc.get_min_tet_quality();
+        bool small_angle = dsc.min_dihedral_angle(tit.key()) < dsc.get_min_angle();
+        if(low_quality || small_angle)
+        {
+            
+            typename DSC::DeformableSimplicialComplex<>::simplex_set cl_t;
+            dsc.closure(tit.key(), cl_t);
+            
+            for (auto fit = cl_t.faces_begin(); fit != cl_t.faces_end(); fit++)
+            {
+                auto nodes = dsc.get_nodes(*fit);
+                DSC::vec3 normal = dsc.get_normal(*fit);
+                
+                for(auto &n : nodes)
+                {
+                    tetrahedra_data.push_back(dsc.get_pos(n));
+                    tetrahedra_data.push_back(normal);
+                }
+            }
+        }
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, tetrahedra_buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*tetrahedra_data.size(), &tetrahedra_data[0], GL_STATIC_DRAW);
+}
 
