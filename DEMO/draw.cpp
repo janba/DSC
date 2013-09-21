@@ -289,7 +289,6 @@ void Painter::draw()
     if(interface_data.size() != 0)
     {
         glBindBuffer(GL_ARRAY_BUFFER, interface_buffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*interface_data.size(), &interface_data[0], GL_STATIC_DRAW);
         
         glVertexAttribPointer(interface_position_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0);
         glVertexAttribPointer(interface_normal_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3));
@@ -301,7 +300,6 @@ void Painter::draw()
     if(boundary_data.size() != 0)
     {
         glBindBuffer(GL_ARRAY_BUFFER, boundary_buffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*boundary_data.size(), &boundary_data[0], GL_STATIC_DRAW);
         
         glVertexAttribPointer(boundary_position_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0);
         glVertexAttribPointer(boundary_normal_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3));
@@ -313,7 +311,6 @@ void Painter::draw()
     {
         glUseProgram(domain_shader);
         glBindBuffer(GL_ARRAY_BUFFER, domain_buffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*domain_data.size(), &domain_data[0], GL_STATIC_DRAW);
         
         glVertexAttribPointer(domain_position_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0);
         glVertexAttribPointer(domain_normal_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3));
@@ -342,6 +339,8 @@ void Painter::update_interface(DSC::DeformableSimplicialComplex<>& dsc)
             }
         }
     }
+    glBindBuffer(GL_ARRAY_BUFFER, interface_buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*interface_data.size(), &interface_data[0], GL_STATIC_DRAW);
 }
 
 void Painter::update_boundary(DSC::DeformableSimplicialComplex<>& dsc)
@@ -352,7 +351,7 @@ void Painter::update_boundary(DSC::DeformableSimplicialComplex<>& dsc)
         if (fit->is_boundary())
         {
             auto nodes = dsc.get_nodes(fit.key());
-            DSC::vec3 normal = dsc.get_normal(fit.key());
+            DSC::vec3 normal = -dsc.get_normal(fit.key());
             
             for(auto &n : nodes)
             {
@@ -361,6 +360,8 @@ void Painter::update_boundary(DSC::DeformableSimplicialComplex<>& dsc)
             }
         }
     }
+    glBindBuffer(GL_ARRAY_BUFFER, boundary_buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*boundary_data.size(), &boundary_data[0], GL_STATIC_DRAW);
 }
 
 
@@ -369,4 +370,9 @@ void Painter::update_design_domain(DSC::DeformableSimplicialComplex<>& dsc)
     domain_data.clear();
     const DSC::DesignDomain *domain = dsc.get_design_domain();
     
+    glBindBuffer(GL_ARRAY_BUFFER, domain_buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*domain_data.size(), &domain_data[0], GL_STATIC_DRAW);
 }
+
+
+
