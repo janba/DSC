@@ -311,11 +311,16 @@ void Painter::update_boundary(DSC::DeformableSimplicialComplex<>& dsc)
 
 bool is_inside(const std::vector<DSC::vec3>& verts, const std::vector<DSC::Util::Plane>& planes)
 {
-    for (auto &p : verts) {
-        for (auto &plane : planes) {
-            if (!DSC::Util::is_inside(p, plane.p, plane.n)) {
-                return false;
+    for (auto &plane : planes) {
+        bool inside = false;
+        for (auto &p : verts) {
+            if (DSC::Util::is_inside(p, plane.p, plane.n)) {
+                inside = true;
             }
+        }
+        if(!inside)
+        {
+            return false;
         }
     }
     return true;
