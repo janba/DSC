@@ -25,12 +25,7 @@ namespace DSC {
      */
     class DesignDomain
     {
-        struct Plane {
-            vec3 p;
-            vec3 n;
-        };
-        
-        std::vector<Plane> planes;
+        std::vector<Util::Plane> planes;
         
     public:
         enum DESIGN_DOMAIN_TYPE {CUBE};
@@ -70,11 +65,15 @@ namespace DSC {
          */
         bool is_inside(const vec3& p) const;
         
-        
         /**
          Returns whether the positions in verts are inside the domain.
          */
         bool is_inside(const std::vector<vec3>& verts) const;
+        
+        const std::vector<Util::Plane>& get_planes() const
+        {
+            return planes;
+        }
     };
     
 }

@@ -50,6 +50,11 @@ namespace DSC {
         using CGLA::sqr_length;
         using CGLA::normalize;
         
+        struct Plane {
+            vec3 p;
+            vec3 n;
+        };
+        
         inline real min(real x, real y)
         {
             return std::min(x, y);
