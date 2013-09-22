@@ -364,7 +364,8 @@ void UI::smooth_armadillo()
     std::vector<int>  tet_labels;
     import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
     
-    dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets);
+    DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(60.));
+    dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain);
     vel_fun = new AverageFunc(VELOCITY, ACCURACY);
     basic_log = new Log<>(create_log_path());
     
@@ -401,7 +402,8 @@ void UI::expand_armadillo()
     std::vector<int>  tet_labels;
     import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
     
-    dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets);
+    DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(60.));
+    dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain);
     vel_fun = new NormalFunc(VELOCITY, ACCURACY);
     basic_log = new Log<>(create_log_path());
     
