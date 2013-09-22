@@ -51,7 +51,7 @@ UI::UI(int &argc, char** argv)
 {
     instance = this;
 	WIN_SIZE_X = 1000;
-    WIN_SIZE_Y = 1000;
+    WIN_SIZE_Y = 700;
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_3_2_CORE_PROFILE | GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
