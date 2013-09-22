@@ -258,7 +258,6 @@ void Painter::draw()
     glCullFace(GL_FRONT);
     boundary->draw();
     
-    glutSwapBuffers();
     check_gl_error();
 }
 

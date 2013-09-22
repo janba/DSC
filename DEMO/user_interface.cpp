@@ -152,6 +152,7 @@ void UI::display()
     {
         painter->save_painting(WIN_SIZE_X, WIN_SIZE_Y, basic_log->get_path(), vel_fun->get_time_step());
     }
+    glutSwapBuffers();
     update_title();
     check_gl_error();
 }
