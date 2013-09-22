@@ -165,9 +165,7 @@ void UI::animate()
     if(vel_fun && CONTINUOUS)
     {
         vel_fun->take_time_step(*dsc);
-        painter->update_interface(*dsc);
-        painter->update_tetrahedra(*dsc);
-        painter->update_domain(*dsc);
+        painter->update(*dsc);
         if(RECORD)
         {
             painter->save_painting(basic_log->get_path(), vel_fun->get_time_step());
@@ -322,10 +320,7 @@ void UI::stop()
 
 void UI::start()
 {
-    painter->update_interface(*dsc);
-    painter->update_boundary(*dsc);
-    painter->update_tetrahedra(*dsc);
-    painter->update_domain(*dsc);
+    painter->update(*dsc);
     if(RECORD)
     {
         painter->save_painting(basic_log->get_path(), vel_fun->get_time_step());

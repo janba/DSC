@@ -261,6 +261,14 @@ void Painter::draw()
     check_gl_error();
 }
 
+void Painter::update(DSC::DeformableSimplicialComplex<>& dsc)
+{
+    update_interface(dsc);
+    update_boundary(dsc);
+    update_domain(dsc);
+    update_tetrahedra(dsc);
+}
+
 void Painter::update_interface(DSC::DeformableSimplicialComplex<>& dsc)
 {
     std::vector<DSC::vec3> data;

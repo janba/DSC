@@ -148,11 +148,17 @@ public:
      */
     void draw();
     
+    /**
+     Updates what to draw.
+     */
+    void update(DSC::DeformableSimplicialComplex<>& dsc);
     
     /**
      Saves the current painting to the selected folder.
      */
     void save_painting(std::string folder = std::string(""), int time_step = -1);
+    
+private:
     /**
      Updates the drawn interface.
      */
