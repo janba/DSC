@@ -96,6 +96,7 @@ class Painter {
     };
     
     constexpr static float dist = 90.;
+    int WIDTH, HEIGHT;
     
     std::unique_ptr<GLObject> interface, boundary, domain, tetrahedra;
     
@@ -106,7 +107,7 @@ class Painter {
     
 public:
     
-    Painter(int WIN_SIZE_X, int WIN_SIZE_Y)
+    Painter(int WIN_SIZE_X, int WIN_SIZE_Y) : WIDTH(WIN_SIZE_X), HEIGHT(WIN_SIZE_Y)
     {
         // Initialize uniforms
         CGLA::Mat4x4f projection = CGLA::perspective_Mat4x4f(53.f, WIN_SIZE_X/float(WIN_SIZE_Y), 0.01*dist, 3.*dist); // Projection matrix

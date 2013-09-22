@@ -217,8 +217,9 @@ GLuint Painter::init_gouraud_shader()
     return gouraud_shader;
 }
 
-void Painter::save_painting(int width, int height, std::string folder, int time_step)
+void Painter::save_painting(std::string folder, int time_step)
 {
+    draw();
     std::ostringstream s;
     if (folder.length() == 0) {
         s << "scr";
@@ -232,7 +233,7 @@ void Painter::save_painting(int width, int height, std::string folder, int time_
         s << std::string(DSC::Util::concat4digits("_", time_step));
     }
     s << ".png";
-    int success = SOIL_save_screenshot(s.str().c_str(), SOIL_SAVE_TYPE_PNG, 0, 0, width, height);
+    int success = SOIL_save_screenshot(s.str().c_str(), SOIL_SAVE_TYPE_PNG, 0, 0, WIDTH, HEIGHT);
     if(!success)
     {
         std::cout << "ERROR: Failed to take screen shot: " << s.str().c_str() << std::endl;
