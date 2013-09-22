@@ -148,10 +148,6 @@ void UI::display()
         return;
     }
     painter->draw();
-    if(vel_fun && RECORD && CONTINUOUS)
-    {
-        painter->save_painting(WIN_SIZE_X, WIN_SIZE_Y, basic_log->get_path(), vel_fun->get_time_step());
-    }
     glutSwapBuffers();
     update_title();
     check_gl_error();
@@ -172,6 +168,10 @@ void UI::animate()
         painter->update_interface(*dsc);
         painter->update_tetrahedra(*dsc);
         painter->update_domain(*dsc);
+        if(RECORD)
+        {
+            painter->save_painting(basic_log->get_path(), vel_fun->get_time_step());
+        }
         basic_log->write_timestep(vel_fun, dsc);
         if (vel_fun->is_motion_finished(*dsc))
         {
@@ -239,7 +239,7 @@ void UI::keyboard(unsigned char key, int x, int y) {
             if(dsc)
             {
                 std::cout << "TAKING SCREEN SHOT" << std::endl;
-                painter->save_painting(WIN_SIZE_X, WIN_SIZE_Y, "LOG");
+                painter->save_painting("LOG");
             }
             break;
         case 'e':
@@ -326,6 +326,10 @@ void UI::start()
     painter->update_boundary(*dsc);
     painter->update_tetrahedra(*dsc);
     painter->update_domain(*dsc);
+    if(RECORD)
+    {
+        painter->save_painting(basic_log->get_path(), vel_fun->get_time_step());
+    }
     
     basic_log->write_message(vel_fun->get_name().c_str());
     basic_log->write_log(dsc);

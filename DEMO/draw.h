@@ -148,6 +148,11 @@ public:
      */
     void draw();
     
+    
+    /**
+     Saves the current painting to the selected folder.
+     */
+    void save_painting(std::string folder = std::string(""), int time_step = -1);
     /**
      Updates the drawn interface.
      */
@@ -167,9 +172,4 @@ public:
      Updates the drawn tetrahedra.
      */
     void update_tetrahedra(DSC::DeformableSimplicialComplex<>& dsc);
-    
-    /**
-     Saves the current painting to the selected folder.
-     */
-    void save_painting(int width, int height, std::string folder = std::string(""), int time_step = -1);
 };
