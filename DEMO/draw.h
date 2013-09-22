@@ -100,7 +100,7 @@ class Painter {
     std::unique_ptr<GLObject> interface, boundary, domain, tetrahedra;
     
     // Uniform variables
-    CGLA::Mat4x4f modelViewProjectionMatrix, modelViewMatrix, normalMatrix;
+    CGLA::Mat4x4f modelViewProjectionMatrix, modelViewMatrix, modelMatrix, normalMatrix;
     CGLA::Vec3f light_pos = CGLA::Vec3f(0.f, 0.5*dist, dist);
     CGLA::Vec3f eye_pos = CGLA::Vec3f(0.3*dist, 0.3*dist, dist);
     
@@ -111,11 +111,11 @@ public:
         // Initialize uniforms
         CGLA::Mat4x4f projection = CGLA::perspective_Mat4x4f(53.f, WIN_SIZE_X/float(WIN_SIZE_Y), 0.01*dist, 3.*dist); // Projection matrix
         CGLA::Mat4x4f view = CGLA::lookAt_Mat4x4f(eye_pos, CGLA::Vec3f(0.), CGLA::Vec3f(0., 1., 0.)); // View matrix
-        CGLA::Mat4x4f model = CGLA::rotation_Mat4x4f(CGLA::YAXIS, M_PI);
+        modelMatrix = CGLA::rotation_Mat4x4f(CGLA::YAXIS, M_PI);
         
-        modelViewProjectionMatrix = projection * view * model;
-        modelViewMatrix = view * model;
-        normalMatrix = CGLA::invert_ortho(view * model);
+        modelViewProjectionMatrix = projection * view * modelMatrix;
+        modelViewMatrix = view * modelMatrix;
+        normalMatrix = CGLA::invert_ortho(view * modelMatrix);
         
         // Initialize shader
         GLuint shader = init_gouraud_shader();
