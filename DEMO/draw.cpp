@@ -250,11 +250,11 @@ void Painter::draw()
     
     glDisable(GL_CULL_FACE);
     tetrahedra->draw();
-    glEnable(GL_CULL_FACE);
     
-    glCullFace(GL_FRONT);
     domain->draw();
     
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
     boundary->draw();
     
     glutSwapBuffers();
@@ -301,12 +301,47 @@ void Painter::update_boundary(DSC::DeformableSimplicialComplex<>& dsc)
     boundary->add_data(data);
 }
 
+bool is_inside(const std::vector<DSC::vec3>& verts, const std::vector<DSC::Util::Plane>& planes)
+{
+    for (auto &p : verts) {
+        for (auto &plane : planes) {
+            if (!DSC::Util::is_inside(p, plane.p, plane.n)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 
-void Painter::update_design_domain(DSC::DeformableSimplicialComplex<>& dsc)
+void Painter::update_domain(DSC::DeformableSimplicialComplex<>& dsc)
 {
     std::vector<DSC::vec3> data;
     const DSC::DesignDomain *d = dsc.get_design_domain();
-    
+    if(d)
+    {
+        CGLA::Vec4f eye_dir = modelMatrix*(-CGLA::Vec4f(eye_pos[0], eye_pos[1], eye_pos[2], 1.));
+        
+        std::vector<DSC::Util::Plane> planes;
+        for(auto plane : d->get_planes())
+        {
+            if(dot(plane.n, DSC::vec3(eye_dir[0], eye_dir[1], eye_dir[2])) > 0.)
+            {
+                planes.push_back(plane);
+            }
+        }
+        for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
+        {
+            auto verts = dsc.get_pos(fit.key());
+            if(!is_inside(verts, planes))
+            {
+                DSC::vec3 normal = dsc.get_normal(fit.key());
+                for (auto &p : verts) {
+                    data.push_back(p);
+                    data.push_back(normal);
+                }
+            }
+        }
+    }
     domain->add_data(data);
 }
 

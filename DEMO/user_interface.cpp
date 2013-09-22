@@ -170,6 +170,7 @@ void UI::animate()
         vel_fun->take_time_step(*dsc);
         painter->update_interface(*dsc);
         painter->update_tetrahedra(*dsc);
+        painter->update_domain(*dsc);
         basic_log->write_timestep(vel_fun, dsc);
         if (vel_fun->is_motion_finished(*dsc))
         {
@@ -323,6 +324,7 @@ void UI::start()
     painter->update_interface(*dsc);
     painter->update_boundary(*dsc);
     painter->update_tetrahedra(*dsc);
+    painter->update_domain(*dsc);
     
     basic_log->write_message(vel_fun->get_name().c_str());
     basic_log->write_log(dsc);

@@ -95,7 +95,7 @@ class Painter {
         
     };
     
-    constexpr static float dist = 120.;
+    constexpr static float dist = 90.;
     
     std::unique_ptr<GLObject> interface, boundary, domain, tetrahedra;
     
@@ -122,7 +122,7 @@ public:
         
         interface = std::unique_ptr<GLObject>(new GLObject(shader, {0.1, 0.3, 0.1, 1.}, {0.5, 0.5, 0.5, 1.}, {0.3, 0.3, 0.3, 1.}));
         boundary = std::unique_ptr<GLObject>(new GLObject(shader, {0.3, 0.3, 0.3, 1.}, {0.3, 0.3, 0.3, 1.}, {0.3, 0.3, 0.3, 1.}));
-        domain = std::unique_ptr<GLObject>(new GLObject(shader, {0.3, 0.3, 0.3, 0.3}, {0.3, 0.3, 0.3, 0.3}, {0.3, 0.3, 0.3, 0.3}));
+        domain = std::unique_ptr<GLObject>(new GLObject(shader, {0.3, 0.3, 0.3, 1.}, {0.3, 0.3, 0.3, 1.}, {0.3, 0.3, 0.3, 1.}));
         tetrahedra = std::unique_ptr<GLObject>(new GLObject(shader, {0.3, 0.1, 0.1, 0.1}, {0.6, 0.4, 0.4, 0.2}, {0., 0., 0., 0.}));
         
         // Enable states
@@ -158,9 +158,9 @@ public:
     void update_boundary(DSC::DeformableSimplicialComplex<>& dsc);
     
     /**
-     Updates the drawn design domain.
+     Updates the drawn domain.
      */
-    void update_design_domain(DSC::DeformableSimplicialComplex<>& dsc);
+    void update_domain(DSC::DeformableSimplicialComplex<>& dsc);
     
     /**
      Updates the drawn tetrahedra.
