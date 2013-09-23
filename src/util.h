@@ -345,43 +345,19 @@ namespace DSC {
         }
         
         /**
-         Returns whether you have to turn left when going from a to b to c.
-         */
-        template<typename real, typename vec3>
-        inline bool is_left_of(vec3 a, vec3 b, vec3 c)
-        {
-            if(Util::signed_area<real>(a,b,c) > 0.)
-            {
-                return true;
-            }
-            return false;
-        }
-        
-        /**
          Returns whether the point p is between the points in the vector corners.
          */
         template<typename real, typename vec3>
         inline bool is_inside(const vec3& p, std::vector<vec3> corners)
         {
-            vec3 c0, c1, c2;
             while(corners.size() > 2)
             {
-                int i = 0;
-                do {
-#ifdef DEBUG
-                    assert(i < corners.size());
-#endif
-                    c0 = corners[i];
-                    c1 = corners[(i+1)%corners.size()];
-                    c2 = corners[(i+2)%corners.size()];
-                    i++;
-                } while (Util::is_left_of<real>(c0,c1,c2));
-                
-                if(!Util::is_left_of<real>(c0, c1, p) && !Util::is_left_of<real>(c1, c2, p) && !Util::is_left_of<real>(c2, c0, p))
+                auto bc = barycentric_coords<real>(p, corners[0], corners[1], corners[2]);
+                if(bc[0] >= 0. && bc[1] >= 0. && bc[2] >= 0.)
                 {
                     return true;
                 }
-                corners.erase(corners.begin() + (i%corners.size()));
+                corners.erase(corners.begin() + 1);
             }
             return false;
         }
