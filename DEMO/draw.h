@@ -95,7 +95,6 @@ class Painter {
         
     };
     
-    constexpr static float dist = 90.;
     int WIDTH, HEIGHT;
     GLuint gouraud_shader;
     

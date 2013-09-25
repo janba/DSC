@@ -166,14 +166,12 @@ void UI::animate()
     if(vel_fun && CONTINUOUS)
     {
         vel_fun->take_time_step(*dsc);
+        painter->update(*dsc);
         if(RECORD)
         {
             painter->set_view_position(camera_pos);
-            painter->update(*dsc);
             painter->save_painting(basic_log->get_path(), vel_fun->get_time_step());
-            painter->set_view_position(eye_pos);
         }
-        painter->update(*dsc);
         
         basic_log->write_timestep(vel_fun, dsc);
         if (vel_fun->is_motion_finished(*dsc))
@@ -325,14 +323,12 @@ void UI::stop()
 
 void UI::start()
 {
+    painter->update(*dsc);
     if(RECORD)
     {
         painter->set_view_position(camera_pos);
-        painter->update(*dsc);
         painter->save_painting(basic_log->get_path(), vel_fun->get_time_step());
-        painter->set_view_position(eye_pos);
     }
-    painter->update(*dsc);
     
     basic_log->write_message(vel_fun->get_name().c_str());
     basic_log->write_log(dsc);
