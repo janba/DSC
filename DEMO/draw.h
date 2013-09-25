@@ -103,12 +103,11 @@ class Painter {
     
     // Uniform variables
     CGLA::Mat4x4f projectionMatrix, viewMatrix, modelMatrix = CGLA::rotation_Mat4x4f(CGLA::YAXIS, M_PI);
-    CGLA::Vec3f light_pos = CGLA::Vec3f(0.f, 0.5*dist, dist);
     CGLA::Vec3f center = CGLA::Vec3f(0.);
     
 public:
     
-    Painter();
+    Painter(const DSC::vec3& light_pos);
     
 private:
     // Create a GLSL program object from vertex and fragment shader files

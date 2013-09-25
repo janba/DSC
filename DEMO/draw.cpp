@@ -175,21 +175,22 @@ GLuint Painter::init_shader(const char* vShaderFile, const char* fShaderFile, co
     /* use program object */
     glUseProgram(program);
     
-    // Send light position uniform to the shader
-    GLuint lightPosUniform = glGetUniformLocation(program, "lightPos");
-    if (lightPosUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
-    }
-    glUniform3fv(lightPosUniform, 1, &light_pos[0]);
-    check_gl_error();
-    
     return program;
 }
 
-Painter::Painter()
+Painter::Painter(const DSC::vec3& light_pos)
 {    
     // Initialize shader
     gouraud_shader = init_shader("shaders/gouraud.vert",  "shaders/gouraud.frag", "fragColour");
+    
+    // Send light position uniform to the shader
+    CGLA::Vec3f lp(light_pos);
+    GLuint lightPosUniform = glGetUniformLocation(gouraud_shader, "lightPos");
+    if (lightPosUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
+    }
+    glUniform3fv(lightPosUniform, 1, &lp[0]);
+    check_gl_error();
     
     interface = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.1, 0.3, 0.1, 1.}, {0.5, 0.5, 0.5, 1.}, {0.3, 0.3, 0.3, 1.}));
     domain = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.1, 0.1, 0.3, 1.}, {0.2, 0.2, 0.3, 1.}, {0., 0., 0., 1.}));

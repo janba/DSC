@@ -69,7 +69,7 @@ UI::UI(int &argc, char** argv)
 	}
     check_gl_error(); // Catches a GL_INVALID_ENUM error. See http://www.opengl.org/wiki/OpenGL_Loading_Library
     
-    painter = new Painter();
+    painter = new Painter(light_pos);
     vel_fun = nullptr;
     dsc = nullptr;
     
@@ -146,8 +146,8 @@ void UI::display()
         return;
     }
     GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.0001;
-    eye_pos = DSC::vec3( 30. * sinf(timeValue), 30. * cosf(timeValue) , 100.);
-    painter->set_view_position(eye_pos);
+    DSC::vec3 ep = DSC::vec3( eye_pos[0] * sinf(timeValue), eye_pos[1] * cosf(timeValue) , eye_pos[2]);
+    painter->set_view_position(ep);
     painter->draw();
     glutSwapBuffers();
     update_title();
