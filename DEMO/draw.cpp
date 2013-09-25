@@ -251,7 +251,7 @@ void Painter::reshape(int width, int height)
 
 void Painter::set_view_position(DSC::vec3 pos)
 {
-    eye_pos = CGLA::Vec3f(pos);
+    CGLA::Vec3f eye_pos = CGLA::Vec3f(pos);
     viewMatrix = CGLA::lookAt_Mat4x4f(eye_pos, center, CGLA::Vec3f(0., 1., 0.));
     CGLA::Mat4x4f modelViewMatrix = viewMatrix * modelMatrix;
     CGLA::Mat4x4f normalMatrix = CGLA::invert_ortho(modelViewMatrix);
@@ -292,11 +292,10 @@ void Painter::draw()
     glCullFace(GL_BACK);
     interface->draw();
     
-    glDisable(GL_CULL_FACE);
-    tetrahedra->draw();
-    
     domain->draw();
     
+    glDisable(GL_CULL_FACE);
+    tetrahedra->draw();
     glEnable(GL_CULL_FACE);
     glCullFace(GL_FRONT);
     boundary->draw();
@@ -352,49 +351,53 @@ void Painter::update_boundary(DSC::DeformableSimplicialComplex<>& dsc)
     boundary->add_data(data);
 }
 
-bool is_inside(const std::vector<DSC::vec3>& verts, const std::vector<DSC::Util::Plane>& planes)
+bool is_boundary(DSC::DeformableSimplicialComplex<>& dsc, const DSC::DeformableSimplicialComplex<>::face_key& fid, std::vector<DSC::vec3>& verts)
 {
-    for (auto &plane : planes) {
-        bool inside = false;
-        for (auto &p : verts) {
-            if (DSC::Util::is_inside(p, plane.p, plane.n)) {
-                inside = true;
+    if(dsc.is_boundary(fid))
+    {
+        std::swap(verts[0], verts[2]);
+        return true;
+    }
+    auto *design_domain = dsc.get_design_domain();
+    if(design_domain)
+    {
+        for (auto &plane : design_domain->get_planes()) {
+            bool boundary = true;
+            for (auto &p : verts) {
+                if (DSC::Util::is_inside(p, plane.p, plane.n)) {
+                    boundary = false;
+                    break;
+                }
+            }
+            if(boundary)
+            {
+                auto apices = dsc.get_apices(fid);
+                if(DSC::Util::is_inside(dsc.get_pos(apices[0]), plane.p, plane.n) != DSC::Util::is_inside(dsc.get_pos(apices[1]), plane.p, plane.n))
+                {
+                    if(dot(dsc.get_normal(fid), plane.n) > 0.)
+                    {
+                        std::swap(verts[0], verts[2]);
+                    }
+                    return true;
+                }
             }
         }
-        if(!inside)
-        {
-            return false;
-        }
     }
-    return true;
+    return false;
 }
 
 void Painter::update_domain(DSC::DeformableSimplicialComplex<>& dsc)
 {
     std::vector<DSC::vec3> data;
-    const DSC::DesignDomain *d = dsc.get_design_domain();
-    if(d)
+    for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
     {
-        CGLA::Vec4f eye_dir = modelMatrix*(-CGLA::Vec4f(eye_pos[0], eye_pos[1], eye_pos[2], 1.));
-        
-        std::vector<DSC::Util::Plane> planes;
-        for(auto plane : d->get_planes())
+        auto verts = dsc.get_pos(fit.key());
+        if(is_boundary(dsc, fit.key(), verts))
         {
-            if(dot(plane.n, DSC::vec3(eye_dir[0], eye_dir[1], eye_dir[2])) > 0.)
-            {
-                planes.push_back(plane);
-            }
-        }
-        for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
-        {
-            auto verts = dsc.get_pos(fit.key());
-            if(!is_inside(verts, planes))
-            {
-                DSC::vec3 normal = dsc.get_normal(fit.key());
-                for (auto &p : verts) {
-                    data.push_back(p);
-                    data.push_back(normal);
-                }
+            DSC::vec3 normal = DSC::Util::normal_direction(verts[0], verts[1], verts[2]);
+            for (auto &p : verts) {
+                data.push_back(p);
+                data.push_back(normal);
             }
         }
     }
