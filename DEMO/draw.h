@@ -28,24 +28,6 @@
 
 #include "DSC.h"
 
-const static float ALPHA = 0.2;
-const static float BACKGROUND_COLOR[] = {0.7, 0.7, 0.7, 0.};
-const static float INVISIBLE[] = {-1., -1., -1.};
-const static float DARK_RED[] = {0.66,0.11,0.15, ALPHA};
-const static float RED[] = {0.96,0.11,0.15, ALPHA};
-const static float YELLOW[] = {0.9,0.9,0., ALPHA};
-const static float DARK_BLUE[] = {0.14,0.16,0.88, ALPHA};
-const static float BLUE[] = {0.45,0.7,0.9, ALPHA};
-const static float GREEN[] = {0.05,1.,0.15, ALPHA};
-const static float ORANGE[] = {0.9,0.4,0., ALPHA};
-const static float BLACK[] = {0., 0., 0.};
-const static float DARK_GRAY[] = {0.5, 0.5, 0.5, ALPHA};
-const static float GRAY[] = {0.8, 0.8, 0.8, ALPHA};
-
-const static float POINT_SIZE = 0.5;
-const static float LINE_WIDTH = 0.1;
-
-
 inline void _check_gl_error(const char *file, int line)
 {
     GLenum err (glGetError());
@@ -113,9 +95,14 @@ private:
     GLuint init_shader(const char* vShaderFile, const char* fShaderFile, const char* outputAttributeName);
     
 public:
-    
+    /**
+     Reshape the window.
+     */
     void reshape(int width, int height);
     
+    /**
+     Set the position of the camera/eye.
+     */
     void set_view_position(DSC::vec3 pos);
     
     /**
