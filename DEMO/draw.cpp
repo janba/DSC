@@ -241,6 +241,58 @@ void Painter::save_painting(std::string folder, int time_step)
     }
 }
 
+void Painter::reshape(int width, int height)
+{
+    WIDTH = width;
+    HEIGHT = height;
+    projectionMatrix = CGLA::perspective_Mat4x4f(53.f, width/float(height), 0.01*dist, 3.*dist);
+    glViewport(0, 0, width, height);
+    CGLA::Mat4x4f modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
+    
+    glUseProgram(gouraud_shader);
+    GLuint MVPMatrixUniform = glGetUniformLocation(gouraud_shader, "MVPMatrix");
+    if (MVPMatrixUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
+    }
+    glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
+    check_gl_error();
+}
+
+void Painter::set_view_position(DSC::vec3 pos)
+{
+    eye_pos = CGLA::Vec3f(pos);
+    viewMatrix = CGLA::lookAt_Mat4x4f(eye_pos, center, CGLA::Vec3f(0., 1., 0.));
+    CGLA::Mat4x4f modelViewMatrix = viewMatrix * modelMatrix;
+    CGLA::Mat4x4f normalMatrix = CGLA::invert_ortho(modelViewMatrix);
+    CGLA::Mat4x4f modelViewProjectionMatrix = projectionMatrix * modelViewMatrix;
+    
+    glUseProgram(gouraud_shader);
+    GLuint eyePosUniform = glGetUniformLocation(gouraud_shader, "eyePos");
+    if (eyePosUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'eyePos' uniform."<<std::endl;
+    }
+    glUniform3fv(eyePosUniform, 1, &eye_pos[0]);
+    
+    GLuint MVMatrixUniform = glGetUniformLocation(gouraud_shader, "MVMatrix");
+    if (MVMatrixUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
+    }
+    glUniformMatrix4fv(MVMatrixUniform, 1, GL_TRUE, &modelViewMatrix[0][0]);
+    
+    GLuint NormalMatrixUniform = glGetUniformLocation(gouraud_shader, "NormalMatrix");
+    if (NormalMatrixUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'NormalMatrix' uniform."<<std::endl;
+    }
+    glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, &normalMatrix[0][0]);
+    
+    GLuint MVPMatrixUniform = glGetUniformLocation(gouraud_shader, "MVPMatrix");
+    if (MVPMatrixUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
+    }
+    glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
+    check_gl_error();
+}
+
 void Painter::draw()
 {
     glClearColor(BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2],BACKGROUND_COLOR[3]);

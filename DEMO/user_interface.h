@@ -33,9 +33,10 @@ protected:
     DSC::Log<> *basic_log;
     
     Painter *painter;
+    DSC::vec3 eye_pos, camera_pos = DSC::vec3(30., 30., 100.);
     
-    int WIN_SIZE_X;
-    int WIN_SIZE_Y;
+    int WIN_SIZE_X = 1000.;
+    int WIN_SIZE_Y = 700;
     
     bool CONTINUOUS;
     bool RECORD;

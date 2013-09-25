@@ -50,8 +50,6 @@ UI* UI::instance = NULL;
 UI::UI(int &argc, char** argv)
 {
     instance = this;
-	WIN_SIZE_X = 1000;
-    WIN_SIZE_Y = 700;
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_3_2_CORE_PROFILE | GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
@@ -147,6 +145,9 @@ void UI::display()
     if (glutGet(GLUT_WINDOW_WIDTH) != WIN_SIZE_X || glutGet(GLUT_WINDOW_HEIGHT) != WIN_SIZE_Y) {
         return;
     }
+    GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.0001;
+    eye_pos = DSC::vec3( 30. * sinf(timeValue), 30. * cosf(timeValue) , 100.);
+    painter->set_view_position(eye_pos);
     painter->draw();
     glutSwapBuffers();
     update_title();
@@ -157,7 +158,7 @@ void UI::reshape(int width, int height)
 {
     WIN_SIZE_X = width;
     WIN_SIZE_Y = height;
-	glViewport(0, 0, WIN_SIZE_X, WIN_SIZE_Y);
+    painter->reshape(width, height);
 }
 
 void UI::animate()
@@ -165,11 +166,15 @@ void UI::animate()
     if(vel_fun && CONTINUOUS)
     {
         vel_fun->take_time_step(*dsc);
-        painter->update(*dsc);
         if(RECORD)
         {
+            painter->set_view_position(camera_pos);
+            painter->update(*dsc);
             painter->save_painting(basic_log->get_path(), vel_fun->get_time_step());
+            painter->set_view_position(eye_pos);
         }
+        painter->update(*dsc);
+        
         basic_log->write_timestep(vel_fun, dsc);
         if (vel_fun->is_motion_finished(*dsc))
         {
@@ -320,11 +325,14 @@ void UI::stop()
 
 void UI::start()
 {
-    painter->update(*dsc);
     if(RECORD)
     {
+        painter->set_view_position(camera_pos);
+        painter->update(*dsc);
         painter->save_painting(basic_log->get_path(), vel_fun->get_time_step());
+        painter->set_view_position(eye_pos);
     }
+    painter->update(*dsc);
     
     basic_log->write_message(vel_fun->get_name().c_str());
     basic_log->write_log(dsc);

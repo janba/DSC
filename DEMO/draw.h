@@ -97,6 +97,7 @@ class Painter {
     
     constexpr static float dist = 90.;
     int WIDTH, HEIGHT;
+    GLuint gouraud_shader;
     
     std::unique_ptr<GLObject> interface, boundary, domain, tetrahedra;
     
@@ -104,6 +105,7 @@ class Painter {
     CGLA::Mat4x4f modelViewProjectionMatrix, modelViewMatrix, modelMatrix, normalMatrix;
     CGLA::Vec3f light_pos = CGLA::Vec3f(0.f, 0.5*dist, dist);
     CGLA::Vec3f eye_pos = CGLA::Vec3f(0.3*dist, 0.3*dist, dist);
+    CGLA::Vec3f center = CGLA::Vec3f(0.);
     
 public:
     
@@ -143,6 +145,11 @@ private:
     GLuint init_gouraud_shader();
     
 public:
+    
+    void reshape(int width, int height);
+    
+    void set_view_position(DSC::vec3 pos);
+    
     /**
      Draws the simplicial complex.
      */
