@@ -99,7 +99,7 @@ class Painter {
     int WIDTH, HEIGHT;
     GLuint gouraud_shader;
     
-    std::unique_ptr<GLObject> interface, boundary, domain, tetrahedra;
+    std::unique_ptr<GLObject> interface, domain, tetrahedra;
     
     // Uniform variables
     CGLA::Mat4x4f projectionMatrix, viewMatrix, modelMatrix = CGLA::rotation_Mat4x4f(CGLA::YAXIS, M_PI);

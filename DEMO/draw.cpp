@@ -192,7 +192,6 @@ Painter::Painter()
     gouraud_shader = init_shader("shaders/gouraud.vert",  "shaders/gouraud.frag", "fragColour");
     
     interface = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.1, 0.3, 0.1, 1.}, {0.5, 0.5, 0.5, 1.}, {0.3, 0.3, 0.3, 1.}));
-    boundary = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.3, 0.3, 0.3, 1.}, {0.3, 0.3, 0.3, 1.}, {0.3, 0.3, 0.3, 1.}));
     domain = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.1, 0.1, 0.3, 1.}, {0.2, 0.2, 0.3, 1.}, {0., 0., 0., 1.}));
     tetrahedra = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.3, 0.1, 0.1, 0.1}, {0.6, 0.4, 0.4, 0.2}, {0., 0., 0., 0.}));
     
@@ -201,6 +200,7 @@ Painter::Painter()
     glDepthMask(GL_TRUE);
     
     glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     
     glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -289,7 +289,6 @@ void Painter::draw()
     glClearColor(BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2],BACKGROUND_COLOR[3]);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    glCullFace(GL_BACK);
     interface->draw();
     
     domain->draw();
@@ -297,8 +296,6 @@ void Painter::draw()
     glDisable(GL_CULL_FACE);
     tetrahedra->draw();
     glEnable(GL_CULL_FACE);
-    glCullFace(GL_FRONT);
-    boundary->draw();
     
     check_gl_error();
 }
@@ -306,7 +303,6 @@ void Painter::draw()
 void Painter::update(DSC::DeformableSimplicialComplex<>& dsc)
 {
     update_interface(dsc);
-    update_boundary(dsc);
     update_domain(dsc);
 //    update_tetrahedra(dsc);
 }
@@ -329,26 +325,6 @@ void Painter::update_interface(DSC::DeformableSimplicialComplex<>& dsc)
         }
     }
     interface->add_data(data);
-}
-
-void Painter::update_boundary(DSC::DeformableSimplicialComplex<>& dsc)
-{
-    std::vector<DSC::vec3> data;
-    for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
-    {
-        if (fit->is_boundary())
-        {
-            auto nodes = dsc.get_nodes(fit.key());
-            DSC::vec3 normal = -dsc.get_normal(fit.key());
-            
-            for(auto &n : nodes)
-            {
-                data.push_back(dsc.get_pos(n));
-                data.push_back(normal);
-            }
-        }
-    }
-    boundary->add_data(data);
 }
 
 bool is_boundary(DSC::DeformableSimplicialComplex<>& dsc, const DSC::DeformableSimplicialComplex<>::face_key& fid, std::vector<DSC::vec3>& verts)
