@@ -102,47 +102,18 @@ class Painter {
     std::unique_ptr<GLObject> interface, boundary, domain, tetrahedra;
     
     // Uniform variables
-    CGLA::Mat4x4f modelViewProjectionMatrix, modelViewMatrix, modelMatrix, normalMatrix;
+    CGLA::Mat4x4f projectionMatrix, viewMatrix, modelMatrix = CGLA::rotation_Mat4x4f(CGLA::YAXIS, M_PI);
     CGLA::Vec3f light_pos = CGLA::Vec3f(0.f, 0.5*dist, dist);
     CGLA::Vec3f eye_pos = CGLA::Vec3f(0.3*dist, 0.3*dist, dist);
     CGLA::Vec3f center = CGLA::Vec3f(0.);
     
 public:
     
-    Painter(int WIN_SIZE_X, int WIN_SIZE_Y) : WIDTH(WIN_SIZE_X), HEIGHT(WIN_SIZE_Y)
-    {
-        // Initialize uniforms
-        CGLA::Mat4x4f projection = CGLA::perspective_Mat4x4f(53.f, WIN_SIZE_X/float(WIN_SIZE_Y), 0.01*dist, 3.*dist); // Projection matrix
-        CGLA::Mat4x4f view = CGLA::lookAt_Mat4x4f(eye_pos, CGLA::Vec3f(0.), CGLA::Vec3f(0., 1., 0.)); // View matrix
-        modelMatrix = CGLA::rotation_Mat4x4f(CGLA::YAXIS, M_PI);
-        
-        modelViewProjectionMatrix = projection * view * modelMatrix;
-        modelViewMatrix = view * modelMatrix;
-        normalMatrix = CGLA::invert_ortho(view * modelMatrix);
-        
-        // Initialize shader
-        GLuint shader = init_gouraud_shader();
-        
-        interface = std::unique_ptr<GLObject>(new GLObject(shader, {0.1, 0.3, 0.1, 1.}, {0.5, 0.5, 0.5, 1.}, {0.3, 0.3, 0.3, 1.}));
-        boundary = std::unique_ptr<GLObject>(new GLObject(shader, {0.3, 0.3, 0.3, 1.}, {0.3, 0.3, 0.3, 1.}, {0.3, 0.3, 0.3, 1.}));
-        domain = std::unique_ptr<GLObject>(new GLObject(shader, {0.1, 0.1, 0.3, 1.}, {0.2, 0.2, 0.3, 1.}, {0., 0., 0., 1.}));
-        tetrahedra = std::unique_ptr<GLObject>(new GLObject(shader, {0.3, 0.1, 0.1, 0.1}, {0.6, 0.4, 0.4, 0.2}, {0., 0., 0., 0.}));
-        
-        // Enable states
-        glEnable(GL_DEPTH_TEST);
-        glDepthMask(GL_TRUE);
-
-        glEnable(GL_CULL_FACE);
-        
-        glEnable(GL_BLEND);
-        glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        
-        check_gl_error();
-    }
+    Painter();
     
 private:
-    
-    GLuint init_gouraud_shader();
+    // Create a GLSL program object from vertex and fragment shader files
+    GLuint init_shader(const char* vShaderFile, const char* fShaderFile, const char* outputAttributeName);
     
 public:
     

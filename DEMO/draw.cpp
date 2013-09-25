@@ -51,6 +51,7 @@ void Painter::GLObject::draw()
 {
     if(data.size() != 0)
     {
+        glUseProgram(shader);
         GLuint uniform = glGetUniformLocation(shader, "ambientMat");
         if (uniform == NULL_LOCATION) {
             std::cerr << "Shader did not contain the 'ambientMat' uniform."<<std::endl;
@@ -108,7 +109,7 @@ char* readShaderSource(const char* shaderFile)
 }
 
 // Create a GLSL program object from vertex and fragment shader files
-GLuint InitShader(const char* vShaderFile, const char* fShaderFile, const char* outputAttributeName)
+GLuint Painter::init_shader(const char* vShaderFile, const char* fShaderFile, const char* outputAttributeName)
 {
     struct Shader {
         const char*  filename;
@@ -174,47 +175,37 @@ GLuint InitShader(const char* vShaderFile, const char* fShaderFile, const char* 
     /* use program object */
     glUseProgram(program);
     
-    return program;
-}
-
-GLuint Painter::init_gouraud_shader()
-{
-    // Load the interface shader
-    GLuint gouraud_shader = InitShader("shaders/gouraud.vert",  "shaders/gouraud.frag", "fragColour");
-    
-    // Send uniforms to the shader
-    GLuint MVMatrixUniform = glGetUniformLocation(gouraud_shader, "MVMatrix");
-    if (MVMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(MVMatrixUniform, 1, GL_TRUE, &modelViewMatrix[0][0]);
-    
-    GLuint MVPMatrixUniform = glGetUniformLocation(gouraud_shader, "MVPMatrix");
-    if (MVPMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
-    
-    GLuint NormalMatrixUniform = glGetUniformLocation(gouraud_shader, "NormalMatrix");
-    if (NormalMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'NormalMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, &normalMatrix[0][0]);
-    
-    GLuint lightPosUniform = glGetUniformLocation(gouraud_shader, "lightPos");
+    // Send light position uniform to the shader
+    GLuint lightPosUniform = glGetUniformLocation(program, "lightPos");
     if (lightPosUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
     }
     glUniform3fv(lightPosUniform, 1, &light_pos[0]);
     check_gl_error();
     
-    GLuint eyePosUniform = glGetUniformLocation(gouraud_shader, "eyePos");
-    if (eyePosUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'eyePos' uniform."<<std::endl;
-    }
-    glUniform3fv(eyePosUniform, 1, &eye_pos[0]);
+    return program;
+}
+
+Painter::Painter()
+{    
+    // Initialize shader
+    gouraud_shader = init_shader("shaders/gouraud.vert",  "shaders/gouraud.frag", "fragColour");
     
-    return gouraud_shader;
+    interface = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.1, 0.3, 0.1, 1.}, {0.5, 0.5, 0.5, 1.}, {0.3, 0.3, 0.3, 1.}));
+    boundary = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.3, 0.3, 0.3, 1.}, {0.3, 0.3, 0.3, 1.}, {0.3, 0.3, 0.3, 1.}));
+    domain = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.1, 0.1, 0.3, 1.}, {0.2, 0.2, 0.3, 1.}, {0., 0., 0., 1.}));
+    tetrahedra = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.3, 0.1, 0.1, 0.1}, {0.6, 0.4, 0.4, 0.2}, {0., 0., 0., 0.}));
+    
+    // Enable states
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    
+    glEnable(GL_CULL_FACE);
+    
+    glEnable(GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    check_gl_error();
 }
 
 void Painter::save_painting(std::string folder, int time_step)
