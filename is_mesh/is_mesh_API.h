@@ -423,22 +423,6 @@ public:
         return *(cl1.edges_begin());
     }
     
-    edge_key get_edge(const tet_key& t1, const tet_key& t2, const tet_key& t3)
-    {
-        simplex_set cl1, cl2, cl3;
-        closure(t1, cl1);
-        closure(t2, cl2);
-        closure(t3, cl3);
-        cl1.intersection(cl2);
-        cl1.intersection(cl3);
-        
-        if (cl1.size_edges() != 1)
-        {
-            return NULL_EDGE;
-        }
-        return *(cl1.edges_begin());
-    }
-    
     face_key get_face(const node_key& n1, const node_key& n2, const node_key& n3)
     {
         simplex_set st1, st2, st3;
