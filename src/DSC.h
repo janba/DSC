@@ -823,7 +823,8 @@ namespace DSC {
                     auto nodes = Complex::get_nodes(*f);
                     orient_cc(apex2, nodes);
                     
-                    real t = Util::intersection_ray_triangle<real>(get_pos(apex1), get_pos(apex2), get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
+                    vec3 ray = get_pos(apex2) - get_pos(apex1);
+                    real t = Util::intersection_ray_triangle<real>(get_pos(apex1), ray, get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
                     if(0. < t && t < 1.)
                     {
                         if(topological_face_removal(*f))
@@ -1553,16 +1554,17 @@ namespace DSC {
          * Returns the intersection point (= pos + t*(new_pos-pos)) with the link of the node n and
          * when moving the node n to the new position new_pos.
          */
-        real intersection_with_link(const node_key & n, const vec3& new_pos)
+        real intersection_with_link(const node_key & n, const vec3& destination)
         {
             vec3 pos = get_pos(n);
+            vec3 ray = destination - pos;
             simplex_set ln;
             Complex::link(n,ln);
             real min_t = INFINITY;
             for(auto fit = ln.faces_begin(); fit != ln.faces_end(); fit++)
             {
                 auto face_pos = get_pos(*fit);
-                real t = Util::intersection_ray_plane<real>(pos, new_pos, face_pos[0], face_pos[1], face_pos[2]);
+                real t = Util::intersection_ray_plane<real>(pos, ray, face_pos[0], face_pos[1], face_pos[2]);
                 if (0. <= t)
                 {
                     min_t = Util::min(t, min_t);

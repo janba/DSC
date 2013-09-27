@@ -383,13 +383,13 @@ namespace DSC {
         }
         
         /**
-         * Calculates the intersection between the line segment |p0 p1| and the plane defined by the point a and the normal. The intersection point is defined by p0 + t*(p1 - p0) and the function returns t. Returns infinity if it does not intersect.
+         * Calculates the intersection between the line segment defined by p + t*r where 0 <= t <= 1 and the plane defined by the point a and the normal. The intersection point is defined by p + t*r and the function returns t. Returns infinity if it does not intersect.
          */
         template<typename real, typename vec3>
-        inline real intersection_ray_plane(const vec3& p0, const vec3& p1, const vec3& a, const vec3& normal)
+        inline real intersection_ray_plane(const vec3& p, const vec3& r, const vec3& a, const vec3& normal)
         {
-            real n = dot(normal, a - p0);
-            real d = dot(normal, p1 - p0);
+            real n = dot(normal, a - p);
+            real d = dot(normal, r);
             
             if (std::abs(d) < EPSILON) // Plane and line are parallel if true.
             {
@@ -405,29 +405,28 @@ namespace DSC {
         }
         
         /**
-         * Calculates the intersection between the line segment |p0 p1| and the plane spanned by the vertices a, b and c. The intersection point is defined by p0 + t*(p1 - p0) and the function returns t. Returns infinity if it does not intersect.
+         * Calculates the intersection between the line segment defined by p + t*r where 0 <= t <= 1 and the plane spanned by the vertices a, b and c. The intersection point is defined by p + t*r and the function returns t. Returns infinity if it does not intersect.
          */
         template<typename real, typename vec3>
-        inline real intersection_ray_plane(const vec3& p0, const vec3& p1, const vec3& a, const vec3& b, const vec3& c)
+        inline real intersection_ray_plane(const vec3& p, const vec3& r, const vec3& a, const vec3& b, const vec3& c)
         {
             vec3 normal = normal_direction(a, b, c);
-            return intersection_ray_plane<real>(p0, p1, a, normal);
+            return intersection_ray_plane<real>(p, r, a, normal);
         }
         
         /**
-         * Calculates the intersection between the line segment |p0 p1| and the triangle |a b c|. The intersection point is defined by p0 + t*(p1 - p0) and the function returns t. Returns infinity if it does not intersect.
+         * Calculates the intersection between the line segment defined by p + t*r where 0 <= t <= 1 and the triangle |a b c|. The intersection point is defined by p + t*r and the function returns t. Returns infinity if it does not intersect.
          */
         template<typename real, typename vec3>
-        inline real intersection_ray_triangle(const vec3& p0, const vec3& p1, const vec3& a, const vec3& b, const vec3& c)
+        inline real intersection_ray_triangle(const vec3& p, const vec3& r, const vec3& a, const vec3& b, const vec3& c)
         {
-            real t = intersection_ray_plane<real>(p0, p1, a, b, c);
+            real t = intersection_ray_plane<real>(p, r, a, b, c);
             if(t < 0.) // The ray goes away from the triangle
             {
                 return t;
             }
-            vec3 p = p0 + t*(p1 - p0);
             
-            std::vector<real> coords = barycentric_coords<real>(p, a, b, c);
+            std::vector<real> coords = barycentric_coords<real>(p + t*r, a, b, c);
             if(coords[0] > EPSILON && coords[1] > EPSILON && coords[2] > EPSILON) // The intersection happens inside the triangle.
             {
                 return t;
