@@ -30,7 +30,7 @@ protected:
     DSC::VelocityFunc<> *vel_fun;
     DSC::DeformableSimplicialComplex<> *dsc;
     
-    DSC::Log<> *basic_log;
+    Log *basic_log;
     
     Painter *painter;
     DSC::vec3 eye_pos = {30., 30., 100.};

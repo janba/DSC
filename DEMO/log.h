@@ -30,211 +30,96 @@
 #include <sys/types.h>
 #endif
 
-namespace DSC {
+/**
+ A class for logging information.
+ */
+class Log {
+    
+    std::string path;
+    std::ofstream log;
+    
+public:
+    /**
+     Creates a log at the path given as input.
+     */
+    Log(std::string path_)
+    {
+        std::string temp;
+        int error;
+        int i = 0;
+        do {
+            temp = DSC::Util::concat4digits(path_ + "_test",i);
+#ifdef WIN32
+            error = _mkdir(temp.c_str());
+#else
+            error = mkdir(temp.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+#endif
+            i++;
+        } while (error != 0 && i < 1000);
+        path = temp;
+        log.open(path + "/log.txt");
+    }
+    
+    ~Log()
+    {
+        log.close();
+    }
     
     /**
-     A class for logging information.
+     Returns the path where the log is saved.
      */
-    template <typename DeformableSimplicialComplex = DeformableSimplicialComplex<>, typename VelocityFunc = VelocityFunc<>>
-    class Log {
-        
-        std::string path;
-    protected:
-        std::ofstream log;
-        
-    public:
-        /**
-         Creates a log at the path given as input.
-         */
-        Log(std::string path_)
-        {
-            std::string temp;
-            int error;
-            int i = 0;
-            do {
-                temp = Util::concat4digits(path_ + "_test",i);
-#ifdef WIN32
-                error = _mkdir(temp.c_str());
-#else
-                error = mkdir(temp.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-#endif
-                i++;
-            } while (error != 0 && i < 1000);
-            path = temp;
-            log.open(path + "/log.txt");
-        }
-        
-        ~Log()
-        {
-            log.close();
-        }
-        
-        /**
-         Returns the path where the log is saved.
-         */
-        std::string get_path()
-        {
-            return path;
-        }
-        
-    protected:
-        /**
-         Write a variable with name and value to the log.
-         */
-        void write_variable(const char* name, real value)
-        {
-            log << "\t" << name << "\t:\t" << value << std::endl;
-        }
-        
-        /**
-         Write a variable with name, value and change in value to the log.
-         */
-        void write_variable(const char* name, real value, real change)
-        {
-            log << "\t" << name << "\t:\t" << value << "\t\tChange\t:\t" << change << std::endl;
-        }
-        
-        /**
-         Write a variable with name, value and unit of the value to the log.
-         */
-        void write_variable(const char* name, real value, const char* unit)
-        {
-            log << "\t" << name << "\t:\t" << value << " " << unit << std::endl;
-        }
-        
-        /**
-         Write a variable with name and values to the log.
-         */
-        void write_variable(const char* name, const std::vector<real>& values)
-        {
-            if(values.size() > 0)
-            {
-                log << "\t" << name << " = [";
-                for (auto val = values.begin(); val != values.end(); val++)
-                {
-                    log << *val;
-                    if(val + 1 != values.end())
-                    {
-                        log << ",\t";
-                    }
-                }
-                log << "];" << std::endl << std::endl;
-            }
-        }
-        
-        void write_variable(const char* name, const std::vector<int>& values)
-        {
-            if(values.size() > 0)
-            {
-                log << "\t" << name << " = [";
-                for (auto val = values.begin(); val != values.end(); val++)
-                {
-                    log << *val;
-                    if(val + 1 != values.end())
-                    {
-                        log << ",\t";
-                    }
-                }
-                log << "];" << std::endl << std::endl;
-            }
-        }
-
-    public:
-        
-        /**
-         Write a message to the terminal and the log.
-         */
-        virtual void write_message(const char* message)
-        {
-            log << std::endl  << "*** " << message << " ***" << std::endl;
-            std::cout << "*** " << message << " ***" << std::endl;
-        }
-        
-        /**
-         Write the time step number, timings and additional time step information to the log.
-         */
-        void write_timestep(const VelocityFunc *vel_fun, DeformableSimplicialComplex *complex)
-        {
-            //    std::cout << "\n\n*** Time step #" << vel_fun->get_time_step() << " ***" << std::endl;
-            log << std::endl << "*** Time step #" << vel_fun->get_time_step() << " ***" << std::endl;
-            log << std::endl;
-            write_variable("Compute time", vel_fun->get_compute_time(), "s");
-            write_variable("Deform time", vel_fun->get_deform_time(), "s");
-            write_variable("Total time", vel_fun->get_compute_time() + vel_fun->get_deform_time(), "s");
-            
-            write_variable("Min quality", complex->min_quality());
-            
-            std::vector<int> hist;
-            real min_a, max_a;
-            complex->get_dihedral_angles(hist, min_a, max_a);
-            write_variable("Min dih. angle", min_a, "degrees");
-            write_variable("Max dih. angle", max_a, "degrees");
-        }
-        
-        /**
-         Writes simplicial complex information to the log.
-         */
-        void write_log(DeformableSimplicialComplex *complex)
-        {
-            write_message("SIMPLICIAL COMPLEX INFO");
-            //        write_variable("Size X\t", complex->get_size_x());
-            //        write_variable("Size Y\t", complex->get_size_y());
-            //        write_variable("Avg edge length", complex->get_avg_edge_length());
-            //        write_variable("Min deformation", complex->get_min_deformation());
-            //        write_variable("Total volume", complex->get_volume());
-            
-            int total, object;
-            complex->count_nodes(total, object);
-            write_variable("#nodes\t", total);
-            write_variable("#obj nodes", object);
-            
-            complex->count_edges(total, object);
-            write_variable("#edges\t", total);
-            write_variable("#obj edges", object);
-            
-            complex->count_faces(total, object);
-            write_variable("#faces\t", total);
-            write_variable("#obj faces", object);
-            
-            complex->count_tetrahedra(total, object);
-            write_variable("#tetrahedra", total);
-            write_variable("#obj tets", object);
-            
-            std::vector<int> hist;
-            real min_a, max_a;
-            complex->get_dihedral_angles(hist, min_a, max_a);
-            write_variable("Min dih. angle", min_a, "degrees");
-            write_variable("Max dih. angle", max_a, "degrees");
-            write_variable("DAhist", hist);
-            
-            complex->get_qualities(hist, min_a);
-            write_variable("Min quality", min_a);
-            write_variable("Qhist", hist);
-            
-        }
-        
-        /**
-         Writes velocity function information to the log.
-         */
-        void write_log(const VelocityFunc *vel_fun)
-        {
-            write_message("VELOCITY FUNCTION INFO");
-            write_variable("Velocity", vel_fun->get_velocity());
-            write_variable("Accuracy", vel_fun->get_accuracy());
-        }
-        
-        /**
-         Writes timings to the log.
-         */
-        void write_timings(const VelocityFunc *vel_fun)
-        {
-            real deform_time = vel_fun->get_total_deform_time();
-            real compute_time = vel_fun->get_total_compute_time();
-            write_message("TIMINGS");
-            write_variable("Total time", deform_time + compute_time, "s");
-            write_variable("Compute time", compute_time, "s");
-            write_variable("Deform time", deform_time , "s");
-        }
-    };
+    std::string get_path()
+    {
+        return path;
+    }
     
-}
+private:
+    /**
+     Write a variable with name and value to the log.
+     */
+    void write_variable(const char* name, DSC::real value);
+    
+    /**
+     Write a variable with name, value and change in value to the log.
+     */
+    void write_variable(const char* name, DSC::real value, DSC::real change);
+    
+    /**
+     Write a variable with name, value and unit of the value to the log.
+     */
+    void write_variable(const char* name, DSC::real value, const char* unit);
+    
+    /**
+     Write a variable with name and values to the log.
+     */
+    void write_variable(const char* name, const std::vector<DSC::real>& values);
+    
+    void write_variable(const char* name, const std::vector<int>& values);
+    
+public:
+    
+    /**
+     Write a message to the terminal and the log.
+     */
+    void write_message(const char* message);
+    
+    /**
+     Write the time step number, timings and additional time step information to the log.
+     */
+    void write_timestep(const DSC::VelocityFunc<> *vel_fun, DSC::DeformableSimplicialComplex<> *complex);
+    
+    /**
+     Writes simplicial complex information to the log.
+     */
+    void write_log(DSC::DeformableSimplicialComplex<> *complex);
+    
+    /**
+     Writes velocity function information to the log.
+     */
+    void write_log(const DSC::VelocityFunc<> *vel_fun);
+    
+    /**
+     Writes timings to the log.
+     */
+    void write_timings(const DSC::VelocityFunc<> *vel_fun);
+};

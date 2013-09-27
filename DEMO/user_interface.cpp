@@ -323,6 +323,7 @@ void UI::stop()
 
 void UI::start()
 {
+    basic_log = new Log(create_log_path());
     painter->update(*dsc);
     if(RECORD)
     {
@@ -351,7 +352,6 @@ void UI::rotate_cube()
     
     dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain);
     vel_fun = new RotateFunc(VELOCITY, ACCURACY);
-    basic_log = new Log<>(create_log_path());
     
     double size = 35.;
     ObjectGenerator::create_cube(*dsc, vec3(-size/2.), vec3(size), 1);
@@ -371,7 +371,6 @@ void UI::smooth_armadillo()
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(60.));
     dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain);
     vel_fun = new AverageFunc(VELOCITY, ACCURACY);
-    basic_log = new Log<>(create_log_path());
     
     ObjectGenerator::create(*dsc, tet_labels);
     
@@ -390,7 +389,6 @@ void UI::expand_sphere()
     
     dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain);
     vel_fun = new NormalFunc(VELOCITY, ACCURACY);
-    basic_log = new Log<>(create_log_path());
     
     ObjectGenerator::create_sphere(*dsc, vec3(0.), 20., 1);
     
@@ -409,7 +407,6 @@ void UI::expand_armadillo()
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(60.));
     dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain);
     vel_fun = new NormalFunc(VELOCITY, ACCURACY);
-    basic_log = new Log<>(create_log_path());
     
     ObjectGenerator::create(*dsc, tet_labels);
     
