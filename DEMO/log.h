@@ -83,12 +83,12 @@ public:
     /**
      Write the time step number, timings and additional time step information to the log.
      */
-    void write_timestep(const DSC::VelocityFunc<>& vel_fun, DSC::DeformableSimplicialComplex<>& complex);
+    void write_timestep(const DSC::VelocityFunc<>& vel_fun, DSC::DeformableSimplicialComplex<>& dsc);
     
     /**
      Writes simplicial complex information to the log.
      */
-    void write_log(DSC::DeformableSimplicialComplex<>& complex);
+    void write_log(DSC::DeformableSimplicialComplex<>& dsc);
     
     /**
      Writes velocity function information to the log.
