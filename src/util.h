@@ -140,7 +140,7 @@ namespace DSC {
         }
         
         template <typename real, typename vec3>
-        inline real min_angle(const vec3& a, const vec3& b, const vec3& c)
+        inline real cos_min_angle(const vec3& a, const vec3& b, const vec3& c)
         {
             std::vector<real> cosines = cos_angles<real>(a, b, c);
             real max_cos = -1.;
@@ -148,11 +148,17 @@ namespace DSC {
             {
                 max_cos = std::max(cos, max_cos);
             }
-            return acos(max_cos);
+            return max_cos;
         }
         
         template <typename real, typename vec3>
-        inline real max_angle(const vec3& a, const vec3& b, const vec3& c)
+        inline real min_angle(const vec3& a, const vec3& b, const vec3& c)
+        {
+            return acos(cos_min_angle<real>(a, b, c));
+        }
+        
+        template <typename real, typename vec3>
+        inline real cos_max_angle(const vec3& a, const vec3& b, const vec3& c)
         {
             std::vector<real> cosines = cos_angles<real>(a, b, c);
             real min_cos = 1.;
@@ -160,7 +166,13 @@ namespace DSC {
             {
                 min_cos = std::min(cos, min_cos);
             }
-            return std::acos(min_cos);
+            return min_cos;
+        }
+        
+        template <typename real, typename vec3>
+        inline real max_angle(const vec3& a, const vec3& b, const vec3& c)
+        {
+            return std::acos(cos_max_angle<real>(a, b, c));
         }
         
         /**
