@@ -59,18 +59,16 @@ namespace DSC {
         real MIN_TET_QUALITY;
         
         // Thresholds on the length of edges.
-        real DEG_EDGE_LENGTH;
-        real MIN_EDGE_LENGTH;
-        real MAX_EDGE_LENGTH;
+        real MIN_LENGTH;
+        real MAX_LENGTH;
         
         // Thresholds on the area of faces.
         real MIN_AREA;
         real MAX_AREA;
         
         // Thresholds on the volume of tetrahedra.
-        real DEG_TET_VOLUME;
-        real MIN_TET_VOLUME;
-        real MAX_TET_VOLUME;
+        real MIN_VOLUME;
+        real MAX_VOLUME;
         
         // As close as a node can get to an opposite face before movement is stopped.
         real MIN_DEFORMATION;
@@ -88,8 +86,8 @@ namespace DSC {
             AVG_EDGE_LENGTH = _AVG_EDGE_LENGTH;
             MIN_DEFORMATION = 0.25 * AVG_EDGE_LENGTH;
             
-            DEG_EDGE_QUALITY = 0.1 * AVG_EDGE_LENGTH;
-            MIN_EDGE_QUALITY = 0.5 * AVG_EDGE_LENGTH;
+            DEG_EDGE_QUALITY = 0.1;
+            MIN_EDGE_QUALITY = 0.5;
             
             DEG_FACE_QUALITY = 1. - cos(5.*M_PI/180.);
             MIN_FACE_QUALITY = 1. - cos(10.*M_PI/180.);
@@ -99,18 +97,16 @@ namespace DSC {
             
             FLIP_EDGE_INTERFACE_FLATNESS = 0.995;
             
-            DEG_EDGE_LENGTH = 0.1 * AVG_EDGE_LENGTH;
-            MIN_EDGE_LENGTH = 0.5 * AVG_EDGE_LENGTH;
-            MAX_EDGE_LENGTH = 2. * AVG_EDGE_LENGTH;
+            MIN_LENGTH = 0.5 * AVG_EDGE_LENGTH;
+            MAX_LENGTH = 2. * AVG_EDGE_LENGTH;
             
             real area_avg = AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*0.5;
             MIN_AREA = 0.2*area_avg;
             MAX_AREA = 5.*area_avg;
             
             real vol_avg = AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*sqrt(2.)/12.;
-            DEG_TET_VOLUME = 0.1*vol_avg;
-            MIN_TET_VOLUME = 0.5*vol_avg;
-            MAX_TET_VOLUME = 10.*vol_avg;
+            MIN_VOLUME = 0.5*vol_avg;
+            MAX_VOLUME = 10.*vol_avg;
             
             //        fix_complex();
             //        resize_complex();
@@ -914,7 +910,7 @@ namespace DSC {
             std::vector<edge_key> edges;
             for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
             {
-                if (is_unsafe_editable(eit.key()) && is_interface(eit.key()) && length(eit.key()) > MAX_EDGE_LENGTH)
+                if (is_unsafe_editable(eit.key()) && is_interface(eit.key()) && length(eit.key()) > MAX_LENGTH)
                 {
                     edges.push_back(eit.key());
                 }
@@ -922,7 +918,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto &e : edges)
             {
-                if (is_unsafe_editable(e) && is_interface(e) && length(e) > MAX_EDGE_LENGTH)
+                if (is_unsafe_editable(e) && is_interface(e) && length(e) > MAX_LENGTH)
                 {
                     if(split(e) != Complex::NULL_NODE)
                     {
@@ -942,7 +938,7 @@ namespace DSC {
             std::vector<tet_key> tetrahedra;
             for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
             {
-                if (volume(tit.key()) > MAX_TET_VOLUME)
+                if (volume(tit.key()) > MAX_VOLUME)
                 {
                     tetrahedra.push_back(tit.key());
                 }
@@ -950,7 +946,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto &t : tetrahedra)
             {
-                if (Complex::exists(t) && volume(t) > MAX_TET_VOLUME)
+                if (Complex::exists(t) && volume(t) > MAX_VOLUME)
                 {
                     if(split(t) != Complex::NULL_NODE)
                     {
@@ -973,7 +969,7 @@ namespace DSC {
             std::vector<tet_key> tetrahedra;
             for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
             {
-                if (volume(tit.key()) < MIN_TET_VOLUME)
+                if (volume(tit.key()) < MIN_VOLUME)
                 {
                     tetrahedra.push_back(tit.key());
                 }
@@ -981,7 +977,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto &t : tetrahedra)
             {
-                if (Complex::exists(t) && volume(t) < MIN_TET_VOLUME)
+                if (Complex::exists(t) && volume(t) < MIN_VOLUME)
                 {
                     if(collapse(t))
                     {
@@ -997,14 +993,14 @@ namespace DSC {
         // REMOVE DEGENERACIES //
         /////////////////////////
         /**
-         * Attempt to remove edges shorter than DEG_EDGE_LENGTH by collapsing them.
+         * Attempt to remove edges with lower quality than DEG_EDGE_QUALITY by collapsing them.
          */
         void remove_degenerate_edges()
         {
             std::list<edge_key> edges;
             for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
             {
-                if (length(eit.key()) < DEG_EDGE_LENGTH)
+                if (quality(eit.key()) < DEG_EDGE_QUALITY)
                 {
                     edges.push_back(eit.key());
                 }
@@ -1012,7 +1008,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto e : edges)
             {
-                if(Complex::exists(e) && length(e) < DEG_EDGE_LENGTH)
+                if(Complex::exists(e) && quality(e) < DEG_EDGE_QUALITY)
                 {
                     if(collapse(e, false))
                     {
@@ -1097,14 +1093,14 @@ namespace DSC {
         //////////////////////////////////
         
         /**
-         * Attempt to remove edges shorter than MIN_EDGE_LENGTH by safely collapsing them.
+         * Attempt to remove edges with worse quality than MIN_EDGE_QUALITY by safely collapsing them.
          */
         void remove_edges()
         {
             std::list<edge_key> edges;
             for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
             {
-                if (length(eit.key()) < MIN_EDGE_LENGTH)
+                if (quality(eit.key()) < MIN_EDGE_QUALITY)
                 {
                     edges.push_back(eit.key());
                 }
@@ -1112,7 +1108,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto e : edges)
             {
-                if(Complex::exists(e) && length(e) < MIN_EDGE_LENGTH)
+                if(Complex::exists(e) && quality(e) < MIN_EDGE_QUALITY)
                 {
                     if(collapse(e) != Complex::NULL_NODE)
                     {
@@ -2020,6 +2016,11 @@ namespace DSC {
                 worst_a = std::max(worst_a, std::abs(a));
             }
             return 1. - worst_a;
+        }
+        
+        real quality(const edge_key& eid)
+        {
+            return length(eid)/AVG_EDGE_LENGTH;
         }
         
         /**
