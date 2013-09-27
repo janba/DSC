@@ -1442,32 +1442,23 @@ namespace DSC {
         
         void fix_complex()
         {
-            simplex_set region;
-            
             std::cout << "Smooth." << std::endl;
             smooth();
-//            validity_check();
             
             std::cout << "Topological removals." << std::endl;
             topological_edge_removal();
-//            validity_check();
             topological_face_removal();
-//            validity_check();
             
-            //        std::cout << "Low quality removal." << std::endl;
-            //        remove_tets();
-            //        validity_check();
-            //        remove_faces();
-            //        validity_check();
-            //        remove_edges();
-            //        validity_check();
+//            std::cout << "Low quality removal." << std::endl;
+//            remove_tets();
+//            remove_faces();
+//            remove_edges();
             
             std::cout << "Degeneracy removal." << std::endl;
             remove_degenerate_tets();
-//            validity_check();
             remove_degenerate_faces();
-//            validity_check();
             remove_degenerate_edges();
+            
             validity_check();
         }
         
@@ -1475,20 +1466,17 @@ namespace DSC {
         {
             std::cout << "Thickening interface pass." << std::endl;
             thickening_interface();
-//            validity_check();
             
-            //        std::cout << "Thinning interface pass." << std::endl;
-            //        thinning_interface();
-            //        validity_check();
+//            std::cout << "Thinning interface pass." << std::endl;
+//            thinning_interface();
             
-            //        std::cout << "Thickening pass." << std::endl;
-            //        thickening();
-            //        validity_check();
+            std::cout << "Thickening pass." << std::endl;
+            thickening();
             
 //            std::cout << "Thinning pass." << std::endl;
 //            thinning();
-//            validity_check();
             
+            validity_check();
             fix_complex();
         }
         
