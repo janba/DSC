@@ -80,7 +80,7 @@ class Painter {
     int WIDTH, HEIGHT;
     GLuint gouraud_shader;
     
-    std::unique_ptr<GLObject> interface, domain, tetrahedra;
+    std::unique_ptr<GLObject> interface, domain, low_quality;
     
     // Uniform variables
     CGLA::Mat4x4f projectionMatrix, viewMatrix, modelMatrix = CGLA::rotation_Mat4x4f(CGLA::YAXIS, M_PI);
@@ -139,5 +139,5 @@ private:
     /**
      Updates the drawn tetrahedra.
      */
-    void update_tetrahedra(DSC::DeformableSimplicialComplex<>& dsc);
+    void update_low_quality(DSC::DeformableSimplicialComplex<>& dsc);
 };

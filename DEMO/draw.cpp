@@ -194,7 +194,7 @@ Painter::Painter(const DSC::vec3& light_pos)
     
     interface = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.1, 0.3, 0.1, 1.}, {0.5, 0.5, 0.5, 1.}, {0.3, 0.3, 0.3, 1.}));
     domain = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.1, 0.1, 0.3, 1.}, {0.2, 0.2, 0.3, 1.}, {0., 0., 0., 1.}));
-    tetrahedra = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.3, 0.1, 0.1, 0.1}, {0.6, 0.4, 0.4, 0.2}, {0., 0., 0., 0.}));
+    low_quality = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.3, 0.1, 0.1, 0.1}, {0.6, 0.4, 0.4, 0.2}, {0., 0., 0., 0.}));
     
     // Enable states
     glEnable(GL_DEPTH_TEST);
@@ -295,7 +295,7 @@ void Painter::draw()
     domain->draw();
     
     glDisable(GL_CULL_FACE);
-    tetrahedra->draw();
+    low_quality->draw();
     glEnable(GL_CULL_FACE);
     
     check_gl_error();
@@ -305,7 +305,7 @@ void Painter::update(DSC::DeformableSimplicialComplex<>& dsc)
 {
     update_interface(dsc);
     update_domain(dsc);
-//    update_tetrahedra(dsc);
+    update_low_quality(dsc);
 }
 
 void Painter::update_interface(DSC::DeformableSimplicialComplex<>& dsc)
@@ -381,16 +381,13 @@ void Painter::update_domain(DSC::DeformableSimplicialComplex<>& dsc)
     domain->add_data(data);
 }
 
-void Painter::update_tetrahedra(DSC::DeformableSimplicialComplex<>& dsc)
+void Painter::update_low_quality(DSC::DeformableSimplicialComplex<>& dsc)
 {
     std::vector<DSC::vec3> data;
     for (auto tit = dsc.tetrahedra_begin(); tit != dsc.tetrahedra_end(); tit++)
     {
-        bool low_quality = dsc.quality(tit.key()) < dsc.get_min_tet_quality();
-        bool small_angle = dsc.min_dihedral_angle(tit.key()) < dsc.get_min_angle();
-        if(low_quality || small_angle)
+        if(dsc.quality(tit.key()) < dsc.get_min_tet_quality())
         {
-            
             typename DSC::DeformableSimplicialComplex<>::simplex_set cl_t;
             dsc.closure(tit.key(), cl_t);
             
@@ -407,6 +404,20 @@ void Painter::update_tetrahedra(DSC::DeformableSimplicialComplex<>& dsc)
             }
         }
     }
-    tetrahedra->add_data(data);
+    for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
+    {
+        if(dsc.quality(fit.key()) < dsc.get_min_face_quality())
+        {
+            auto nodes = dsc.get_nodes(fit.key());
+            DSC::vec3 normal = dsc.get_normal(fit.key());
+            
+            for(auto &n : nodes)
+            {
+                data.push_back(dsc.get_pos(n));
+                data.push_back(normal);
+            }
+        }
+    }
+    low_quality->add_data(data);
 }
 

@@ -39,31 +39,41 @@ namespace DSC {
     private:
         DesignDomain *design_domain;
         
-        // Thresholds on the dihedral angle between two neighbouring faces
-        real DEG_ANGLE;
-        real MIN_ANGLE;
+        // Input parameter
+        real AVG_EDGE_LENGTH;
         
-        // Thresholds on the quality of tetrahedra
+        // Should be eliminated
+        real FLIP_EDGE_INTERFACE_FLATNESS;
+        
+    protected:
+        // Thresholds on the quality of edges
+        real DEG_EDGE_QUALITY;
+        real MIN_EDGE_QUALITY;
+        
+        // Thresholds on the quality of faces.
+        real DEG_FACE_QUALITY;
+        real MIN_FACE_QUALITY;
+        
+        // Thresholds on the quality of tetrahedra.
         real DEG_TET_QUALITY;
         real MIN_TET_QUALITY;
         
-        // Thresholds on the volume of tetrahedra
-        real DEG_TET_VOLUME;
-        real MIN_TET_VOLUME;
-        real MAX_TET_VOLUME;
-        
-        // Thresholds on the length of edges
+        // Thresholds on the length of edges.
         real DEG_EDGE_LENGTH;
         real MIN_EDGE_LENGTH;
         real MAX_EDGE_LENGTH;
         
-        // User defined parameters
-        real AVG_EDGE_LENGTH;
+        // Thresholds on the area of faces.
+        real MIN_AREA;
+        real MAX_AREA;
+        
+        // Thresholds on the volume of tetrahedra.
+        real DEG_TET_VOLUME;
+        real MIN_TET_VOLUME;
+        real MAX_TET_VOLUME;
+        
+        // As close as a node can get to an opposite face before movement is stopped.
         real MIN_DEFORMATION;
-        
-        real FLIP_EDGE_INTERFACE_FLATNESS;
-        
-        int step_no;
         
         //////////////////////////
         // INITIALIZE FUNCTIONS //
@@ -75,24 +85,30 @@ namespace DSC {
         DeformableSimplicialComplex(real _AVG_EDGE_LENGTH, std::vector<real> & points, std::vector<int> & tets, DesignDomain *domain = nullptr):
         ISMesh<node_att, edge_att, face_att, tet_att>(points, tets), design_domain(domain)
         {
-            step_no = 0;
-            
             AVG_EDGE_LENGTH = _AVG_EDGE_LENGTH;
+            MIN_DEFORMATION = 0.25 * AVG_EDGE_LENGTH;
+            
+            DEG_EDGE_QUALITY = 0.1 * AVG_EDGE_LENGTH;
+            MIN_EDGE_QUALITY = 0.5 * AVG_EDGE_LENGTH;
+            
+            DEG_FACE_QUALITY = 1. - cos(5.*M_PI/180.);
+            MIN_FACE_QUALITY = 1. - cos(10.*M_PI/180.);
+            
+            DEG_TET_QUALITY = 0.01;
+            MIN_TET_QUALITY = 0.3;
+            
+            FLIP_EDGE_INTERFACE_FLATNESS = 0.995;
             
             DEG_EDGE_LENGTH = 0.1 * AVG_EDGE_LENGTH;
             MIN_EDGE_LENGTH = 0.5 * AVG_EDGE_LENGTH;
             MAX_EDGE_LENGTH = 2. * AVG_EDGE_LENGTH;
             
-            DEG_ANGLE = 5.*M_PI/180.;
-            MIN_ANGLE = 10.*M_PI/180.;
-            
-            MIN_DEFORMATION = 0.25 * AVG_EDGE_LENGTH;
-            
-            DEG_TET_QUALITY = 0.01;
-            MIN_TET_QUALITY = 0.3;
-            FLIP_EDGE_INTERFACE_FLATNESS = 0.995;
+            real area_avg = AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*0.5;
+            MIN_AREA = 0.2*area_avg;
+            MAX_AREA = 5.*area_avg;
             
             real vol_avg = AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*sqrt(2.)/12.;
+            DEG_TET_VOLUME = 0.1*vol_avg;
             MIN_TET_VOLUME = 0.5*vol_avg;
             MAX_TET_VOLUME = 10.*vol_avg;
             
@@ -395,9 +411,14 @@ namespace DSC {
             return DEG_TET_QUALITY;
         }
         
-        real get_min_angle() const
+        real get_deg_face_quality() const
         {
-            return MIN_ANGLE;
+            return DEG_FACE_QUALITY;
+        }
+        
+        real get_min_face_quality() const
+        {
+            return MIN_FACE_QUALITY;
         }
         
         real get_avg_edge_length() const
@@ -1010,7 +1031,7 @@ namespace DSC {
             
             for (auto fit = Complex::faces_begin(); fit != Complex::faces_end(); fit++)
             {
-                if(min_angle(fit.key()) < DEG_ANGLE)
+                if(quality(fit.key()) < DEG_FACE_QUALITY)
                 {
                     faces.push_back(fit.key());
                 }
@@ -1019,7 +1040,7 @@ namespace DSC {
             int i = 0, j = 0;
             for (auto &f : faces)
             {
-                if (Complex::exists(f) && min_angle(f) < DEG_ANGLE)
+                if (Complex::exists(f) && quality(f) < DEG_FACE_QUALITY)
                 {
                     if(collapse(f, false))
                     {
@@ -1153,7 +1174,7 @@ namespace DSC {
          */
         bool remove_face(const face_key& f)
         {
-            if(max_angle(f) > M_PI - MIN_ANGLE)
+            if(max_angle(f) > 0.9*M_PI)
             {
                 return remove_cap(f);
             }
@@ -1169,7 +1190,7 @@ namespace DSC {
             
             for (auto fit = Complex::faces_begin(); fit != Complex::faces_end(); fit++)
             {
-                if(min_angle(fit.key()) < MIN_ANGLE)
+                if(quality(fit.key()) < MIN_FACE_QUALITY)
                 {
                     faces.push_back(fit.key());
                 }
@@ -1178,7 +1199,7 @@ namespace DSC {
             int i = 0, j = 0;
             for (auto &f : faces)
             {
-                if (Complex::exists(f) && min_angle(f) < MIN_ANGLE)
+                if (Complex::exists(f) && quality(f) < MIN_FACE_QUALITY)
                 {
                     if(remove_face(f))
                     {
@@ -1517,7 +1538,6 @@ namespace DSC {
             
             Complex::garbage_collect();
             update_attributes();
-            ++step_no;
         }
         
     private:
@@ -1988,6 +2008,18 @@ namespace DSC {
             std::vector<vec3> verts;
             get_pos(f, verts);
             return Util::max_angle<real>(verts[0], verts[1], verts[2]);
+        }
+        
+        real quality(const face_key& fid)
+        {
+            auto verts = get_pos(fid);
+            auto angles = Util::cos_angles<real>(verts[0], verts[1], verts[2]);
+            real worst_a;
+            for(auto a : angles)
+            {
+                worst_a = std::max(worst_a, std::abs(a));
+            }
+            return 1. - worst_a;
         }
         
         /**
