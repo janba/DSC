@@ -175,6 +175,11 @@ namespace DSC {
         // ATTRIBUTE FUNCTIONS //
         /////////////////////////
     public:
+        virtual void update_attributes()
+        {
+            
+        }
+    
         template<typename key>
         bool is_interface(const key& k)
         {
@@ -298,7 +303,7 @@ namespace DSC {
         /**
          * Sets the position of node n.
          */
-        void set_pos(const node_key& n, vec3 p)
+        void set_pos(const node_key& n, const vec3& p)
         {
             Complex::get(n).set_pos(p);
         }
@@ -403,15 +408,6 @@ namespace DSC {
         const DesignDomain* get_design_domain() const
         {
             return design_domain;
-        }
-        
-        /////////////////////
-        // GARBAGE COLLECT //
-        /////////////////////
-        
-        virtual void garbage_collect()
-        {
-            Complex::garbage_collect();
         }
         
         ////////////////////////
@@ -675,7 +671,7 @@ namespace DSC {
                 }
             }
             std::cout << "Topological edge removals: " << i << "/" << j << std::endl;
-            garbage_collect();
+            Complex::garbage_collect();
         }
         
         //////////////////////////////
@@ -881,7 +877,7 @@ namespace DSC {
             }
             std::cout << "Topological face removals: " << i << "/" << j << std::endl;
             
-            garbage_collect();
+            Complex::garbage_collect();
         }
         
         ////////////////
@@ -1004,7 +1000,7 @@ namespace DSC {
                 }
             }
             std::cout << "Removed " << i <<"/"<< j << " degenerate edges" << std::endl;
-            garbage_collect();
+            Complex::garbage_collect();
         }
         
         void remove_degenerate_faces()
@@ -1038,7 +1034,7 @@ namespace DSC {
                 }
             }
             std::cout << "Removed " << i <<"/"<< j << " degenerate faces" << std::endl;
-            garbage_collect();
+            Complex::garbage_collect();
         }
         
         void remove_degenerate_tets()
@@ -1071,7 +1067,7 @@ namespace DSC {
                 }
             }
             std::cout << "Removed " << i <<"/"<< j << " degenerate tets" << std::endl;
-            garbage_collect();
+            Complex::garbage_collect();
         }
         
         //////////////////////////////////
@@ -1104,7 +1100,7 @@ namespace DSC {
                 }
             }
             std::cout << "Removed " << i <<"/"<< j << " low quality edges" << std::endl;
-            garbage_collect();
+            Complex::garbage_collect();
         }
         
         /**
@@ -1191,7 +1187,7 @@ namespace DSC {
                 }
             }
             std::cout << "Removed " << i <<"/"<< j << " low quality faces" << std::endl;
-            garbage_collect();
+            Complex::garbage_collect();
         }
         
         /**
@@ -1379,7 +1375,7 @@ namespace DSC {
                 }
             }
             std::cout << "Removed " << i <<"/"<< j << " low quality tets" << std::endl;
-            garbage_collect();
+            Complex::garbage_collect();
         }
         
         ///////////////
@@ -1518,7 +1514,8 @@ namespace DSC {
             
             resize_complex();
             
-            garbage_collect();
+            Complex::garbage_collect();
+            update_attributes();
             ++step_no;
         }
         
@@ -2407,7 +2404,7 @@ namespace DSC {
         
         void extract_tet_mesh(std::vector<vec3>& points, std::vector< std::vector<int> >& tets)
         {
-            garbage_collect();
+            Complex::garbage_collect();
             
             std::map<node_key, int> indices;
             int counter = 0;

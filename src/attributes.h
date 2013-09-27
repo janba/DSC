@@ -43,7 +43,7 @@ namespace DSC {
             p = vec3(x,y,z);
         }
         
-        void set_pos(vec3 p_)
+        void set_pos(const vec3& p_)
         {
             p = p_;
         }
@@ -53,7 +53,7 @@ namespace DSC {
             p_new = vec3(x,y,z);
         }
         
-        void set_destination(vec3 p_)
+        void set_destination(const vec3& p_)
         {
             p_new = p_;
         }

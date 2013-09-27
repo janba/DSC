@@ -43,7 +43,7 @@ namespace DSC {
             {
                 dsc.set_label(tit.key(), tet_labels[tit.key()]);
             }
-            dsc.garbage_collect();
+            dsc.update_attributes();
         }
 
         template <typename DeformableSimplicialComplex>
@@ -66,7 +66,7 @@ namespace DSC {
                     dsc.set_label(tit.key(), label);
                 }
             }
-            dsc.garbage_collect();
+            dsc.update_attributes();
         }
         
         template <typename DeformableSimplicialComplex>
@@ -93,7 +93,7 @@ namespace DSC {
                     dsc.set_label(tit.key(), label);
                 }
             }
-            dsc.garbage_collect();
+            dsc.update_attributes();
         }
     };
     

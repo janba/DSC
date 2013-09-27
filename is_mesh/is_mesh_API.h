@@ -272,7 +272,7 @@ private:
             }
         }
     }
-public:
+    
     bool crossing(const node_key& n)
     {
         simplex_set st_n;
