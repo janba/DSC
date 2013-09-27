@@ -16,24 +16,49 @@
 
 #include "log.h"
 
+#ifdef WIN32
+#include <direct.h>
+#else
+#include <sys/stat.h>
+#include <sys/types.h>
+#endif
+
 using namespace DSC;
 
-void Log::write_variable(const char* name, real value)
+Log::Log(const std::string& path_)
+{
+    std::string temp;
+    int error;
+    int i = 0;
+    do {
+        temp = DSC::Util::concat4digits(path_ + "_test",i);
+#ifdef WIN32
+        error = _mkdir(temp.c_str());
+#else
+        error = mkdir(temp.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+#endif
+        i++;
+    } while (error != 0 && i < 1000);
+    path = temp;
+    log.open(path + "/log.txt");
+}
+
+void Log::write_variable(const std::string& name, real value)
 {
     log << "\t" << name << "\t:\t" << value << std::endl;
 }
 
-void Log::write_variable(const char* name, real value, real change)
+void Log::write_variable(const std::string& name, real value, real change)
 {
     log << "\t" << name << "\t:\t" << value << "\t\tChange\t:\t" << change << std::endl;
 }
 
-void Log::write_variable(const char* name, real value, const char* unit)
+void Log::write_variable(const std::string& name, real value, const std::string& unit)
 {
     log << "\t" << name << "\t:\t" << value << " " << unit << std::endl;
 }
 
-void Log::write_variable(const char* name, const std::vector<real>& values)
+void Log::write_variable(const std::string& name, const std::vector<real>& values)
 {
     if(values.size() > 0)
     {
@@ -50,7 +75,7 @@ void Log::write_variable(const char* name, const std::vector<real>& values)
     }
 }
 
-void Log::write_variable(const char* name, const std::vector<int>& values)
+void Log::write_variable(const std::string& name, const std::vector<int>& values)
 {
     if(values.size() > 0)
     {
@@ -67,80 +92,80 @@ void Log::write_variable(const char* name, const std::vector<int>& values)
     }
 }
 
-void Log::write_message(const char* message)
+void Log::write_message(const std::string& message)
 {
     log << std::endl  << "*** " << message << " ***" << std::endl;
     std::cout << "*** " << message << " ***" << std::endl;
 }
 
-void Log::write_timestep(const VelocityFunc<> *vel_fun, DeformableSimplicialComplex<> *complex)
+void Log::write_timestep(const VelocityFunc<>& vel_fun, DeformableSimplicialComplex<>& dsc)
 {
-    //    std::cout << "\n\n*** Time step #" << vel_fun->get_time_step() << " ***" << std::endl;
-    log << std::endl << "*** Time step #" << vel_fun->get_time_step() << " ***" << std::endl;
+    //    std::cout << "\n\n*** Time step #" << vel_fun.get_time_step() << " ***" << std::endl;
+    log << std::endl << "*** Time step #" << vel_fun.get_time_step() << " ***" << std::endl;
     log << std::endl;
-    write_variable("Compute time", vel_fun->get_compute_time(), "s");
-    write_variable("Deform time", vel_fun->get_deform_time(), "s");
-    write_variable("Total time", vel_fun->get_compute_time() + vel_fun->get_deform_time(), "s");
+    write_variable("Compute time", vel_fun.get_compute_time(), "s");
+    write_variable("Deform time", vel_fun.get_deform_time(), "s");
+    write_variable("Total time", vel_fun.get_compute_time() + vel_fun.get_deform_time(), "s");
     
-    write_variable("Min quality", complex->min_quality());
+    write_variable("Min quality", dsc.min_quality());
     
     std::vector<int> hist;
     real min_a, max_a;
-    complex->get_dihedral_angles(hist, min_a, max_a);
+    dsc.get_dihedral_angles(hist, min_a, max_a);
     write_variable("Min dih. angle", min_a, "degrees");
     write_variable("Max dih. angle", max_a, "degrees");
 }
 
-void Log::write_log(DeformableSimplicialComplex<> *complex)
+void Log::write_log(DeformableSimplicialComplex<>& dsc)
 {
     write_message("SIMPLICIAL COMPLEX INFO");
-    //        write_variable("Size X\t", complex->get_size_x());
-    //        write_variable("Size Y\t", complex->get_size_y());
-    //        write_variable("Avg edge length", complex->get_avg_edge_length());
-    //        write_variable("Min deformation", complex->get_min_deformation());
-    //        write_variable("Total volume", complex->get_volume());
+    //        write_variable("Size X\t", complex.get_size_x());
+    //        write_variable("Size Y\t", complex.get_size_y());
+    //        write_variable("Avg edge length", complex.get_avg_edge_length());
+    //        write_variable("Min deformation", complex.get_min_deformation());
+    //        write_variable("Total volume", complex.get_volume());
     
     int total, object;
-    complex->count_nodes(total, object);
+    dsc.count_nodes(total, object);
     write_variable("#nodes\t", total);
     write_variable("#obj nodes", object);
     
-    complex->count_edges(total, object);
+    dsc.count_edges(total, object);
     write_variable("#edges\t", total);
     write_variable("#obj edges", object);
     
-    complex->count_faces(total, object);
+    dsc.count_faces(total, object);
     write_variable("#faces\t", total);
     write_variable("#obj faces", object);
     
-    complex->count_tetrahedra(total, object);
+    dsc.count_tetrahedra(total, object);
     write_variable("#tetrahedra", total);
     write_variable("#obj tets", object);
     
     std::vector<int> hist;
     real min_a, max_a;
-    complex->get_dihedral_angles(hist, min_a, max_a);
+    dsc.get_dihedral_angles(hist, min_a, max_a);
     write_variable("Min dih. angle", min_a, "degrees");
     write_variable("Max dih. angle", max_a, "degrees");
     write_variable("DAhist", hist);
     
-    complex->get_qualities(hist, min_a);
+    dsc.get_qualities(hist, min_a);
     write_variable("Min quality", min_a);
     write_variable("Qhist", hist);
     
 }
 
-void Log::write_log(const VelocityFunc<> *vel_fun)
+void Log::write_log(const VelocityFunc<>& vel_fun)
 {
     write_message("VELOCITY FUNCTION INFO");
-    write_variable("Velocity", vel_fun->get_velocity());
-    write_variable("Accuracy", vel_fun->get_accuracy());
+    write_variable("Velocity", vel_fun.get_velocity());
+    write_variable("Accuracy", vel_fun.get_accuracy());
 }
 
-void Log::write_timings(const VelocityFunc<> *vel_fun)
+void Log::write_timings(const VelocityFunc<>& vel_fun)
 {
-    real deform_time = vel_fun->get_total_deform_time();
-    real compute_time = vel_fun->get_total_compute_time();
+    real deform_time = vel_fun.get_total_deform_time();
+    real compute_time = vel_fun.get_total_compute_time();
     write_message("TIMINGS");
     write_variable("Total time", deform_time + compute_time, "s");
     write_variable("Compute time", compute_time, "s");

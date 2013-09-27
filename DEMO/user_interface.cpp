@@ -173,7 +173,7 @@ void UI::animate()
             painter->save_painting(basic_log->get_path(), vel_fun->get_time_step());
         }
         
-        basic_log->write_timestep(vel_fun, dsc);
+        basic_log->write_timestep(*vel_fun, *dsc);
         if (vel_fun->is_motion_finished(*dsc))
         {
             stop();
@@ -309,9 +309,9 @@ void UI::stop()
     if(vel_fun)
     {
         basic_log->write_message("MOTION STOPPED");
-        basic_log->write_log(dsc);
-        basic_log->write_log(vel_fun);
-        basic_log->write_timings(vel_fun);
+        basic_log->write_log(*dsc);
+        basic_log->write_log(*vel_fun);
+        basic_log->write_timings(*vel_fun);
 
         delete vel_fun;
         delete dsc;
@@ -332,8 +332,8 @@ void UI::start()
     }
     
     basic_log->write_message(vel_fun->get_name().c_str());
-    basic_log->write_log(dsc);
-    basic_log->write_log(vel_fun);
+    basic_log->write_log(*dsc);
+    basic_log->write_log(*vel_fun);
     
     update_title();
 	glutReshapeWindow(WIN_SIZE_X, WIN_SIZE_Y);
