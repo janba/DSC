@@ -675,7 +675,7 @@ namespace DSC {
                                     i++;
                                 }
                             }
-                            else if(is_flippable(*eit))
+                            else if(!is_boundary(*eit) && is_flippable(*eit))
                             {
                                 if(topological_boundary_edge_removal(*eit))
                                 {
@@ -1590,6 +1590,10 @@ namespace DSC {
          */
         bool is_flippable(const edge_key & e)
         {
+            if(!is_interface(e) && !is_boundary(e))
+            {
+                return false;
+            }
             simplex_set st_e;
             Complex::star(e, st_e);
             std::vector<face_key> faces;
