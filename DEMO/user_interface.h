@@ -26,13 +26,12 @@
  */
 class UI
 {
-protected:
-    DSC::VelocityFunc<> *vel_fun;
-    DSC::DeformableSimplicialComplex<> *dsc;
+    std::unique_ptr<DSC::VelocityFunc<>> vel_fun;
+    std::unique_ptr<DSC::DeformableSimplicialComplex<>> dsc;
     
-    Log *basic_log;
+    std::unique_ptr<Log> basic_log;
     
-    Painter *painter;
+    std::unique_ptr<Painter> painter;
     DSC::vec3 eye_pos = {30., 30., 100.};
     DSC::vec3 camera_pos = {30., 30., 100.};
     DSC::vec3 light_pos = {0., 0., 50.};
@@ -59,17 +58,13 @@ public:
     
     UI(int &argc, char** argv);
     
-    ~UI()
-    {
-        delete painter;
-    }
-    
     static UI* get_instance()
     {
         return instance;
     }
     
-    virtual std::string create_log_path()
+private:
+    std::string create_log_path()
     {
         std::ostringstream s;
         s << "LOG/delta" << DISCRETIZATION << "_nu" << VELOCITY << "_alpha" << ACCURACY;
@@ -82,13 +77,14 @@ public:
         return obj_path + file;
     }
     
-    virtual void display();
+public:
+    void display();
     
-    virtual void animate();
+    void animate();
     
-    virtual void reshape(int width, int height);
+    void reshape(int width, int height);
     
-    virtual void visible(int v);
+    void visible(int v);
     
     void mouse(int button, int state, int x, int y);
     
@@ -127,8 +123,9 @@ public:
      5:         Selects motion type 5.
      6:         Selects motion type 6.
      */
-    virtual void keyboard(unsigned char key, int x, int y);
+    void keyboard(unsigned char key, int x, int y);
     
+private:
     void rotate_cube();
     
     void smooth_armadillo();
@@ -153,10 +150,10 @@ public:
     /**
      Starts the motion.
      */
-    virtual void start();
+    void start();
     
     /**
      Stops the motion and deletes the DSC object.
      */
-    virtual void stop();
+    void stop();
 };

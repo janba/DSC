@@ -69,7 +69,7 @@ UI::UI(int &argc, char** argv)
 	}
     check_gl_error(); // Catches a GL_INVALID_ENUM error. See http://www.opengl.org/wiki/OpenGL_Loading_Library
     
-    painter = new Painter(light_pos);
+    painter = std::unique_ptr<Painter>(new Painter(light_pos));
     vel_fun = nullptr;
     dsc = nullptr;
     
@@ -306,24 +306,21 @@ void UI::visible(int v)
 
 void UI::stop()
 {
-    if(vel_fun)
+    if(basic_log)
     {
         basic_log->write_message("MOTION STOPPED");
         basic_log->write_log(*dsc);
         basic_log->write_log(*vel_fun);
         basic_log->write_timings(*vel_fun);
-
-        delete vel_fun;
-        delete dsc;
-        delete basic_log;
-        vel_fun = nullptr;
-        dsc = nullptr;
     }
+    basic_log = nullptr;
+    vel_fun = nullptr;
+    dsc = nullptr;
 }
 
 void UI::start()
 {
-    basic_log = new Log(create_log_path());
+    basic_log = std::unique_ptr<Log>(new Log(create_log_path()));
     painter->update(*dsc);
     if(RECORD)
     {
@@ -350,8 +347,8 @@ void UI::rotate_cube()
     
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(40.));
     
-    dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain);
-    vel_fun = new RotateFunc(VELOCITY, ACCURACY);
+    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain));
+    vel_fun = std::unique_ptr<VelocityFunc<>>(new RotateFunc(VELOCITY, ACCURACY));
     
     double size = 35.;
     ObjectGenerator::create_cube(*dsc, vec3(-size/2.), vec3(size), 1);
@@ -369,8 +366,8 @@ void UI::smooth_armadillo()
     import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
     
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(60.));
-    dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain);
-    vel_fun = new AverageFunc(VELOCITY, ACCURACY);
+    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain));
+    vel_fun = std::unique_ptr<VelocityFunc<>>(new AverageFunc(VELOCITY, ACCURACY));
     
     ObjectGenerator::create(*dsc, tet_labels);
     
@@ -387,8 +384,8 @@ void UI::expand_sphere()
     
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(40.));
     
-    dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain);
-    vel_fun = new NormalFunc(VELOCITY, ACCURACY);
+    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain));
+    vel_fun = std::unique_ptr<VelocityFunc<>>(new NormalFunc(VELOCITY, ACCURACY));
     
     ObjectGenerator::create_sphere(*dsc, vec3(0.), 20., 1);
     
@@ -405,8 +402,8 @@ void UI::expand_armadillo()
     import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
     
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(60.));
-    dsc = new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain);
-    vel_fun = new NormalFunc(VELOCITY, ACCURACY);
+    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain));
+    vel_fun = std::unique_ptr<VelocityFunc<>>(new NormalFunc(VELOCITY, ACCURACY));
     
     ObjectGenerator::create(*dsc, tet_labels);
     
