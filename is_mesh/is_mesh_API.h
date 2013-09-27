@@ -651,7 +651,7 @@ public:
     
     node_key split(const tet_key& t)
     {
-        int label = get(t).label;
+        int label = get_label(t);
         
         node_key n = mesh.split_tetrahedron(t);
         

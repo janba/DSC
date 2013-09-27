@@ -1663,13 +1663,12 @@ namespace DSC {
         /**
          * Split a tetrahedron t and returns the new node which is positioned at the barycenter of the vertices of t.
          */
-        node_key split(const tet_key& t)
+        node_key split(const tet_key& tid)
         {
-            std::vector<vec3> verts;
-            get_pos(t, verts);
+            auto verts = get_pos(tid);
             vec3 p = Util::barycenter(verts[0], verts[1], verts[2], verts[3]);
             
-            node_key n = Complex::split(t);
+            node_key n = Complex::split(tid);
             set_pos(n, p);
             set_destination(n, p);
             return n;
