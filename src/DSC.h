@@ -1531,7 +1531,7 @@ namespace DSC {
             vec3 destination = get_dest(n);
             real l = Util::length(destination - pos);
             
-            if (l < EPSILON) // The vertex is not moved
+            if (l < 1e-4*AVG_EDGE_LENGTH) // The vertex is not moved
             {
                 return true;
             }
