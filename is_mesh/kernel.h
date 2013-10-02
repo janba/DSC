@@ -670,189 +670,39 @@ namespace OpenTissue
         if (tmp.state == kernel_element::VALID) return true;
         return false;
       }
-
-      /**
-       * Preallocate a chunk of memory if the surplied argument is larger than the current size.
-       *
-       * @param s     The size to preallocate.
-       */
-      size_type reserve(size_type s) 
-      {
-        if (m_capacity < s) resize(s);
-      }
-
-      /**
-       * Makes a mark for an undo operation.
-       * Copies values between begin and end, so that they can be restored if undo is needed.
-       * The range [begin,end[ must be valid and should return handles to the kernel.
-       * The type <base_iterator> is a forward_iterator concept.
-       *
-       * @param begin     An iterator to the sequence of elements to safe guard.
-       * @param end       An iterator to one past the end of the sequence.
-       */
-      template<typename base_iterator>
-      void set_undo_mark(base_iterator begin, base_iterator end) 
-      {
-        stack_element* e = m_stack_allocator.allocate(1);
-        e->first         = m_first;
-        e->last          = m_last;
-        e->first_marked  = m_first_marked;
-        e->last_marked   = m_last_marked;
-        e->first_empty   = m_first_empty;
-        e->last_empty    = m_last_empty;
-        e->size          = std::distance(begin, end);
         
-        e->elements      = m_alloc.allocate(e->size); //allocate room for size copies
-        
-        //kernel_element Ke;
-        //Ke = m_mem[m_last];
-
-        kernel_element* n = e->elements; 
-		while(begin != end)
+        /**
+         * Commits all the changes in the kernel, and permanently removes all the marked elements.
+         */
+        void commit_all()
         {
-          *n = m_mem[begin->key]; //copies the kernel element
-
-          ++n; ++begin;
+            typename stack_type::iterator it = m_stack.begin();
+            while(it != m_stack.end())
+            {
+                free_stack_element(*it);
+                ++it;
+            }
+            m_stack.clear(); //commit all undo changes
+            
+            key_type m = m_first_marked;
+            while (m != m_past_the_end)
+            {
+                kernel_element* p = &m_mem[m_first_marked];
+                key_type n = p->next;
+                
+                unlink(*p, m_first_marked, m_last_marked);
+                link_at_head(*p, m_first_empty, m_last_empty);
+                
+                m_alloc.destroy(p);
+                
+                p->state = kernel_element::EMPTY;
+                p->key = m;
+                
+                m = n;
+            }
+            
+            m_shadow_size = m_size;
         }
-        m_stack.push_back(e);
-      }
-
-      /**
-       * Rolls back all the changes since the last undo mark in the kernel.
-       * Valid and marked lists return to the same state, as they were when the undo mark was set.
-       */
-	  void undo() 
-      {
-
-        if (m_stack.empty()) return; // no undo marks...
-
-        stack_element* e = m_stack.back();
-
-        while(m_last_marked != e->last_marked)
-        {
-          kernel_element & n = lookup(m_last_marked);
-          assert (n.state == kernel_element::MARKED || !"Marked list contains not marked elements");
-          unlink(n, m_first_marked, m_last_marked);
-          n.state = kernel_element::EMPTY;
-        }
-
-        // restore old values
-
-        key_type back = m_last;
-
-        for(size_type i=0; i < e->size; ++i)
-        {
-          kernel_element & e_old = e->elements[i];
-          kernel_element & e_new = m_mem[e_old.key];
-          assert (e_old.state == kernel_element::VALID);
-
-          if (e_new.state == kernel_element::EMPTY)
-          {
-            relink(e_old, m_first, m_last);
-            ++m_size;
-          }
-
-          m_mem[e_old.key] = e_old;
-		  m_alloc.destroy(&e_new);
-        }
-
-        while(back != e->last && back != m_past_the_end)
-        { // move all allocated elements back to the empty list
-          kernel_element & n = lookup(back);
-          key_type back_prev = n.prev, back_prev_next;
-
-		  if (back_prev != m_past_the_end)
-            back_prev_next = lookup(back_prev).next;
-          else
-            back_prev_next = m_past_the_end;
-
-          n.state = kernel_element::EMPTY;
-          if (back_prev_next == back)
-            unsafe_unlink(n);
-
-          link_at_head(n, m_first_empty, m_last_empty);
-          --m_size;
-
-          if (back != back_prev_next)
-            break;
-
-          back = back_prev;
-        }
-
-        //reset internal pointers
-        m_first         = e->first;
-        m_last          = e->last;
-
-        //release whatever was stored on the stack
-        free_stack_element(e);
-
-		//m_alloc.deallocate(e->elements, e->size);
-        //m_stack_allocator.deallocate(e, 1);
-
-        m_stack.pop_back();
-      }
-	 
-      /**
-       * Rolls back all undo marks in the kernel.
-       */
-      void undo_all()
-      {
-        while(!m_stack.empty()) undo();
-      }
-
-      /**
-       * Commits all the changes since the last undo mark in the kernel.
-       */
-      void commit()
-      {
-        if (m_stack.empty()) return; //no undo marks...
-        stack_element* e = m_stack.back();
-
-        while(m_last_marked != e->last_marked)
-        {
-          kernel_element & n = lookup(m_last_marked);
-          assert (n.state == kernel_element::MARKED || !"Marked list contains not marked elements");
-          unlink(n, m_first_marked, m_last_marked);
-          link_at_head(n, m_first_empty, m_last_empty);
-          n.state = kernel_element::EMPTY;
-        }
-
-        free_stack_element(e);
-        m_stack.pop_back();
-      }
-
-      /**
-       * Commits all the changes in the kernel, and permanently removes all the marked elements.
-       */
-      void commit_all()
-      {
-        typename stack_type::iterator it = m_stack.begin();
-        while(it != m_stack.end())
-        {
-          free_stack_element(*it);
-          ++it;
-        }
-        m_stack.clear(); //commit all undo changes
-
-        key_type m = m_first_marked;
-        while (m != m_past_the_end)
-        {
-          kernel_element* p = &m_mem[m_first_marked];
-          key_type n = p->next;
-
-          unlink(*p, m_first_marked, m_last_marked);
-          link_at_head(*p, m_first_empty, m_last_empty);
-
-          m_alloc.destroy(p);
-
-          p->state = kernel_element::EMPTY;
-          p->key = m;
-
-          m = n;
-        }
-
-        m_shadow_size = m_size;
-      }
 
       /**
        * Reorders all the lists so that cache trashing will be at a minimum.
