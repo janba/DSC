@@ -10,7 +10,6 @@
 #include <list>
 
 #include <is_mesh/kernel.h>
-#include <is_mesh/is_mesh_default_traits.h>
 #include <is_mesh/is_mesh_key_type.h>
 #include <is_mesh/is_mesh_utils.h>
 #include <is_mesh/is_mesh_simplex.h>
@@ -29,10 +28,10 @@ namespace OpenTissue
          * each type.h
          */
         template<
-        typename NodeTraits         = default_node_traits
-        , typename TetrahedronTraits  = default_tetrahedron_traits
-        , typename EdgeTraits         = default_edge_traits
-        , typename FaceTraits         = default_face_traits
+        typename NodeTraits
+        , typename TetrahedronTraits
+        , typename EdgeTraits
+        , typename FaceTraits
         >
         class t4mesh
         {

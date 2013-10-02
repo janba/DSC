@@ -12,7 +12,6 @@
 		7A45DB96176E122100B9B388 /* configuration.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB88176E122100B9B388 /* configuration.h */; };
 		7A45DB97176E122100B9B388 /* is_mesh_lists_read.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8A176E122100B9B388 /* is_mesh_lists_read.h */; };
 		7A45DB98176E122100B9B388 /* is_mesh_lists_write.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8B176E122100B9B388 /* is_mesh_lists_write.h */; };
-		7A45DB9B176E122100B9B388 /* is_mesh_default_traits.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8E176E122100B9B388 /* is_mesh_default_traits.h */; };
 		7A45DB9C176E122100B9B388 /* is_mesh_key_type.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8F176E122100B9B388 /* is_mesh_key_type.h */; };
 		7A45DB9D176E122100B9B388 /* is_mesh_simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB90176E122100B9B388 /* is_mesh_simplex.h */; };
 		7A45DB9E176E122100B9B388 /* is_mesh_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB91176E122100B9B388 /* is_mesh_utils.h */; };
@@ -137,7 +136,6 @@
 		7A45DB88176E122100B9B388 /* configuration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = configuration.h; path = is_mesh/configuration.h; sourceTree = "<group>"; };
 		7A45DB8A176E122100B9B388 /* is_mesh_lists_read.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = is_mesh_lists_read.h; sourceTree = "<group>"; };
 		7A45DB8B176E122100B9B388 /* is_mesh_lists_write.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = is_mesh_lists_write.h; sourceTree = "<group>"; };
-		7A45DB8E176E122100B9B388 /* is_mesh_default_traits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh_default_traits.h; path = is_mesh/is_mesh_default_traits.h; sourceTree = "<group>"; };
 		7A45DB8F176E122100B9B388 /* is_mesh_key_type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh_key_type.h; path = is_mesh/is_mesh_key_type.h; sourceTree = "<group>"; };
 		7A45DB90176E122100B9B388 /* is_mesh_simplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh_simplex.h; path = is_mesh/is_mesh_simplex.h; sourceTree = "<group>"; };
 		7A45DB91176E122100B9B388 /* is_mesh_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh_utils.h; path = is_mesh/is_mesh_utils.h; sourceTree = "<group>"; };
@@ -291,7 +289,6 @@
 			children = (
 				7A45DB88176E122100B9B388 /* configuration.h */,
 				7A45DB89176E122100B9B388 /* io */,
-				7A45DB8E176E122100B9B388 /* is_mesh_default_traits.h */,
 				7A45DB8F176E122100B9B388 /* is_mesh_key_type.h */,
 				7A45DB90176E122100B9B388 /* is_mesh_simplex.h */,
 				7A45DB91176E122100B9B388 /* is_mesh_utils.h */,
@@ -555,7 +552,6 @@
 				7A45DB96176E122100B9B388 /* configuration.h in Headers */,
 				7A45DB97176E122100B9B388 /* is_mesh_lists_read.h in Headers */,
 				7A45DB98176E122100B9B388 /* is_mesh_lists_write.h in Headers */,
-				7A45DB9B176E122100B9B388 /* is_mesh_default_traits.h in Headers */,
 				7A45DB9C176E122100B9B388 /* is_mesh_key_type.h in Headers */,
 				7A45DB9D176E122100B9B388 /* is_mesh_simplex.h in Headers */,
 				7A45DB9E176E122100B9B388 /* is_mesh_utils.h in Headers */,
