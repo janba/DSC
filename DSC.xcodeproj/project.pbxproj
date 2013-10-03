@@ -9,9 +9,6 @@
 /* Begin PBXBuildFile section */
 		7A0AB5C217D908E10058910E /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0AB5C017D9082A0058910E /* CoreFoundation.framework */; };
 		7A30ED1A17D951EB0051E6C0 /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A30ED1917D951EB0051E6C0 /* libGLEW.a */; };
-		7A45DB96176E122100B9B388 /* configuration.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB88176E122100B9B388 /* configuration.h */; };
-		7A45DB97176E122100B9B388 /* is_mesh_lists_read.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8A176E122100B9B388 /* is_mesh_lists_read.h */; };
-		7A45DB98176E122100B9B388 /* is_mesh_lists_write.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8B176E122100B9B388 /* is_mesh_lists_write.h */; };
 		7A45DB9C176E122100B9B388 /* is_mesh_key_type.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8F176E122100B9B388 /* is_mesh_key_type.h */; };
 		7A45DB9D176E122100B9B388 /* is_mesh_simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB90176E122100B9B388 /* is_mesh_simplex.h */; };
 		7A45DB9E176E122100B9B388 /* is_mesh_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB91176E122100B9B388 /* is_mesh_utils.h */; };
@@ -133,9 +130,6 @@
 		7A30ED1917D951EB0051E6C0 /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = ../../../../../usr/local/lib/libGLEW.a; sourceTree = "<group>"; };
 		7A38E82A17E3B35A0075DC24 /* gouraud.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = gouraud.frag; sourceTree = "<group>"; };
 		7A38E82B17E3B35A0075DC24 /* gouraud.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = gouraud.vert; sourceTree = "<group>"; };
-		7A45DB88176E122100B9B388 /* configuration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = configuration.h; path = is_mesh/configuration.h; sourceTree = "<group>"; };
-		7A45DB8A176E122100B9B388 /* is_mesh_lists_read.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = is_mesh_lists_read.h; sourceTree = "<group>"; };
-		7A45DB8B176E122100B9B388 /* is_mesh_lists_write.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = is_mesh_lists_write.h; sourceTree = "<group>"; };
 		7A45DB8F176E122100B9B388 /* is_mesh_key_type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh_key_type.h; path = is_mesh/is_mesh_key_type.h; sourceTree = "<group>"; };
 		7A45DB90176E122100B9B388 /* is_mesh_simplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh_simplex.h; path = is_mesh/is_mesh_simplex.h; sourceTree = "<group>"; };
 		7A45DB91176E122100B9B388 /* is_mesh_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh_utils.h; path = is_mesh/is_mesh_utils.h; sourceTree = "<group>"; };
@@ -224,6 +218,7 @@
 		7A9F2A8F17E7548900259577 /* design_domain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = design_domain.h; path = src/design_domain.h; sourceTree = SOURCE_ROOT; };
 		7A9F2A9017E7548900259577 /* object_generator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = object_generator.cpp; path = src/object_generator.cpp; sourceTree = SOURCE_ROOT; };
 		7A9F2A9117E7548900259577 /* object_generator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = object_generator.h; path = src/object_generator.h; sourceTree = SOURCE_ROOT; };
+		7AB27FB317FCEC0C00BFC866 /* is_mesh_lists_read.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = is_mesh_lists_read.h; path = is_mesh/is_mesh_lists_read.h; sourceTree = "<group>"; };
 		7ACA21D717DE37C5005E9309 /* stb_image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image.c; sourceTree = "<group>"; };
 		7ACA21D817DE37C5005E9309 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
 		7AE27AD617675AE8000F8238 /* libDSC.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDSC.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -287,8 +282,7 @@
 		7A07B9B1176B23A8006589A4 /* ISMesh */ = {
 			isa = PBXGroup;
 			children = (
-				7A45DB88176E122100B9B388 /* configuration.h */,
-				7A45DB89176E122100B9B388 /* io */,
+				7AB27FB317FCEC0C00BFC866 /* is_mesh_lists_read.h */,
 				7A45DB8F176E122100B9B388 /* is_mesh_key_type.h */,
 				7A45DB90176E122100B9B388 /* is_mesh_simplex.h */,
 				7A45DB91176E122100B9B388 /* is_mesh_utils.h */,
@@ -308,16 +302,6 @@
 				7A38E82B17E3B35A0075DC24 /* gouraud.vert */,
 			);
 			path = shaders;
-			sourceTree = "<group>";
-		};
-		7A45DB89176E122100B9B388 /* io */ = {
-			isa = PBXGroup;
-			children = (
-				7A45DB8A176E122100B9B388 /* is_mesh_lists_read.h */,
-				7A45DB8B176E122100B9B388 /* is_mesh_lists_write.h */,
-			);
-			name = io;
-			path = is_mesh/io;
 			sourceTree = "<group>";
 		};
 		7A553EC117DA724800125178 /* SOIL */ = {
@@ -549,9 +533,6 @@
 				7AE27AF917675B04000F8238 /* velocity_function.h in Headers */,
 				7AF7E9BF176B4FE400F43714 /* DSC.h in Headers */,
 				7AF7E9C1176B524700F43714 /* is_mesh_API.h in Headers */,
-				7A45DB96176E122100B9B388 /* configuration.h in Headers */,
-				7A45DB97176E122100B9B388 /* is_mesh_lists_read.h in Headers */,
-				7A45DB98176E122100B9B388 /* is_mesh_lists_write.h in Headers */,
 				7A45DB9C176E122100B9B388 /* is_mesh_key_type.h in Headers */,
 				7A45DB9D176E122100B9B388 /* is_mesh_simplex.h in Headers */,
 				7A45DB9E176E122100B9B388 /* is_mesh_utils.h in Headers */,

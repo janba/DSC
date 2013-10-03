@@ -9,7 +9,7 @@
 #pragma once
 
 #include <is_mesh/is_mesh.h>
-#include <is_mesh/io/is_mesh_lists_read.h>
+#include <is_mesh/is_mesh_lists_read.h>
 
 
 template <typename node_traits, typename edge_traits, typename face_traits, typename tet_traits>

@@ -10,7 +10,6 @@
 #include <list>
 
 #include <is_mesh/kernel.h>
-#include <is_mesh/is_mesh_key_type.h>
 #include <is_mesh/is_mesh_utils.h>
 #include <is_mesh/is_mesh_simplex.h>
 #include <is_mesh/simplex_set.h>
