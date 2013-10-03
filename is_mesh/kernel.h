@@ -92,28 +92,7 @@ namespace is_mesh
         typedef typename value_type::type_traits                        type_traits;
         typedef typename kernel_element::state_type                     state_type;
         
-        /**
-         * A stack element that is pushed whenever an undo mark is set in the kernel.
-         */
-        struct kernel_stack_element
-        {
-            typedef          kernel_element                             element_type;
-            
-            element_type*    elements;         //data that is copied
-            size_type        size;             //the size of the array elements
-            key_type         first;
-            key_type         last;
-            key_type         first_marked;
-            key_type         last_marked;
-            key_type         first_empty;
-            key_type         last_empty;
-        };
-        typedef          kernel_stack_element                                     stack_element;
-        typedef          std::vector<stack_element*>                              stack_type;
-        typedef typename allocator_type::template rebind<stack_element>::other    stack_allocator;
-        
         allocator_type        m_alloc;               //the allocator
-        stack_allocator       m_stack_allocator;     //the same allocator, but for stack elements.
         kernel_element*       m_mem;                 //the allocated memory
         key_type              m_first;               //Holds the first allocated element in the collection
         key_type              m_last;                //Holds the last allocated element in the collection
@@ -322,21 +301,6 @@ namespace is_mesh
             
             m_capacity = new_size;
             m_mem = new_mem;
-        }
-        
-        /**
-         * Deallocates an undo stack element from the undo stack.
-         * Makes sure that temporary elements on the undo stack are
-         * properly destroyed.
-         *
-         * @param e   A reference to the stack element.
-         */
-        void free_stack_element(stack_element* e)
-        {
-            for (std::size_t i = 0; i < e->size; ++i)
-                m_alloc.destroy(&(e->elements[i]));
-            m_alloc.deallocate(e->elements, e->size);
-            m_stack_allocator.deallocate(e, 1);
         }
         
     public:

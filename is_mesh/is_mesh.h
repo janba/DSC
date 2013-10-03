@@ -2348,12 +2348,12 @@ namespace is_mesh
             result.difference(st_f);
             result.filter(tag);
         }
-        
-        void link(edge_key_type const & e, simplex_set_type & result, simplex_set_type & st_e)
+                
+        void link(edge_key_type const & e, simplex_set_type & result)
         {
             typename util::simplex_traits<mesh_type, 0>::simplex_tag tag;
             
-            simplex_set_type cl_e, temp;
+            simplex_set_type st_e, cl_e, temp;
             star(e, st_e);
             closure(st_e, temp);
             closure(e, cl_e);
@@ -2383,12 +2383,6 @@ namespace is_mesh
             }
             temp.filter(tag);
             result.add(temp);
-        }
-        
-        void link(edge_key_type const & e, simplex_set_type & result)
-        {
-            simplex_set_type st_e;
-            link(e, result, st_e);
         }
         
         void link(node_key_type const & n, simplex_set_type & result)
