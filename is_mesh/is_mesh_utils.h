@@ -12,15 +12,15 @@ namespace is_mesh
         template<typename mesh_type, int dim>
         struct simplex_traits{};
         
-        template<typename mesh_type>
-        struct simplex_traits<mesh_type, 0>
-        {
-            typedef typename mesh_type::node_type             simplex_type;
-            typedef typename mesh_type::edge_type             co_boundary_type;
-            typedef typename mesh_type::node_iterator         iterator;
-            typedef typename mesh_type::edge_iterator         co_boundary_iterator;
-            typedef typename mesh_type::node_key_type         key_type;
-        };
+//        template<typename mesh_type>
+//        struct simplex_traits<mesh_type, 0>
+//        {
+//            typedef typename mesh_type::node_type             simplex_type;
+//            typedef typename mesh_type::edge_type             co_boundary_type;
+//            typedef typename mesh_type::node_iterator         iterator;
+//            typedef typename mesh_type::edge_iterator         co_boundary_iterator;
+//            typedef typename mesh_type::node_key_type         key_type;
+//        };
         
         template<typename mesh_type>
         struct simplex_traits<mesh_type, 1>

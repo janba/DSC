@@ -382,41 +382,35 @@ namespace is_mesh
             
             typedef typename util::simplex_traits<mesh_type, key_type_simplex::dim>::simplex_type simplex_type;
             
-            typedef typename util::simplex_traits<mesh_type, key_type_coface::dim>::simplex_type coface_type;
-            typedef typename util::simplex_traits<mesh_type, key_type_simplex::dim-1>::simplex_type face_type;
+            auto coface_boundary = lookup_simplex(cfk).get_boundary();
             
-            typename simplex_type::boundary_list simplex_boundary = lookup_simplex(sk).get_boundary();
-            typename coface_type::boundary_list coface_boundary = lookup_simplex(cfk).get_boundary();
-            
-            typename coface_type::boundary_iterator cfb_it = coface_boundary->begin();
             std::map<typename simplex_type::boundary_key_type, key_type_simplex> face_to_simplex;
             
-            while (cfb_it != coface_boundary->end())
+            for (auto cfb_it : *coface_boundary)
             {
-                if (*cfb_it != sk)
+                if (cfb_it != sk)
                 {
                     typename simplex_type::boundary_key_type k;
-                    bool res = get_intersection(sk, *cfb_it, k);
+                    bool res = get_intersection(sk, cfb_it, k);
                     assert(res || !"Two faces of the same simplex do not intersect?!");
-                    face_to_simplex[k] = *cfb_it;
+                    face_to_simplex[k] = cfb_it;
                 }
-                ++cfb_it;
             }
             
-            cfb_it = coface_boundary->begin();
+            auto cfb_it = coface_boundary->begin();
             *cfb_it = sk;
             ++cfb_it;
             
-            typename simplex_type::boundary_iterator sb_it = simplex_boundary->begin();
-            
-            while (sb_it != simplex_boundary->end())
+            for (auto sb_it : *lookup_simplex(sk).get_boundary())
             {
-                *cfb_it = face_to_simplex[*sb_it];
+                *cfb_it = face_to_simplex[sb_it];
                 ++cfb_it;
-                ++sb_it;
             }
             
-            if (!consistently) invert_orientation(cfk);
+            if (!consistently)
+            {
+                invert_orientation(cfk);
+            }
         }
         
         /**
@@ -1617,13 +1611,9 @@ namespace is_mesh
          */
         void star(node_key_type const & key, simplex_set_type & s_set)
         {
-            typedef typename util::simplex_traits<mesh_type, 0>::simplex_type simplex_type;
-            simplex_type& simplex = lookup_simplex(key);
-            typename simplex_type::co_boundary_set co_boundary = simplex.get_co_boundary();
-            typename simplex_type::co_boundary_iterator co_bit = co_boundary->begin();
-            for( ; co_bit != co_boundary->end() ; ++co_bit )
+            for( auto co_bit : *lookup_simplex(key).get_co_boundary())
             {
-                star_helper(key, *co_bit, s_set);
+                star_helper(key, co_bit, s_set);
             }
             //now that we are done, remember to reset all labels
             //reset_label(simplex);
