@@ -358,9 +358,7 @@ namespace is_mesh {
         std::vector<node_key> get_nodes(const face_key& f)
         {
             orient_face(f);
-            std::vector<node_key> nodes(3);
-            mesh.vertices(f, nodes);
-            return nodes;
+            return mesh.vertices(f);
         }
         
         std::vector<node_key> get_nodes(const tet_key& tid)

@@ -2079,15 +2079,14 @@ namespace is_mesh
          */
         void vertices(tetrahedron_key_type const & t, std::vector<node_key_type> & verts)
         {
-            typename tetrahedron_type::boundary_list t_boundary = lookup_simplex(t).get_boundary();
-            typename tetrahedron_type::boundary_iterator tbit = t_boundary->begin();
-            std::vector<node_key_type> f_verts(3);
-            vertices(*tbit, f_verts);
+            auto t_boundary = lookup_simplex(t).get_boundary();
+            auto tbit = t_boundary->begin();
+            auto f_verts = vertices(*tbit);
             verts[1] = f_verts[0];
             verts[2] = f_verts[1];
             verts[3] = f_verts[2];
             ++tbit;
-            vertices(*tbit, f_verts);
+            f_verts = vertices(*tbit);
             int k = -1, k1 = -1, k2 = -1;
             for (k = 0; k < 3; ++k)
             {
@@ -2109,7 +2108,7 @@ namespace is_mesh
             verts[1] = verts[k2];
             verts[k2] = temp;
             ++tbit;
-            vertices(*tbit, f_verts);
+            f_verts = vertices(*tbit);
             for (k = 0; k < 4; ++k)
             {
                 if (verts[k] == f_verts[0] || verts[k] == f_verts[1] || verts[k] == f_verts[2])
@@ -2125,8 +2124,9 @@ namespace is_mesh
         /**
          *
          */
-        void vertices(face_key_type const & f, std::vector<node_key_type> & verts)
+        std::vector<node_key_type> vertices(face_key_type const & f)
         {
+            std::vector<node_key_type> verts(3);
             auto f_boundary = lookup_simplex(f).get_boundary();
             auto fbit = f_boundary->begin();
             auto e_verts = vertices(*fbit);
@@ -2149,6 +2149,7 @@ namespace is_mesh
                 verts[1] = verts[2];
                 verts[2] = temp;
             }
+            return verts;
         }
         
         /**
