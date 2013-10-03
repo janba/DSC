@@ -97,6 +97,7 @@
 		7A9F2A9317E7548900259577 /* design_domain.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9F2A8F17E7548900259577 /* design_domain.h */; };
 		7A9F2A9417E7548900259577 /* object_generator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A9F2A9017E7548900259577 /* object_generator.cpp */; };
 		7A9F2A9517E7548900259577 /* object_generator.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9F2A9117E7548900259577 /* object_generator.h */; };
+		7AB27FB417FD0A1D00BFC866 /* is_mesh_lists_read.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AB27FB317FCEC0C00BFC866 /* is_mesh_lists_read.h */; };
 		7ACA21D917DE37C5005E9309 /* stb_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ACA21D717DE37C5005E9309 /* stb_image.c */; };
 		7ACA21DA17DE37C5005E9309 /* stb_image.h in Headers */ = {isa = PBXBuildFile; fileRef = 7ACA21D817DE37C5005E9309 /* stb_image.h */; };
 		7AE27AF117675B04000F8238 /* mesh_io.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE117675B04000F8238 /* mesh_io.h */; };
@@ -532,6 +533,7 @@
 				7AE27AF817675B04000F8238 /* util.h in Headers */,
 				7AE27AF917675B04000F8238 /* velocity_function.h in Headers */,
 				7AF7E9BF176B4FE400F43714 /* DSC.h in Headers */,
+				7AB27FB417FD0A1D00BFC866 /* is_mesh_lists_read.h in Headers */,
 				7AF7E9C1176B524700F43714 /* is_mesh_API.h in Headers */,
 				7A45DB9C176E122100B9B388 /* is_mesh_key_type.h in Headers */,
 				7A45DB9D176E122100B9B388 /* is_mesh_simplex.h in Headers */,
@@ -802,6 +804,7 @@
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
 				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				HEADER_SEARCH_PATHS = .;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -812,6 +815,7 @@
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
 				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				HEADER_SEARCH_PATHS = .;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -821,6 +825,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_PEDANTIC = NO;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = NO;
 				HEADER_SEARCH_PATHS = (
 					.,
 					/usr/local/include/,
@@ -834,6 +843,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_PEDANTIC = NO;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = NO;
 				HEADER_SEARCH_PATHS = (
 					.,
 					/usr/local/include/,

@@ -1,10 +1,6 @@
 #pragma once
 
-#include <iterator>
-#include <vector>
 #include <set>
-
-#include <is_mesh/is_mesh.h>
 #include <is_mesh/is_mesh_key_type.h>
 
 namespace is_mesh
@@ -181,8 +177,8 @@ namespace is_mesh
             
             bool is_compact(){ return m_is_compact; }
             void set_compact(bool c) { m_is_compact = c; }
-        }; //Simplex
-    } //namespace util
+        };
+    }
     
     
     ///////////////////////////////////////////////////////////////////////////////

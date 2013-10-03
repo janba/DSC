@@ -1,13 +1,6 @@
 
 #pragma once
 
-#include <iterator>
-#include <memory>
-#include <vector>
-#include <cassert>
-
-#include <is_mesh/kernel.h>
-
 namespace is_mesh
 {
     
@@ -40,17 +33,12 @@ namespace is_mesh
     {
     private:
         typedef typename key_t_::kernel_element    element_type;
-        //    typedef typename element_type::element_pointer  element_pointer;
     public:
         typedef          key_t_                                       kernel_type;
         typedef          kernel_iterator<kernel_type>                 iterator;
         typedef typename kernel_type::kernel_element                  kernel_element;
-        typedef typename kernel_type::allocator_type::difference_type difference_type;
         typedef typename element_type::value_type                     value_type;
         typedef typename element_type::key_type                       key_type;
-        typedef          value_type *                                 pointer;
-        typedef          value_type &                                 reference;
-        typedef          std::input_iterator_tag                      iterator_category;
         
     private:
         
@@ -100,7 +88,7 @@ namespace is_mesh
          *
          * @return Pointer to the element contained within the kernel cell.
          */
-        pointer operator->()
+        value_type* operator->()
         {
             assert(m_kernel->lookup(m_key).state == element_type::VALID);
             m_value = &m_kernel->lookup(m_key).value;
@@ -112,7 +100,7 @@ namespace is_mesh
          *
          * @return The element that is contained within the kernel cell.
          */
-        reference operator*()
+        value_type& operator*()
         {
             assert(m_kernel->lookup(m_key).state == element_type::VALID);
             m_value = &m_kernel->lookup(m_key).value;

@@ -285,7 +285,7 @@ namespace is_mesh
             {
                 assert (m_last_empty != m_past_the_end);
                 new_mem[m_capacity].prev = m_last_empty;
-                new_mem[m_last_empty].next = m_capacity;
+                new_mem[m_last_empty].next = static_cast<int>(m_capacity);
             }
             
             m_last_empty = static_cast<unsigned int>(new_size) - 1;
@@ -647,7 +647,7 @@ namespace is_mesh
             //now rebuild lists in incremental order of key
             for(size_type i = 0; i < m_capacity; ++i) 
             {
-                kernel_element & p = lookup(i);
+                kernel_element & p = lookup(static_cast<int>(i));
                 p.next = m_past_the_end; //always set this just to be sure to end the lists - likely to be overwritten
                 if ( p.state == kernel_element::VALID) 
                 {
@@ -681,7 +681,6 @@ namespace is_mesh
             commit_all();
             reorder_lists();
         }
-        
     };
     
 }
