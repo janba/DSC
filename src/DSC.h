@@ -346,7 +346,6 @@ namespace DSC {
         std::vector<vec3> get_dest(const face_key & f)
         {
             std::vector<vec3> verts(3);
-            Complex::orient_face(f);
             auto nodes = Complex::get_nodes(f);
             for (int k = 0; k < 3; ++k)
             {
@@ -1872,6 +1871,7 @@ namespace DSC {
          */
         vec3 get_normal(const face_key& fid)
         {
+            Complex::orient_face(fid);
             auto pos = get_pos(fid);
             return Util::normal_direction(pos[0], pos[1], pos[2]);
         }
@@ -2380,7 +2380,7 @@ namespace DSC {
                         
                         if (nodes[0] == sorted_vertices.back())
                         {
-                            sorted_vertices.push_back(nodes[1]);
+                            sorted_vertices.push_back(nodes[1]); // VERTEX FLIP
                             edge_used[*eit] = true;
                             break;
                         }
@@ -2419,6 +2419,7 @@ namespace DSC {
             {
                 if (fit->is_interface())
                 {
+                    Complex::orient_face(fit.key());
                     auto nodes = Complex::get_nodes(fit.key());
                     
                     indices.push_back(vert_index[nodes[0]]);

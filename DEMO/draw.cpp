@@ -315,12 +315,13 @@ void Painter::update_interface(DSC::DeformableSimplicialComplex<>& dsc)
     {
         if (fit->is_interface())
         {
-            auto nodes = dsc.get_nodes(fit.key());
-            DSC::vec3 normal = dsc.get_normal(fit.key());
+            dsc.orient_face(fit.key());
+            auto verts = dsc.get_pos(fit.key());
+            DSC::vec3 normal = DSC::Util::normal_direction(verts[0], verts[1], verts[2]);
             
-            for(auto &n : nodes)
+            for(auto &p : verts)
             {
-                data.push_back(dsc.get_pos(n));
+                data.push_back(p);
                 data.push_back(normal);
             }
         }
@@ -368,6 +369,7 @@ void Painter::update_domain(DSC::DeformableSimplicialComplex<>& dsc)
     std::vector<DSC::vec3> data;
     for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
     {
+        dsc.orient_face(fit.key());
         auto verts = dsc.get_pos(fit.key());
         if(is_boundary(dsc, fit.key(), verts))
         {

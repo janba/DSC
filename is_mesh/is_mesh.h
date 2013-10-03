@@ -106,7 +106,7 @@ namespace is_mesh
         
         size_type                          m_uncompressed; //an estimate of the numbers of uncompressed simplices in the mesh
         
-    private:
+    public:
         
         /**
          *
@@ -2073,121 +2073,6 @@ namespace is_mesh
             closure(st_n, result);
             result.difference(st_n);
         }
-        
-        
-        /**
-         * Marek
-         */
-        void vertices(tetrahedron_key_type const & t, std::vector<node_key_type> & verts)
-        {
-            auto t_boundary = lookup_simplex(t).get_boundary();
-            auto tbit = t_boundary->begin();
-            auto f_verts = vertices(*tbit);
-            verts[1] = f_verts[0];
-            verts[2] = f_verts[1];
-            verts[3] = f_verts[2];
-            ++tbit;
-            f_verts = vertices(*tbit);
-            int k = -1, k1 = -1, k2 = -1;
-            for (k = 0; k < 3; ++k)
-            {
-                if (f_verts[k] == verts[1] || f_verts[k] == verts[2] || f_verts[k] == verts[3])
-                    continue;
-                else
-                    k1 = k;
-            }
-            for (k = 0; k < 4; ++k)
-            {
-                if (verts[k] == f_verts[0] || verts[k] == f_verts[1] || verts[k] == f_verts[2])
-                    continue;
-                else
-                    k2 = k;
-            }
-            assert((k != -1 && k1 != -1 && k2 != -1) || !"Vertex lists corrupted!");
-            verts[0] = f_verts[k1];
-            node_key_type temp = verts[1];
-            verts[1] = verts[k2];
-            verts[k2] = temp;
-            ++tbit;
-            f_verts = vertices(*tbit);
-            for (k = 0; k < 4; ++k)
-            {
-                if (verts[k] == f_verts[0] || verts[k] == f_verts[1] || verts[k] == f_verts[2])
-                    continue;
-                else
-                    k1 = k;
-            }
-            temp = verts[2];
-            verts[2] = verts[k1];
-            verts[k1] = temp;
-        }
-        
-        std::vector<node_key_type> get_nodes(const face_key_type& fid)
-        {
-            std::vector<node_key_type> nodes;
-            
-            for (auto eid : *lookup_simplex(fid).get_boundary()) {
-                orient_face_helper(fid, eid, true);
-                nodes.push_back(vertices(eid)[0]);
-            }
-            return nodes;
-        }
-        
-        std::vector<edge_key_type> get_edges(const face_key_type& fid)
-        {
-            
-        }
-        
-        /**
-         *
-         */
-        std::vector<node_key_type> vertices(face_key_type const & f)
-        {
-            std::vector<node_key_type> verts(3);
-            auto f_boundary = lookup_simplex(f).get_boundary();
-            auto fbit = f_boundary->begin();
-            auto e_verts = vertices(*fbit);
-            verts[1] = e_verts[1];
-            verts[2] = e_verts[0];
-            ++fbit;
-            e_verts = vertices(*fbit);
-            if (e_verts[0] == verts[1] || e_verts[0] == verts[2])
-            {
-                verts[0] = e_verts[1];
-            }
-            else
-            {
-                verts[0] = e_verts[0];
-            }
-            
-            if (verts[1] == e_verts[0] || verts[1] == e_verts[1])
-            {
-                node_key_type temp = verts[1];
-                verts[1] = verts[2];
-                verts[2] = temp;
-            }
-            return verts;
-        }
-        
-        /**
-         *
-         */
-        std::vector<node_key_type> vertices(const edge_key_type& eid)
-        {
-            std::vector<node_key_type> nodes(2);
-            int i = 1;
-            for (auto nid : *lookup_simplex(eid).get_boundary())
-            {
-                nodes[i] = nid;
-                i--;
-            }
-            return nodes;
-        }
-        
-        /**
-         *
-         */
-        void vertices(node_key_type const & n, std::vector<node_key_type> & verts) {}
         
         /**
          *

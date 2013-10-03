@@ -352,19 +352,42 @@ namespace is_mesh {
         
         std::vector<node_key> get_nodes(const edge_key& eid)
         {
-            return mesh.vertices(eid);
+            std::vector<node_key> nodes;
+            for (auto nid : *mesh.lookup_simplex(eid).get_boundary()) {
+                nodes.push_back(nid);
+            }
+            std::swap(nodes[0], nodes[1]);
+            return nodes;
         }
         
-        std::vector<node_key> get_nodes(const face_key& f)
+        std::vector<node_key> get_nodes(const face_key& fid)
         {
-            orient_face(f);
-            return mesh.get_nodes(f);
+            std::vector<node_key> nodes;
+            for (auto eid : *mesh.lookup_simplex(fid).get_boundary()) {
+                mesh.orient_face_helper(fid, eid, true);
+                nodes.push_back(get_nodes(eid)[0]);
+            }
+            return nodes;
         }
         
         std::vector<node_key> get_nodes(const tet_key& tid)
         {
-            std::vector<node_key> nodes(4);
-            mesh.vertices(tid, nodes);
+            std::vector<node_key> nodes;
+            auto bit = mesh.lookup_simplex(tid).get_boundary();
+            face_key fid = *bit->begin();
+            mesh.orient_face_helper(tid, fid, false);
+            for (auto nid : get_nodes(fid)) {
+                nodes.push_back(nid);
+            }
+            
+            for (auto nid : get_nodes(*(bit->begin()+1))) {
+
+                if(std::find(nodes.begin(), nodes.end(), nid) == nodes.end())
+                {
+                    nodes.push_back(nid);
+                    break;
+                }
+            }
             return nodes;
         }
         
