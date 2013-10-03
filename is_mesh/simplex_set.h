@@ -1,10 +1,6 @@
 
 #pragma once
 
-#include <set>
-#include <utility> //for pair
-#include <algorithm> //for std's set operations
-
 #include <is_mesh/is_mesh_utils.h>
 
 namespace is_mesh
@@ -15,23 +11,15 @@ namespace is_mesh
      * operations upon a set of simplices.
      * Only handles are stored in the simplex set, actual data must be looked up elsewhere.
      */
-    template<
-    typename node_key_t_
-    , typename edge_key_t_
-    , typename face_key_t_
-    , typename tetrahedron_key_t_
-    >
+    template<typename node_key_t_, typename edge_key_t_, typename face_key_t_, typename tetrahedron_key_t_>
     class simplex_set
     {
-    private:
-        //typedef          std::pair<typename set_type::iterator, bool> pair_type;
     public:
         typedef          node_key_t_                                  node_key_type;
         typedef          edge_key_t_                                  edge_key_type;
         typedef          face_key_t_                                  face_key_type;
         typedef          tetrahedron_key_t_                           tetrahedron_key_type;
-        typedef simplex_set<node_key_type, edge_key_type
-        , face_key_type, tetrahedron_key_type>      simplex_set_type;
+        typedef simplex_set<node_key_type, edge_key_type, face_key_type, tetrahedron_key_type>      simplex_set_type;
         
         typedef          std::set<node_key_type>                      node_set;
         typedef          std::set<edge_key_type>                      edge_set;
@@ -217,22 +205,6 @@ namespace is_mesh
         size_type size() const
         {
             return m_nodes.size() + m_edges.size() + m_faces.size() + m_tetrahedra.size();
-        }
-        size_type size(util::node_simplex_tag) const
-        {
-            return m_nodes.size();
-        }
-        size_type size(util::edge_simplex_tag) const
-        {
-            return m_edges.size();
-        }
-        size_type size(util::face_simplex_tag) const
-        {
-            return m_faces.size();
-        }
-        size_type size(util::tetrahedron_simplex_tag) const
-        {
-            return m_tetrahedra.size();
         }
         
         size_type size_nodes() const

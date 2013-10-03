@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include <vector>
-
 namespace is_mesh
 {
     namespace util
