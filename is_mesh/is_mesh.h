@@ -2074,6 +2074,7 @@ namespace is_mesh
             result.difference(st_n);
         }
         
+        
         /**
          * Marek
          */
@@ -2119,6 +2120,22 @@ namespace is_mesh
             temp = verts[2];
             verts[2] = verts[k1];
             verts[k1] = temp;
+        }
+        
+        std::vector<node_key_type> get_nodes(const face_key_type& fid)
+        {
+            std::vector<node_key_type> nodes;
+            
+            for (auto eid : *lookup_simplex(fid).get_boundary()) {
+                orient_face_helper(fid, eid, true);
+                nodes.push_back(vertices(eid)[0]);
+            }
+            return nodes;
+        }
+        
+        std::vector<edge_key_type> get_edges(const face_key_type& fid)
+        {
+            
         }
         
         /**

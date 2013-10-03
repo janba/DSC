@@ -358,7 +358,7 @@ namespace is_mesh {
         std::vector<node_key> get_nodes(const face_key& f)
         {
             orient_face(f);
-            return mesh.vertices(f);
+            return mesh.get_nodes(f);
         }
         
         std::vector<node_key> get_nodes(const tet_key& tid)
@@ -570,13 +570,7 @@ namespace is_mesh {
          */
         void orient_face(const face_key& fid)
         {
-            if (is_boundary(fid))
-            {
-                simplex_set st_f;
-                star(fid, st_f);
-                mesh.orient_faces_consistently(*st_f.tetrahedra_begin());
-            }
-            else if (is_interface(fid))
+            if (is_interface(fid))
             {
                 simplex_set st_f;
                 star(fid, st_f);
@@ -591,6 +585,11 @@ namespace is_mesh {
                     }
                     label = tl;
                 }
+            }
+            else {
+                simplex_set st_f;
+                star(fid, st_f);
+                mesh.orient_faces_consistently(*st_f.tetrahedra_begin());
             }
         }
         
