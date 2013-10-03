@@ -16,7 +16,7 @@ namespace is_mesh {
     template <typename node_traits, typename edge_traits, typename face_traits, typename tet_traits>
     class ISMesh
     {
-        typedef typename OpenTissue::is_mesh::t4mesh< node_traits, tet_traits, edge_traits, face_traits> Mesh;
+        typedef typename is_mesh::t4mesh< node_traits, tet_traits, edge_traits, face_traits> Mesh;
         
     public:
         typedef typename Mesh::node_key_type            node_key;
