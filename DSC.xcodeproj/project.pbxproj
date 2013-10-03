@@ -283,14 +283,14 @@
 		7A07B9B1176B23A8006589A4 /* ISMesh */ = {
 			isa = PBXGroup;
 			children = (
-				7AB27FB317FCEC0C00BFC866 /* is_mesh_lists_read.h */,
 				7A45DB8F176E122100B9B388 /* is_mesh_key_type.h */,
 				7A45DB90176E122100B9B388 /* is_mesh_simplex.h */,
 				7A45DB91176E122100B9B388 /* is_mesh_utils.h */,
-				7A45DB92176E122100B9B388 /* is_mesh.h */,
+				7A45DB95176E122100B9B388 /* simplex_set.h */,
 				7A45DB93176E122100B9B388 /* kernel_iterator.h */,
 				7A45DB94176E122100B9B388 /* kernel.h */,
-				7A45DB95176E122100B9B388 /* simplex_set.h */,
+				7A45DB92176E122100B9B388 /* is_mesh.h */,
+				7AB27FB317FCEC0C00BFC866 /* is_mesh_lists_read.h */,
 				7AF7E9C0176B524700F43714 /* is_mesh_API.h */,
 			);
 			name = ISMesh;

@@ -3,16 +3,6 @@
 
 namespace is_mesh
 {
-    
-    /*
-     * Forward declaration
-     template<
-     typename value_type
-     , typename key_type
-     , typename allocator_type
-     > class kernel;
-     */
-    
     /**
      * An iterator class used by the is_mesh::kernel.
      * The kernel wraps a kernel handle and uses indirect access to the kernel.

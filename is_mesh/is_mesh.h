@@ -206,43 +206,6 @@ namespace is_mesh
         
         void boundary_helper(node_key_type const & k, simplex_set_type & set) {}
         
-        /**
-         * Marek
-         * Helper for the boundary of a k-manifold patch.
-         */
-        template<typename key_type_simplex
-        , typename key_type_face>
-        void boundary_helper2(simplex_set_type & patch, simplex_set_type & result_set)
-        {
-            typedef typename util::simplex_traits<mesh_type, key_type_simplex::dim>::simplex_type simplex_type;
-            typename util::simplex_traits<mesh_type, key_type_simplex::dim>::simplex_tag tag;
-            
-            std::map<key_type_face, char> face_occurrences;
-            typename simplex_set_type::iterator_type<key_type_simplex::dim>::iterator pit = patch.begin(tag);
-            
-            while (pit != patch.end(tag))
-            {
-                typename simplex_type::boundary_list s_boundary = lookup_simplex(*pit).get_boundary();
-                typename simplex_type::boundary_iterator bit = s_boundary->begin();
-                while (bit != s_boundary->end())
-                {
-                    face_occurrences[*bit]++;
-                    ++bit;
-                }
-                ++pit;
-            }
-            
-            typename std::map<key_type_face, char>::iterator foit = face_occurrences.begin();
-            simplex_set_type boundary_faces;
-            
-            while (foit != face_occurrences.end())
-            {
-                if (foit->second == 1) boundary_faces.insert(foit->first);
-                ++foit;
-            }
-            
-            closure(boundary_faces, result_set);
-        }
         
         void closure_helper(simplex_set_type & input_set, simplex_set_type & set)
         {
@@ -1926,7 +1889,26 @@ namespace is_mesh
          */
         void boundary(simplex_set_type & tetrahedra, simplex_set_type & result_set)
         {
-            boundary_helper2<tetrahedron_key_type, face_key_type>(tetrahedra, result_set);
+            std::map<face_key_type, char> face_occurrences;
+            for (auto pit = tetrahedra.tetrahedra_begin(); pit != tetrahedra.tetrahedra_end(); ++pit)
+            {
+                for (auto bit : *lookup_simplex(*pit).get_boundary())
+                {
+                    face_occurrences[bit]++;
+                }
+            }
+            
+            simplex_set_type boundary_faces;
+            
+            for (auto foit = face_occurrences.begin(); foit != face_occurrences.end(); ++foit)
+            {
+                if (foit->second == 1)
+                {
+                    boundary_faces.insert(foit->first);
+                }
+            }
+            
+            closure(boundary_faces, result_set);
         }
         
         /**
