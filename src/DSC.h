@@ -24,10 +24,10 @@
 namespace DSC {
     
     template <typename node_att = NodeAttributes, typename edge_att = EdgeAttributes, typename face_att = FaceAttributes, typename tet_att = TetAttributes>
-    class DeformableSimplicialComplex : public ISMesh<node_att, edge_att, face_att, tet_att>
+    class DeformableSimplicialComplex : public is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>
     {
         friend class ObjectGenerator;
-        typedef ISMesh<node_att, edge_att, face_att, tet_att> Complex;
+        typedef is_mesh::ISMesh<node_att, edge_att, face_att, tet_att> Complex;
     public:
         
         typedef typename Complex::node_key      node_key;
@@ -81,7 +81,7 @@ namespace DSC {
         
         /// SimplicialComplex constructor.
         DeformableSimplicialComplex(real _AVG_EDGE_LENGTH, std::vector<real> & points, std::vector<int> & tets, DesignDomain *domain = nullptr):
-        ISMesh<node_att, edge_att, face_att, tet_att>(points, tets), design_domain(domain)
+            Complex(points, tets), design_domain(domain)
         {
             AVG_EDGE_LENGTH = _AVG_EDGE_LENGTH;
             MIN_DEFORMATION = 0.25 * AVG_EDGE_LENGTH;
