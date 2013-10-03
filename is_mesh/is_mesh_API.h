@@ -350,11 +350,9 @@ namespace is_mesh {
         }
         
         
-        std::vector<node_key> get_nodes(const edge_key& e)
+        std::vector<node_key> get_nodes(const edge_key& eid)
         {
-            std::vector<node_key> nodes(2);
-            mesh.vertices(e, nodes);
-            return nodes;
+            return mesh.vertices(eid);
         }
         
         std::vector<node_key> get_nodes(const face_key& f)

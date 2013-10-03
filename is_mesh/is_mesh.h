@@ -2127,18 +2127,21 @@ namespace is_mesh
          */
         void vertices(face_key_type const & f, std::vector<node_key_type> & verts)
         {
-            typename face_type::boundary_list f_boundary = lookup_simplex(f).get_boundary();
-            typename face_type::boundary_iterator fbit = f_boundary->begin();
-            std::vector<node_key_type> e_verts(2);
-            vertices(*fbit, e_verts);
+            auto f_boundary = lookup_simplex(f).get_boundary();
+            auto fbit = f_boundary->begin();
+            auto e_verts = vertices(*fbit);
             verts[1] = e_verts[1];
             verts[2] = e_verts[0];
             ++fbit;
-            vertices(*fbit, e_verts);
+            e_verts = vertices(*fbit);
             if (e_verts[0] == verts[1] || e_verts[0] == verts[2])
+            {
                 verts[0] = e_verts[1];
+            }
             else
+            {
                 verts[0] = e_verts[0];
+            }
             
             if (verts[1] == e_verts[0] || verts[1] == e_verts[1])
             {
@@ -2151,17 +2154,16 @@ namespace is_mesh
         /**
          *
          */
-        void vertices(edge_key_type const & e, std::vector<node_key_type> & verts)
+        std::vector<node_key_type> vertices(const edge_key_type& eid)
         {
-            typename edge_type::boundary_list e_boundary = lookup_simplex(e).get_boundary();
-            typename edge_type::boundary_iterator ebit = e_boundary->begin();
+            std::vector<node_key_type> nodes(2);
             int i = 1;
-            while (ebit != e_boundary->end())
+            for (auto nid : *lookup_simplex(eid).get_boundary())
             {
-                verts[i] = *ebit;
-                --i;
-                ++ebit;
+                nodes[i] = nid;
+                i--;
             }
+            return nodes;
         }
         
         /**
