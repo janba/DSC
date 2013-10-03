@@ -120,16 +120,13 @@ namespace is_mesh
             assert(s.get_label() == 0 || !"traverse_co_co_bound called with simplex already labled");
             s.set_label(label);
             
-            typename simplex_type::boundary_list bound = s.get_boundary();
-            typename simplex_type::boundary_iterator bound_it = bound->begin();
-            for(; bound_it != bound->end(); ++bound_it)
+            for(auto bound_it : *s.get_boundary())
             {
-                typedef typename util::simplex_traits<mesh_type, simplex_type::dim-1>::simplex_type  boundary_type;
-                boundary_type& simplex = lookup_simplex(*bound_it);
+                auto& simplex = lookup_simplex(bound_it);
                 if (simplex.get_label() == 0)
                 {
                     simplex_set_type s_boundary;
-                    boundary(*bound_it, s_boundary);
+                    boundary(bound_it, s_boundary);
                     if (s_boundary.contains(ssk))
                         label_co_bound(ssk, simplex, label);
                 }
@@ -148,17 +145,13 @@ namespace is_mesh
             assert(s.get_label() == 0 || !"traverse_co_bound called with simplex already labled");
             s.set_label(label);
             
-            typename simplex_type::co_boundary_set co_bound = s.get_co_boundary();
-            typename simplex_type::co_boundary_iterator co_bound_it = co_bound->begin();
-            for( ; co_bound_it != co_bound->end() ; ++co_bound_it )
+            for(auto co_bound_it : *s.get_co_boundary())
             {
-                //convinience typedefs
-                typedef typename util::simplex_traits<mesh_type, simplex_type::dim+1>::simplex_type  co_boundary_type;
-                co_boundary_type& simplex = lookup_simplex(*co_bound_it);
+                auto& simplex = lookup_simplex(co_bound_it);
                 if (simplex.get_label() == 0)
                 {
                     simplex_set_type s_boundary;
-                    boundary(*co_bound_it, s_boundary);
+                    boundary(co_bound_it, s_boundary);
                     if (s_boundary.contains(ssk))
                         label_co_co_bound(ssk, simplex, label);
                 }
@@ -290,14 +283,12 @@ namespace is_mesh
         {
             if (key_type::dim == 0) return;
             
-            typedef typename util::simplex_traits<mesh_type, key_type::dim>::simplex_type simplex_type;
-            
-            typename simplex_type::boundary_list boundary = lookup_simplex(k).get_boundary();
-            typename simplex_type::boundary_iterator it = boundary->begin();
+            auto boundary = lookup_simplex(k).get_boundary();
+            auto it = boundary->begin();
             
             ++it;
             
-            typename simplex_type::boundary_key_type temp = *it;
+            auto temp = *it;
             *it = *(boundary->begin());
             *(boundary->begin()) = temp;
         }
@@ -314,14 +305,12 @@ namespace is_mesh
             assert(key_type_simplex::dim == (key_type_face::dim + 1) || !"fk is not a boundary face of sk.");
             assert(key_type_simplex::dim > 1 || !"Cannot induce dimension on vertices.");
             
-            typedef typename util::simplex_traits<mesh_type, key_type_simplex::dim>::simplex_type simplex_type;
             typedef typename util::simplex_traits<mesh_type, key_type_face::dim>::simplex_type face_type;
+            auto simplex_boundary = lookup_simplex(sk).get_boundary();
+            auto face_boundary = lookup_simplex(fk).get_boundary();
             
-            typename simplex_type::boundary_list simplex_boundary = lookup_simplex(sk).get_boundary();
-            typename face_type::boundary_list face_boundary = lookup_simplex(fk).get_boundary();
-            
-            typename simplex_type::boundary_iterator sb_it = simplex_boundary->begin();
-            typename face_type::boundary_iterator fb_it = face_boundary->begin();
+            auto sb_it = simplex_boundary->begin();
+            auto fb_it = face_boundary->begin();
             
             std::vector<typename face_type::boundary_key_type> new_face_boundary(face_boundary->size());
             
@@ -352,14 +341,6 @@ namespace is_mesh
             face_boundary->clear();
             for (; i < new_face_boundary.size(); ++i)
                 face_boundary->push_back(new_face_boundary[i]);
-            /*fb_it = face_boundary->begin();
-             
-             while (fb_it != face_boundary->end())
-             {
-             *fb_it = new_face_boundary[i];
-             ++i;
-             ++fb_it;
-             }*/
             
             f_index %= 2;
             if ((f_index == 0 && consistently) ||
@@ -1126,15 +1107,13 @@ namespace is_mesh
         void reset_label(simplex_type & s)
         {
             s.reset_label();
-            typename simplex_type::co_boundary_set co_bound = s.get_co_boundary();
-            typename simplex_type::co_boundary_iterator co_bound_it = co_bound->begin();
-            
-            for( ; co_bound_it != co_bound->end() ; ++co_bound_it )
+            for(auto co_bound_it : *s.get_co_boundary())
             {
-                typedef typename util::simplex_traits<mesh_type, simplex_type::dim+1>::simplex_type  co_boundary_type;
-                
-                co_boundary_type& simplex = lookup_simplex(*co_bound_it);
-                if (simplex.get_label() != 0) reset_co_label(simplex);
+                auto& simplex = lookup_simplex(co_bound_it);
+                if (simplex.get_label() != 0)
+                {
+                    reset_co_label(simplex);
+                }
             }
         }
         
@@ -1145,14 +1124,9 @@ namespace is_mesh
         void reset_co_label(simplex_type & s)
         {
             s.reset_label();
-            typename simplex_type::boundary_list bound = s.get_boundary();
-            typename simplex_type::boundary_iterator bound_it = bound->begin();
-            
-            for( ; bound_it != bound->end() ; ++bound_it )
+            for(auto bound_it : *s.get_boundary())
             {
-                typedef typename util::simplex_traits<mesh_type, simplex_type::dim-1>::simplex_type  boundary_type;
-                
-                boundary_type& simplex = lookup_simplex(*bound_it);
+                auto& simplex = lookup_simplex(bound_it);
                 if (simplex.get_label() != 0) reset_label(simplex);
             }
         }
@@ -1168,14 +1142,12 @@ namespace is_mesh
                 //cannot be in boundary as dimensions are wrong
                 return false;
             }
-            //for convinience
-            typedef typename util::simplex_traits<mesh_type, key_type_simplex::dim>::simplex_type simplex_type;
-            typename simplex_type::boundary_list b_list = lookup_simplex(s).get_boundary();
+            auto b_list = lookup_simplex(s).get_boundary();
             if (key_type_face::dim+1 < key_type_simplex::dim)
             {
                 //too far apart.. need to call recursively
                 bool in_bound = false;
-                typename simplex_type::boundary_iterator bound_it = b_list->begin();
+                auto bound_it = b_list->begin();
                 ++bound_it;
                 for( ; bound_it != b_list->end() ; ++bound_it)
                 {
@@ -1185,7 +1157,7 @@ namespace is_mesh
                 return in_bound;
             }
             //this is the right dimensions.. search the boundary list
-            typename simplex_type::boundary_iterator bound_it = b_list->begin();
+            auto bound_it = b_list->begin();
             for( ; bound_it != b_list->end() ; ++bound_it)
             {
                 if (f == *bound_it) return true;
@@ -1213,9 +1185,7 @@ namespace is_mesh
         {
             assert(simplex_key_s::dim < simplex_key_t::dim || !"Star traversed a wrong dimension simplex");
             
-            typedef typename util::simplex_traits<mesh_type, simplex_key_t::dim>::simplex_type simplex_type;
-            
-            simplex_type& simplex = lookup_simplex(t);
+            auto& simplex = lookup_simplex(t);
             set.insert(t); //add ourself to the set
             simplex.set_label(1);
             
@@ -1237,17 +1207,14 @@ namespace is_mesh
         template<typename simplex_key_s, typename simplex_key_t>
         void star_helper_recurse_up(simplex_key_s const & s, simplex_key_t const & t, simplex_set_type & set)
         {
-            typedef typename util::simplex_traits<mesh_type, simplex_key_t::dim>::simplex_type simplex_type;
-            typename simplex_type::co_boundary_set co_boundary = lookup_simplex(t).get_co_boundary();
-            typename simplex_type::co_boundary_iterator co_b_it = co_boundary->begin();
-            for( ; co_b_it != co_boundary->end() ; ++co_b_it )
+            for(auto co_b_it : *lookup_simplex(t).get_co_boundary())
             {
                 //only recurse if it has not been visited previously - no need to check boundary relations as a co-face
                 //of t will have s on it's boundary if t has it on it's boundary - and it does
-                if(lookup_simplex(*co_b_it).get_label() == 0)
+                if(lookup_simplex(co_b_it).get_label() == 0)
                 {
                     //recurse through children
-                    star_helper(s, *co_b_it, set);
+                    star_helper(s, co_b_it, set);
                 }
             }
         }
@@ -1294,16 +1261,13 @@ namespace is_mesh
         template<typename simplex_key_s, typename simplex_key_t>
         void star_helper_recurse_down_(simplex_key_s const & s, simplex_key_t const & t,  simplex_set_type & set)
         {
-            typedef typename util::simplex_traits<mesh_type, simplex_key_t::dim>::simplex_type simplex_type;
-            typename simplex_type::boundary_list boundary = lookup_simplex(t).get_boundary();
-            typename simplex_type::boundary_iterator b_it = boundary->begin();
-            for( ; b_it != boundary->end() ; ++b_it )
+            for(auto b_it : *lookup_simplex(t).get_boundary())
             {
                 //only recurse if the simplex is a co-face* of s and if it has not been visited previously
-                if(lookup_simplex(*b_it).get_label() == 0 && in_boundary(s, *b_it))
+                if(lookup_simplex(b_it).get_label() == 0 && in_boundary(s, b_it))
                 {
                     //recurse through children
-                    star_helper(s, *b_it, set);
+                    star_helper(s, b_it, set);
                 }
             }
         }
@@ -1629,13 +1593,9 @@ namespace is_mesh
         
         void star(edge_key_type const & key, simplex_set_type & s_set)
         {
-            typedef typename util::simplex_traits<mesh_type, 1>::simplex_type simplex_type;
-            simplex_type& simplex = lookup_simplex(key);
-            typename simplex_type::co_boundary_set co_boundary = simplex.get_co_boundary();
-            typename simplex_type::co_boundary_iterator co_bit = co_boundary->begin();
-            for( ; co_bit != co_boundary->end() ; ++co_bit )
+            for(auto co_bit : *lookup_simplex(key).get_co_boundary())
             {
-                star_helper(key, *co_bit, s_set);
+                star_helper(key, co_bit, s_set);
             }
             //now that we are done, remember to reset all labels
             //reset_label(simplex);
@@ -1928,15 +1888,9 @@ namespace is_mesh
         template<typename key_type>
         void orient_faces_consistently(key_type const & sk)
         {
-            typedef typename util::simplex_traits<mesh_type, key_type::dim>::simplex_type simplex_type;
-            
-            typename simplex_type::boundary_list boundary = lookup_simplex(sk).get_boundary();
-            typename simplex_type::boundary_iterator it = boundary->begin();
-            
-            while (it != boundary->end())
+            for (auto it : *lookup_simplex(sk).get_boundary())
             {
-                orient_face_helper(sk, *it, true);
-                ++it;
+                orient_face_helper(sk, it, true);
             }
         }
         
@@ -1958,15 +1912,9 @@ namespace is_mesh
         template<typename key_type>
         void orient_faces_oppositely(key_type const & sk)
         {
-            typedef typename util::simplex_traits<mesh_type, key_type::dim>::simplex_type simplex_type;
-            
-            typename simplex_type::boundary_list boundary = lookup_simplex(sk).get_boundary();
-            typename simplex_type::boundary_iterator it = boundary->begin();
-            
-            while (it != boundary->end())
+            for (auto it : *lookup_simplex(sk).get_boundary())
             {
-                orient_face_helper(sk, *it, false);
-                ++it;
+                orient_face_helper(sk, it, false);
             }
         }
         
