@@ -13,6 +13,38 @@
 
 namespace is_mesh
 {
+    
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Simplex typebinding traits
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    
+    template<typename mesh_type, int dim>
+    struct simplex_traits{};
+    
+    template<typename mesh_type>
+    struct simplex_traits<mesh_type, 0>
+    {
+        typedef typename mesh_type::node_type             simplex_type;
+    };
+    
+    template<typename mesh_type>
+    struct simplex_traits<mesh_type, 1>
+    {
+        typedef typename mesh_type::edge_type             simplex_type;
+    };
+    
+    template<typename mesh_type>
+    struct simplex_traits<mesh_type, 2>
+    {
+        typedef typename mesh_type::face_type             simplex_type;
+    };
+    
+    template<typename mesh_type>
+    struct simplex_traits<mesh_type, 3>
+    {
+        typedef typename mesh_type::tetrahedron_type      simplex_type;
+    };
+    
     /**
      * A data structure for managing a Simplicial Complex. Based on the work
      * by de Floriani and Hui, the Incidence Simplicial.
@@ -298,14 +330,13 @@ namespace is_mesh
          * Helper function for orient_face[...] methods.
          * fk must be a face of sk, dim(sk) = dimension, dim(fk) = dimension-1.
          */
-        template<typename key_type_simplex
-        , typename key_type_face>
+        template<typename key_type_simplex, typename key_type_face>
         void orient_face_helper(key_type_simplex const & sk, key_type_face const & fk, bool consistently)
         {
             assert(key_type_simplex::dim == (key_type_face::dim + 1) || !"fk is not a boundary face of sk.");
             assert(key_type_simplex::dim > 1 || !"Cannot induce dimension on vertices.");
             
-            typedef typename util::simplex_traits<mesh_type, key_type_face::dim>::simplex_type face_type;
+            typedef typename simplex_traits<mesh_type, key_type_face::dim>::simplex_type face_type;
             auto simplex_boundary = lookup_simplex(sk).get_boundary();
             auto face_boundary = lookup_simplex(fk).get_boundary();
             
@@ -361,7 +392,7 @@ namespace is_mesh
             assert(key_type_simplex::dim < 3 || !"No simplices of dimension more than three.");
             assert(key_type_simplex::dim > 0 || !"Vertices are not oriented.");
             
-            typedef typename util::simplex_traits<mesh_type, key_type_simplex::dim>::simplex_type simplex_type;
+            typedef typename simplex_traits<mesh_type, key_type_simplex::dim>::simplex_type simplex_type;
             
             auto coface_boundary = lookup_simplex(cfk).get_boundary();
             
@@ -1883,26 +1914,14 @@ namespace is_mesh
         
         /**
          * Marek
-         * Induces consistent orientations on all faces of a simplex sk.
+         * Induces consistent orientations on all faces of the tetrahedra with ID tid.
          */
-        template<typename key_type>
-        void orient_faces_consistently(key_type const & sk)
+        void orient_faces_consistently(const tetrahedron_key_type& tid)
         {
-            for (auto it : *lookup_simplex(sk).get_boundary())
+            for (auto it : *lookup_simplex(tid).get_boundary())
             {
-                orient_face_helper(sk, it, true);
+                orient_face_helper(tid, it, true);
             }
-        }
-        
-        /**
-         * Marek
-         * Induces consistent orientation on a face fk of a simplex sk.
-         */
-        template<typename key_type_simplex
-        , typename key_type_face>
-        void orient_face_consistently(key_type_simplex const & sk, key_type_face const & fk)
-        {
-            orient_face_helper(sk, fk, true);
         }
         
         /**
@@ -1916,17 +1935,6 @@ namespace is_mesh
             {
                 orient_face_helper(sk, it, false);
             }
-        }
-        
-        /**
-         * Marek
-         * Induces opposite orientation on a face fk of a simplex sk.
-         */
-        template<typename key_type_simplex
-        , typename key_type_face>
-        void orient_face_oppositely(key_type_simplex const & sk, key_type_face const & fk)
-        {
-            orient_face_helper(sk, fk, false);
         }
         
         /**
@@ -1951,25 +1959,16 @@ namespace is_mesh
             assert(k1 != k2 || !"The same key for both input simplices");
             assert(key_type_simplex::dim > 0 || !"Cannot intersect two vertices");
             
-            typedef typename util::simplex_traits<mesh_type, key_type_simplex::dim>::simplex_type simplex_type;
-            
-            typename simplex_type::boundary_list b1 = lookup_simplex(k1).get_boundary();
-            typename simplex_type::boundary_list b2 = lookup_simplex(k2).get_boundary();
-            
-            typename simplex_type::boundary_iterator bi1 = b1->begin();
-            while (bi1 != b1->end())
+            for (auto bi1 : *lookup_simplex(k1).get_boundary())
             {
-                typename simplex_type::boundary_iterator bi2 = b2->begin();
-                while (bi2 != b2->end())
+                for (auto bi2 : *lookup_simplex(k2).get_boundary())
                 {
-                    if (*bi1 == *bi2)
+                    if (bi1 == bi2)
                     {
-                        k = *bi1;
+                        k = bi1;
                         return true;
                     }
-                    ++bi2;
                 }
-                ++bi1;
             }
             
             return false;

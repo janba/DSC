@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include <is_mesh/is_mesh_utils.h>
-
 namespace is_mesh
 {
     
