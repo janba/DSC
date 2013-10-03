@@ -6,13 +6,8 @@ namespace is_mesh
     namespace util
     {
         /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-         * Simplex Tags and typebinding traits
+         * Simplex typebinding traits
          * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-        //tags
-        struct node_simplex_tag{};
-        struct edge_simplex_tag{};
-        struct face_simplex_tag{};
-        struct tetrahedron_simplex_tag{};
         
         template<typename mesh_type, int dim>
         struct simplex_traits{};
@@ -25,7 +20,6 @@ namespace is_mesh
             typedef typename mesh_type::node_iterator         iterator;
             typedef typename mesh_type::edge_iterator         co_boundary_iterator;
             typedef typename mesh_type::node_key_type         key_type;
-            typedef          node_simplex_tag                 simplex_tag;
         };
         
         template<typename mesh_type>
@@ -38,7 +32,6 @@ namespace is_mesh
             typedef typename mesh_type::node_iterator         boundary_iterator;
             typedef typename mesh_type::face_iterator         co_boundary_iterator;
             typedef typename mesh_type::edge_key_type         key_type;
-            typedef          edge_simplex_tag                 simplex_tag;
         };
         
         template<typename mesh_type>
@@ -51,7 +44,6 @@ namespace is_mesh
             typedef typename mesh_type::edge_iterator         boundary_iterator;
             typedef typename mesh_type::tetrahedron_iterator  co_boundary_iterator;
             typedef typename mesh_type::face_key_type         key_type;
-            typedef          face_simplex_tag                 simplex_tag;
         };
         
         template<typename mesh_type>
@@ -62,7 +54,6 @@ namespace is_mesh
             typedef typename mesh_type::tetrahedron_iterator  iterator;
             typedef typename mesh_type::face_iterator         boundary_iterator;
             typedef typename mesh_type::tetrahedron_key_type  key_type;
-            typedef          tetrahedron_simplex_tag          simplex_tag;
         };
     }
 }

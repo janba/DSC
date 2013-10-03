@@ -128,31 +128,6 @@ namespace is_mesh
             }
         }
         
-        void filter(util::node_simplex_tag)
-        {
-            m_edges.clear();
-            m_faces.clear();
-            m_tetrahedra.clear();
-        }
-        void filter(util::edge_simplex_tag)
-        {
-            m_nodes.clear();
-            m_faces.clear();
-            m_tetrahedra.clear();
-        }
-        void filter(util::face_simplex_tag)
-        {
-            m_nodes.clear();
-            m_edges.clear();
-            m_tetrahedra.clear();
-        }
-        void filter(util::tetrahedron_simplex_tag)
-        {
-            m_nodes.clear();
-            m_edges.clear();
-            m_faces.clear();
-        }
-        
         void difference(const simplex_set_type& s)
         {
             difference_helper(m_nodes, s.m_nodes);
@@ -197,6 +172,26 @@ namespace is_mesh
             m_tetrahedra.clear();
         }
         
+        void clear_nodes()
+        {
+            m_nodes.clear();
+        }
+        
+        void clear_edges()
+        {
+            m_edges.clear();
+        }
+        
+        void clear_faces()
+        {
+            m_faces.clear();
+        }
+        
+        void clear_tetrahedra()
+        {
+            m_tetrahedra.clear();
+        }
+        
         bool empty() const
         {
             return m_nodes.empty() && m_edges.empty() && m_edges.empty() && m_tetrahedra.empty();
@@ -232,16 +227,6 @@ namespace is_mesh
         face_set_iterator faces_end()   { return m_faces.end(); }
         tetrahedron_set_iterator tetrahedra_begin() { return m_tetrahedra.begin(); }
         tetrahedron_set_iterator tetrahedra_end()   { return m_tetrahedra.end(); }
-        
-        node_set_iterator begin(util::node_simplex_tag) { return nodes_begin(); }
-        edge_set_iterator begin(util::edge_simplex_tag) { return edges_begin(); }
-        face_set_iterator begin(util::face_simplex_tag) { return faces_begin(); }
-        tetrahedron_set_iterator begin(util::tetrahedron_simplex_tag) { return tetrahedra_begin(); }
-        
-        node_set_iterator end(util::node_simplex_tag) { return nodes_end(); }
-        edge_set_iterator end(util::edge_simplex_tag) { return edges_end(); }
-        face_set_iterator end(util::face_simplex_tag) { return faces_end(); }
-        tetrahedron_set_iterator end(util::tetrahedron_simplex_tag) { return tetrahedra_end(); }
     };
     
     template<> template<>

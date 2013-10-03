@@ -2081,21 +2081,19 @@ namespace is_mesh
         
         void link(face_key_type const & f, simplex_set_type & result)
         {
-            typename util::simplex_traits<mesh_type, 0>::simplex_tag tag;
-            
             simplex_set_type st_f, cl_f;
             star(f, st_f);
             closure(st_f, result);
             closure(f, cl_f);
             result.difference(cl_f);
             result.difference(st_f);
-            result.filter(tag);
+            result.clear_edges();
+            result.clear_faces();
+            result.clear_tetrahedra();
         }
                 
         void link(edge_key_type const & e, simplex_set_type & result)
         {
-            typename util::simplex_traits<mesh_type, 0>::simplex_tag tag;
-            
             simplex_set_type st_e, cl_e, temp;
             star(e, st_e);
             closure(st_e, temp);
@@ -2124,7 +2122,9 @@ namespace is_mesh
                 result.insert(*eit);
                 ++eit;
             }
-            temp.filter(tag);
+            temp.clear_edges();
+            temp.clear_faces();
+            temp.clear_tetrahedra();
             result.add(temp);
         }
         
