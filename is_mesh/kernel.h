@@ -139,8 +139,6 @@ namespace OpenTissue
       
       size_type             m_initial_size;        //the size by wich we grow
 
-      stack_type            m_stack;               //undo stack
-
     private:
       /**
        * Converts an indirect reference to the direct memory reference currently allocated by the cell.
@@ -402,14 +400,6 @@ namespace OpenTissue
        */
       ~kernel() 
       { //destructor
-        //deallocate everything on the undo stack
-        typename stack_type::iterator it = m_stack.begin();
-        while(it != m_stack.end())
-        {
-          //deallocate each stack element, first it's list then the element itself
-          free_stack_element(*it);
-          ++it;
-        }
         //call the deallocate of all managed objects
         for(size_type i=0; i<m_capacity; ++i)
         {
@@ -606,16 +596,6 @@ namespace OpenTissue
 
         m_size         = 0;
         m_shadow_size  = 0;
-        //first clear the stack - we are in fact committing all undo changes
-        typename stack_type::iterator it = m_stack.begin();
-        while(it != m_stack.end())
-        {
-          //deallocate each stack element, first it's list then the element itself
-          //m_alloc.deallocate((*it)->elements, (*it)->size);
-          delete [] (*it)->elements;
-          delete *it;
-        }
-        m_stack.clear(); //commit all undo changes
       }
 
       /**
@@ -676,14 +656,6 @@ namespace OpenTissue
          */
         void commit_all()
         {
-            typename stack_type::iterator it = m_stack.begin();
-            while(it != m_stack.end())
-            {
-                free_stack_element(*it);
-                ++it;
-            }
-            m_stack.clear(); //commit all undo changes
-            
             key_type m = m_first_marked;
             while (m != m_past_the_end)
             {

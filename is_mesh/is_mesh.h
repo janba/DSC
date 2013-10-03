@@ -71,54 +71,11 @@ namespace OpenTissue
             //expose some types from the kernel
             typedef typename node_kernel_type::size_type                                 size_type;
             
-        public:
-            struct node_undo_info
-            {
-                node_key_type key;
-                typename node_type::co_boundary_set old_co_boundary;
-                typename node_type::co_boundary_set new_co_boundary;
-            };
-            
-            struct edge_undo_info
-            {
-                edge_key_type key;
-                typename edge_type::boundary_list old_boundary;
-                typename edge_type::boundary_list new_boundary;
-                typename edge_type::co_boundary_set old_co_boundary;
-                typename edge_type::co_boundary_set new_co_boundary;
-            };
-            
-            struct face_undo_info
-            {
-                face_key_type key;
-                typename face_type::boundary_list old_boundary;
-                typename face_type::boundary_list new_boundary;
-                typename face_type::co_boundary_set old_co_boundary;
-                typename face_type::co_boundary_set new_co_boundary;
-            };
-            
-            struct tetrahedron_undo_info
-            {
-                tetrahedron_key_type key;
-                typename tetrahedron_type::boundary_list old_boundary;
-                typename tetrahedron_type::boundary_list new_boundary;
-            };
-            
         private:
             node_kernel_type*                  m_node_kernel;
             edge_kernel_type*                  m_edge_kernel;
             face_kernel_type*                  m_face_kernel;
             tetrahedron_kernel_type*           m_tetrahedron_kernel;
-            
-            std::vector<node_undo_info>        m_node_undo_stack;
-            std::vector<edge_undo_info>        m_edge_undo_stack;
-            std::vector<face_undo_info>        m_face_undo_stack;
-            std::vector<tetrahedron_undo_info> m_tetrahedron_undo_stack;
-            
-            std::list<unsigned int>            m_node_mark_stack;
-            std::list<unsigned int>            m_edge_mark_stack;
-            std::list<unsigned int>            m_face_mark_stack;
-            std::list<unsigned int>            m_tetrahedron_mark_stack;
             
             size_type                          m_uncompressed; //an estimate of the numbers of uncompressed simplices in the mesh
             
@@ -2630,38 +2587,9 @@ namespace OpenTissue
             void garbage_collect()
             {
                 m_node_kernel->garbage_collect();
-                for (unsigned int i = 0; i < m_node_undo_stack.size(); ++i)
-                {
-                    delete m_node_undo_stack[i].old_co_boundary;
-                }
-                m_node_undo_stack.clear();
-                m_node_mark_stack.clear();
-                
                 m_edge_kernel->garbage_collect();
-                for (unsigned int i = 0; i < m_edge_undo_stack.size(); ++i)
-                {
-                    delete m_edge_undo_stack[i].old_boundary;
-                    delete m_edge_undo_stack[i].old_co_boundary;
-                }
-                m_edge_undo_stack.clear();
-                m_edge_mark_stack.clear();
-                
                 m_face_kernel->garbage_collect();
-                for (unsigned int i = 0; i < m_face_undo_stack.size(); ++i)
-                {
-                    delete m_face_undo_stack[i].old_boundary;
-                    delete m_face_undo_stack[i].old_co_boundary;
-                }
-                m_face_undo_stack.clear();
-                m_face_mark_stack.clear();
-                
                 m_tetrahedron_kernel->garbage_collect();
-                for (unsigned int i = 0; i < m_tetrahedron_undo_stack.size(); ++i)
-                {
-                    delete m_tetrahedron_undo_stack[i].old_boundary;
-                }
-                m_tetrahedron_undo_stack.clear();
-                m_tetrahedron_mark_stack.clear();
             }
             
         }; //class t4mesh
