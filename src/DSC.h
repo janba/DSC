@@ -459,8 +459,8 @@ namespace DSC {
                 {
                     for (int k = i+1; k < j; k++)
                     {
-                        real q2 = Util::quality<real>(get_pos(polygon[i]), get_pos(polygon[k]), get_pos(polygon[j]), verts[1]);
-                        real q1 = Util::quality<real>(get_pos(polygon[k]), get_pos(polygon[i]), get_pos(polygon[j]), verts[0]);
+                        real q2 = Util::quality<real>(get_pos(polygon[i]), get_pos(polygon[k]), verts[1], get_pos(polygon[j]));
+                        real q1 = Util::quality<real>(get_pos(polygon[k]), get_pos(polygon[i]), verts[0], get_pos(polygon[j]));
                         real q = Util::min(q1, q2);
                         if (k < j-1)
                         {
@@ -718,19 +718,19 @@ namespace DSC {
         {
             edge_key e = Complex::get_edge(u,w);
             face_key g = get_neighbour(f, e);
-            real q = Util::quality<real>(get_pos(a), get_pos(b), get_pos(u), get_pos(w));
+            real q = Util::quality<real>(get_pos(a), get_pos(b), get_pos(w), get_pos(u));
             
             if(g != Complex::NULL_FACE && is_safe_editable(e))
             {
                 node_key v = Complex::get_apex(g, e);
-                real V_uv = Util::signed_volume<real>(get_pos(a), get_pos(b), get_pos(u), get_pos(v));
-                real V_vw = Util::signed_volume<real>(get_pos(a), get_pos(b), get_pos(v), get_pos(w));
-                real V_wu = Util::signed_volume<real>(get_pos(a), get_pos(b), get_pos(w), get_pos(u));
+                real V_uv = Util::signed_volume<real>(get_pos(a), get_pos(b), get_pos(v), get_pos(u));
+                real V_vw = Util::signed_volume<real>(get_pos(a), get_pos(b), get_pos(w), get_pos(v));
+                real V_wu = Util::signed_volume<real>(get_pos(a), get_pos(b), get_pos(u), get_pos(w));
                 
                 if((V_uv > 0. && V_vw > 0.) || (V_vw > 0. && V_wu > 0.) || (V_wu > 0. && V_uv > 0.))
                 {
-                    q_old = Util::min(Util::quality<real>(get_pos(a), get_pos(u), get_pos(v), get_pos(w)),
-                                     Util::quality<real>(get_pos(u), get_pos(v), get_pos(w), get_pos(b)));
+                    q_old = Util::min(Util::quality<real>(get_pos(a), get_pos(u), get_pos(w), get_pos(v)),
+                                     Util::quality<real>(get_pos(u), get_pos(v), get_pos(b), get_pos(w)));
                     
                     real q_uv_old, q_uv_new, q_vw_old, q_vw_new;
                     auto uv_edges = test_neighbour(g, a, b, u, v, q_uv_old, q_uv_new);
@@ -2146,7 +2146,7 @@ namespace DSC {
             real sum = 0;
             for (unsigned int i = 0; i < n; ++i)
             {
-                sum += Util::signed_volume<real>(vv[0], vv[1], vp[(i+1)%n], vp[i]);
+                sum += Util::signed_volume<real>(vv[0], vv[1], vp[i], vp[(i+1)%n]);
             }
             
             if (sum < 0.)

@@ -97,7 +97,7 @@ namespace DSC {
         template <typename real, typename vec3>
         inline real signed_volume(const vec3& a, const vec3& b, const vec3& c, const vec3& d)
         {
-            return dot(a-d, cross(c-d, b-d))/6.;
+            return dot(a-d, cross(b-d, c-d))/6.;
         }
         
         template <typename real, typename vec3>

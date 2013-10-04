@@ -375,7 +375,7 @@ namespace is_mesh {
             std::vector<node_key> nodes;
             auto bit = mesh.lookup_simplex(tid).get_boundary();
             face_key fid = *bit->begin();
-            mesh.orient_face_helper(tid, fid, false);
+            mesh.orient_face_helper(tid, fid, true);
             for (auto nid : get_nodes(fid)) {
                 nodes.push_back(nid);
             }
@@ -406,7 +406,7 @@ namespace is_mesh {
             int j = 0;
             for(auto fid : *mesh.lookup_simplex(tid).get_boundary())
             {
-                mesh.orient_face_helper(tid, fid, false);
+                mesh.orient_face_helper(tid, fid, true);
                 auto f_edges = get_edges(fid);
                 if(edges.size() == 0)
                 {
