@@ -1469,8 +1469,8 @@ namespace DSC {
 //            std::cout << "Thinning interface pass." << std::endl;
 //            thinning_interface();
             
-            std::cout << "Thickening pass." << std::endl;
-            thickening();
+//            std::cout << "Thickening pass." << std::endl;
+//            thickening();
             
 //            std::cout << "Thinning pass." << std::endl;
 //            thinning();
