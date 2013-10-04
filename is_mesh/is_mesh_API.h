@@ -394,11 +394,8 @@ namespace is_mesh {
         std::vector<edge_key> get_edges(const face_key& fid)
         {
             std::vector<edge_key> edges;
-            simplex_set cl_f;
-            closure(fid, cl_f);
-            for(auto eit = cl_f.edges_begin(); eit != cl_f.edges_end(); eit++)
-            {
-                edges.push_back(*eit);
+            for (auto eid : *mesh.lookup_simplex(fid).get_boundary()) {
+                edges.push_back(eid);
             }
             return edges;
         }
@@ -406,11 +403,29 @@ namespace is_mesh {
         std::vector<edge_key> get_edges(const tet_key& tid)
         {
             std::vector<edge_key> edges;
-            simplex_set cl_t;
-            closure(tid, cl_t);
-            for(auto eit = cl_t.edges_begin(); eit != cl_t.edges_end(); eit++)
+            int j = 0;
+            for(auto fid : *mesh.lookup_simplex(tid).get_boundary())
             {
-                edges.push_back(*eit);
+                mesh.orient_face_helper(tid, fid, false);
+                auto f_edges = get_edges(fid);
+                if(edges.size() == 0)
+                {
+                    for (auto eid : f_edges) {
+                        edges.push_back(eid);
+                    }
+                    edges.resize(6);
+                }
+                else {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if(f_edges[i] == edges[0] || f_edges[i] == edges[1] || f_edges[i] == edges[2])
+                        {
+                            edges[3+j] = f_edges[(i+1)%3];
+                            j++;
+                            break;
+                        }
+                    }
+                }
             }
             return edges;
         }
