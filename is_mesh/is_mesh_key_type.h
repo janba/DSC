@@ -78,30 +78,4 @@ namespace is_mesh
         TetrahedronKey(unsigned int k) : Key(k, 3) {}
     };
     
-    template<int n>struct key_traits
-    {
-        typedef unsigned int    key_type;
-    };
-    
-    template<>
-    struct key_traits<0>
-    {
-        typedef NodeKey         key_type;
-    };
-    template<>
-    struct key_traits<1>
-    {
-        typedef EdgeKey         key_type;
-    };
-    template<>
-    struct key_traits<2>
-    {
-        typedef FaceKey         key_type;
-    };
-    template<>
-    struct key_traits<3>
-    {
-        typedef TetrahedronKey   key_type;
-    };
-    
 }

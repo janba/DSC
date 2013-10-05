@@ -2079,19 +2079,6 @@ namespace is_mesh
             return split_edge_helper(e, new_tets);
         }
         
-        /**
-         * Marek
-         */
-        node_key_type edge_collapse(edge_key_type & e)
-        {
-            typename edge_type::boundary_list e_boundary = lookup_simplex(e).get_boundary();
-            typename edge_type::boundary_iterator ebit = e_boundary->begin();
-            node_key_type n1 = *ebit;
-            ++ebit;
-            node_key_type n2 = *ebit;
-            return edge_collapse_helper(e, n1, n2);
-        }
-        
         void link(tetrahedron_key_type const & k, simplex_set_type & result){}
         
         void link(face_key_type const & f, simplex_set_type & result)

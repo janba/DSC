@@ -227,28 +227,4 @@ namespace is_mesh
         tetrahedron_set_iterator tetrahedra_end()   { return m_tetrahedra.end(); }
     };
     
-    template<> template<>
-    struct simplex_set<NodeKey,EdgeKey,FaceKey,TetrahedronKey>::iterator_type<0>
-    {
-        typedef node_set_iterator           iterator;
-    };
-    
-    template<> template<>
-    struct simplex_set<NodeKey,EdgeKey,FaceKey,TetrahedronKey>::iterator_type<1>
-    {
-        typedef edge_set_iterator           iterator;
-    };
-    
-    template<> template<>
-    struct simplex_set<NodeKey,EdgeKey,FaceKey,TetrahedronKey>::iterator_type<2>
-    {
-        typedef face_set_iterator           iterator;
-    };
-    
-    template<> template<>
-    struct simplex_set<NodeKey,EdgeKey,FaceKey,TetrahedronKey>::iterator_type<3>
-    {
-        typedef tetrahedron_set_iterator    iterator;
-    };
-    
 }
