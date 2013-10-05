@@ -459,8 +459,8 @@ namespace DSC {
                 {
                     for (int k = i+1; k < j; k++)
                     {
-                        real q2 = Util::quality<real>(get_pos(polygon[i]), get_pos(polygon[k]), verts[1], get_pos(polygon[j]));
-                        real q1 = Util::quality<real>(get_pos(polygon[k]), get_pos(polygon[i]), verts[0], get_pos(polygon[j]));
+                        real q2 = Util::quality<real>(get_pos(polygon[i]), get_pos(polygon[k]), verts[0], get_pos(polygon[j]));
+                        real q1 = Util::quality<real>(get_pos(polygon[k]), get_pos(polygon[i]), verts[1], get_pos(polygon[j]));
                         real q = Util::min(q1, q2);
                         if (k < j-1)
                         {
@@ -490,7 +490,7 @@ namespace DSC {
             std::vector<node_key> polygon;
             
             sort_vertices(lk_e, polygon);
-            check_consistency(e, polygon);
+            check_consistency(get_pos(e), polygon);
             return polygon;
         }
         
@@ -2131,7 +2131,7 @@ namespace DSC {
          * Check if the sequence of vertices in polygon is consistent with positive orientation of tetrahedra in the mesh
          * with respect to the ordered pair of vertices in vv. If not, reverse the order of vertices in polygon.
          */
-        void check_consistency(std::vector<vec3> & vv, std::vector<node_key> & polygon)
+        void check_consistency(const std::vector<vec3> & vv, std::vector<node_key> & polygon)
         {
             unsigned int n = static_cast<unsigned int>(polygon.size());
             std::vector<vec3> vp(n);
@@ -2156,20 +2156,6 @@ namespace DSC {
                     polygon[n-1-i] = temp;
                 }
             }
-        }
-        
-        /**
-         * Check if the sequence of vertices in polygon is consistent with positive orientation of tetrahedra in the mesh
-         * with respect to edge. If not, reverse the order of vertices in polygon.
-         */
-        void check_consistency(edge_key const & e, std::vector<node_key> & polygon)
-        {
-            auto verts = get_pos(e);
-            std::vector<vec3> vv(2);
-            vv[1] = verts[0]; // VERTEX FLIP
-            vv[0] = verts[1];
-            
-            check_consistency(vv, polygon);
         }
         
         

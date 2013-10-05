@@ -356,7 +356,6 @@ namespace is_mesh {
             for (auto nid : *mesh.lookup_simplex(eid).get_boundary()) {
                 nodes.push_back(nid);
             }
-            std::swap(nodes[0], nodes[1]);
             return nodes;
         }
         
@@ -707,7 +706,7 @@ namespace is_mesh {
             assert(nodes[0] != NULL_NODE);
             assert(nodes[1] != NULL_NODE);
 #endif
-            node_key n = mesh.edge_collapse_helper(e, nodes[1], nodes[0]);
+            node_key n = mesh.edge_collapse_helper(e, nodes[0], nodes[1]);
             if (n == (node_key)-1) {
                 return NULL_NODE;
             }
