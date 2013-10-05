@@ -313,7 +313,7 @@ namespace is_mesh
         template<typename key_type>
         void invert_orientation(key_type const & k)
         {
-            if (key_type::dim == 0) return;
+            if (k.get_dim() == 0) return;
             
             auto boundary = lookup_simplex(k).get_boundary();
             auto it = boundary->begin();
@@ -330,20 +330,15 @@ namespace is_mesh
          * Helper function for orient_face[...] methods.
          * fk must be a face of sk, dim(sk) = dimension, dim(fk) = dimension-1.
          */
-        template<typename key_type_simplex, typename key_type_face>
-        void orient_face_helper(key_type_simplex const & sk, key_type_face const & fk, bool consistently)
+        void orient_face_helper(const TetrahedronKey& sk, const FaceKey& fk, bool consistently)
         {
-            assert(key_type_simplex::dim == (key_type_face::dim + 1) || !"fk is not a boundary face of sk.");
-            assert(key_type_simplex::dim > 1 || !"Cannot induce dimension on vertices.");
-            
-            typedef typename simplex_traits<mesh_type, key_type_face::dim>::simplex_type face_type;
             auto simplex_boundary = lookup_simplex(sk).get_boundary();
             auto face_boundary = lookup_simplex(fk).get_boundary();
             
             auto sb_it = simplex_boundary->begin();
             auto fb_it = face_boundary->begin();
             
-            std::vector<typename face_type::boundary_key_type> new_face_boundary(face_boundary->size());
+            std::vector<edge_key_type> new_face_boundary(face_boundary->size());
             
             unsigned char f_index = 0, i = 0;
             
@@ -355,7 +350,7 @@ namespace is_mesh
                 }
                 else
                 {
-                    typename face_type::boundary_key_type ek;
+                    edge_key_type ek;
                     bool res = get_intersection(fk, *sb_it, ek);
                     assert(res || !"Two faces of the same simplex do not intersect?!");
                     new_face_boundary[i] = ek;
@@ -381,28 +376,111 @@ namespace is_mesh
         
         /**
          * Marek
-         * Helper function for orient_coface[...] methods.
-         * sk must be a face of cfk, dim(sk) = dimension, dim(cfk) = dimension+1.
+         * Helper function for orient_face[...] methods.
+         * fk must be a face of sk, dim(sk) = dimension, dim(fk) = dimension-1.
          */
-        template<typename key_type_simplex
-        , typename key_type_coface>
-        void orient_coface_helper(key_type_simplex const & sk, key_type_coface const & cfk, bool consistently)
+        void orient_face_helper(const FaceKey& fid, const EdgeKey& eid, bool consistently)
         {
-            assert(key_type_simplex::dim == (key_type_coface::dim - 1) || !"sk is not a boundary face of cfk.");
-            assert(key_type_simplex::dim < 3 || !"No simplices of dimension more than three.");
-            assert(key_type_simplex::dim > 0 || !"Vertices are not oriented.");
+            auto simplex_boundary = lookup_simplex(fid).get_boundary();
+            auto face_boundary = lookup_simplex(eid).get_boundary();
             
-            typedef typename simplex_traits<mesh_type, key_type_simplex::dim>::simplex_type simplex_type;
+            auto sb_it = simplex_boundary->begin();
+            auto fb_it = face_boundary->begin();
+            
+            std::vector<node_key_type> new_face_boundary(face_boundary->size());
+            
+            unsigned char f_index = 0, i = 0;
+            
+            while (sb_it != simplex_boundary->end())
+            {
+                if (*sb_it == eid)
+                {
+                    f_index = i+1;
+                }
+                else
+                {
+                    node_key_type ek;
+                    bool res = get_intersection(eid, *sb_it, ek);
+                    assert(res || !"Two faces of the same simplex do not intersect?!");
+                    new_face_boundary[i] = ek;
+                    ++fb_it;
+                    ++i;
+                }
+                ++sb_it;
+            }
+            
+            assert(f_index > 0 || !"fk is not a face of sk");
+            
+            i = 0;
+            /**/
+            face_boundary->clear();
+            for (; i < new_face_boundary.size(); ++i)
+                face_boundary->push_back(new_face_boundary[i]);
+            
+            f_index %= 2;
+            if ((f_index == 0 && consistently) ||
+                (f_index == 1 && !consistently))
+                invert_orientation(eid);
+        }
+        
+        
+        void orient_coface_helper(const FaceKey& sk, const TetrahedronKey& cfk, bool consistently)
+        {
+            assert(sk.get_dim() == (cfk.get_dim() - 1) || !"sk is not a boundary face of cfk.");
+            assert(sk.get_dim() < 3 || !"No simplices of dimension more than three.");
+            assert(sk.get_dim() > 0 || !"Vertices are not oriented.");
             
             auto coface_boundary = lookup_simplex(cfk).get_boundary();
             
-            std::map<typename simplex_type::boundary_key_type, key_type_simplex> face_to_simplex;
+            std::map<edge_key_type, face_key_type> face_to_simplex;
             
             for (auto cfb_it : *coface_boundary)
             {
                 if (cfb_it != sk)
                 {
-                    typename simplex_type::boundary_key_type k;
+                    edge_key_type k;
+                    bool res = get_intersection(sk, cfb_it, k);
+                    assert(res || !"Two faces of the same simplex do not intersect?!");
+                    face_to_simplex[k] = cfb_it;
+                }
+            }
+            
+            auto cfb_it = coface_boundary->begin();
+            *cfb_it = sk;
+            ++cfb_it;
+            
+            for (auto sb_it : *lookup_simplex(sk).get_boundary())
+            {
+                *cfb_it = face_to_simplex[sb_it];
+                ++cfb_it;
+            }
+            
+            if (!consistently)
+            {
+                invert_orientation(cfk);
+            }
+        }
+        
+        /**
+         * Marek
+         * Helper function for orient_coface[...] methods.
+         * sk must be a face of cfk, dim(sk) = dimension, dim(cfk) = dimension+1.
+         */
+        void orient_coface_helper(const edge_key_type& sk, const face_key_type& cfk, bool consistently)
+        {
+            assert(sk.get_dim() == (cfk.get_dim() - 1) || !"sk is not a boundary face of cfk.");
+            assert(sk.get_dim() < 3 || !"No simplices of dimension more than three.");
+            assert(sk.get_dim() > 0 || !"Vertices are not oriented.");
+            
+            auto coface_boundary = lookup_simplex(cfk).get_boundary();
+            
+            std::map<node_key_type, edge_key_type> face_to_simplex;
+            
+            for (auto cfb_it : *coface_boundary)
+            {
+                if (cfb_it != sk)
+                {
+                    node_key_type k;
                     bool res = get_intersection(sk, cfb_it, k);
                     assert(res || !"Two faces of the same simplex do not intersect?!");
                     face_to_simplex[k] = cfb_it;
@@ -873,7 +951,7 @@ namespace is_mesh
                                            node_key_type const & n2)
         {
             if (!edge_collapse_precond(e,n1,n2))
-                return -1;
+                return NodeKey();
             
             simplex_set_type st2, lk1, lk2, st_e, lk_e, st_e_boundary;
             star(n2, st2);
@@ -1168,13 +1246,13 @@ namespace is_mesh
         template<typename key_type_face, typename key_type_simplex>
         bool in_boundary(key_type_face const & f, key_type_simplex const & s)
         {
-            if (key_type_face::dim >= key_type_simplex::dim)
+            if (f.get_dim() >= s.get_dim())
             {
                 //cannot be in boundary as dimensions are wrong
                 return false;
             }
             auto b_list = lookup_simplex(s).get_boundary();
-            if (key_type_face::dim+1 < key_type_simplex::dim)
+            if (f.get_dim()+1 < s.get_dim())
             {
                 //too far apart.. need to call recursively
                 bool in_bound = false;
@@ -1214,7 +1292,7 @@ namespace is_mesh
         template<typename simplex_key_s, typename simplex_key_t>
         void star_helper(simplex_key_s const & s, simplex_key_t const & t,  simplex_set_type & set)
         {
-            assert(simplex_key_s::dim < simplex_key_t::dim || !"Star traversed a wrong dimension simplex");
+            assert(s.get_dim() < t.get_dim() || !"Star traversed a wrong dimension simplex");
             
             auto& simplex = lookup_simplex(t);
             set.insert(t); //add ourself to the set
@@ -1957,7 +2035,7 @@ namespace is_mesh
         bool get_intersection(key_type_simplex const & k1, key_type_simplex const & k2, key_type_face & k)
         {
             assert(k1 != k2 || !"The same key for both input simplices");
-            assert(key_type_simplex::dim > 0 || !"Cannot intersect two vertices");
+            assert(k1.get_dim() > 0 || !"Cannot intersect two vertices");
             
             for (auto bi1 : *lookup_simplex(k1).get_boundary())
             {

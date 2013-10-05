@@ -3,16 +3,32 @@
 
 namespace is_mesh
 {
-    struct Key
+    class Key
     {
-        //this is where the magic happens...
+    protected:
         unsigned int key;
+        unsigned int dim;
         
-        //default constructor - sets key to 0
-        Key() : key() { }
+        Key() : Key(-1,-1)
+        {
+            
+        }
         
-        //conversion from int
-        Key(unsigned int k) : key(k) { }
+        Key(unsigned int _key, unsigned int _dim) : key(_key), dim(_dim)
+        {
+            
+        }
+        
+    public:
+        bool is_valid() const
+        {
+            return dim != static_cast<unsigned int>(-1);
+        }
+        
+        const int get_dim() const
+        {
+            return dim;
+        }
         
         //conversion to int
         operator unsigned int() { return key; }
@@ -34,32 +50,32 @@ namespace is_mesh
         friend std::istream& operator>> (std::istream & is, Key       & a) { return (is >> a.key); }
     };
     
-    struct NodeKey : public Key
+    class NodeKey : public Key
     {
+    public:
         NodeKey() : Key() {}
-        NodeKey(unsigned int k) : Key(k) {}
-        static const int dim = 0;
+        NodeKey(unsigned int k) : Key(k, 0) {}
     };
     
-    struct EdgeKey : public Key
+    class EdgeKey : public Key
     {
+    public:
         EdgeKey() : Key() {}
-        EdgeKey(unsigned int k) : Key(k) {}
-        static const int dim = 1;
+        EdgeKey(unsigned int k) : Key(k, 1) {}
     };
     
-    struct FaceKey : public Key
+    class FaceKey : public Key
     {
+    public:
         FaceKey() : Key() {}
-        FaceKey(unsigned int k) : Key(k) {}
-        static const int dim = 2;
+        FaceKey(unsigned int k) : Key(k, 2) {}
     };
     
-    struct TetrahedronKey : public Key
+    class TetrahedronKey : public Key
     {
+    public:
         TetrahedronKey() : Key() {}
-        TetrahedronKey(unsigned int k) : Key(k) {}
-        static const int dim = 3;
+        TetrahedronKey(unsigned int k) : Key(k, 3) {}
     };
     
     template<int n>struct key_traits
