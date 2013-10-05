@@ -9,7 +9,7 @@ namespace is_mesh
         unsigned int key;
         unsigned int dim;
         
-        Key() : Key(-1,-1)
+        Key() : Key(static_cast<unsigned int>(-1), static_cast<unsigned int>(-1))
         {
             
         }

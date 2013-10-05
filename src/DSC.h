@@ -503,7 +503,7 @@ namespace DSC {
             {
                 face_key f = Complex::get_face(nodes[0], nodes[1], polygon[i]);
 #ifdef DEBUG
-                assert(f != Complex::NULL_FACE);
+                assert(f.is_valid());
 #endif
                 if(is_interface(f) || is_boundary(f))
                 {
@@ -700,7 +700,7 @@ namespace DSC {
             Complex::star(e, st_e);
             if(st_e.size_faces() != 4)
             {
-                return Complex::NULL_FACE;
+                return face_key();
             }
             
             simplex_set st_f, cl_st_f;
@@ -720,7 +720,7 @@ namespace DSC {
             face_key g = get_neighbour(f, e);
             real q = Util::quality<real>(get_pos(a), get_pos(b), get_pos(w), get_pos(u));
             
-            if(g != Complex::NULL_FACE && is_safe_editable(e))
+            if(g.is_valid() && is_safe_editable(e))
             {
                 node_key v = Complex::get_apex(g, e);
                 real V_uv = Util::signed_volume<real>(get_pos(a), get_pos(b), get_pos(v), get_pos(u));
@@ -794,27 +794,27 @@ namespace DSC {
             {
                 node_key n = Complex::flip_23(f);
 #ifdef DEBUG
-                assert(n != Complex::NULL_NODE);
+                assert(n.is_valid());
 #endif
                 for(auto &e : e01)
                 {
                     n = Complex::flip_32(e);
 #ifdef DEBUG
-                    assert(n != Complex::NULL_NODE);
+                    assert(n.is_valid());
 #endif
                 }
                 for(auto &e : e12)
                 {
                     n = Complex::flip_32(e);
 #ifdef DEBUG
-                    assert(n != Complex::NULL_NODE);
+                    assert(n.is_valid());
 #endif
                 }
                 for(auto &e : e20)
                 {
                     n = Complex::flip_32(e);
 #ifdef DEBUG
-                    assert(n != Complex::NULL_NODE);
+                    assert(n.is_valid());
 #endif
                 }
                 return true;
@@ -919,7 +919,8 @@ namespace DSC {
             {
                 if (is_unsafe_editable(e) && is_interface(e) && length(e) > MAX_LENGTH)
                 {
-                    if(split(e) != Complex::NULL_NODE)
+                    node_key nid = split(e);
+                    if(nid.is_valid())
                     {
                         i++;
                     }
@@ -1716,7 +1717,7 @@ namespace DSC {
         {
             node_key n_new = Complex::collapse(e);
             
-            if (Complex::exists(n_new) && n_new != Complex::NULL_NODE)
+            if (Complex::exists(n_new) && n_new.is_valid())
             {
                 set_pos(n_new, p);
                 set_destination(n_new, p_new);
@@ -1775,9 +1776,9 @@ namespace DSC {
          */
         node_key collapse(edge_key& e, bool safe = true)
         {
-            if (!Complex::exists(e) || e == Complex::NULL_EDGE)
+            if (!Complex::exists(e) || !e.is_valid())
             {
-                return Complex::NULL_NODE;
+                return node_key();
             }
             auto nodes = Complex::get_nodes(e);
             
@@ -1826,7 +1827,7 @@ namespace DSC {
             {
                 return collapse(e, p_opt, p_new_opt);
             }
-            return Complex::NULL_NODE;
+            return node_key();
         }
         
         bool collapse(const face_key& f, bool safe = true)
@@ -1836,7 +1837,8 @@ namespace DSC {
             while(cl_f.size_edges() > 0)
             {
                 edge_key e = shortest_edge(cl_f);
-                if(collapse(e, safe) != Complex::NULL_NODE)
+                node_key nid = collapse(e, safe);
+                if(nid.is_valid())
                 {
                     return true;
                 }
@@ -1852,7 +1854,8 @@ namespace DSC {
             while(cl_t.size_edges() > 0)
             {
                 edge_key e = shortest_edge(cl_t);
-                if(collapse(e, safe) != Complex::NULL_NODE)
+                node_key nid = collapse(e, safe);
+                if(nid.is_valid())
                 {
                     return true;
                 }

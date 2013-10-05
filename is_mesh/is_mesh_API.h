@@ -25,18 +25,12 @@ namespace is_mesh {
         typedef typename Mesh::tetrahedron_key_type     tet_key;
         typedef typename Mesh::simplex_set_type         simplex_set;
         
-        
-        const node_key NULL_NODE;
-        const edge_key NULL_EDGE;
-        const face_key NULL_FACE;
-        const tet_key NULL_TETRAHEDRON;
-        
     private:
         Mesh mesh;
         
     public:
         template<typename real>
-        ISMesh(std::vector<real> & points, std::vector<int> & tets): NULL_NODE(-1), NULL_EDGE(-1), NULL_FACE(-1), NULL_TETRAHEDRON(-1)
+        ISMesh(std::vector<real> & points, std::vector<int> & tets)
         {
             vectors_read(points, tets, mesh);
             init();
@@ -438,7 +432,7 @@ namespace is_mesh {
             
             if (st1.size_edges() != 1)
             {
-                return NULL_EDGE;
+                return EdgeKey();
             }
             return *(st1.edges_begin());
         }
@@ -452,7 +446,7 @@ namespace is_mesh {
             
             if (cl1.size_edges() != 1)
             {
-                return NULL_EDGE;
+                return EdgeKey();
             }
             return *(cl1.edges_begin());
         }
@@ -469,7 +463,7 @@ namespace is_mesh {
             
             if (st1.size_faces() != 1)
             {
-                return NULL_FACE;
+                return FaceKey();
             }
             return *(st1.faces_begin());
         }
@@ -483,7 +477,7 @@ namespace is_mesh {
             
             if (cl1.size_faces() != 1)
             {
-                return NULL_FACE;
+                return FaceKey();
             }
             return *(cl1.faces_begin());
         }
@@ -499,7 +493,7 @@ namespace is_mesh {
                     return *tit;
                 }
             }
-            return NULL_TETRAHEDRON;
+            return TetrahedronKey();
         }
         
         node_key get_apex(const tet_key& t, const face_key& f)
@@ -703,12 +697,12 @@ namespace is_mesh {
         {
             auto nodes = get_nodes(e);
 #ifdef DEBUG
-            assert(nodes[0] != NULL_NODE);
-            assert(nodes[1] != NULL_NODE);
+            assert(nodes[0].is_valid());
+            assert(nodes[1].is_valid());
 #endif
             node_key n = mesh.edge_collapse_helper(e, nodes[0], nodes[1]);
-            if (n == (node_key)-1) {
-                return NULL_NODE;
+            if (!n.is_valid()) {
+                return n;
             }
             simplex_set st_n, cl_st_n;
             star(n, st_n);
@@ -731,11 +725,11 @@ namespace is_mesh {
             node_key n2 = split(e);
             edge_key e2 = get_edge(n1, n2);
 #ifdef DEBUG
-            assert(e2 != NULL_EDGE);
+            assert(e2.is_valid());
 #endif
             node_key n3 = collapse(e2);
 #ifdef DEBUG
-            assert(n3 != NULL_NODE);
+            assert(n3.is_valid());
             assert(n1 == n3);
 #endif
             return n3;
@@ -755,11 +749,11 @@ namespace is_mesh {
             node_key n2 = split(f);
             edge_key e = get_edge(n1, n2);
 #ifdef DEBUG
-            assert(e != NULL_EDGE);
+            assert(e.is_valid());
 #endif
             node_key n3 = collapse(e);
 #ifdef DEBUG
-            assert(n3 != NULL_NODE);
+            assert(n3.is_valid());
             assert(n1 == n3);
 #endif
             return n3;
@@ -781,11 +775,11 @@ namespace is_mesh {
             node_key n2 = split(e1);
             edge_key e2 = get_edge(n1, n2);
 #ifdef DEBUG
-            assert(e2 != NULL_EDGE);
+            assert(e2.is_valid());
 #endif
             node_key n3 = collapse(e2);
 #ifdef DEBUG
-            assert(n3 != NULL_NODE);
+            assert(n3.is_valid());
             assert(n1 == n3);
 #endif
             return n3;
