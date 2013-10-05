@@ -1981,7 +1981,7 @@ namespace DSC {
         real quality(const tet_key& tid)
         {
             auto verts = get_pos(tid);
-            return Util::quality<real>(verts[0], verts[1], verts[2], verts[3]);
+            return std::abs(Util::quality<real>(verts[0], verts[1], verts[2], verts[3]));
         }
         
         real min_angle(const face_key& f)
