@@ -1404,13 +1404,15 @@ namespace DSC {
          */
         bool smart_laplacian(const node_key& n, real alpha = 1.)
         {
-            real q_old = min_quality(n);
+            simplex_set st_n;
+            Complex::star(n, st_n);
+            real q_old = min_quality(st_n);
+
             vec3 old_pos = get_pos(n);
             vec3 avg_pos = get_barycenter(n);
             set_pos(n, old_pos + alpha * (avg_pos - old_pos));
             
-            real q_new = min_quality(n);
-            if (q_new < q_old)
+            if (inverted(st_n) || min_quality(st_n) < q_old)
             {
                 set_pos(n, old_pos);
                 return false;
