@@ -3,62 +3,62 @@
 
 namespace is_mesh
 {
-    namespace util
+    struct Key
     {
-        struct CustomKey
-        {
-            //this is where the magic happens...
-            unsigned int key;
-            
-            //default constructor - sets key to 0
-            CustomKey() : key() { }
-            
-            //conversion from int
-            CustomKey(unsigned int k) : key(k) { }
-            
-            //conversion to int
-            operator unsigned int() { return key; }
-            
-            friend inline bool operator==(CustomKey    const & a, CustomKey    const & b)   { return a.key == b.key; }
-            friend inline bool operator==(CustomKey          & a, CustomKey          & b)   { return a.key == b.key; }
-            friend inline bool operator==(unsigned int const & k, CustomKey    const & b)   { return   k   == b.key; }
-            friend inline bool operator==(CustomKey    const & a, unsigned int const & k)   { return a.key ==   k;   }
-            friend inline bool operator!=(CustomKey    const & a, CustomKey    const & b)   { return a.key != b.key; }
-            friend inline bool operator!=(CustomKey          & a, CustomKey          & b)   { return a.key != b.key; }
-            friend inline bool operator!=(unsigned int const & k, CustomKey    const & b)   { return   k   != b.key; }
-            friend inline bool operator!=(CustomKey    const & a, unsigned int const & k)   { return a.key !=   k;   }
-            friend inline bool operator< (CustomKey    const & a, CustomKey    const & b)   { return a.key <  b.key; }
-            friend inline bool operator< (CustomKey          & a, CustomKey          & b)   { return a.key <  b.key; }
-            friend inline bool operator< (unsigned int const & k, CustomKey    const & b)   { return   k   <  b.key; }
-            friend inline bool operator< (CustomKey    const & a, unsigned int const & k)   { return a.key <    k;   }
-            
-            friend std::ostream& operator<< (std::ostream & os, CustomKey const & a) { return (os << a.key); }
-            friend std::istream& operator>> (std::istream & is, CustomKey       & a) { return (is >> a.key); }
-        };
-    }
+        //this is where the magic happens...
+        unsigned int key;
+        
+        //default constructor - sets key to 0
+        Key() : key() { }
+        
+        //conversion from int
+        Key(unsigned int k) : key(k) { }
+        
+        //conversion to int
+        operator unsigned int() { return key; }
+        
+        friend inline bool operator==(Key    const & a, Key    const & b)   { return a.key == b.key; }
+        friend inline bool operator==(Key          & a, Key          & b)   { return a.key == b.key; }
+        friend inline bool operator==(unsigned int const & k, Key    const & b)   { return   k   == b.key; }
+        friend inline bool operator==(Key    const & a, unsigned int const & k)   { return a.key ==   k;   }
+        friend inline bool operator!=(Key    const & a, Key    const & b)   { return a.key != b.key; }
+        friend inline bool operator!=(Key          & a, Key          & b)   { return a.key != b.key; }
+        friend inline bool operator!=(unsigned int const & k, Key    const & b)   { return   k   != b.key; }
+        friend inline bool operator!=(Key    const & a, unsigned int const & k)   { return a.key !=   k;   }
+        friend inline bool operator< (Key    const & a, Key    const & b)   { return a.key <  b.key; }
+        friend inline bool operator< (Key          & a, Key          & b)   { return a.key <  b.key; }
+        friend inline bool operator< (unsigned int const & k, Key    const & b)   { return   k   <  b.key; }
+        friend inline bool operator< (Key    const & a, unsigned int const & k)   { return a.key <    k;   }
+        
+        friend std::ostream& operator<< (std::ostream & os, Key const & a) { return (os << a.key); }
+        friend std::istream& operator>> (std::istream & is, Key       & a) { return (is >> a.key); }
+    };
     
-    struct NodeKey : public util::CustomKey
+    struct NodeKey : public Key
     {
-        NodeKey() : CustomKey() {}
-        NodeKey(unsigned int k) : CustomKey(k) {}
+        NodeKey() : Key() {}
+        NodeKey(unsigned int k) : Key(k) {}
         static const int dim = 0;
     };
-    struct EdgeKey : public util::CustomKey
+    
+    struct EdgeKey : public Key
     {
-        EdgeKey() : CustomKey() {}
-        EdgeKey(unsigned int k) : CustomKey(k) {}
+        EdgeKey() : Key() {}
+        EdgeKey(unsigned int k) : Key(k) {}
         static const int dim = 1;
     };
-    struct FaceKey : public util::CustomKey
+    
+    struct FaceKey : public Key
     {
-        FaceKey() : CustomKey() {}
-        FaceKey(unsigned int k) : CustomKey(k) {}
+        FaceKey() : Key() {}
+        FaceKey(unsigned int k) : Key(k) {}
         static const int dim = 2;
     };
-    struct TetrahedronKey : public util::CustomKey
+    
+    struct TetrahedronKey : public Key
     {
-        TetrahedronKey() : CustomKey() {}
-        TetrahedronKey(unsigned int k) : CustomKey(k) {}
+        TetrahedronKey() : Key() {}
+        TetrahedronKey(unsigned int k) : Key(k) {}
         static const int dim = 3;
     };
     
