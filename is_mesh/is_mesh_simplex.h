@@ -188,7 +188,6 @@ namespace is_mesh
         typedef          NodeTraits                                                         type_traits;
         typedef typename Mesh::edge_type                                              co_boundary_type;
         
-    public:
         Node()
         {
             Simplex::m_co_boundary = new typename Simplex::set_type();
@@ -206,48 +205,29 @@ namespace is_mesh
     ///////////////////////////////////////////////////////////////////////////////
     ///  E D G E
     ///////////////////////////////////////////////////////////////////////////////
-    template<
-    typename NodeTraits
-    , typename TetrahedronTraits
-    , typename EdgeTraits
-    , typename FaceTraits
-    >
-    class Edge :
-    public EdgeTraits
-    , public util::Simplex<
-    Edge<NodeTraits,TetrahedronTraits,EdgeTraits,FaceTraits>
-    , t4mesh<NodeTraits,TetrahedronTraits,EdgeTraits,FaceTraits>
-    , typename t4mesh<NodeTraits,TetrahedronTraits,EdgeTraits,FaceTraits>::edge_key_type
-    >
+    template<typename EdgeTraits, typename Mesh>
+    class Edge : public EdgeTraits, public util::Simplex<Edge<EdgeTraits, Mesh>, Mesh, typename Mesh::edge_key_type>
     {
-    private:
     public:
-        typedef util::Simplex<
-        Edge<NodeTraits,TetrahedronTraits,EdgeTraits,FaceTraits>
-        , t4mesh<NodeTraits,TetrahedronTraits,EdgeTraits,FaceTraits>
-        , typename t4mesh<NodeTraits,TetrahedronTraits,EdgeTraits,FaceTraits>::edge_key_type
-        >                                                                               base_class;
+        typedef util::Simplex<Edge<EdgeTraits, Mesh>, Mesh, typename Mesh::edge_key_type> Simplex;
         typedef          EdgeTraits                                                       type_traits;
-        typedef typename base_class::node_type                                            boundary_type;
-        typedef typename base_class::face_type                                            co_boundary_type;
+        typedef typename Simplex::node_type                                            boundary_type;
+        typedef typename Simplex::face_type                                            co_boundary_type;
         
-        friend class t4mesh<NodeTraits,TetrahedronTraits,EdgeTraits,FaceTraits>;
-    private:
-    public:
         Edge()
         {
-            base_class::m_co_boundary = new typename base_class::set_type();
-            base_class::m_boundary    = new typename base_class::list_type();
+            Simplex::m_co_boundary = new typename Simplex::set_type();
+            Simplex::m_boundary    = new typename Simplex::list_type();
         }
         Edge(const type_traits & t) : type_traits(t)
         {
-            base_class::m_co_boundary = new typename base_class::set_type();
-            base_class::m_boundary    = new typename base_class::list_type();
+            Simplex::m_co_boundary = new typename Simplex::set_type();
+            Simplex::m_boundary    = new typename Simplex::list_type();
         }
         ~Edge()
         {
-            delete base_class::m_co_boundary;
-            delete base_class::m_boundary;
+            delete Simplex::m_co_boundary;
+            delete Simplex::m_boundary;
         }
     };
     
