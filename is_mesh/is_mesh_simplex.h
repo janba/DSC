@@ -44,25 +44,7 @@ namespace is_mesh
             int              		m_label;       //used in coloring - to identify connected components.
             
         public:
-            template<int n>
-            void init()
-            {
-                if (n > 0)
-                    m_boundary = new list_type();
-                if (n < 3)
-                    m_co_boundary = new set_type();
-            }
             
-            template<int n>
-            void destroy()
-            {
-                if (n > 0)
-                    delete m_boundary;
-                if (n < 3)
-                    delete m_co_boundary;
-            }
-            
-        public:
             Simplex() : m_boundary(0), m_co_boundary(0), m_is_compact(false), m_label(0)
             { }
             
@@ -92,12 +74,12 @@ namespace is_mesh
                 m_co_boundary= 0;
                 if (s.m_boundary != 0)
                 {
-                    init<3>(); //init m_boundary
+                    m_boundary = new list_type();
                     std::copy(s.m_boundary->begin(), s.m_boundary->end(), m_boundary->begin());
                 }
                 if (s.m_co_boundary != 0)
                 {
-                    init<0>(); //init m_co_boundary
+                    m_co_boundary = new set_type();
                     typename set_type::iterator sb, se;
                     sb = s.m_co_boundary->begin();
                     se = s.m_co_boundary->end();
@@ -108,24 +90,6 @@ namespace is_mesh
                     }
                     //std::copy(s.m_co_boundary->begin(), s.m_co_boundary->end(), m_co_boundary->begin());
                 }
-            }
-            Simplex& operator=(const Simplex& s) //asignment
-            {
-                m_is_compact = s.m_is_compact;
-                m_label      = s.m_label;
-                m_boundary   = 0;
-                m_co_boundary= 0;
-                if (s.m_boundary != 0)
-                {
-                    init<3>(); //init m_boundary
-                    m_boundary->insert(m_boundary->begin(), s.m_boundary->begin(), s.m_boundary->end());
-                }
-                if (s.m_co_boundary != 0)
-                {
-                    init<0>(); //init m_boundary
-                    m_co_boundary->insert(s.m_co_boundary->begin(), s.m_co_boundary->end());
-                }
-                return *this;
             }
             
         public:
