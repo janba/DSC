@@ -11,15 +11,10 @@ namespace is_mesh
     /**
      * Base class for all simplex classes
      */
-    template<typename mesh_type, typename key_type>
+    template<typename key_type>
     class Simplex
     {
     public:
-        typedef typename mesh_type::node_type                   node_type;
-        typedef typename mesh_type::edge_type                   edge_type;
-        typedef typename mesh_type::face_type                   face_type;
-        typedef typename mesh_type::tetrahedron_type            tetrahedron_type;
-        
         typedef typename key_traits<key_type::dim-1>::key_type  boundary_key_type;
         typedef typename key_traits<key_type::dim+1>::key_type  co_boundary_key_type;
         
@@ -151,10 +146,10 @@ namespace is_mesh
     ///  N O D E
     ///////////////////////////////////////////////////////////////////////////////
     template<typename NodeTraits, typename Mesh>
-    class Node : public NodeTraits, public Simplex<Mesh, typename Mesh::node_key_type>
+    class Node : public NodeTraits, public Simplex<typename Mesh::node_key_type>
     {
     public:
-        typedef Simplex<Mesh, typename Mesh::node_key_type>         Simplex;
+        typedef Simplex<typename Mesh::node_key_type>         Simplex;
         typedef          NodeTraits                                                         type_traits;
         typedef typename Mesh::edge_type                                              co_boundary_type;
         
@@ -172,13 +167,13 @@ namespace is_mesh
     ///  E D G E
     ///////////////////////////////////////////////////////////////////////////////
     template<typename EdgeTraits, typename Mesh>
-    class Edge : public EdgeTraits, public Simplex<Mesh, typename Mesh::edge_key_type>
+    class Edge : public EdgeTraits, public Simplex<typename Mesh::edge_key_type>
     {
     public:
-        typedef Simplex<Mesh, typename Mesh::edge_key_type> Simplex;
+        typedef Simplex<typename Mesh::edge_key_type> Simplex;
         typedef          EdgeTraits                                                       type_traits;
-        typedef typename Simplex::node_type                                            boundary_type;
-        typedef typename Simplex::face_type                                            co_boundary_type;
+        typedef typename Mesh::node_type                                            boundary_type;
+        typedef typename Mesh::face_type                                            co_boundary_type;
         
         Edge() : Simplex()
         {
@@ -194,13 +189,13 @@ namespace is_mesh
     //  F A C E
     ///////////////////////////////////////////////////////////////////////////////
     template<typename FaceTraits, typename Mesh>
-    class Face : public FaceTraits, public Simplex<Mesh, typename Mesh::face_key_type>
+    class Face : public FaceTraits, public Simplex<typename Mesh::face_key_type>
     {
     public:
-        typedef Simplex<Mesh, typename Mesh::face_key_type>   Simplex;
+        typedef Simplex<typename Mesh::face_key_type>   Simplex;
         typedef          FaceTraits                                       type_traits;
-        typedef typename Simplex::edge_type                            boundary_type;
-        typedef typename Simplex::tetrahedron_type                     co_boundary_type;
+        typedef typename Mesh::edge_type                            boundary_type;
+        typedef typename Mesh::tetrahedron_type                     co_boundary_type;
         
         Face() : Simplex()
         {
@@ -216,12 +211,12 @@ namespace is_mesh
     // T E T R A H E D R O N
     ///////////////////////////////////////////////////////////////////////////////
     template<typename TetrahedronTraits, typename Mesh>
-    class Tetrahedron : public TetrahedronTraits, public Simplex<Mesh, typename Mesh::tetrahedron_key_type>
+    class Tetrahedron : public TetrahedronTraits, public Simplex<typename Mesh::tetrahedron_key_type>
     {
     public:
-        typedef Simplex<Mesh, typename Mesh::tetrahedron_key_type>        Simplex;
+        typedef Simplex<typename Mesh::tetrahedron_key_type>        Simplex;
         typedef          TetrahedronTraits                                type_traits;
-        typedef typename Simplex::face_type                            boundary_type;
+        typedef typename Mesh::face_type                            boundary_type;
         
         Tetrahedron() : Simplex()
         {
