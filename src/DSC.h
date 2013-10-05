@@ -2158,18 +2158,22 @@ namespace DSC {
             }
         }
         
-        
-        /// Check whether they are no inverted tetrahedra in the Complex::
+        /// Check whether they are any inverted tetrahedra in the simplicial complex.
         bool simplicial_complex_criterion_check()
         {
             for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
             {
-                if (0. > signed_volume(tit.key()))
+                if (inverted(tit.key()))
                 {
                     return false;
                 }
             }
             return true;
+        }
+        
+        bool inverted(const tet_key& tid)
+        {
+            return signed_volume(tid) < 0.;
         }
         
         /**
@@ -2179,7 +2183,7 @@ namespace DSC {
         {
             for (auto tit = set.tetrahedra_begin(); tit != set.tetrahedra_end(); tit++)
             {
-                if (0. > signed_volume(*tit))
+                if (inverted(*tit))
                 {
                     return true;
                 }
