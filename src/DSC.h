@@ -655,7 +655,7 @@ namespace DSC {
             }
             
             // Attempt to remove each edge of each tetrahedron in tets. Accept if it increases the minimum quality locally.
-            int i = 0, j = 0;
+            int i = 0, j = 0, k = 0;
             for (auto &t : tets)
             {
                 if (Complex::exists(t) && quality(t) < MIN_TET_QUALITY)
@@ -678,7 +678,7 @@ namespace DSC {
                             {
                                 if(topological_boundary_edge_removal(*eit))
                                 {
-                                    i++;
+                                    k++;
                                 }
                             }
                             j++;
@@ -686,7 +686,7 @@ namespace DSC {
                     }
                 }
             }
-            std::cout << "Topological edge removals: " << i << "/" << j << std::endl;
+            std::cout << "Topological edge removals: " << i + k << "/" << j << " (" << k << " at interface)" << std::endl;
             Complex::garbage_collect();
         }
         
