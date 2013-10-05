@@ -27,28 +27,46 @@ namespace is_mesh
             typedef typename key_traits<key_type::dim-1>::key_type  boundary_key_type;
             typedef typename key_traits<key_type::dim+1>::key_type  co_boundary_key_type;
             
-            typedef          std::vector<boundary_key_type>         list_type;
             typedef          std::set<co_boundary_key_type>         set_type;
             
-            typedef          list_type*                             boundary_list;
+            typedef          std::vector<boundary_key_type>*                             boundary_list;
             typedef          set_type*                              co_boundary_set;
-            typedef typename list_type::iterator                    boundary_iterator;
+            typedef typename std::vector<boundary_key_type>::iterator                    boundary_iterator;
             typedef typename set_type::iterator                     co_boundary_iterator;
             
             static const unsigned int dim = key_type::dim;
             
         protected:
-            list_type*       		m_boundary;
-            set_type*     		 	m_co_boundary;
+            std::vector<boundary_key_type>* m_boundary = nullptr;
+            set_type* m_co_boundary = nullptr;
             bool             		m_is_compact;
             int              		m_label;       //used in coloring - to identify connected components.
             
         public:
             
             Simplex() : m_boundary(0), m_co_boundary(0), m_is_compact(false), m_label(0)
-            { }
+            {
+                if(key_type::dim > 0)
+                {
+                    m_boundary    = new std::vector<boundary_key_type>();
+                }
+                if(key_type::dim < 3)
+                {
+                    m_co_boundary = new std::set<co_boundary_key_type>();
+                }
+            }
             
-            ~Simplex() { }
+            ~Simplex()
+            {
+                if(m_boundary)
+                {
+                    delete m_boundary;
+                }
+                if(m_co_boundary)
+                {
+                    delete m_co_boundary;
+                }
+            }
             
             void set_label(const int& l)
             {
@@ -74,7 +92,7 @@ namespace is_mesh
                 m_co_boundary= 0;
                 if (s.m_boundary != 0)
                 {
-                    m_boundary = new list_type();
+                    m_boundary = new std::vector<boundary_key_type>();
                     std::copy(s.m_boundary->begin(), s.m_boundary->end(), m_boundary->begin());
                 }
                 if (s.m_co_boundary != 0)
@@ -98,7 +116,7 @@ namespace is_mesh
             {
                 return m_co_boundary;
             }
-            list_type* get_boundary() const
+            boundary_list get_boundary() const
             {
                 return m_boundary;
             }
@@ -106,7 +124,7 @@ namespace is_mesh
             {
                 return m_co_boundary;
             }
-            list_type* get_boundary()
+            boundary_list get_boundary()
             {
                 return m_boundary;
             }
@@ -114,7 +132,7 @@ namespace is_mesh
             {
                 m_co_boundary = co_boundary;
             }
-            void set_boundary_list(list_type* boundary)
+            void set_boundary_list(boundary_list boundary)
             {
                 m_boundary = boundary;
             }
@@ -148,17 +166,13 @@ namespace is_mesh
         typedef          NodeTraits                                                         type_traits;
         typedef typename Mesh::edge_type                                              co_boundary_type;
         
-        Node()
+        Node() : Simplex()
         {
-            Simplex::m_co_boundary = new typename Simplex::set_type();
+            
         }
-        Node(const type_traits & t) : type_traits(t)
+        Node(const type_traits & t) : type_traits(t), Simplex()
         {
-            Simplex::m_co_boundary = new typename Simplex::set_type();
-        }
-        ~Node()
-        {
-            delete Simplex::m_co_boundary;
+            
         }
     };
     
@@ -174,20 +188,13 @@ namespace is_mesh
         typedef typename Simplex::node_type                                            boundary_type;
         typedef typename Simplex::face_type                                            co_boundary_type;
         
-        Edge()
+        Edge() : Simplex()
         {
-            Simplex::m_co_boundary = new typename Simplex::set_type();
-            Simplex::m_boundary    = new typename Simplex::list_type();
+            
         }
-        Edge(const type_traits & t) : type_traits(t)
+        Edge(const type_traits & t) : type_traits(t), Simplex()
         {
-            Simplex::m_co_boundary = new typename Simplex::set_type();
-            Simplex::m_boundary    = new typename Simplex::list_type();
-        }
-        ~Edge()
-        {
-            delete Simplex::m_co_boundary;
-            delete Simplex::m_boundary;
+            
         }
     };
     
@@ -203,22 +210,13 @@ namespace is_mesh
         typedef typename Simplex::edge_type                            boundary_type;
         typedef typename Simplex::tetrahedron_type                     co_boundary_type;
 
-        Face()
+        Face() : Simplex()
         {
-            Simplex::m_co_boundary = new typename Simplex::set_type();
-            Simplex::m_boundary    = new typename Simplex::list_type();
             Simplex::set_compact(true);
         }
-        Face(const type_traits & t) : type_traits(t)
+        Face(const type_traits & t) : type_traits(t), Simplex()
         {
-            Simplex::m_co_boundary = new typename Simplex::set_type();
-            Simplex::m_boundary    = new typename Simplex::list_type();
             Simplex::set_compact(true);
-        }
-        ~Face()
-        {
-            delete Simplex::m_co_boundary;
-            delete Simplex::m_boundary;
         }
     };
     
@@ -233,19 +231,13 @@ namespace is_mesh
         typedef          TetrahedronTraits                                type_traits;
         typedef typename Simplex::face_type                            boundary_type;
         
-        Tetrahedron() 
-        { 
-            Simplex::m_boundary    = new typename Simplex::list_type();
+        Tetrahedron() : Simplex()
+        {
             Simplex::set_compact(true);
         }
-        Tetrahedron(const type_traits & t) : type_traits(t) 
-        { 
-            Simplex::m_boundary    = new typename Simplex::list_type();
+        Tetrahedron(const type_traits & t) : type_traits(t), Simplex()
+        {
             Simplex::set_compact(true);
-        }
-        ~Tetrahedron() 
-        { 
-            delete Simplex::m_boundary;
         }
     };
 }
