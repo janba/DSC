@@ -1137,8 +1137,7 @@ namespace DSC {
             node_key apex = *cl_f.nodes_begin();
             
             // Find the projected position of the apex
-            std::vector<vec3> verts;
-            get_pos(e, verts);
+            auto verts = get_pos(e);
             vec3 p = Util::project(get_pos(apex), verts[0], verts[1]);
             
             // Split longest edge
@@ -1241,8 +1240,7 @@ namespace DSC {
             node_key apex = Complex::get_apex(t, f);
             
             // Project the apex
-            std::vector<vec3> verts;
-            get_pos(f, verts);
+            auto verts = get_pos(f);
             vec3 p = Util::project(get_pos(apex), verts);
             
             // Split the face
@@ -1324,8 +1322,7 @@ namespace DSC {
             node_key apex = Complex::get_apex(t, f);
             
             // Project the apex
-            std::vector<vec3> verts;
-            get_pos(f, verts);
+            auto verts = get_pos(f);
             vec3 proj_apex = Util::project(get_pos(apex), verts);
             
             // Find barycentric coordinates
@@ -1994,8 +1991,7 @@ namespace DSC {
         
         real max_angle(const face_key& f)
         {
-            std::vector<vec3> verts;
-            get_pos(f, verts);
+            auto verts = get_pos(f);
             return Util::max_angle<real>(verts[0], verts[1], verts[2]);
         }
         
@@ -2317,7 +2313,7 @@ namespace DSC {
                         
                         if (nodes[0] == sorted_vertices.back())
                         {
-                            sorted_vertices.push_back(nodes[1]); // VERTEX FLIP
+                            sorted_vertices.push_back(nodes[1]);
                             edge_used[*eit] = true;
                             break;
                         }
