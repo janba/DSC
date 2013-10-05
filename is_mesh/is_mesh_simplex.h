@@ -265,46 +265,27 @@ namespace is_mesh
     ///////////////////////////////////////////////////////////////////////////////
     // T E T R A H E D R O N
     ///////////////////////////////////////////////////////////////////////////////
-    template<
-    typename NodeTraits
-    , typename TetrahedronTraits
-    , typename EdgeTraits
-    , typename FaceTraits
-    >
-    class Tetrahedron :
-    public TetrahedronTraits
-    , public util::Simplex<
-    Tetrahedron<NodeTraits,TetrahedronTraits,EdgeTraits,FaceTraits>
-    , t4mesh<NodeTraits, TetrahedronTraits, EdgeTraits, FaceTraits>
-    , typename t4mesh<NodeTraits,TetrahedronTraits,EdgeTraits,FaceTraits>::tetrahedron_key_type
-    >
+    template<typename TetrahedronTraits, typename Mesh>
+    class Tetrahedron : public TetrahedronTraits, public util::Simplex<Tetrahedron<TetrahedronTraits, Mesh>, Mesh, typename Mesh::tetrahedron_key_type>
     {
-    private:
     public:
-        typedef util::Simplex<
-        Tetrahedron<NodeTraits,TetrahedronTraits,EdgeTraits,FaceTraits>
-        , t4mesh<NodeTraits,TetrahedronTraits,EdgeTraits,FaceTraits>
-        , typename t4mesh<NodeTraits,TetrahedronTraits,EdgeTraits,FaceTraits>::tetrahedron_key_type
-        >                                                               base_class;
+        typedef util::Simplex<Tetrahedron<TetrahedronTraits, Mesh>, Mesh, typename Mesh::tetrahedron_key_type>        Simplex;
         typedef          TetrahedronTraits                                type_traits;
-        typedef typename base_class::face_type                            boundary_type;
+        typedef typename Simplex::face_type                            boundary_type;
         
-        friend class t4mesh<NodeTraits,TetrahedronTraits,EdgeTraits,FaceTraits>;
-    private:
-    public:
         Tetrahedron() 
         { 
-            base_class::m_boundary    = new typename base_class::list_type();
-            base_class::set_compact(true); 
+            Simplex::m_boundary    = new typename Simplex::list_type();
+            Simplex::set_compact(true);
         }
         Tetrahedron(const type_traits & t) : type_traits(t) 
         { 
-            base_class::m_boundary    = new typename base_class::list_type();
-            base_class::set_compact(true); 
+            Simplex::m_boundary    = new typename Simplex::list_type();
+            Simplex::set_compact(true);
         }
         ~Tetrahedron() 
         { 
-            delete base_class::m_boundary;
+            delete Simplex::m_boundary;
         }
     };
 }
