@@ -74,7 +74,7 @@ namespace is_mesh
         typedef EdgeTraits                                                           edge_traits;
         typedef FaceTraits                                                           face_traits;
         
-        typedef Node<NodeTraits, TetrahedronTraits, EdgeTraits, FaceTraits>          node_type;
+        typedef Node<NodeTraits, mesh_type>                                         node_type;
         typedef Edge<NodeTraits, TetrahedronTraits, EdgeTraits, FaceTraits>          edge_type;
         typedef Face<NodeTraits, TetrahedronTraits, EdgeTraits, FaceTraits>          face_type;
         typedef Tetrahedron<NodeTraits, TetrahedronTraits, EdgeTraits, FaceTraits>   tetrahedron_type;

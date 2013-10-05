@@ -62,10 +62,7 @@ namespace is_mesh
      * @param allocator_type This type must conform to the C++ standard allocator concept. The
      *        default argument is the default STL allocator.
      */
-    template<
-    typename value_t_
-    , typename key_t_
-    , typename allocator_t_ = std::allocator<util::kernel_element<value_t_, key_t_> > >
+    template<typename value_t_, typename key_t_, typename allocator_t_ = std::allocator<util::kernel_element<value_t_, key_t_> > >
     class kernel
     {
     public:

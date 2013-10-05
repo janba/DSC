@@ -39,10 +39,6 @@ namespace is_mesh
             typedef typename list_type::iterator                    boundary_iterator;
             typedef typename set_type::iterator                     co_boundary_iterator;
             
-            // friend mesh_type;
-            friend void xml_write(std::string const &, mesh_type const &);
-            
-            
             static const unsigned int dim = key_type::dim;
             
         protected:
@@ -184,44 +180,26 @@ namespace is_mesh
     ///////////////////////////////////////////////////////////////////////////////
     ///  N O D E
     ///////////////////////////////////////////////////////////////////////////////
-    template<
-    typename NodeTraits
-    , typename TetrahedronTraits
-    , typename EdgeTraits
-    , typename FaceTraits
-    >
-    class Node :
-    public NodeTraits
-    , public util::Simplex<
-    Node<NodeTraits,TetrahedronTraits,EdgeTraits,FaceTraits>
-    , t4mesh<NodeTraits,TetrahedronTraits,EdgeTraits,FaceTraits>
-    , typename t4mesh<NodeTraits,TetrahedronTraits,EdgeTraits,FaceTraits>::node_key_type
-    >
+    template<typename NodeTraits, typename Mesh>
+    class Node : public NodeTraits, public util::Simplex<Node<NodeTraits, Mesh>, Mesh, typename Mesh::node_key_type>
     {
     public:
-        typedef util::Simplex<
-        Node<NodeTraits,TetrahedronTraits,EdgeTraits,FaceTraits>
-        , t4mesh<NodeTraits,TetrahedronTraits,EdgeTraits,FaceTraits>
-        , typename t4mesh<NodeTraits,TetrahedronTraits,EdgeTraits,FaceTraits>::node_key_type
-        >                                                                                 base_class;
+        typedef util::Simplex<Node<NodeTraits, Mesh>, Mesh, typename Mesh::node_key_type>         Simplex;
         typedef          NodeTraits                                                         type_traits;
-        typedef typename base_class::edge_type                                              co_boundary_type;
+        typedef typename Mesh::edge_type                                              co_boundary_type;
         
-        friend class t4mesh<NodeTraits,TetrahedronTraits,EdgeTraits,FaceTraits>;
-        
-    private:
     public:
         Node()
         {
-            base_class::m_co_boundary = new typename base_class::set_type();
+            Simplex::m_co_boundary = new typename Simplex::set_type();
         }
         Node(const type_traits & t) : type_traits(t)
         {
-            base_class::m_co_boundary = new typename base_class::set_type();
+            Simplex::m_co_boundary = new typename Simplex::set_type();
         }
         ~Node()
         {
-            delete base_class::m_co_boundary;
+            delete Simplex::m_co_boundary;
         }
     };
     
