@@ -1971,12 +1971,6 @@ namespace DSC {
             return Util::volume<real>(dests[0], dests[1], dests[2], dests[3]);
         }
         
-        real signed_volume(const tet_key& tid)
-        {
-            auto verts = get_pos(tid);
-            return Util::signed_volume<real>(verts[0], verts[1], verts[2], verts[3]);
-        }
-        
         real quality(const tet_key& tid)
         {
             auto verts = get_pos(tid);
@@ -2171,9 +2165,13 @@ namespace DSC {
             return true;
         }
         
+        /**
+         * Returns whether the tetrahedron with ID tid is inverted.
+         */
         bool inverted(const tet_key& tid)
         {
-            return signed_volume(tid) < 0.;
+            auto verts = get_pos(tid);
+            return Util::signed_volume<real>(verts[0], verts[1], verts[2], verts[3]) < 0.;
         }
         
         /**
@@ -2189,16 +2187,6 @@ namespace DSC {
                 }
             }
             return false;
-        }
-        
-        /**
-         * Returns whether any of the tetrahedra in the star of n is inverted.
-         */
-        bool inverted(const node_key& n)
-        {
-            simplex_set st_n;
-            Complex::star(n, st_n);
-            return inverted(st_n);
         }
         
         /**
@@ -2219,17 +2207,6 @@ namespace DSC {
             }
             return false;
         }
-        
-        /**
-         * Returns whether any of the tetrahedra in the star of n will invert if node n is moved to p_new.
-         */
-        //    bool will_invert(const node_key& n, const vec3 p_new)
-        //    {
-        //        simplex_set st_n, cl_st_n;
-        //        Complex::star(n, st_n);
-        //        Complex::closure(st_n, cl_st_n);
-        //        return will_invert(n, p_new, cl_st_n);
-        //    }
         
         void validity_check()
         {
