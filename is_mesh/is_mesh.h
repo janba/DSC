@@ -13,38 +13,6 @@
 
 namespace is_mesh
 {
-    
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     * Simplex typebinding traits
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    
-    template<typename mesh_type, int dim>
-    struct simplex_traits{};
-    
-    template<typename mesh_type>
-    struct simplex_traits<mesh_type, 0>
-    {
-        typedef typename mesh_type::node_type             simplex_type;
-    };
-    
-    template<typename mesh_type>
-    struct simplex_traits<mesh_type, 1>
-    {
-        typedef typename mesh_type::edge_type             simplex_type;
-    };
-    
-    template<typename mesh_type>
-    struct simplex_traits<mesh_type, 2>
-    {
-        typedef typename mesh_type::face_type             simplex_type;
-    };
-    
-    template<typename mesh_type>
-    struct simplex_traits<mesh_type, 3>
-    {
-        typedef typename mesh_type::tetrahedron_type      simplex_type;
-    };
-    
     /**
      * A data structure for managing a Simplicial Complex. Based on the work
      * by de Floriani and Hui, the Incidence Simplicial.
@@ -53,40 +21,24 @@ namespace is_mesh
      * Simplices are explicitly stored using a different memory kernel for
      * each type.h
      */
-    template<
-    typename NodeTraits
-    , typename TetrahedronTraits
-    , typename EdgeTraits
-    , typename FaceTraits
-    >
+    template<typename NodeTraits, typename TetrahedronTraits, typename EdgeTraits, typename FaceTraits>
     class t4mesh
     {
     public:
         typedef t4mesh<NodeTraits, TetrahedronTraits, EdgeTraits, FaceTraits>        mesh_type;
-        
-        typedef NodeKey                                                              node_key_type;
-        typedef EdgeKey                                                              edge_key_type;
-        typedef FaceKey                                                              face_key_type;
-        typedef TetrahedronKey                                                       tetrahedron_key_type;
-        
-        typedef NodeTraits                                                           node_traits;
-        typedef TetrahedronTraits                                                    tetrahedron_traits;
-        typedef EdgeTraits                                                           edge_traits;
-        typedef FaceTraits                                                           face_traits;
         
         typedef Node<NodeTraits, mesh_type>                                         node_type;
         typedef Edge<EdgeTraits, mesh_type>                                         edge_type;
         typedef Face<FaceTraits, mesh_type>                                         face_type;
         typedef Tetrahedron<TetrahedronTraits, mesh_type>                           tetrahedron_type;
         
-        typedef          simplex_set<node_key_type, edge_key_type
-        , face_key_type, tetrahedron_key_type>            simplex_set_type;
+        typedef          simplex_set<NodeKey, EdgeKey, FaceKey, TetrahedronKey>            simplex_set_type;
         
     public:
-        typedef          kernel<node_type, node_key_type>                            node_kernel_type;
-        typedef          kernel<edge_type, edge_key_type>                            edge_kernel_type;
-        typedef          kernel<face_type, face_key_type>                            face_kernel_type;
-        typedef          kernel<tetrahedron_type, tetrahedron_key_type>              tetrahedron_kernel_type;
+        typedef          kernel<node_type, NodeKey>                            node_kernel_type;
+        typedef          kernel<edge_type, EdgeKey>                            edge_kernel_type;
+        typedef          kernel<face_type, FaceKey>                            face_kernel_type;
+        typedef          kernel<tetrahedron_type, TetrahedronKey>              tetrahedron_kernel_type;
         
     public:
         
@@ -111,7 +63,7 @@ namespace is_mesh
         /**
          *
          */
-        node_type & lookup_simplex(node_key_type const & k)
+        node_type & lookup_simplex(NodeKey const & k)
         {
             return m_node_kernel->find(k);
         }
@@ -119,7 +71,7 @@ namespace is_mesh
         /**
          *
          */
-        edge_type & lookup_simplex(edge_key_type const & k)
+        edge_type & lookup_simplex(EdgeKey const & k)
         {
             return m_edge_kernel->find(k);
         }
@@ -127,7 +79,7 @@ namespace is_mesh
         /**
          *
          */
-        face_type & lookup_simplex(face_key_type const & k)
+        face_type & lookup_simplex(FaceKey const & k)
         {
             return m_face_kernel->find(k);
         }
@@ -135,7 +87,7 @@ namespace is_mesh
         /**
          *
          */
-        tetrahedron_type & lookup_simplex(tetrahedron_key_type const & k)
+        tetrahedron_type & lookup_simplex(TetrahedronKey const & k)
         {
             return m_tetrahedron_kernel->find(k);
         }
@@ -194,7 +146,7 @@ namespace is_mesh
          * Marek
          * Helper function for boundary and closure.
          */
-        void boundary_helper(tetrahedron_key_type const & k, simplex_set_type & set)
+        void boundary_helper(TetrahedronKey const & k, simplex_set_type & set)
         {
             auto s_boundary = lookup_simplex(k).get_boundary();
             auto it = s_boundary->begin();
@@ -206,7 +158,7 @@ namespace is_mesh
             }
         }
         
-        void boundary_helper(face_key_type const & k, simplex_set_type & set)
+        void boundary_helper(FaceKey const & k, simplex_set_type & set)
         {
             auto s_boundary = lookup_simplex(k).get_boundary();
             auto it = s_boundary->begin();
@@ -218,7 +170,7 @@ namespace is_mesh
             }
         }
         
-        void boundary_helper(edge_key_type const & k, simplex_set_type & set)
+        void boundary_helper(EdgeKey const & k, simplex_set_type & set)
         {
             auto s_boundary = lookup_simplex(k).get_boundary();
             auto it = s_boundary->begin();
@@ -229,7 +181,7 @@ namespace is_mesh
             }
         }
         
-        void boundary_helper(node_key_type const & k, simplex_set_type & set) {}
+        void boundary_helper(NodeKey const & k, simplex_set_type & set) {}
         
         
         void closure_helper(simplex_set_type & input_set, simplex_set_type & set)
@@ -338,7 +290,7 @@ namespace is_mesh
             auto sb_it = simplex_boundary->begin();
             auto fb_it = face_boundary->begin();
             
-            std::vector<edge_key_type> new_face_boundary(face_boundary->size());
+            std::vector<EdgeKey> new_face_boundary(face_boundary->size());
             
             unsigned char f_index = 0, i = 0;
             
@@ -350,7 +302,7 @@ namespace is_mesh
                 }
                 else
                 {
-                    edge_key_type ek;
+                    EdgeKey ek;
                     bool res = get_intersection(fk, *sb_it, ek);
                     assert(res || !"Two faces of the same simplex do not intersect?!");
                     new_face_boundary[i] = ek;
@@ -387,7 +339,7 @@ namespace is_mesh
             auto sb_it = simplex_boundary->begin();
             auto fb_it = face_boundary->begin();
             
-            std::vector<node_key_type> new_face_boundary(face_boundary->size());
+            std::vector<NodeKey> new_face_boundary(face_boundary->size());
             
             unsigned char f_index = 0, i = 0;
             
@@ -399,7 +351,7 @@ namespace is_mesh
                 }
                 else
                 {
-                    node_key_type ek;
+                    NodeKey ek;
                     bool res = get_intersection(eid, *sb_it, ek);
                     assert(res || !"Two faces of the same simplex do not intersect?!");
                     new_face_boundary[i] = ek;
@@ -432,13 +384,13 @@ namespace is_mesh
             
             auto coface_boundary = lookup_simplex(cfk).get_boundary();
             
-            std::map<edge_key_type, face_key_type> face_to_simplex;
+            std::map<EdgeKey, FaceKey> face_to_simplex;
             
             for (auto cfb_it : *coface_boundary)
             {
                 if (cfb_it != sk)
                 {
-                    edge_key_type k;
+                    EdgeKey k;
                     bool res = get_intersection(sk, cfb_it, k);
                     assert(res || !"Two faces of the same simplex do not intersect?!");
                     face_to_simplex[k] = cfb_it;
@@ -466,7 +418,7 @@ namespace is_mesh
          * Helper function for orient_coface[...] methods.
          * sk must be a face of cfk, dim(sk) = dimension, dim(cfk) = dimension+1.
          */
-        void orient_coface_helper(const edge_key_type& sk, const face_key_type& cfk, bool consistently)
+        void orient_coface_helper(const EdgeKey& sk, const FaceKey& cfk, bool consistently)
         {
             assert(sk.get_dim() == (cfk.get_dim() - 1) || !"sk is not a boundary face of cfk.");
             assert(sk.get_dim() < 3 || !"No simplices of dimension more than three.");
@@ -474,13 +426,13 @@ namespace is_mesh
             
             auto coface_boundary = lookup_simplex(cfk).get_boundary();
             
-            std::map<node_key_type, edge_key_type> face_to_simplex;
+            std::map<NodeKey, EdgeKey> face_to_simplex;
             
             for (auto cfb_it : *coface_boundary)
             {
                 if (cfb_it != sk)
                 {
-                    node_key_type k;
+                    NodeKey k;
                     bool res = get_intersection(sk, cfb_it, k);
                     assert(res || !"Two faces of the same simplex do not intersect?!");
                     face_to_simplex[k] = cfb_it;
@@ -507,8 +459,8 @@ namespace is_mesh
          * Marek
          */
     protected:
-        node_key_type split_tetrahedron_helper(const tetrahedron_key_type & t,
-                                               std::map<tetrahedron_key_type, tetrahedron_key_type> & new_tets)
+        NodeKey split_tetrahedron_helper(const TetrahedronKey & t,
+                                               std::map<TetrahedronKey, TetrahedronKey> & new_tets)
         {
             orient_faces_oppositely(t);
             simplex_set_type t_boundary;
@@ -516,9 +468,9 @@ namespace is_mesh
             
             unsafe_remove(t);
             
-            node_key_type n = insert_node();
+            NodeKey n = insert_node();
             lookup_simplex(n).set_compact(true);
-            std::map<node_key_type, edge_key_type> node_2_edge_map;
+            std::map<NodeKey, EdgeKey> node_2_edge_map;
             simplex_set_type::node_set_iterator nit = t_boundary.nodes_begin();
             while (nit != t_boundary.nodes_end())
             {
@@ -531,18 +483,18 @@ namespace is_mesh
                 }
                 ++nit;
             }
-            std::map<edge_key_type, face_key_type> edge_2_face_map;
+            std::map<EdgeKey, FaceKey> edge_2_face_map;
             simplex_set_type::edge_set_iterator eit = t_boundary.edges_begin();
             while (eit != t_boundary.edges_end())
             {
                 auto e_boundary = lookup_simplex(*eit).get_boundary();
                 assert(e_boundary->size() == 2 || !"Edge boundary corrupted");
                 auto ebit = e_boundary->begin();
-                node_key_type n1 = *ebit; ++ebit;
-                node_key_type n2 = *ebit;
-                edge_key_type e1 = node_2_edge_map[n1];
-                edge_key_type e2 = node_2_edge_map[n2];
-                face_key_type f = unsafe_insert_face(*eit, e1, e2);
+                NodeKey n1 = *ebit; ++ebit;
+                NodeKey n2 = *ebit;
+                EdgeKey e1 = node_2_edge_map[n1];
+                EdgeKey e2 = node_2_edge_map[n2];
+                FaceKey f = unsafe_insert_face(*eit, e1, e2);
                 edge_2_face_map[*eit] = f;
                 auto e1_coboundary = lookup_simplex(e1).get_co_boundary();
                 auto e2_coboundary = lookup_simplex(e2).get_co_boundary();
@@ -556,13 +508,13 @@ namespace is_mesh
                 auto f_boundary = lookup_simplex(*fit).get_boundary();
                 assert(f_boundary->size() == 3 || !"Face boundary corrupted");
                 auto fbit = f_boundary->begin();
-                edge_key_type e1 = *fbit; ++fbit;
-                edge_key_type e2 = *fbit; ++fbit;
-                edge_key_type e3 = *fbit;
-                face_key_type f1 = edge_2_face_map[e1];
-                face_key_type f2 = edge_2_face_map[e2];
-                face_key_type f3 = edge_2_face_map[e3];
-                tetrahedron_key_type tet = unsafe_insert_tetrahedron(*fit, f1, f2, f3);
+                EdgeKey e1 = *fbit; ++fbit;
+                EdgeKey e2 = *fbit; ++fbit;
+                EdgeKey e3 = *fbit;
+                FaceKey f1 = edge_2_face_map[e1];
+                FaceKey f2 = edge_2_face_map[e2];
+                FaceKey f3 = edge_2_face_map[e3];
+                TetrahedronKey tet = unsafe_insert_tetrahedron(*fit, f1, f2, f3);
                 new_tets[tet] = t;
                 orient_coface_oppositely(*fit, tet);
                 ++fit;
@@ -574,8 +526,8 @@ namespace is_mesh
         /**
          * Marek
          */
-        node_key_type split_face_helper(face_key_type const & f,
-                                        std::map<tetrahedron_key_type, tetrahedron_key_type> & new_tets)
+        NodeKey split_face_helper(FaceKey const & f,
+                                        std::map<TetrahedronKey, TetrahedronKey> & new_tets)
         {
             simplex_set_type region, shell;
             star(f, region);
@@ -585,7 +537,7 @@ namespace is_mesh
             repair_co_boundaries(region, shell);
             
             simplex_set_type::tetrahedron_set_iterator tit = region.tetrahedra_begin();
-            std::map<face_key_type, tetrahedron_key_type> face_2_tet_map;
+            std::map<FaceKey, TetrahedronKey> face_2_tet_map;
             while (tit != region.tetrahedra_end())
             {
                 orient_faces_oppositely(*tit);
@@ -612,9 +564,9 @@ namespace is_mesh
             }
             unsafe_erase(f);
             
-            node_key_type n = insert_node();
+            NodeKey n = insert_node();
             lookup_simplex(n).set_compact(true);
-            std::map<node_key_type, edge_key_type> node_2_edge_map;
+            std::map<NodeKey, EdgeKey> node_2_edge_map;
             simplex_set_type::node_set_iterator nit = region_boundary.nodes_begin();
             while (nit != region_boundary.nodes_end())
             {
@@ -628,18 +580,18 @@ namespace is_mesh
                 ++nit;
             }
             
-            std::map<edge_key_type, face_key_type> edge_2_face_map;
+            std::map<EdgeKey, FaceKey> edge_2_face_map;
             simplex_set_type::edge_set_iterator eit = region_boundary.edges_begin();
             while (eit != region_boundary.edges_end())
             {
                 auto e_boundary = lookup_simplex(*eit).get_boundary();
                 assert(e_boundary->size() == 2 || !"Edge boundary corrupted");
                 auto ebit = e_boundary->begin();
-                node_key_type n1 = *ebit; ++ebit;
-                node_key_type n2 = *ebit;
-                edge_key_type e1 = node_2_edge_map[n1];
-                edge_key_type e2 = node_2_edge_map[n2];
-                face_key_type f = unsafe_insert_face(*eit, e1, e2);
+                NodeKey n1 = *ebit; ++ebit;
+                NodeKey n2 = *ebit;
+                EdgeKey e1 = node_2_edge_map[n1];
+                EdgeKey e2 = node_2_edge_map[n2];
+                FaceKey f = unsafe_insert_face(*eit, e1, e2);
                 edge_2_face_map[*eit] = f;
                 auto e1_coboundary = lookup_simplex(e1).get_co_boundary();
                 auto e2_coboundary = lookup_simplex(e2).get_co_boundary();
@@ -660,13 +612,13 @@ namespace is_mesh
                 auto f_boundary = lookup_simplex(*fit).get_boundary();
                 assert(f_boundary->size() == 3 || !"Face boundary corrupted");
                 auto fbit = f_boundary->begin();
-                edge_key_type e1 = *fbit; ++fbit;
-                edge_key_type e2 = *fbit; ++fbit;
-                edge_key_type e3 = *fbit;
-                face_key_type f1 = edge_2_face_map[e1];
-                face_key_type f2 = edge_2_face_map[e2];
-                face_key_type f3 = edge_2_face_map[e3];
-                tetrahedron_key_type tet = unsafe_insert_tetrahedron(*fit, f1, f2, f3);
+                EdgeKey e1 = *fbit; ++fbit;
+                EdgeKey e2 = *fbit; ++fbit;
+                EdgeKey e3 = *fbit;
+                FaceKey f1 = edge_2_face_map[e1];
+                FaceKey f2 = edge_2_face_map[e2];
+                FaceKey f3 = edge_2_face_map[e3];
+                TetrahedronKey tet = unsafe_insert_tetrahedron(*fit, f1, f2, f3);
                 new_tets[tet] = face_2_tet_map[*fit];
                 orient_coface_oppositely(*fit, tet);
                 ++fit;
@@ -692,10 +644,10 @@ namespace is_mesh
         /**
          * Marek
          */
-        node_key_type split_edge_helper(const edge_key_type & edge,
-                                        std::map<tetrahedron_key_type, tetrahedron_key_type> & new_tets)
+        NodeKey split_edge_helper(const EdgeKey & edge,
+                                        std::map<TetrahedronKey, TetrahedronKey> & new_tets)
         {
-            edge_key_type e = edge;
+            EdgeKey e = edge;
             
             simplex_set_type st_e;
             star(e, st_e);
@@ -706,7 +658,7 @@ namespace is_mesh
             
             repair_co_boundaries(st_e, shell);
             
-            std::map<face_key_type, tetrahedron_key_type> face_2_tet_map;
+            std::map<FaceKey, TetrahedronKey> face_2_tet_map;
             simplex_set_type::tetrahedron_set_iterator tit = st_e.tetrahedra_begin();
             while (tit != st_e.tetrahedra_end())
             {
@@ -720,8 +672,8 @@ namespace is_mesh
                 ++tit;
             }
             
-            std::map<edge_key_type, face_key_type> old_edge_2_face_map;
-            std::map<edge_key_type, bool> non_link_edge;
+            std::map<EdgeKey, FaceKey> old_edge_2_face_map;
+            std::map<EdgeKey, bool> non_link_edge;
             simplex_set_type::face_set_iterator fit = st_e.faces_begin();
             while (fit != st_e.faces_end())
             {
@@ -749,21 +701,21 @@ namespace is_mesh
             
             auto e_boundary = lookup_simplex(e).get_boundary();
             auto ebit = e_boundary->begin();
-            node_key_type n1 = *ebit;
+            NodeKey n1 = *ebit;
             ++ebit;
-            node_key_type n2 = *ebit;
+            NodeKey n2 = *ebit;
             
-            node_key_type n = insert_node();
+            NodeKey n = insert_node();
             find_node(n).set_compact(false);
-            std::map<node_key_type, edge_key_type> node_2_edge_map;
+            std::map<NodeKey, EdgeKey> node_2_edge_map;
             auto n_coboundary = lookup_simplex(n).get_co_boundary();
             
-            edge_key_type e1 = unsafe_insert_edge(n, n1);
+            EdgeKey e1 = unsafe_insert_edge(n, n1);
             find_edge(e1).set_compact(false);
             node_2_edge_map[n1] = e1;
             n_coboundary->insert(e1);
             
-            edge_key_type e2 = unsafe_insert_edge(n2, n);
+            EdgeKey e2 = unsafe_insert_edge(n2, n);
             find_edge(e2).set_compact(false);
             node_2_edge_map[n2] = e2;
             n_coboundary->insert(e2);
@@ -774,7 +726,7 @@ namespace is_mesh
             {
                 if ((*nit != n1) && (*nit != n2))
                 {
-                    edge_key_type new_edge = unsafe_insert_edge(*nit, n);
+                    EdgeKey new_edge = unsafe_insert_edge(*nit, n);
                     find_edge(new_edge).set_compact(false);
                     node_2_edge_map[*nit] = new_edge;
                     n_coboundary->insert(new_edge);
@@ -782,18 +734,18 @@ namespace is_mesh
                 ++nit;
             }
             
-            std::map<edge_key_type, face_key_type> edge_2_face_map;
+            std::map<EdgeKey, FaceKey> edge_2_face_map;
             simplex_set_type::edge_set_iterator eit = shell.edges_begin();
             while (eit != shell.edges_end())
             {
                 auto e_boundary = lookup_simplex(*eit).get_boundary();
                 assert(e_boundary->size() == 2 || !"Edge boundary corrupted");
                 auto ebit = e_boundary->begin();
-                node_key_type n1 = *ebit; ++ebit;
-                node_key_type n2 = *ebit;
-                edge_key_type e1 = node_2_edge_map[n1];
-                edge_key_type e2 = node_2_edge_map[n2];
-                face_key_type f = unsafe_insert_face(*eit, e1, e2);
+                NodeKey n1 = *ebit; ++ebit;
+                NodeKey n2 = *ebit;
+                EdgeKey e1 = node_2_edge_map[n1];
+                EdgeKey e2 = node_2_edge_map[n2];
+                FaceKey f = unsafe_insert_face(*eit, e1, e2);
                 edge_2_face_map[*eit] = f;
                 auto e1_coboundary = lookup_simplex(e1).get_co_boundary();
                 auto e2_coboundary = lookup_simplex(e2).get_co_boundary();
@@ -818,13 +770,13 @@ namespace is_mesh
                 auto f_boundary = lookup_simplex(*sfit).get_boundary();
                 assert(f_boundary->size() == 3 || !"Face boundary corrupted");
                 auto fbit = f_boundary->begin();
-                edge_key_type e1 = *fbit; ++fbit;
-                edge_key_type e2 = *fbit; ++fbit;
-                edge_key_type e3 = *fbit;
-                face_key_type f1 = edge_2_face_map[e1];
-                face_key_type f2 = edge_2_face_map[e2];
-                face_key_type f3 = edge_2_face_map[e3];
-                tetrahedron_key_type tet = unsafe_insert_tetrahedron(*sfit, f1, f2, f3);
+                EdgeKey e1 = *fbit; ++fbit;
+                EdgeKey e2 = *fbit; ++fbit;
+                EdgeKey e3 = *fbit;
+                FaceKey f1 = edge_2_face_map[e1];
+                FaceKey f2 = edge_2_face_map[e2];
+                FaceKey f3 = edge_2_face_map[e3];
+                TetrahedronKey tet = unsafe_insert_tetrahedron(*sfit, f1, f2, f3);
                 new_tets[tet] = face_2_tet_map[*sfit];
                 orient_coface_oppositely(*sfit, tet);
                 ++sfit;
@@ -861,8 +813,8 @@ namespace is_mesh
          */
         void repair_co_boundaries(simplex_set_type & interior, simplex_set_type & boundary)
         {
-            std::map<node_key_type, char> node_repaired;
-            std::map<edge_key_type, char> edge_repaired;
+            std::map<NodeKey, char> node_repaired;
+            std::map<EdgeKey, char> edge_repaired;
             simplex_set_type::face_set_iterator fit = boundary.faces_begin();
             while (fit != boundary.faces_end())
             {
@@ -924,9 +876,9 @@ namespace is_mesh
          * Marek
          * so far for the manifold edge ONLY!
          */
-        bool edge_collapse_precond(edge_key_type & e,
-                                   node_key_type const & n1,
-                                   node_key_type const & n2)
+        bool edge_collapse_precond(EdgeKey & e,
+                                   NodeKey const & n1,
+                                   NodeKey const & n2)
         {
             simplex_set_type lk_e, lk1, lk12;
             link(e, lk_e);
@@ -946,9 +898,9 @@ namespace is_mesh
          * Marek
          * so far for the manifold edge ONLY!
          */
-        node_key_type edge_collapse_helper(edge_key_type & e,
-                                           node_key_type const & n1,
-                                           node_key_type const & n2)
+        NodeKey edge_collapse_helper(EdgeKey & e,
+                                           NodeKey const & n1,
+                                           NodeKey const & n2)
         {
             if (!edge_collapse_precond(e,n1,n2))
                 return NodeKey();
@@ -965,8 +917,8 @@ namespace is_mesh
             
             repair_co_boundaries(st_e, st_e_boundary);
             
-            std::map<edge_key_type, edge_key_type> edge_2_edge_map;
-            std::map<face_key_type, face_key_type> face_2_face_map;
+            std::map<EdgeKey, EdgeKey> edge_2_edge_map;
+            std::map<FaceKey, FaceKey> face_2_face_map;
             
             edge_collapse_clear_interior(n1, n2, e, st_e, st_e_boundary, lk1, lk2, edge_2_edge_map, face_2_face_map);
             edge_collapse_sew_hole_up(n1, n2, st2, st_e, lk1, edge_2_edge_map, face_2_face_map);
@@ -978,20 +930,20 @@ namespace is_mesh
         /**
          * Marek
          */
-        void edge_collapse_clear_interior(node_key_type const & n1,
-                                          node_key_type const & n2,
-                                          edge_key_type & e,
+        void edge_collapse_clear_interior(NodeKey const & n1,
+                                          NodeKey const & n2,
+                                          EdgeKey & e,
                                           simplex_set_type & st_e,
                                           simplex_set_type & st_e_boundary,
                                           simplex_set_type & lk1,
                                           simplex_set_type & lk2,
-                                          std::map<edge_key_type, edge_key_type> & edge_2_edge_map,
-                                          std::map<face_key_type, face_key_type> & face_2_face_map)
+                                          std::map<EdgeKey, EdgeKey> & edge_2_edge_map,
+                                          std::map<FaceKey, FaceKey> & face_2_face_map)
         {
             simplex_set_type::tetrahedron_set_iterator tit = st_e.tetrahedra_begin();
             while (tit != st_e.tetrahedra_end())
             {
-                face_key_type f1, f2;
+                FaceKey f1, f2;
                 auto t_boundary = lookup_simplex(*tit).get_boundary();
                 auto tbit = t_boundary->begin();
                 while (tbit != t_boundary->end())
@@ -1017,7 +969,7 @@ namespace is_mesh
             simplex_set_type::face_set_iterator fit = st_e.faces_begin();
             while (fit != st_e.faces_end())
             {
-                edge_key_type e1, e2;
+                EdgeKey e1, e2;
                 auto f_boundary = lookup_simplex(*fit).get_boundary();
                 auto fbit = f_boundary->begin();
                 while (fbit != f_boundary->end())
@@ -1046,22 +998,22 @@ namespace is_mesh
         /**
          * Marek
          */
-        void edge_collapse_sew_hole_up(node_key_type const & n1,
-                                       node_key_type const & n2,
+        void edge_collapse_sew_hole_up(NodeKey const & n1,
+                                       NodeKey const & n2,
                                        simplex_set_type & st2,
                                        simplex_set_type & st_e,
                                        simplex_set_type & lk1,
-                                       std::map<edge_key_type, edge_key_type> & edge_2_edge_map,
-                                       std::map<face_key_type, face_key_type> & face_2_face_map)
+                                       std::map<EdgeKey, EdgeKey> & edge_2_edge_map,
+                                       std::map<FaceKey, FaceKey> & face_2_face_map)
         {
             simplex_set_type to_be_removed;
-            std::map<edge_key_type, edge_key_type>::iterator meeit = edge_2_edge_map.begin();
+            std::map<EdgeKey, EdgeKey>::iterator meeit = edge_2_edge_map.begin();
             while (meeit != edge_2_edge_map.end())
             {
                 to_be_removed.insert(meeit->first);
                 ++meeit;
             }
-            std::map<face_key_type, face_key_type>::iterator mffit = face_2_face_map.begin();
+            std::map<FaceKey, FaceKey>::iterator mffit = face_2_face_map.begin();
             while (mffit != face_2_face_map.end())
             {
                 to_be_removed.insert(mffit->first);
@@ -1119,7 +1071,7 @@ namespace is_mesh
                     {
                         if (to_be_removed.contains(*tbit))
                         {
-                            face_key_type f = face_2_face_map[*tbit];
+                            FaceKey f = face_2_face_map[*tbit];
                             *tbit = f;
                             lookup_simplex(f).get_co_boundary()->insert(*tit);
                             //break;
@@ -1130,7 +1082,7 @@ namespace is_mesh
                 ++tit;
             }
             
-            std::map<face_key_type, face_key_type>::iterator ffit = face_2_face_map.begin();
+            std::map<FaceKey, FaceKey>::iterator ffit = face_2_face_map.begin();
             while (ffit != face_2_face_map.end())
             {
                 auto f_boundary = lookup_simplex(ffit->first).get_boundary();
@@ -1169,7 +1121,7 @@ namespace is_mesh
                 ++ffit;
             }
             
-            std::map<edge_key_type, edge_key_type>::iterator eeit = edge_2_edge_map.begin();
+            std::map<EdgeKey, EdgeKey>::iterator eeit = edge_2_edge_map.begin();
             while (eeit != edge_2_edge_map.end())
             {
                 auto e_boundary = lookup_simplex(eeit->first).get_boundary();
@@ -1275,7 +1227,7 @@ namespace is_mesh
         }
         
         template<typename key_type_face>
-        bool in_boundary(key_type_face const & f, node_key_type const & s)
+        bool in_boundary(key_type_face const & f, NodeKey const & s)
         { //no simplex is in the boundary of a node...
             return false;
         }
@@ -1308,7 +1260,7 @@ namespace is_mesh
          *
          */
         template<typename simplex_key_s>
-        void star_helper_recurse_up(simplex_key_s const & s, tetrahedron_key_type const & t, simplex_set_type & set) {}
+        void star_helper_recurse_up(simplex_key_s const & s, TetrahedronKey const & t, simplex_set_type & set) {}
         
         /**
          *
@@ -1337,8 +1289,8 @@ namespace is_mesh
         /**
          *
          */
-        void star_helper_recurse_down(edge_key_type const & s,
-                                      tetrahedron_key_type const & t,
+        void star_helper_recurse_down(EdgeKey const & s,
+                                      TetrahedronKey const & t,
                                       simplex_set_type & set)
         {
             star_helper_recurse_down_(s, t, set);
@@ -1347,8 +1299,8 @@ namespace is_mesh
         /**
          *
          */
-        void star_helper_recurse_down(node_key_type const & s,
-                                      tetrahedron_key_type const & t,
+        void star_helper_recurse_down(NodeKey const & s,
+                                      TetrahedronKey const & t,
                                       simplex_set_type & set)
         {
             star_helper_recurse_down_(s, t, set);
@@ -1357,8 +1309,8 @@ namespace is_mesh
         /**
          *
          */
-        void star_helper_recurse_down(node_key_type const & s,
-                                      face_key_type const & t,
+        void star_helper_recurse_down(NodeKey const & s,
+                                      FaceKey const & t,
                                       simplex_set_type & set)
         {
             star_helper_recurse_down_(s, t, set);
@@ -1385,7 +1337,7 @@ namespace is_mesh
          * Inserts an edge into the mesh without updating any of the boundary nodes co-boundary relation.
          * Might leave the mesh in an inconsistent state.
          */
-        edge_key_type unsafe_insert_edge(node_key_type node1, node_key_type node2)
+        EdgeKey unsafe_insert_edge(NodeKey node1, NodeKey node2)
         {
             edge_iterator edge = m_edge_kernel->create();
             //edge->set_compact(true);
@@ -1399,7 +1351,7 @@ namespace is_mesh
          * Inserts a face into the mesh without updating any of the boundary edges co-boundary relation
          * Might leave the mesh in an inconsistent state.
          */
-        face_key_type unsafe_insert_face(edge_key_type edge1, edge_key_type edge2, edge_key_type edge3)
+        FaceKey unsafe_insert_face(EdgeKey edge1, EdgeKey edge2, EdgeKey edge3)
         {
             face_iterator face = m_face_kernel->create();
             face->add_face(edge1);
@@ -1413,9 +1365,9 @@ namespace is_mesh
          * Updates boundary relation both ways, but don't uncompresses anything.
          * Might leave the mesh in an inconsistent state.
          */
-        tetrahedron_key_type unsafe_insert_tetrahedron(face_key_type face1, face_key_type face2, face_key_type face3, face_key_type face4)
+        TetrahedronKey unsafe_insert_tetrahedron(FaceKey face1, FaceKey face2, FaceKey face3, FaceKey face4)
         {
-            tetrahedron_iterator tetrahedron = m_tetrahedron_kernel->create();
+            auto tetrahedron = m_tetrahedron_kernel->create();
             m_face_kernel->find(face1).add_co_face(tetrahedron.key());
             m_face_kernel->find(face2).add_co_face(tetrahedron.key());
             m_face_kernel->find(face3).add_co_face(tetrahedron.key());
@@ -1430,7 +1382,7 @@ namespace is_mesh
         /**
          *
          */
-        void unsafe_erase(tetrahedron_key_type const & key)
+        void unsafe_erase(TetrahedronKey const & key)
         {
             m_tetrahedron_kernel->erase(key);
         }
@@ -1438,7 +1390,7 @@ namespace is_mesh
         /**
          *
          */
-        void unsafe_erase(face_key_type const & key)
+        void unsafe_erase(FaceKey const & key)
         {
             m_face_kernel->erase(key);
         }
@@ -1446,7 +1398,7 @@ namespace is_mesh
         /**
          *
          */
-        void unsafe_erase(edge_key_type const & key)
+        void unsafe_erase(EdgeKey const & key)
         {
             m_edge_kernel->erase(key);
         }
@@ -1454,7 +1406,7 @@ namespace is_mesh
         /**
          *
          */
-        void unsafe_erase(node_key_type const & key)
+        void unsafe_erase(NodeKey const & key)
         {
             m_node_kernel->erase(key);
         }
@@ -1463,7 +1415,7 @@ namespace is_mesh
         /**
          *
          */
-        void unsafe_remove(tetrahedron_key_type const & key)
+        void unsafe_remove(TetrahedronKey const & key)
         {
             tetrahedron_type& tet = lookup_simplex(key);
             auto itr = tet.get_boundary()->begin();
@@ -1512,22 +1464,22 @@ namespace is_mesh
         /**
          *
          */
-        node_type & find_node(const node_key_type k) { return m_node_kernel->find(k); }
+        node_type & find_node(const NodeKey k) { return m_node_kernel->find(k); }
         
         /**
          *
          */
-        edge_type & find_edge(const edge_key_type k) { return m_edge_kernel->find(k); }
+        edge_type & find_edge(const EdgeKey k) { return m_edge_kernel->find(k); }
         
         /**
          *
          */
-        face_type & find_face(const face_key_type k) { return m_face_kernel->find(k); }
+        face_type & find_face(const FaceKey k) { return m_face_kernel->find(k); }
         
         /**
          *
          */
-        tetrahedron_type & find_tetrahedron(const tetrahedron_key_type k) { return m_tetrahedron_kernel->find(k); }
+        tetrahedron_type & find_tetrahedron(const TetrahedronKey k) { return m_tetrahedron_kernel->find(k); }
         
         /**
          *
@@ -1572,7 +1524,7 @@ namespace is_mesh
         /**
          * Inserts a node into the mesh. Trivial.
          */
-        node_key_type insert_node(bool is_compact =false)
+        NodeKey insert_node(bool is_compact =false)
         {
             node_iterator node = m_node_kernel->create();
             node->set_compact(is_compact);
@@ -1583,7 +1535,7 @@ namespace is_mesh
          * Inserts an edge into the mesh. Updates the co-boundary of the boundary nodes with the newly created edge.
          * Leaves the closure of the edge in an uncompressed state.
          */
-        edge_key_type insert_edge(node_key_type node1, node_key_type node2, bool is_compact =false)
+        EdgeKey insert_edge(NodeKey node1, NodeKey node2, bool is_compact =false)
         {
             edge_iterator edge = m_edge_kernel->create();
             //first uncompress boundary
@@ -1603,7 +1555,7 @@ namespace is_mesh
          * Inserts a face into the mesh. Updates the co-boundary of the boundary faces with the newly created face.
          * Leaves the closure of the face in an uncompressed state.
          */
-        face_key_type insert_face(edge_key_type edge1, edge_key_type edge2, edge_key_type edge3)
+        FaceKey insert_face(EdgeKey edge1, EdgeKey edge2, EdgeKey edge3)
         {
             face_iterator face = m_face_kernel->create();
             //first uncompress full boundary - fast if allready uncompressed, else might be heavy
@@ -1626,9 +1578,9 @@ namespace is_mesh
          * Inserts a tetrahedron into the mesh. Updates the co-boundary of the boundary edges with the newly created tetrahedron.
          * Leaves the closure of the tetrahedron in an uncompressed state.
          */
-        tetrahedron_key_type insert_tetrahedron(face_key_type face1, face_key_type face2, face_key_type face3, face_key_type face4)
+        TetrahedronKey insert_tetrahedron(FaceKey face1, FaceKey face2, FaceKey face3, FaceKey face4)
         {
-            tetrahedron_iterator tetrahedron = m_tetrahedron_kernel->create();
+            auto tetrahedron = m_tetrahedron_kernel->create();
             //first uncompress full boundary - fast if allready uncompressed, else might be heavy
             simplex_set_type set;
             closure(face1, set);
@@ -1673,7 +1625,7 @@ namespace is_mesh
                     set.insert(iter.key());
                 for (face_iterator iter = m_face_kernel->begin(); iter != m_face_kernel->end(); ++iter)
                     set.insert(iter.key());
-                for (tetrahedron_iterator iter = m_tetrahedron_kernel->begin(); iter != m_tetrahedron_kernel->end(); ++iter)
+                for (auto iter = m_tetrahedron_kernel->begin(); iter != m_tetrahedron_kernel->end(); ++iter)
                     set.insert(iter.key());
                 compress(set);
             }
@@ -1682,7 +1634,7 @@ namespace is_mesh
         /**
          * Returns the restricted star of a simplex.
          */
-        void star(node_key_type const & key, simplex_set_type & s_set)
+        void star(NodeKey const & key, simplex_set_type & s_set)
         {
             for( auto co_bit : *lookup_simplex(key).get_co_boundary())
             {
@@ -1700,7 +1652,7 @@ namespace is_mesh
         }
         
         
-        void star(edge_key_type const & key, simplex_set_type & s_set)
+        void star(EdgeKey const & key, simplex_set_type & s_set)
         {
             for(auto co_bit : *lookup_simplex(key).get_co_boundary())
             {
@@ -1715,7 +1667,7 @@ namespace is_mesh
                 lookup_simplex(*tit).reset_label();
         }
         
-        void star(face_key_type const & f, simplex_set_type & s_set)
+        void star(FaceKey const & f, simplex_set_type & s_set)
         {
             for(auto co_bit : *lookup_simplex(f).get_co_boundary())
             {
@@ -1723,7 +1675,7 @@ namespace is_mesh
             }
         }
         
-        void star(tetrahedron_key_type const &, simplex_set_type &)
+        void star(TetrahedronKey const &, simplex_set_type &)
         { /* do nothing */ }
         
         /**
@@ -1788,9 +1740,9 @@ namespace is_mesh
                 if (node.is_compact()) continue;
                 node.set_compact(true);
                 auto cob_set = node.get_co_boundary();
-                std::vector<edge_key_type> edge_vec(cob_set->size());
+                std::vector<EdgeKey> edge_vec(cob_set->size());
                 std::copy(cob_set->begin(), cob_set->end(), edge_vec.begin());
-                typename std::vector<edge_key_type>::iterator edge_itr = edge_vec.begin();
+                typename std::vector<EdgeKey>::iterator edge_itr = edge_vec.begin();
                 //co_boundary_iterator edge_itr = cob_set->begin();
                 int label = 1;
                 for( ;edge_itr != edge_vec.end() ; ++edge_itr)
@@ -1836,9 +1788,9 @@ namespace is_mesh
                 if (edge.is_compact()) continue;
                 edge.set_compact(true);
                 auto cob_set = edge.get_co_boundary();
-                std::vector<face_key_type> face_vec(cob_set->size());
+                std::vector<FaceKey> face_vec(cob_set->size());
                 std::copy(cob_set->begin(), cob_set->end(), face_vec.begin());
-                typename std::vector<face_key_type>::iterator face_itr = face_vec.begin();
+                typename std::vector<FaceKey>::iterator face_itr = face_vec.begin();
                 //co_boundary_iterator edge_itr = cob_set->begin();
                 int label = 1;
                 for( ;face_itr != face_vec.end() ; ++face_itr)
@@ -1875,11 +1827,11 @@ namespace is_mesh
         } //compress(simplex_set_type)
         
         
-        void uncompress(const tetrahedron_key_type & t) {}
-        void uncompress(const face_key_type & f) {}
+        void uncompress(const TetrahedronKey & t) {}
+        void uncompress(const FaceKey & f) {}
         
         //// NOT TESTED!!!!!
-        void uncompress(const edge_key_type & edge_k)
+        void uncompress(const EdgeKey & edge_k)
         {
             //assert(0);
             ++m_uncompressed;
@@ -1897,7 +1849,7 @@ namespace is_mesh
         }
         
         //// NOT TESTED!!!!!!
-        void uncompress(const node_key_type & node_k)
+        void uncompress(const NodeKey & node_k)
         {
             //assert(0);
             ++m_uncompressed;
@@ -1945,7 +1897,7 @@ namespace is_mesh
          */
         void boundary(simplex_set_type & tetrahedra, simplex_set_type & result_set)
         {
-            std::map<face_key_type, char> face_occurrences;
+            std::map<FaceKey, char> face_occurrences;
             for (auto pit = tetrahedra.tetrahedra_begin(); pit != tetrahedra.tetrahedra_end(); ++pit)
             {
                 for (auto bit : *lookup_simplex(*pit).get_boundary())
@@ -1991,7 +1943,7 @@ namespace is_mesh
          * Marek
          * Induces consistent orientations on all faces of the tetrahedra with ID tid.
          */
-        void orient_faces_consistently(const tetrahedron_key_type& tid)
+        void orient_faces_consistently(const TetrahedronKey& tid)
         {
             for (auto it : *lookup_simplex(tid).get_boundary())
             {
@@ -2052,33 +2004,33 @@ namespace is_mesh
         /**
          * Marek
          */
-        node_key_type split_tetrahedron(const tetrahedron_key_type & t)
+        NodeKey split_tetrahedron(const TetrahedronKey & t)
         {
-            std::map<tetrahedron_key_type, tetrahedron_key_type> new_tets;
+            std::map<TetrahedronKey, TetrahedronKey> new_tets;
             return split_tetrahedron_helper(t, new_tets);
         }
         
         /**
          * Marek
          */
-        node_key_type split_face(face_key_type & f)
+        NodeKey split_face(FaceKey & f)
         {
-            std::map<tetrahedron_key_type, tetrahedron_key_type> new_tets;
+            std::map<TetrahedronKey, TetrahedronKey> new_tets;
             return split_face_helper(f, new_tets);
         }
         
         /**
          * Marek
          */
-        node_key_type split_edge(edge_key_type & e)
+        NodeKey split_edge(EdgeKey & e)
         {
-            std::map<tetrahedron_key_type, tetrahedron_key_type> new_tets;
+            std::map<TetrahedronKey, TetrahedronKey> new_tets;
             return split_edge_helper(e, new_tets);
         }
         
-        void link(tetrahedron_key_type const & k, simplex_set_type & result){}
+        void link(TetrahedronKey const & k, simplex_set_type & result){}
         
-        void link(face_key_type const & f, simplex_set_type & result)
+        void link(FaceKey const & f, simplex_set_type & result)
         {
             simplex_set_type st_f, cl_f;
             star(f, st_f);
@@ -2091,13 +2043,13 @@ namespace is_mesh
             result.clear_tetrahedra();
         }
                 
-        void link(edge_key_type const & e, simplex_set_type & result)
+        void link(EdgeKey const & e, simplex_set_type & result)
         {
             simplex_set_type st_e, cl_e, temp;
             star(e, st_e);
             closure(st_e, temp);
             closure(e, cl_e);
-            node_key_type n1, n2;
+            NodeKey n1, n2;
             simplex_set_type::node_set_iterator nit = cl_e.nodes_begin();
             n1 = *nit;  ++nit;  n2 = *nit;
             temp.difference(st_e);
@@ -2127,7 +2079,7 @@ namespace is_mesh
             result.add(temp);
         }
         
-        void link(node_key_type const & n, simplex_set_type & result)
+        void link(NodeKey const & n, simplex_set_type & result)
         {
             simplex_set_type st_n;
             star(n, st_n);
@@ -2139,7 +2091,7 @@ namespace is_mesh
         /**
          *
          */
-        bool exists(tetrahedron_key_type const & t)
+        bool exists(TetrahedronKey const & t)
         {
             return m_tetrahedron_kernel->is_valid(t);
         }
@@ -2147,7 +2099,7 @@ namespace is_mesh
         /**
          *
          */
-        bool exists(face_key_type const & f)
+        bool exists(FaceKey const & f)
         {
             return m_face_kernel->is_valid(f);
         }
@@ -2155,7 +2107,7 @@ namespace is_mesh
         /**
          *
          */
-        bool exists(edge_key_type const & e)
+        bool exists(EdgeKey const & e)
         {
             return m_edge_kernel->is_valid(e);
         }
@@ -2163,7 +2115,7 @@ namespace is_mesh
         /**
          *
          */
-        bool exists(node_key_type const & n)
+        bool exists(NodeKey const & n)
         {
             return m_node_kernel->is_valid(n);
         }

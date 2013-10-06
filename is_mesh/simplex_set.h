@@ -9,14 +9,10 @@ namespace is_mesh
      * operations upon a set of simplices.
      * Only handles are stored in the simplex set, actual data must be looked up elsewhere.
      */
-    template<typename node_key_t_, typename edge_key_t_, typename face_key_t_, typename tetrahedron_key_t_>
+    template<typename node_key_type, typename edge_key_type, typename face_key_type, typename tetrahedron_key_type>
     class simplex_set
     {
     public:
-        typedef          node_key_t_                                  node_key_type;
-        typedef          edge_key_t_                                  edge_key_type;
-        typedef          face_key_t_                                  face_key_type;
-        typedef          tetrahedron_key_t_                           tetrahedron_key_type;
         typedef simplex_set<node_key_type, edge_key_type, face_key_type, tetrahedron_key_type>      simplex_set_type;
         
         typedef          std::set<node_key_type>                      node_set;

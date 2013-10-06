@@ -19,10 +19,10 @@ namespace is_mesh {
         typedef typename is_mesh::t4mesh< node_traits, tet_traits, edge_traits, face_traits> Mesh;
         
     public:
-        typedef typename Mesh::node_key_type            node_key;
-        typedef typename Mesh::edge_key_type            edge_key;
-        typedef typename Mesh::face_key_type            face_key;
-        typedef typename Mesh::tetrahedron_key_type     tet_key;
+        typedef NodeKey            node_key;
+        typedef EdgeKey            edge_key;
+        typedef FaceKey            face_key;
+        typedef TetrahedronKey     tet_key;
         typedef typename Mesh::simplex_set_type         simplex_set;
         
     private:
