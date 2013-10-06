@@ -208,7 +208,7 @@ namespace is_mesh
         
         void boundary_helper(face_key_type const & k, simplex_set_type & set)
         {
-            typename face_type::boundary_list s_boundary = lookup_simplex(k).get_boundary();
+            auto s_boundary = lookup_simplex(k).get_boundary();
             auto it = s_boundary->begin();
             while (it != s_boundary->end())
             {
@@ -220,7 +220,7 @@ namespace is_mesh
         
         void boundary_helper(edge_key_type const & k, simplex_set_type & set)
         {
-            typename edge_type::boundary_list s_boundary = lookup_simplex(k).get_boundary();
+            auto s_boundary = lookup_simplex(k).get_boundary();
             auto it = s_boundary->begin();
             while (it != s_boundary->end())
             {
@@ -266,7 +266,7 @@ namespace is_mesh
             fit = set.faces_begin();
             while (fit != set.faces_end())
             {
-                typename face_type::boundary_list f_boundary = lookup_simplex(*fit).get_boundary();
+                auto f_boundary = lookup_simplex(*fit).get_boundary();
                 auto it = f_boundary->begin();
                 while (it != f_boundary->end())
                 {
@@ -287,7 +287,7 @@ namespace is_mesh
             eit = set.edges_begin();
             while (eit != set.edges_end())
             {
-                typename edge_type::boundary_list e_boundary = lookup_simplex(*eit).get_boundary();
+                auto e_boundary = lookup_simplex(*eit).get_boundary();
                 auto it = e_boundary->begin();
                 while (it != e_boundary->end())
                 {
@@ -526,7 +526,7 @@ namespace is_mesh
                 lookup_simplex(node_2_edge_map[*nit]).set_compact(true);
                 if (nit == t_boundary.nodes_begin())
                 {
-                    typename node_type::co_boundary_set n_coboundary = lookup_simplex(n).get_co_boundary();
+                    auto n_coboundary = lookup_simplex(n).get_co_boundary();
                     n_coboundary->insert(node_2_edge_map[*nit]);
                 }
                 ++nit;
@@ -535,7 +535,7 @@ namespace is_mesh
             simplex_set_type::edge_set_iterator eit = t_boundary.edges_begin();
             while (eit != t_boundary.edges_end())
             {
-                typename edge_type::boundary_list e_boundary = lookup_simplex(*eit).get_boundary();
+                auto e_boundary = lookup_simplex(*eit).get_boundary();
                 assert(e_boundary->size() == 2 || !"Edge boundary corrupted");
                 auto ebit = e_boundary->begin();
                 node_key_type n1 = *ebit; ++ebit;
@@ -544,8 +544,8 @@ namespace is_mesh
                 edge_key_type e2 = node_2_edge_map[n2];
                 face_key_type f = unsafe_insert_face(*eit, e1, e2);
                 edge_2_face_map[*eit] = f;
-                typename edge_type::co_boundary_set e1_coboundary = lookup_simplex(e1).get_co_boundary();
-                typename edge_type::co_boundary_set e2_coboundary = lookup_simplex(e2).get_co_boundary();
+                auto e1_coboundary = lookup_simplex(e1).get_co_boundary();
+                auto e2_coboundary = lookup_simplex(e2).get_co_boundary();
                 if (e1_coboundary->empty()) e1_coboundary->insert(f);
                 if (e2_coboundary->empty()) e2_coboundary->insert(f);
                 ++eit;
@@ -553,7 +553,7 @@ namespace is_mesh
             simplex_set_type::face_set_iterator fit = t_boundary.faces_begin();
             while (fit != t_boundary.faces_end())
             {
-                typename face_type::boundary_list f_boundary = lookup_simplex(*fit).get_boundary();
+                auto f_boundary = lookup_simplex(*fit).get_boundary();
                 assert(f_boundary->size() == 3 || !"Face boundary corrupted");
                 auto fbit = f_boundary->begin();
                 edge_key_type e1 = *fbit; ++fbit;
@@ -622,7 +622,7 @@ namespace is_mesh
                 lookup_simplex(node_2_edge_map[*nit]).set_compact(true);
                 if (nit == region_boundary.nodes_begin())
                 {
-                    typename node_type::co_boundary_set n_coboundary = lookup_simplex(n).get_co_boundary();
+                    auto n_coboundary = lookup_simplex(n).get_co_boundary();
                     n_coboundary->insert(node_2_edge_map[*nit]);
                 }
                 ++nit;
@@ -632,7 +632,7 @@ namespace is_mesh
             simplex_set_type::edge_set_iterator eit = region_boundary.edges_begin();
             while (eit != region_boundary.edges_end())
             {
-                typename edge_type::boundary_list e_boundary = lookup_simplex(*eit).get_boundary();
+                auto e_boundary = lookup_simplex(*eit).get_boundary();
                 assert(e_boundary->size() == 2 || !"Edge boundary corrupted");
                 auto ebit = e_boundary->begin();
                 node_key_type n1 = *ebit; ++ebit;
@@ -641,8 +641,8 @@ namespace is_mesh
                 edge_key_type e2 = node_2_edge_map[n2];
                 face_key_type f = unsafe_insert_face(*eit, e1, e2);
                 edge_2_face_map[*eit] = f;
-                typename edge_type::co_boundary_set e1_coboundary = lookup_simplex(e1).get_co_boundary();
-                typename edge_type::co_boundary_set e2_coboundary = lookup_simplex(e2).get_co_boundary();
+                auto e1_coboundary = lookup_simplex(e1).get_co_boundary();
+                auto e2_coboundary = lookup_simplex(e2).get_co_boundary();
                 if (e1_coboundary->empty()) e1_coboundary->insert(f);
                 if (e2_coboundary->empty()) e2_coboundary->insert(f);
                 ++eit;
@@ -657,7 +657,7 @@ namespace is_mesh
                     ++fit;
                     continue;
                 }
-                typename face_type::boundary_list f_boundary = lookup_simplex(*fit).get_boundary();
+                auto f_boundary = lookup_simplex(*fit).get_boundary();
                 assert(f_boundary->size() == 3 || !"Face boundary corrupted");
                 auto fbit = f_boundary->begin();
                 edge_key_type e1 = *fbit; ++fbit;
@@ -725,7 +725,7 @@ namespace is_mesh
             simplex_set_type::face_set_iterator fit = st_e.faces_begin();
             while (fit != st_e.faces_end())
             {
-                typename face_type::boundary_list f_boundary = lookup_simplex(*fit).get_boundary();
+                auto f_boundary = lookup_simplex(*fit).get_boundary();
                 auto fbit = f_boundary->begin();
                 while (fbit != f_boundary->end())
                 {
@@ -747,7 +747,7 @@ namespace is_mesh
                 ++tit;
             }
             
-            typename edge_type::boundary_list e_boundary = lookup_simplex(e).get_boundary();
+            auto e_boundary = lookup_simplex(e).get_boundary();
             auto ebit = e_boundary->begin();
             node_key_type n1 = *ebit;
             ++ebit;
@@ -756,7 +756,7 @@ namespace is_mesh
             node_key_type n = insert_node();
             find_node(n).set_compact(false);
             std::map<node_key_type, edge_key_type> node_2_edge_map;
-            typename node_type::co_boundary_set n_coboundary = lookup_simplex(n).get_co_boundary();
+            auto n_coboundary = lookup_simplex(n).get_co_boundary();
             
             edge_key_type e1 = unsafe_insert_edge(n, n1);
             find_edge(e1).set_compact(false);
@@ -786,7 +786,7 @@ namespace is_mesh
             simplex_set_type::edge_set_iterator eit = shell.edges_begin();
             while (eit != shell.edges_end())
             {
-                typename edge_type::boundary_list e_boundary = lookup_simplex(*eit).get_boundary();
+                auto e_boundary = lookup_simplex(*eit).get_boundary();
                 assert(e_boundary->size() == 2 || !"Edge boundary corrupted");
                 auto ebit = e_boundary->begin();
                 node_key_type n1 = *ebit; ++ebit;
@@ -795,11 +795,11 @@ namespace is_mesh
                 edge_key_type e2 = node_2_edge_map[n2];
                 face_key_type f = unsafe_insert_face(*eit, e1, e2);
                 edge_2_face_map[*eit] = f;
-                typename edge_type::co_boundary_set e1_coboundary = lookup_simplex(e1).get_co_boundary();
-                typename edge_type::co_boundary_set e2_coboundary = lookup_simplex(e2).get_co_boundary();
+                auto e1_coboundary = lookup_simplex(e1).get_co_boundary();
+                auto e2_coboundary = lookup_simplex(e2).get_co_boundary();
                 e1_coboundary->insert(f);
                 e2_coboundary->insert(f);
-                typename edge_type::co_boundary_set e_coboundary = lookup_simplex(*eit).get_co_boundary();
+                auto e_coboundary = lookup_simplex(*eit).get_co_boundary();
                 //assert (*(e_coboundary->begin()) != old_edge_2_face_map[*eit]);
                 if (non_link_edge[*eit] &&
                     (e_coboundary->find(old_edge_2_face_map[*eit]) != e_coboundary->end()))
@@ -815,7 +815,7 @@ namespace is_mesh
             
             while (sfit != shell.faces_end())
             {
-                typename face_type::boundary_list f_boundary = lookup_simplex(*sfit).get_boundary();
+                auto f_boundary = lookup_simplex(*sfit).get_boundary();
                 assert(f_boundary->size() == 3 || !"Face boundary corrupted");
                 auto fbit = f_boundary->begin();
                 edge_key_type e1 = *fbit; ++fbit;
@@ -866,7 +866,7 @@ namespace is_mesh
             simplex_set_type::face_set_iterator fit = boundary.faces_begin();
             while (fit != boundary.faces_end())
             {
-                typename face_type::boundary_list f_boundary = lookup_simplex(*fit).get_boundary();
+                auto f_boundary = lookup_simplex(*fit).get_boundary();
                 auto fbit = f_boundary->begin();
                 while (fbit != f_boundary->end())
                 {
@@ -894,7 +894,7 @@ namespace is_mesh
             simplex_set_type::edge_set_iterator eit = boundary.edges_begin();
             while (eit != boundary.edges_end())
             {
-                typename edge_type::boundary_list e_boundary = lookup_simplex(*eit).get_boundary();
+                auto e_boundary = lookup_simplex(*eit).get_boundary();
                 auto ebit = e_boundary->begin();
                 while (ebit != e_boundary->end())
                 {
@@ -1018,7 +1018,7 @@ namespace is_mesh
             while (fit != st_e.faces_end())
             {
                 edge_key_type e1, e2;
-                typename face_type::boundary_list f_boundary = lookup_simplex(*fit).get_boundary();
+                auto f_boundary = lookup_simplex(*fit).get_boundary();
                 auto fbit = f_boundary->begin();
                 while (fbit != f_boundary->end())
                 {
@@ -1073,7 +1073,7 @@ namespace is_mesh
             {
                 if ((!st_e.contains(*eit)) && (!to_be_removed.contains(*eit)))
                 {
-                    typename edge_type::boundary_list e_boundary = lookup_simplex(*eit).get_boundary();
+                    auto e_boundary = lookup_simplex(*eit).get_boundary();
                     auto ebit = e_boundary->begin();
                     while (ebit != e_boundary->end())
                     {
@@ -1093,7 +1093,7 @@ namespace is_mesh
             {
                 if ((!st_e.contains(*fit)) && (!to_be_removed.contains(*fit)))
                 {
-                    typename face_type::boundary_list f_boundary = lookup_simplex(*fit).get_boundary();
+                    auto f_boundary = lookup_simplex(*fit).get_boundary();
                     auto fbit = f_boundary->begin();
                     while (fbit != f_boundary->end())
                     {
@@ -1133,14 +1133,14 @@ namespace is_mesh
             std::map<face_key_type, face_key_type>::iterator ffit = face_2_face_map.begin();
             while (ffit != face_2_face_map.end())
             {
-                typename face_type::boundary_list f_boundary = lookup_simplex(ffit->first).get_boundary();
+                auto f_boundary = lookup_simplex(ffit->first).get_boundary();
                 auto fbit = f_boundary->begin();
                 while (fbit != f_boundary->end())
                 {
-                    typename edge_type::co_boundary_set e_coboundary = lookup_simplex(*fbit).get_co_boundary();
+                    auto e_coboundary = lookup_simplex(*fbit).get_co_boundary();
                     assert (e_coboundary->size() == 1);
                     auto ecit = e_coboundary->begin();
-                    auto new_coboundary = new typename edge_type::set_type;
+                    auto new_coboundary = new typename edge_type::co_boundary_list();
                     while (ecit != e_coboundary->end())
                     {
                         if (*ecit == ffit->first)
@@ -1172,14 +1172,14 @@ namespace is_mesh
             std::map<edge_key_type, edge_key_type>::iterator eeit = edge_2_edge_map.begin();
             while (eeit != edge_2_edge_map.end())
             {
-                typename edge_type::boundary_list e_boundary = lookup_simplex(eeit->first).get_boundary();
+                auto e_boundary = lookup_simplex(eeit->first).get_boundary();
                 auto ebit = e_boundary->begin();
                 while (ebit != e_boundary->end())
                 {
                     auto n_coboundary = lookup_simplex(*ebit).get_co_boundary();
                     assert (n_coboundary->size() == 1);
                     auto ncit = n_coboundary->begin();
-                    auto new_coboundary = new typename node_type::set_type;
+                    auto new_coboundary = new typename node_type::co_boundary_list();
                     while (ncit != n_coboundary->end())
                     {
                         if (*ncit == eeit->first)
@@ -1787,7 +1787,7 @@ namespace is_mesh
                 node_type& node = m_node_kernel->find(*node_itr);
                 if (node.is_compact()) continue;
                 node.set_compact(true);
-                typename node_type::co_boundary_set cob_set = node.get_co_boundary();
+                auto cob_set = node.get_co_boundary();
                 std::vector<edge_key_type> edge_vec(cob_set->size());
                 std::copy(cob_set->begin(), cob_set->end(), edge_vec.begin());
                 typename std::vector<edge_key_type>::iterator edge_itr = edge_vec.begin();
@@ -1835,7 +1835,7 @@ namespace is_mesh
                 edge_type& edge = m_edge_kernel->find(*edge_itr);
                 if (edge.is_compact()) continue;
                 edge.set_compact(true);
-                typename edge_type::co_boundary_set cob_set = edge.get_co_boundary();
+                auto cob_set = edge.get_co_boundary();
                 std::vector<face_key_type> face_vec(cob_set->size());
                 std::copy(cob_set->begin(), cob_set->end(), face_vec.begin());
                 typename std::vector<face_key_type>::iterator face_itr = face_vec.begin();

@@ -15,15 +15,12 @@ namespace is_mesh
     class Simplex
     {
     public:
-        typedef         std::vector<boundary_key_type>          boundary_type;
-        typedef         std::set<co_boundary_key_type>          set_type;
-        
-        typedef          std::vector<boundary_key_type>*                             boundary_list;
-        typedef          set_type*                              co_boundary_set;
+        typedef         std::vector<boundary_key_type>          boundary_list;
+        typedef         std::set<co_boundary_key_type>          co_boundary_list;
         
     protected:
-        std::vector<boundary_key_type>* m_boundary = nullptr;
-        set_type* m_co_boundary = nullptr;
+        boundary_list* m_boundary = nullptr;
+        co_boundary_list* m_co_boundary = nullptr;
         bool             		m_is_compact;
         int              		m_label;       //used in coloring - to identify connected components.
         
@@ -31,8 +28,8 @@ namespace is_mesh
         
         Simplex() : m_is_compact(false), m_label(0)
         {
-            m_boundary    = new std::vector<boundary_key_type>();
-            m_co_boundary = new std::set<co_boundary_key_type>();
+            m_boundary    = new boundary_list();
+            m_co_boundary = new co_boundary_list();
         }
         
         ~Simplex()
@@ -76,14 +73,10 @@ namespace is_mesh
             }
             if (s.m_co_boundary != 0)
             {
-                m_co_boundary = new set_type();
-                typename set_type::iterator sb, se;
-                sb = s.m_co_boundary->begin();
-                se = s.m_co_boundary->end();
-                while (sb != se)
+                m_co_boundary = new co_boundary_list();
+                for (auto &sb : *s.m_co_boundary)
                 {
-                    m_co_boundary->insert(*sb);
-                    ++sb;
+                    m_co_boundary->insert(sb);
                 }
                 //std::copy(s.m_co_boundary->begin(), s.m_co_boundary->end(), m_co_boundary->begin());
             }
@@ -91,19 +84,19 @@ namespace is_mesh
         
     public:
         
-        set_type* get_co_boundary() const
+        co_boundary_list* get_co_boundary() const
         {
             return m_co_boundary;
         }
-        boundary_list get_boundary() const
+        boundary_list* get_boundary() const
         {
             return m_boundary;
         }
-        set_type* get_co_boundary()
+        co_boundary_list* get_co_boundary()
         {
             return m_co_boundary;
         }
-        boundary_list get_boundary()
+        boundary_list* get_boundary()
         {
             return m_boundary;
         }
