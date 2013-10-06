@@ -20,8 +20,6 @@ namespace is_mesh
         
         typedef          std::vector<boundary_key_type>*                             boundary_list;
         typedef          set_type*                              co_boundary_set;
-        typedef typename std::vector<boundary_key_type>::iterator                    boundary_iterator;
-        typedef typename set_type::iterator                     co_boundary_iterator;
         
     protected:
         std::vector<boundary_key_type>* m_boundary = nullptr;

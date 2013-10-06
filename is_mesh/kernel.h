@@ -62,13 +62,10 @@ namespace is_mesh
      * @param allocator_type This type must conform to the C++ standard allocator concept. The
      *        default argument is the default STL allocator.
      */
-    template<typename value_t_, typename key_t_, typename allocator_t_ = std::allocator<util::kernel_element<value_t_, key_t_> > >
+    template<typename value_type, typename key_type, typename allocator_type = std::allocator<util::kernel_element<value_type, key_type> > >
     class kernel
     {
     public:
-        typedef          value_t_                                       value_type;
-        typedef          key_t_                                         key_type;
-        typedef          allocator_t_                                   allocator_type;
         typedef          kernel<value_type, key_type, allocator_type>   kernel_type;
         typedef typename allocator_type::template rebind<value_type>    rebind_type;
         typedef typename rebind_type::other                             value_allocator;
@@ -85,7 +82,6 @@ namespace is_mesh
     private:
         typedef          kernel_element*                                element_pointer;
         typedef typename value_type::type_traits                        type_traits;
-        typedef typename kernel_element::state_type                     state_type;
         
         allocator_type        m_alloc;               //the allocator
         kernel_element*       m_mem;                 //the allocated memory
