@@ -1,7 +1,7 @@
 #pragma once
 
 #include <set>
-#include <is_mesh/is_mesh_key_type.h>
+#include <is_mesh/key.h>
 
 namespace is_mesh
 {

@@ -8,7 +8,7 @@
 #include <list>
 
 #include <is_mesh/kernel.h>
-#include <is_mesh/is_mesh_simplex.h>
+#include <is_mesh/simplex.h>
 #include <is_mesh/simplex_set.h>
 
 namespace is_mesh

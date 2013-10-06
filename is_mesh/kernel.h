@@ -20,10 +20,7 @@ namespace is_mesh
          * A struct to hold the actual data along with auxiliary informations, like
          * the state of af memory cell, and list pointers.
          */
-        template<
-        typename value_t_
-        , typename key_t_
-        >
+        template< typename value_t_ , typename key_t_>
         struct kernel_element
         {
             typedef value_t_            value_type;
@@ -62,25 +59,22 @@ namespace is_mesh
      * @param allocator_type This type must conform to the C++ standard allocator concept. The
      *        default argument is the default STL allocator.
      */
-    template<typename value_type, typename key_type, typename allocator_type = std::allocator<util::kernel_element<value_type, key_type> > >
+    template<typename value_type, typename key_type>
     class kernel
     {
     public:
-        typedef          kernel<value_type, key_type, allocator_type>   kernel_type;
+        typedef std::allocator<util::kernel_element<value_type, key_type>> allocator_type;
+        typedef          kernel<value_type, key_type>                   kernel_type;
         typedef typename allocator_type::template rebind<value_type>    rebind_type;
         typedef typename rebind_type::other                             value_allocator;
         typedef          util::kernel_element<value_type, key_type>     kernel_element;
         typedef          kernel_iterator<kernel_type>                   iterator;
         typedef          iterator const                                 const_iterator;
         typedef typename allocator_type::size_type                      size_type;
-        typedef typename allocator_type::reference                      reference;
-        typedef typename allocator_type::const_reference                const_reference;
-        typedef          value_type*                                    pointer;
         
         friend class kernel_iterator<kernel_type>;
         
     private:
-        typedef          kernel_element*                                element_pointer;
         typedef typename value_type::type_traits                        type_traits;
         
         allocator_type        m_alloc;               //the allocator
