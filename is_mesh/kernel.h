@@ -380,12 +380,11 @@ namespace is_mesh
          *
          * @return      An iterator pointing to the element.
          */
-        const_iterator create(key_type k, const type_traits& d)
-        //const_iterator create(key_type k, type_traits & d)
+        const_iterator create()
         {
-            //element_pointer cur = get_next_free_cell();
-            kernel_element& cur = lookup(k);
-            cur.key = k;
+            key_type key = get_next_free_cell();
+            kernel_element& cur = lookup(key);
+            cur.key = key;
             assert(cur.state != kernel_element::VALID || !"Cannot create new element, duplicate key.");
             assert(cur.state != kernel_element::MARKED || !"Attempted to overwrite a marked element.");
             /*  if (cur.state == kernel_element::MARKED)
@@ -394,7 +393,7 @@ namespace is_mesh
              } else */ {
                  //only setting value if mem was empty (or unused)
                  //we copy the memory instead of assinging, as assigning would create a temp object.
-                 value_allocator(m_alloc).construct( &cur.value , value_type(d) );
+                 value_allocator(m_alloc).construct( &cur.value , value_type(type_traits()) );
              }
             if (cur.state == kernel_element::EMPTY)
             {
@@ -405,51 +404,6 @@ namespace is_mesh
             ++m_shadow_size;
             link_at_end(cur, m_first, m_last);
             return iterator(this, cur.key);
-        }
-        
-        /**
-         * Creates (or inserts) a new element into the kernel. From this point forward the
-         * memory mangement of the element is controlled by the kernel and all access to the
-         * element should be through an iterator.
-         * Default type traits is assinged as value for the element.
-         *
-         * @param k     A key indicating the handle the new element should have. If the cell coresponding
-         *              to the cell is not available an assertion is thrown.
-         * @return      An iterator pointing to the element.
-         */
-        const_iterator create(key_type k)
-        {
-            return create(k, type_traits());
-        }
-        
-        /**
-         * Creates (or inserts) a new element into the kernel. From this point forward the
-         * memory mangement of the element is controlled by the kernel and all access to the
-         * element should be through an iterator.
-         * The next free cell is chosen for the element.
-         *
-         * @param d     The type traits of the element to be inserted.
-         *
-         * @return      An iterator pointing to the element.
-         */
-        const_iterator create(type_traits d)
-        {
-            key_type key = get_next_free_cell();
-            return create(key, d);
-        }
-        
-        /**
-         * Creates (or inserts) a new element into the kernel. From this point forward the
-         * memory mangement of the element is controlled by the kernel and all access to the
-         * element should be through an iterator.
-         * Default type traits is assinged as value for the element.
-         * The next free cell is chosen for the element.
-         *
-         * @return      An iterator pointing to the element.
-         */
-        const_iterator create()
-        {
-            return create(type_traits());
         }
         
         /**
