@@ -15,8 +15,8 @@ namespace is_mesh
     class Simplex
     {
     public:
-        typedef std::vector<boundary_key_type> boundary_type;
-        typedef          std::set<co_boundary_key_type>         set_type;
+        typedef         std::vector<boundary_key_type>          boundary_type;
+        typedef         std::set<co_boundary_key_type>          set_type;
         
         typedef          std::vector<boundary_key_type>*                             boundary_list;
         typedef          set_type*                              co_boundary_set;
@@ -109,25 +109,25 @@ namespace is_mesh
         {
             return m_boundary;
         }
-        void set_co_boundary_set(set_type* co_boundary)
-        {
-            m_co_boundary = co_boundary;
-        }
-        void set_boundary_list(boundary_list boundary)
-        {
-            m_boundary = boundary;
-        }
+        
         void add_co_face(co_boundary_key_type n)
         {
             m_co_boundary->insert(n);
         }
+        
         void add_face(boundary_key_type n)
         {
             m_boundary->push_back(n);
         }
+        
         void remove_co_face(co_boundary_key_type const & n)
         {
             m_co_boundary->erase(n);
+        }
+        
+        void remove_face(boundary_key_type const & n)
+        {
+            m_boundary->erase(n);
         }
         
         bool is_compact(){ return m_is_compact; }
@@ -141,15 +141,13 @@ namespace is_mesh
     class Node : public NodeTraits, public Simplex<Key, EdgeKey>
     {
     public:
-        typedef Simplex<Key, EdgeKey>         Simplex;
-        typedef          NodeTraits                                                         type_traits;
-        typedef typename Mesh::edge_type                                              co_boundary_type;
+        typedef NodeTraits  type_traits;
         
-        Node() : Simplex()
+        Node() : Simplex<Key, EdgeKey>()
         {
             
         }
-        Node(const type_traits & t) : type_traits(t), Simplex()
+        Node(const type_traits & t) : type_traits(t), Simplex<Key, EdgeKey>()
         {
             
         }
@@ -162,16 +160,13 @@ namespace is_mesh
     class Edge : public EdgeTraits, public Simplex<NodeKey, FaceKey>
     {
     public:
-        typedef Simplex<NodeKey, FaceKey> Simplex;
-        typedef          EdgeTraits                                                       type_traits;
-        typedef typename Mesh::node_type                                            boundary_type;
-        typedef typename Mesh::face_type                                            co_boundary_type;
+        typedef EdgeTraits type_traits;
         
-        Edge() : Simplex()
+        Edge() : Simplex<NodeKey, FaceKey>()
         {
             
         }
-        Edge(const type_traits & t) : type_traits(t), Simplex()
+        Edge(const type_traits & t) : type_traits(t), Simplex<NodeKey, FaceKey>()
         {
             
         }
@@ -184,16 +179,13 @@ namespace is_mesh
     class Face : public FaceTraits, public Simplex<EdgeKey, TetrahedronKey>
     {
     public:
-        typedef Simplex<EdgeKey, TetrahedronKey>   Simplex;
-        typedef          FaceTraits                                       type_traits;
-        typedef typename Mesh::edge_type                            boundary_type;
-        typedef typename Mesh::tetrahedron_type                     co_boundary_type;
+        typedef FaceTraits type_traits;
         
-        Face() : Simplex()
+        Face() : Simplex<EdgeKey, TetrahedronKey>()
         {
             Simplex::set_compact(true);
         }
-        Face(const type_traits & t) : type_traits(t), Simplex()
+        Face(const type_traits & t) : type_traits(t), Simplex<EdgeKey, TetrahedronKey>()
         {
             Simplex::set_compact(true);
         }
@@ -206,15 +198,13 @@ namespace is_mesh
     class Tetrahedron : public TetrahedronTraits, public Simplex<FaceKey, Key>
     {
     public:
-        typedef Simplex<FaceKey, Key>        Simplex;
-        typedef          TetrahedronTraits                                type_traits;
-        typedef typename Mesh::face_type                            boundary_type;
+        typedef TetrahedronTraits  type_traits;
         
-        Tetrahedron() : Simplex()
+        Tetrahedron() : Simplex<FaceKey, Key>()
         {
             Simplex::set_compact(true);
         }
-        Tetrahedron(const type_traits & t) : type_traits(t), Simplex()
+        Tetrahedron(const type_traits & t) : type_traits(t), Simplex<FaceKey, Key>()
         {
             Simplex::set_compact(true);
         }
