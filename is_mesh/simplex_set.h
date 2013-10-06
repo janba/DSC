@@ -26,8 +26,6 @@ namespace is_mesh
         
         typedef typename node_set::size_type                          size_type;
         
-        template<int d> struct iterator_type{};
-        
     private:
         node_set         m_nodes;
         edge_set         m_edges;
@@ -107,10 +105,10 @@ namespace is_mesh
             m_tetrahedra.insert(begin, end);
         }
         
-        node_set_iterator insert(node_key_type const & k) { return m_nodes.insert(k).first; }
-        edge_set_iterator insert(edge_key_type const & k) { return m_edges.insert(k).first; }
-        face_set_iterator insert(face_key_type const & k) { return m_faces.insert(k).first; }
-        tetrahedron_set_iterator insert(tetrahedron_key_type const & k) { return m_tetrahedra.insert(k).first; }
+        typename node_set::iterator insert(node_key_type const & k) { return m_nodes.insert(k).first; }
+        typename edge_set::iterator insert(edge_key_type const & k) { return m_edges.insert(k).first; }
+        typename face_set::iterator insert(face_key_type const & k) { return m_faces.insert(k).first; }
+        typename tetrahedron_set::iterator insert(tetrahedron_key_type const & k) { return m_tetrahedra.insert(k).first; }
         
         template<typename _first, typename _last>
         void insert(_first first, _last last)
@@ -211,6 +209,26 @@ namespace is_mesh
         size_type size_tetrahedra() const
         {
             return m_tetrahedra.size();
+        }
+        
+        node_set get_nodes()
+        {
+            return m_nodes;
+        }
+        
+        edge_set get_edges()
+        {
+            return m_edges;
+        }
+        
+        face_set get_faces()
+        {
+            return m_faces;
+        }
+        
+        tetrahedron_set get_tets()
+        {
+            return m_tetrahedra;
         }
         
         node_set_iterator nodes_begin() { return m_nodes.begin(); }

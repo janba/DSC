@@ -128,7 +128,7 @@ namespace is_mesh
     ///////////////////////////////////////////////////////////////////////////////
     ///  N O D E
     ///////////////////////////////////////////////////////////////////////////////
-    template<typename NodeTraits, typename Mesh>
+    template<typename NodeTraits>
     class Node : public NodeTraits, public Simplex<Key, EdgeKey>
     {
     public:
@@ -147,7 +147,7 @@ namespace is_mesh
     ///////////////////////////////////////////////////////////////////////////////
     ///  E D G E
     ///////////////////////////////////////////////////////////////////////////////
-    template<typename EdgeTraits, typename Mesh>
+    template<typename EdgeTraits>
     class Edge : public EdgeTraits, public Simplex<NodeKey, FaceKey>
     {
     public:
@@ -166,7 +166,7 @@ namespace is_mesh
     ///////////////////////////////////////////////////////////////////////////////
     //  F A C E
     ///////////////////////////////////////////////////////////////////////////////
-    template<typename FaceTraits, typename Mesh>
+    template<typename FaceTraits>
     class Face : public FaceTraits, public Simplex<EdgeKey, TetrahedronKey>
     {
     public:
@@ -185,7 +185,7 @@ namespace is_mesh
     ///////////////////////////////////////////////////////////////////////////////
     // T E T R A H E D R O N
     ///////////////////////////////////////////////////////////////////////////////
-    template<typename TetrahedronTraits, typename Mesh>
+    template<typename TetrahedronTraits>
     class Tetrahedron : public TetrahedronTraits, public Simplex<FaceKey, Key>
     {
     public:

@@ -25,12 +25,10 @@ namespace is_mesh
     class t4mesh
     {
     public:
-        typedef t4mesh<NodeTraits, TetrahedronTraits, EdgeTraits, FaceTraits>        mesh_type;
-        
-        typedef Node<NodeTraits, mesh_type>                                         node_type;
-        typedef Edge<EdgeTraits, mesh_type>                                         edge_type;
-        typedef Face<FaceTraits, mesh_type>                                         face_type;
-        typedef Tetrahedron<TetrahedronTraits, mesh_type>                           tetrahedron_type;
+        typedef Node<NodeTraits>                                         node_type;
+        typedef Edge<EdgeTraits>                                         edge_type;
+        typedef Face<FaceTraits>                                         face_type;
+        typedef Tetrahedron<TetrahedronTraits>                           tetrahedron_type;
         
         typedef          simplex_set<NodeKey, EdgeKey, FaceKey, TetrahedronKey>            simplex_set_type;
         
@@ -186,25 +184,20 @@ namespace is_mesh
         
         void closure_helper(simplex_set_type & input_set, simplex_set_type & set)
         {
-            typename simplex_set_type::tetrahedron_set_iterator tit = input_set.tetrahedra_begin();
-            
-            while (tit != input_set.tetrahedra_end())
+            for (auto &tid : input_set.get_tets())
             {
-                set.insert(*tit);
-                ++tit;
+                set.insert(tid);
             }
             
-            tit = set.tetrahedra_begin();
-            while (tit != set.tetrahedra_end())
+            for (auto tid : set.get_tets())
             {
-                auto t_boundary = lookup_simplex(*tit).get_boundary();
+                auto t_boundary = lookup_simplex(tid).get_boundary();
                 auto it = t_boundary->begin();
                 while (it != t_boundary->end())
                 {
                     set.insert(*it);
                     ++it;
                 }
-                ++tit;
             }
             
             typename simplex_set_type::face_set_iterator fit = input_set.faces_begin();
@@ -1484,12 +1477,12 @@ namespace is_mesh
         /**
          *
          */
-        typename node_kernel_type::iterator nodes_begin() { return m_node_kernel->begin(); }
+        node_iterator nodes_begin() { return m_node_kernel->begin(); }
         
         /**
          *
          */
-        typename node_kernel_type::iterator nodes_end() { return m_node_kernel->end(); }
+        node_iterator nodes_end() { return m_node_kernel->end(); }
         
         /**
          *
