@@ -862,6 +862,25 @@ namespace is_mesh {
         }
         
         template<typename key_type>
+        std::vector<key_type> uni(const std::vector<key_type>& keys1, const std::vector<key_type>& keys2)
+        {
+            std::vector<key_type> keys;
+            for (auto &k : keys1) {
+                if(std::find(keys.begin(), keys.end(), k) == keys.end())
+                {
+                    keys.push_back(k);
+                }
+            }
+            for (auto &k : keys2) {
+                if(std::find(keys.begin(), keys.end(), k) == keys.end())
+                {
+                    keys.push_back(k);
+                }
+            }
+            return keys;
+        }
+        
+        template<typename key_type>
         std::vector<key_type> intersection(const std::vector<key_type>& keys1, const std::vector<key_type>& keys2)
         {
             std::vector<key_type> keys;
