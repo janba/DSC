@@ -805,6 +805,38 @@ namespace is_mesh {
             return n3;
         }
         
+        template<typename key_type>
+        std::vector<key_type> difference(const std::vector<key_type>& keys1, const std::vector<key_type>& keys2)
+        {
+            std::vector<key_type> keys;
+            for (auto &k1 : keys1) {
+                if(std::find(keys2.begin(), keys2.end(), k1) == keys2.end())
+                {
+                    keys.push_back(k1);
+                }
+            }
+            
+            for (auto &k2 : keys2) {
+                if(std::find(keys1.begin(), keys1.end(), k2) == keys1.end())
+                {
+                    keys.push_back(k2);
+                }
+            }
+            return keys;
+        }
+        
+        template<typename key_type>
+        std::vector<key_type> uni(const std::vector<key_type>& keys1, const std::vector<key_type>& keys2)
+        {
+            std::vector<key_type> keys;
+            for (auto &k1 : keys1) {
+                if(std::find(keys2.begin(), keys2.end(), k1) != keys2.end())
+                {
+                    keys.push_back(k1);
+                }
+            }
+            return keys;
+        }
         node_key flip_23(const face_key& f)
         {
 #ifdef DEBUG
