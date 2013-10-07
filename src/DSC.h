@@ -792,30 +792,18 @@ namespace DSC {
             
             if(q_new > q_old)
             {
-                node_key n = Complex::flip_23(f);
-#ifdef DEBUG
-                assert(n.is_valid());
-#endif
+                Complex::flip_23(f);
                 for(auto &e : e01)
                 {
-                    n = Complex::flip_32(e);
-#ifdef DEBUG
-                    assert(n.is_valid());
-#endif
+                    Complex::flip_32(e);
                 }
                 for(auto &e : e12)
                 {
-                    n = Complex::flip_32(e);
-#ifdef DEBUG
-                    assert(n.is_valid());
-#endif
+                    Complex::flip_32(e);
                 }
                 for(auto &e : e20)
                 {
-                    n = Complex::flip_32(e);
-#ifdef DEBUG
-                    assert(n.is_valid());
-#endif
+                    Complex::flip_32(e);
                 }
                 return true;
             }

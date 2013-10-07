@@ -837,6 +837,68 @@ namespace is_mesh {
             }
             return keys;
         }
+        
+        void flip_23_new(const face_key& fid)
+        {
+            auto apices = get_apices(fid);
+            auto edges = get_edges(fid);
+            auto tets = get_tets(fid);
+            
+            // Create edge, remove face
+            edge_key new_edge = mesh.insert_edge(apices[0], apices[1]);
+            mesh.remove(fid);
+            
+            auto faces1 = get_faces(tets[0]);
+            auto faces2 = get_faces(tets[1]);
+            
+            // Create faces, remove tetrahedra
+            std::vector<face_key> new_faces;
+            for (auto e1 : difference(get_edges(tets[0]), edges))
+            {
+                auto nodes1 = get_nodes(e1);
+                for(auto e2: difference(get_edges(tets[1]), edges))
+                {
+                    auto nodes2 = get_nodes(e2);
+                    assert(uni(nodes1, nodes2).size() < 2);
+                    if(uni(nodes1, nodes2).size() == 1)
+                    {
+                        new_faces.push_back(mesh.insert_face(new_edge, e1, e2));
+                    }
+                }
+            }
+            assert(new_faces.size() == 3);
+            mesh.remove(tets[0]);
+            mesh.remove(tets[1]);
+            
+            // Create tetrahedra
+            for (int i = 0; i < new_faces.size(); i++) {
+                FaceKey fid1 = new_faces[i], fid2 = new_faces[(i+1)%new_faces.size()];
+                FaceKey fid3, fid4;
+                auto edges1 = get_edges(fid1);
+                auto edges2 = get_edges(fid2);
+                for (auto f : faces1)
+                {
+                    auto edges = get_edges(f);
+                    if(uni(edges, edges1).size() == 1 && uni(edges, edges2).size() == 1)
+                    {
+                        fid3 = f;
+                        break;
+                    }
+                }
+                for(auto f: faces2)
+                {
+                    auto edges = get_edges(f);
+                    if(uni(edges, edges1).size() == 1 && uni(edges, edges2).size() == 1)
+                    {
+                        fid4 = f;
+                        break;
+                    }
+                }
+                mesh.insert_tetrahedron(fid1, fid2, fid3, fid4);
+            }
+            
+        }
+        
         node_key flip_23(const face_key& f)
         {
 #ifdef DEBUG
