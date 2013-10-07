@@ -451,6 +451,16 @@ namespace is_mesh {
             return *(cl1.edges_begin());
         }
         
+        std::vector<face_key> get_faces(const tet_key& tid)
+        {
+            std::vector<face_key> faces;
+            for(auto fid : *mesh.lookup_simplex(tid).get_boundary())
+            {
+                faces.push_back(fid);
+            }
+            return faces;
+        }
+        
         face_key get_face(const node_key& n1, const node_key& n2, const node_key& n3)
         {
             simplex_set st1, st2, st3;
