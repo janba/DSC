@@ -101,24 +101,46 @@ namespace is_mesh
             return m_boundary;
         }
         
-        void add_co_face(co_boundary_key_type n)
+        void add_co_face(co_boundary_key_type key)
         {
-            m_co_boundary->insert(n);
+            m_co_boundary->insert(key);
         }
         
-        void add_face(boundary_key_type n)
+        void add_face(boundary_key_type key)
         {
-            m_boundary->push_back(n);
+            m_boundary->push_back(key);
         }
         
-        void remove_co_face(co_boundary_key_type const & n)
+        void remove_co_face(const co_boundary_key_type& key)
         {
-            m_co_boundary->erase(n);
+            auto iter = std::find(m_co_boundary->begin(), m_co_boundary->end(), key);
+            assert(iter != m_co_boundary->end());
+            m_co_boundary->erase(iter);
         }
         
-        void remove_face(boundary_key_type const & n)
+        void remove_face(const boundary_key_type& key)
         {
-            m_boundary->erase(n);
+            auto iter = std::find(m_boundary->begin(), m_boundary->end(), key);
+            assert(iter != m_boundary->end());
+            m_boundary->erase(iter);
+        }
+        
+        void merge(const Simplex& sim)
+        {
+            for (auto key : *sim.get_boundary())
+            {
+                if(std::find(m_boundary->begin(), m_boundary->end(), key) == m_boundary->end())
+                {
+                    add_face(key);
+                }
+            }
+            for (auto key : *sim.get_co_boundary())
+            {
+                if(std::find(m_co_boundary->begin(), m_co_boundary->end(), key) == m_co_boundary->end())
+                {
+                    add_co_face(key);
+                }
+            }
         }
         
         bool is_compact(){ return m_is_compact; }
