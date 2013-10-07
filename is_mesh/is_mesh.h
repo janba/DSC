@@ -459,7 +459,7 @@ namespace is_mesh
             simplex_set_type t_boundary;
             boundary(t, t_boundary);
             
-            unsafe_remove(t);
+            remove(t);
             
             NodeKey n = insert_node();
             lookup_simplex(n).set_compact(true);
@@ -552,7 +552,7 @@ namespace is_mesh
             tit = region.tetrahedra_begin();
             while (tit != region.tetrahedra_end())
             {
-                unsafe_remove(*tit);
+                remove(*tit);
                 ++tit;
             }
             unsafe_erase(f);
@@ -779,7 +779,7 @@ namespace is_mesh
             tit = st_e.tetrahedra_begin();
             while (tit != st_e.tetrahedra_end())
             {
-                unsafe_remove(*tit);
+                remove(*tit);
                 ++tit;
             }
             fit = st_e.faces_begin();
@@ -955,7 +955,7 @@ namespace is_mesh
                     ++tbit;
                 }
                 face_2_face_map[f2] = f1;
-                unsafe_remove(*tit);
+                remove(*tit);
                 ++tit;
             }
             
@@ -1406,97 +1406,6 @@ namespace is_mesh
         
     public:
         
-        void merge(const NodeKey& key1, const NodeKey& key2)
-        {
-            auto& simplex = lookup_simplex(key2);
-            for(auto cob : *simplex.get_co_boundary())
-            {
-                lookup_simplex(cob).add_face(key1);
-            }
-            
-            lookup_simplex(key1).merge(simplex);
-            unsafe_remove(key2);
-        }
-        
-        template<typename key_type>
-        void merge(const key_type& key1, const key_type& key2)
-        {
-            auto& simplex = lookup_simplex(key2);
-            for(auto cob : *simplex.get_co_boundary())
-            {
-                lookup_simplex(cob).add_face(key1);
-            }
-            for(auto bou : *simplex.get_boundary())
-            {
-                lookup_simplex(bou).add_co_face(key1);
-            }
-            
-            lookup_simplex(key1).merge(simplex);
-            unsafe_remove(key2);
-        }
-        
-        /**
-         *
-         */
-        void unsafe_remove(const NodeKey& nid)
-        {
-            auto& node = lookup_simplex(nid);
-            for(auto eid : *node.get_co_boundary())
-            {
-                lookup_simplex(eid).remove_face(nid);
-            }
-            m_node_kernel->erase(nid);
-        }
-        
-        /**
-         *
-         */
-        void unsafe_remove(const EdgeKey& eid)
-        {
-            auto& edge = lookup_simplex(eid);
-            for(auto fid : *edge.get_co_boundary())
-            {
-                lookup_simplex(fid).remove_face(eid);
-            }
-            for(auto nid : *edge.get_boundary())
-            {
-                lookup_simplex(nid).remove_co_face(eid);
-            }
-            m_edge_kernel->erase(eid);
-        }
-        
-        /**
-         *
-         */
-        void unsafe_remove(const FaceKey& fid)
-        {
-            auto& face = lookup_simplex(fid);
-            for(auto tid : *face.get_co_boundary())
-            {
-                lookup_simplex(tid).remove_face(fid);
-            }
-            for(auto eid : *face.get_boundary())
-            {
-                lookup_simplex(eid).remove_co_face(fid);
-            }
-            m_face_kernel->erase(fid);
-        }
-        
-        /**
-         *
-         */
-        void unsafe_remove(const TetrahedronKey& tid)
-        {
-            auto& tet = lookup_simplex(tid);
-            for(auto fid : *tet.get_boundary())
-            {
-                lookup_simplex(fid).remove_co_face(tid);
-            }
-            m_tetrahedron_kernel->erase(tid);
-        }
-        
-    public:
-        
         /**
          *
          */
@@ -1667,6 +1576,95 @@ namespace is_mesh
             tetrahedron->add_face(face3);
             tetrahedron->add_face(face4);
             return tetrahedron.key();
+        }
+        
+        /**
+         *
+         */
+        void remove(const NodeKey& nid)
+        {
+            auto& node = lookup_simplex(nid);
+            for(auto eid : *node.get_co_boundary())
+            {
+                lookup_simplex(eid).remove_face(nid);
+            }
+            m_node_kernel->erase(nid);
+        }
+        
+        /**
+         *
+         */
+        void remove(const EdgeKey& eid)
+        {
+            auto& edge = lookup_simplex(eid);
+            for(auto fid : *edge.get_co_boundary())
+            {
+                lookup_simplex(fid).remove_face(eid);
+            }
+            for(auto nid : *edge.get_boundary())
+            {
+                lookup_simplex(nid).remove_co_face(eid);
+            }
+            m_edge_kernel->erase(eid);
+        }
+        
+        /**
+         *
+         */
+        void remove(const FaceKey& fid)
+        {
+            auto& face = lookup_simplex(fid);
+            for(auto tid : *face.get_co_boundary())
+            {
+                lookup_simplex(tid).remove_face(fid);
+            }
+            for(auto eid : *face.get_boundary())
+            {
+                lookup_simplex(eid).remove_co_face(fid);
+            }
+            m_face_kernel->erase(fid);
+        }
+        
+        /**
+         *
+         */
+        void remove(const TetrahedronKey& tid)
+        {
+            auto& tet = lookup_simplex(tid);
+            for(auto fid : *tet.get_boundary())
+            {
+                lookup_simplex(fid).remove_co_face(tid);
+            }
+            m_tetrahedron_kernel->erase(tid);
+        }
+        
+        void merge(const NodeKey& key1, const NodeKey& key2)
+        {
+            auto& simplex = lookup_simplex(key2);
+            for(auto cob : *simplex.get_co_boundary())
+            {
+                lookup_simplex(cob).add_face(key1);
+            }
+            
+            lookup_simplex(key1).merge(simplex);
+            remove(key2);
+        }
+        
+        template<typename key_type>
+        void merge(const key_type& key1, const key_type& key2)
+        {
+            auto& simplex = lookup_simplex(key2);
+            for(auto cob : *simplex.get_co_boundary())
+            {
+                lookup_simplex(cob).add_face(key1);
+            }
+            for(auto bou : *simplex.get_boundary())
+            {
+                lookup_simplex(bou).add_co_face(key1);
+            }
+            
+            lookup_simplex(key1).merge(simplex);
+            unsafe_remove(key2);
         }
         
         size_type size_nodes() { return m_node_kernel->size(); }
