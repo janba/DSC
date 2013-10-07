@@ -492,6 +492,12 @@ namespace is_mesh {
             return *(cl1.faces_begin());
         }
         
+        std::vector<tet_key> get_tets(const face_key& fid)
+        {
+            auto coboundary = *mesh.lookup_simplex(fid).get_co_boundary();
+            return std::vector<tet_key>(coboundary.begin(), coboundary.end());
+        }
+        
         tet_key get_tet(const tet_key& t, const face_key& f)
         {
             simplex_set st_f;
