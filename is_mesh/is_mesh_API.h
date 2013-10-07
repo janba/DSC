@@ -846,7 +846,7 @@ namespace is_mesh {
         }
         
         template<typename key_type>
-        std::vector<key_type> uni(const std::vector<key_type>& keys1, const std::vector<key_type>& keys2)
+        std::vector<key_type> intersection(const std::vector<key_type>& keys1, const std::vector<key_type>& keys2)
         {
             std::vector<key_type> keys;
             for (auto &k1 : keys1) {
@@ -860,12 +860,12 @@ namespace is_mesh {
         
         void flip_23_new(const face_key& fid)
         {
-            auto apices = get_apices(fid);
+            auto nodes = get_apices(fid);
             auto edges = get_edges(fid);
             auto tets = get_tets(fid);
             
             // Create edge, remove face
-            edge_key new_edge = mesh.insert_edge(apices[0], apices[1]);
+            edge_key new_edge = mesh.insert_edge(nodes[0], nodes[1]);
             mesh.remove(fid);
             
             auto faces1 = get_faces(tets[0]);
@@ -879,8 +879,8 @@ namespace is_mesh {
                 for(auto e2: difference(get_edges(tets[1]), edges))
                 {
                     auto nodes2 = get_nodes(e2);
-                    assert(uni(nodes1, nodes2).size() < 2);
-                    if(uni(nodes1, nodes2).size() == 1)
+                    assert(intersection(nodes1, nodes2).size() < 2);
+                    if(intersection(nodes1, nodes2).size() == 1)
                     {
                         new_faces.push_back(mesh.insert_face(new_edge, e1, e2));
                     }
@@ -899,7 +899,7 @@ namespace is_mesh {
                 for (auto f : faces1)
                 {
                     auto edges = get_edges(f);
-                    if(uni(edges, edges1).size() == 1 && uni(edges, edges2).size() == 1)
+                    if(intersection(edges, edges1).size() == 1 && intersection(edges, edges2).size() == 1)
                     {
                         fid3 = f;
                         break;
@@ -908,7 +908,7 @@ namespace is_mesh {
                 for(auto f: faces2)
                 {
                     auto edges = get_edges(f);
-                    if(uni(edges, edges1).size() == 1 && uni(edges, edges2).size() == 1)
+                    if(intersection(edges, edges1).size() == 1 && intersection(edges, edges2).size() == 1)
                     {
                         fid4 = f;
                         break;
@@ -916,7 +916,6 @@ namespace is_mesh {
                 }
                 mesh.insert_tetrahedron(fid1, fid2, fid3, fid4);
             }
-            
         }
         
         node_key flip_23(const face_key& f)
