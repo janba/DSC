@@ -1405,18 +1405,94 @@ namespace is_mesh
         }
         
     public:
+        
+        void merge(const NodeKey& key1, const NodeKey& key2)
+        {
+            auto& simplex = lookup_simplex(key2);
+            for(auto cob : *simplex.get_co_boundary())
+            {
+                lookup_simplex(cob).add_face(key1);
+            }
+            
+            lookup_simplex(key1).merge(simplex);
+            unsafe_remove(key2);
+        }
+        
+        template<typename key_type>
+        void merge(const key_type& key1, const key_type& key2)
+        {
+            auto& simplex = lookup_simplex(key2);
+            for(auto cob : *simplex.get_co_boundary())
+            {
+                lookup_simplex(cob).add_face(key1);
+            }
+            for(auto bou : *simplex.get_boundary())
+            {
+                lookup_simplex(bou).add_co_face(key1);
+            }
+            
+            lookup_simplex(key1).merge(simplex);
+            unsafe_remove(key2);
+        }
+        
         /**
          *
          */
-        void unsafe_remove(TetrahedronKey const & key)
+        void unsafe_remove(const NodeKey& nid)
         {
-            tetrahedron_type& tet = lookup_simplex(key);
-            auto itr = tet.get_boundary()->begin();
-            for( ; itr != tet.get_boundary()->end(); ++itr)
+            auto& node = lookup_simplex(nid);
+            for(auto eid : *node.get_co_boundary())
             {
-                lookup_simplex(*itr).remove_co_face(key);
+                lookup_simplex(eid).remove_face(nid);
             }
-            m_tetrahedron_kernel->erase(key);
+            m_node_kernel->erase(nid);
+        }
+        
+        /**
+         *
+         */
+        void unsafe_remove(const EdgeKey& eid)
+        {
+            auto& edge = lookup_simplex(eid);
+            for(auto fid : *edge.get_co_boundary())
+            {
+                lookup_simplex(fid).remove_face(eid);
+            }
+            for(auto nid : *edge.get_boundary())
+            {
+                lookup_simplex(nid).remove_co_face(eid);
+            }
+            m_edge_kernel->erase(eid);
+        }
+        
+        /**
+         *
+         */
+        void unsafe_remove(const FaceKey& fid)
+        {
+            auto& face = lookup_simplex(fid);
+            for(auto tid : *face.get_co_boundary())
+            {
+                lookup_simplex(tid).remove_face(fid);
+            }
+            for(auto eid : *face.get_boundary())
+            {
+                lookup_simplex(eid).remove_co_face(fid);
+            }
+            m_face_kernel->erase(fid);
+        }
+        
+        /**
+         *
+         */
+        void unsafe_remove(const TetrahedronKey& tid)
+        {
+            auto& tet = lookup_simplex(tid);
+            for(auto fid : *tet.get_boundary())
+            {
+                lookup_simplex(fid).remove_co_face(tid);
+            }
+            m_tetrahedron_kernel->erase(tid);
         }
         
     public:
