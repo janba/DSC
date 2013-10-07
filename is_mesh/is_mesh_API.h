@@ -703,6 +703,60 @@ namespace is_mesh {
             return n;
         }
         
+        node_key collapse_new(edge_key& eid)
+        {
+            auto nids = get_nodes(eid);
+            NodeKey n = nids[1]; // The node to survive.
+#ifdef DEBUG
+            assert(nids[0].is_valid());
+            assert(nids[1].is_valid());
+#endif
+            simplex_set st_e;
+            star(eid, st_e);
+            
+            // Remove edge, merge nodes
+            mesh.merge(nids[1], nids[0]);
+            mesh.unsafe_remove(eid);
+            
+            // Remove faces, merge edges
+            for(auto fit = st_e.faces_begin(); fit != st_e.faces_end(); fit++)
+            {
+                auto edges = get_edges(*fit);
+                assert(edges.size() == 2);
+                auto nodes = get_nodes(edges[0]);
+                if(nodes[0] == n || nodes[1] == n)
+                {
+                    mesh.merge(edges[0], edges[1]);
+                }
+                else {
+                    mesh.merge(edges[1], edges[0]);
+                }
+                mesh.unsafe_remove(*fit);
+            }
+            
+            // Remove tetrahedra, merge faces
+            for(auto tit = st_e.tetrahedra_begin(); tit != st_e.tetrahedra_end(); tit++)
+            {
+                auto faces = get_faces(*tit);
+                assert(faces.size() == 2);
+                auto nodes = get_nodes(faces[0]);
+                if(nodes[0] == n || nodes[1] == n || nodes[2] == n)
+                {
+                    mesh.merge(faces[0], faces[1]);
+                }
+                else {
+                    mesh.merge(faces[1], faces[0]);
+                }
+                mesh.unsafe_remove(*tit);
+            }
+            
+            simplex_set st_n, cl_st_n;
+            star(n, st_n);
+            closure(st_n, cl_st_n);
+            update(cl_st_n);
+            return n;
+        }
+        
         node_key collapse(edge_key& e)
         {
             auto nodes = get_nodes(e);
