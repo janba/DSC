@@ -1062,6 +1062,172 @@ namespace is_mesh {
             return true;
         }
         
+        void flip_22_new(const face_key& fid1, const face_key& fid2)
+        {
+            edge_key eid = intersection(get_edges(fid1), get_edges(fid2)).front();
+            node_key nid1 = difference(get_nodes(eid), get_nodes(fid1));
+            node_key nid2 = difference(get_nodes(eid), get_nodes(fid2));
+            
+            auto faces = get_faces(eid);
+            auto tets = get_tets(eid);
+            
+            // Create edge
+            auto new_edge = mesh.insert_edge(nid1, nid2);
+            
+            // Remove edge
+            mesh.remove(eid);
+            
+            // Create faces
+            std::vector<node_key> nodes = {nid1, nid2};
+            std::vector<edge_key> boundary_edges = get_edges(tets);
+            assert(boundary_edges.size() == 8);
+            
+            std::vector<face_key> new_faces;
+            for (auto e1 = boundary_edges.begin(); e1 != boundary_edges.end(); e1++)
+            {
+                auto nodes1 = get_nodes(*e1);
+                for (auto e2 = e1+1; e2 != boundary_edges.end(); e2++)
+                {
+                    auto nodes2 = get_nodes(*e2);
+                    if(intersection(nodes1, nodes2).size() == 1 && intersection(nodes, nodes2).size() == 1 && intersection(nodes1, nodes).size() == 1)
+                    {
+                        new_faces.push_back(mesh.insert_face(new_edge, *e1, *e2));
+                    }
+                }
+            }
+            assert(new_faces.size() == 3);
+            
+            // Remove faces
+            for (auto f : faces)
+            {
+                mesh.remove(f);
+            }
+            
+            // Create tetrahedra
+            std::vector<face_key> boundary_faces = get_faces(tets);
+            assert(boundary_faces.size() == 4);
+            
+            for (int i = 0; i < 2; i++) {
+                std::vector<face_key> tet_faces = {new_faces[i]};
+                
+                for (auto f2 : boundary_faces)
+                {
+                    if(is_neighbour(f2, tet_faces))
+                    {
+                        tet_faces.push_back(f2);
+                        break;
+                    }
+                }
+                for (auto f2 : new_faces)
+                {
+                    if(is_neighbour(f2, tet_faces))
+                    {
+                        tet_faces.push_back(f2);
+                        break;
+                    }
+                }
+                for (auto f2 : boundary_faces)
+                {
+                    if(is_neighbour(f2, tet_faces))
+                    {
+                        tet_faces.push_back(f2);
+                        break;
+                    }
+                }
+                assert(tet_faces.size() == 4);
+                mesh.insert_tetrahedron(tet_faces[0], tet_faces[1], tet_faces[2], tet_faces[3]);
+            }
+            
+            // Remove tetrahedra
+            for(auto t : tets)
+            {
+                mesh.remove(t);
+            }
+        }
+        
+        void flip_44_new(const face_key& fid1, const face_key& fid2)
+        {
+            edge_key eid = intersection(get_edges(fid1), get_edges(fid2)).front();
+            node_key nid1 = difference(get_nodes(eid), get_nodes(fid1));
+            node_key nid2 = difference(get_nodes(eid), get_nodes(fid2));
+            
+            auto faces = get_faces(eid);
+            auto tets = get_tets(eid);
+            
+            // Create edge
+            auto new_edge = mesh.insert_edge(nid1, nid2);
+            
+            // Remove edge
+            mesh.remove(eid);
+            
+            // Create faces
+            std::vector<node_key> nodes = {nid1, nid2};
+            std::vector<edge_key> boundary_edges = get_edges(tets);
+            
+            std::vector<face_key> new_faces;
+            for (auto e1 = boundary_edges.begin(); e1 != boundary_edges.end(); e1++)
+            {
+                auto nodes1 = get_nodes(*e1);
+                for (auto e2 = e1+1; e2 != boundary_edges.end(); e2++)
+                {
+                    auto nodes2 = get_nodes(*e2);
+                    if(intersection(nodes1, nodes2).size() == 1 && intersection(nodes, nodes2).size() == 1 && intersection(nodes1, nodes).size() == 1)
+                    {
+                        new_faces.push_back(mesh.insert_face(new_edge, *e1, *e2));
+                    }
+                }
+            }
+            assert(new_faces.size() == 4);
+            
+            // Remove faces
+            for (auto f : faces)
+            {
+                mesh.remove(f);
+            }
+            
+            // Create tetrahedra
+            std::vector<face_key> boundary_faces = get_faces(tets);
+            assert(boundary_faces.size() == 8);
+            
+            for (auto f1 : new_faces) {
+                std::vector<face_key> tet_faces = {f1};
+                
+                for (auto f2 : boundary_faces)
+                {
+                    if(is_neighbour(f2, tet_faces))
+                    {
+                        tet_faces.push_back(f2);
+                        break;
+                    }
+                }
+                for (auto f2 : new_faces)
+                {
+                    if(is_neighbour(f2, tet_faces))
+                    {
+                        tet_faces.push_back(f2);
+                        break;
+                    }
+                }
+                for (auto f2 : boundary_faces)
+                {
+                    if(is_neighbour(f2, tet_faces))
+                    {
+                        tet_faces.push_back(f2);
+                        break;
+                    }
+                }
+                assert(tet_faces.size() == 4);
+                mesh.insert_tetrahedron(tet_faces[0], tet_faces[1], tet_faces[2], tet_faces[3]);
+            }
+            
+            // Remove tetrahedra
+            for(auto t : tets)
+            {
+                mesh.remove(t);
+            }
+            
+        }
+        
         node_key flip_22(const face_key& f1, const face_key& f2)
         {
             return flip_44(f1, f2);
