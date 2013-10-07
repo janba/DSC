@@ -451,6 +451,16 @@ namespace is_mesh {
             return *(cl1.edges_begin());
         }
         
+        std::vector<edge_key> get_edges(const std::vector<tet_key>& tets)
+        {
+            std::vector<edge_key> edges;
+            for (auto t : tets)
+            {
+                edges = uni(get_edges(t), edges);
+            }
+            return edges;
+        }
+        
         std::vector<face_key> get_faces(const edge_key& eid)
         {
             auto coboundary = *mesh.lookup_simplex(eid).get_co_boundary();
@@ -459,10 +469,16 @@ namespace is_mesh {
         
         std::vector<face_key> get_faces(const tet_key& tid)
         {
+            auto boundary = *mesh.lookup_simplex(tid).get_boundary();
+            return std::vector<face_key>(boundary.begin(), boundary.end());
+        }
+        
+        std::vector<face_key> get_faces(const std::vector<tet_key>& tids)
+        {
             std::vector<face_key> faces;
-            for(auto fid : *mesh.lookup_simplex(tid).get_boundary())
+            for (auto tid : tids)
             {
-                faces.push_back(fid);
+                faces = uni(get_faces(tid), faces);
             }
             return faces;
         }
