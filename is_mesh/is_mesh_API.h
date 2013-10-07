@@ -858,6 +858,64 @@ namespace is_mesh {
             return keys;
         }
         
+        void flip_32_new(const edge_key& eid)
+        {
+            auto tets = get_tets(eid);
+            
+            // Remove faces
+            for(auto f : get_faces(eid))
+            {
+                mesh.remove(f);
+            }
+            
+            // Remove edge
+            mesh.remove(eid);
+            
+            // Create faces
+            std::vector<edge_key> edges;
+            for (auto t : tets)
+            {
+                auto faces = get_faces(t);
+                assert(faces.size() == 2);
+                auto edge = intersection(get_edges(faces[0]), get_edges(faces[1]));
+                assert(edge.size() == 1);
+                edges.push_back(edge[0]);
+            }
+            assert(edges.size() == 3);
+            auto new_face = mesh.insert_face(edges[0], edges[1], edges[2]);
+            
+            // Create tets
+            for(int i = 0; i < 2; i++)
+            {
+                std::vector<face_key> faces = {new_face};
+                for(auto t : tets)
+                {
+                    auto faces = get_faces(t);
+                    if(faces.size() == 1)
+                    {
+                        faces.push_back(faces[i]);
+                    }
+                    else {
+                        for(auto f : faces)
+                        {
+                            if(intersection(get_edges(faces.back()), get_edges(f)).size() > 0)
+                            {
+                                faces.push_back(f);
+                            }
+                        }
+                    }
+                }
+                assert(faces.size() == 4);
+                mesh.insert_tetrahedron(faces[0], faces[1], faces[2], faces[3]);
+            }
+            
+            // Remove tets
+            for(auto t : tets)
+            {
+                mesh.remove(t);
+            }
+        }
+        
         void flip_23_new(const face_key& fid)
         {
             auto nodes = get_apices(fid);
