@@ -893,6 +893,20 @@ namespace is_mesh {
             return keys;
         }
         
+        template<typename key_type>
+        bool is_neighbour(const key_type& key1, const key_type& key2)
+        {
+            auto boundary = *mesh.lookup_simplex(key1).get_boundary();
+            for (auto key : *mesh.lookup_simplex(key2).get_boundary())
+            {
+                if(std::find(boundary.begin(), boundary.end(), key) != boundary.end())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
         void flip_32_new(const edge_key& eid)
         {
             auto tets = get_tets(eid);
@@ -1033,6 +1047,19 @@ namespace is_mesh {
             assert(n1 == n3);
 #endif
             return n3;
+        }
+        
+        template<typename key_type>
+        bool is_neighbour(const key_type& key, const std::vector<key_type>& keys)
+        {
+            for (auto k : keys)
+            {
+                if(!is_neighbour(k, keys))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
         
         node_key flip_22(const face_key& f1, const face_key& f2)
