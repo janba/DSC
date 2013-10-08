@@ -963,51 +963,43 @@ namespace is_mesh {
             return new_faces;
         }
         
+        tet_key create_tetrahedron(const std::vector<face_key>& interior_faces, std::vector<face_key>& exterior_faces)
+        {
+            std::vector<face_key> tet_faces {exterior_faces.back()};
+            exterior_faces.pop_back();
+            for (auto& f : interior_faces)
+            {
+                if(std::find(tet_faces.begin(), tet_faces.end(), f) == tet_faces.end() && is_neighbour(f, tet_faces))
+                {
+                    tet_faces.push_back(f);
+                }
+            }
+            
+            for (auto fit = exterior_faces.begin(); fit != exterior_faces.end(); fit++)
+            {
+                if(is_neighbour(*fit, tet_faces))
+                {
+                    tet_faces.push_back(*fit);
+                    fit--;
+                    exterior_faces.erase(fit+1);
+                }
+            }
+            assert(tet_faces.size() == 4);
+            return mesh.insert_tetrahedron(tet_faces[0], tet_faces[1], tet_faces[2], tet_faces[3]);
+        }
+        
         std::vector<tet_key> create_tetrahedra(const std::vector<face_key>& interior_faces, const std::vector<face_key>& exterior_faces)
         {
             int N_tets = (2*static_cast<int>(interior_faces.size()) + static_cast<int>(exterior_faces.size()))/4;
             assert((2*interior_faces.size()+exterior_faces.size())%4 == 0);
-            std::vector<std::vector<face_key>> tets_faces(N_tets);
-            for (auto& f : interior_faces)
-            {
-                for(auto& tet_faces : tets_faces)
-                {
-                    if(tet_faces.empty())
-                    {
-                        tet_faces.push_back(f);
-                        break;
-                    }
-                }
-            }
-            for (auto& f : exterior_faces)
-            {
-                for(auto& tet_faces : tets_faces)
-                {
-                    if(tet_faces.empty() || is_neighbour(f, tet_faces))
-                    {
-                        tet_faces.push_back(f);
-                        break;
-                    }
-                }
-            }
-            for (auto& f : interior_faces)
-            {
-                for(auto& tet_faces : tets_faces)
-                {
-                    if(std::find(tet_faces.begin(), tet_faces.end(), f) == tet_faces.end() && (tet_faces.empty() || is_neighbour(f, tet_faces)))
-                    {
-                        tet_faces.push_back(f);
-                        break;
-                    }
-                }
-            }
             
+            std::vector<face_key> exterior_faces_(exterior_faces.begin(), exterior_faces.end());
             std::vector<tet_key> new_tets;
-            for(auto& tet_faces : tets_faces)
+            for(int i = 0; i < N_tets; i++)
             {
-                assert(tet_faces.size() == 4);
-                new_tets.push_back(mesh.insert_tetrahedron(tet_faces[0], tet_faces[1], tet_faces[2], tet_faces[3]));
+                new_tets.push_back(create_tetrahedron(interior_faces, exterior_faces_));
             }
+            assert(exterior_faces_.size() == 0);
             assert(new_tets.size() == N_tets);
             return new_tets;
         }
