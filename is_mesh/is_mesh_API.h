@@ -933,7 +933,6 @@ namespace is_mesh {
             return i == keys.size();
         }
         
-        std::vector<tet_key> create_tetrahedra(const std::vector<face_key>& interior_faces, const std::vector<face_key>& boundary_faces)
         std::vector<face_key> create_faces(const edge_key& interior_edge, const std::vector<edge_key>& exterior_edges)
         {
             assert(exterior_edges.size()%3 == 0);
@@ -964,22 +963,23 @@ namespace is_mesh {
             return new_faces;
         }
         
+        std::vector<tet_key> create_tetrahedra(const std::vector<face_key>& interior_faces, const std::vector<face_key>& exterior_faces)
         {
-            int N_tets = (2*static_cast<int>(interior_faces.size()) + static_cast<int>(boundary_faces.size()))/4;
-            assert((2*interior_faces.size()+boundary_faces.size())%4 == 0);
+            int N_tets = (2*static_cast<int>(interior_faces.size()) + static_cast<int>(exterior_faces.size()))/4;
+            assert((2*interior_faces.size()+exterior_faces.size())%4 == 0);
             std::vector<std::vector<face_key>> tets_faces(N_tets);
             for (auto& f : interior_faces)
             {
                 for(auto& tet_faces : tets_faces)
                 {
-                    if(tet_faces.empty() || is_neighbour(f, tet_faces))
+                    if(tet_faces.empty())
                     {
                         tet_faces.push_back(f);
                         break;
                     }
                 }
             }
-            for (auto& f : boundary_faces)
+            for (auto& f : exterior_faces)
             {
                 for(auto& tet_faces : tets_faces)
                 {
@@ -992,15 +992,15 @@ namespace is_mesh {
             }
             for (auto& f : interior_faces)
             {
-                if(!is_boundary(f))
+                for(auto& tet_faces : tets_faces)
                 {
-                    for(auto& tet_faces : tets_faces)
+                    if(std::find(tet_faces.begin(), tet_faces.end(), f) == tet_faces.end() && (tet_faces.empty() || is_neighbour(f, tet_faces)))
                     {
-                        if(tet_faces.empty() || is_neighbour(f, tet_faces))
-                        {
-                            tet_faces.push_back(f);
-                            break;
-                        }
+                        tet_faces.push_back(f);
+                        break;
+                    }
+                }
+            }
                     }
                 }
             }
