@@ -384,6 +384,12 @@ namespace is_mesh {
             return nodes;
         }
         
+        std::vector<edge_key> get_edges(const node_key& nid)
+        {
+            auto coboundary = *mesh.lookup_simplex(nid).get_co_boundary();
+            return std::vector<edge_key>(coboundary.begin(), coboundary.end());
+        }
+        
         std::vector<edge_key> get_edges(const face_key& fid)
         {
             std::vector<edge_key> edges;
