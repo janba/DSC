@@ -1001,9 +1001,6 @@ namespace is_mesh {
                     }
                 }
             }
-                    }
-                }
-            }
             
             std::vector<tet_key> new_tets;
             for(auto& tet_faces : tets_faces)
@@ -1019,6 +1016,19 @@ namespace is_mesh {
             auto tets = get_tets(eid);
             assert(tets.size() == 3);
             
+            // Find edges for the new face
+            auto edges = get_edges(tets);
+            assert(edges.size() == 10);
+            std::vector<edge_key> face_edges;
+            for(auto& e : edges)
+            {
+                if(e != eid && !is_neighbour(e, eid))
+                {
+                    face_edges.push_back(e);
+                }
+            }
+            assert(face_edges.size() == 3);
+            
             // Remove edge
             mesh.remove(eid);
             
@@ -1029,22 +1039,12 @@ namespace is_mesh {
             }
             
             // Create face
-            std::vector<edge_key> face_edges;
-            for (auto t : tets)
-            {
-                auto faces = get_faces(t);
-                assert(faces.size() == 2);
-                auto edge = intersection(get_edges(faces[0]), get_edges(faces[1]));
-                assert(edge.size() == 1);
-                face_edges.push_back(edge[0]);
-            }
-            assert(face_edges.size() == 3);
             auto new_face = mesh.insert_face(face_edges[0], face_edges[1], face_edges[2]);
             
             // Create tets
-            auto boundary_faces = get_faces(tets);
-            assert(boundary_faces.size() == 6);
-            auto new_tets = create_tetrahedra({new_face}, boundary_faces);
+            auto exterior_faces = get_faces(tets);
+            assert(exterior_faces.size() == 6);
+            auto new_tets = create_tetrahedra({new_face}, exterior_faces);
             assert(new_tets.size() == 2);
             
             // Remove tets
@@ -1071,17 +1071,10 @@ namespace is_mesh {
             edge_key new_edge = mesh.insert_edge(nodes[0], nodes[1]);
             
             // Create faces
-            std::vector<face_key> new_faces;
-            for (auto e1 : difference(get_edges(tets[0]), edges))
-            {
-                for(auto e2 : difference(get_edges(tets[1]), edges))
-                {
-                    if(is_neighbour(e1, e2))
-                    {
-                        new_faces.push_back(mesh.insert_face(new_edge, e1, e2));
-                    }
-                }
-            }
+            std::vector<edge_key> exterior_edges = get_edges(tets);
+            assert(exterior_edges.size() == 9);
+            
+            std::vector<face_key> new_faces = create_faces(new_edge, exterior_edges);
             assert(new_faces.size() == 3);
             
             // Remove face
