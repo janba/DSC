@@ -1277,10 +1277,12 @@ namespace is_mesh {
             std::cout << "Validity check" << std::endl;
             for(auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
+                assert(exists(tit.key()));
                 // Check faces:
                 auto faces = get_faces(tit.key());
                 assert(faces.size() == 4);
                 for (auto f : faces) {
+                    assert(exists(f));
                     auto cotets = get_tets(f);
                     assert((is_boundary(f) && cotets.size() == 1) || (!is_boundary(f) && cotets.size() == 2));
                     assert(std::find(cotets.begin(), cotets.end(), tit.key()) != cotets.end());
@@ -1293,6 +1295,7 @@ namespace is_mesh {
                     assert(edges.size() == 3);
                     for (auto e : edges)
                     {
+                        assert(exists(e));
                         auto cofaces = get_faces(e);
                         assert(std::find(cofaces.begin(), cofaces.end(), f) != cofaces.end());
                         for (auto e2 : edges) {
@@ -1304,6 +1307,7 @@ namespace is_mesh {
                         assert(nodes.size() == 2);
                         for (auto n : nodes)
                         {
+                            assert(exists(n));
                             auto coedges = get_edges(n);
                             assert(std::find(coedges.begin(), coedges.end(), e) != coedges.end());
                         }
