@@ -932,6 +932,58 @@ namespace is_mesh {
             }
             return i == keys.size();
         }
+        
+        std::vector<tet_key> create_tetrahedra(const std::vector<face_key>& interior_faces, const std::vector<face_key>& boundary_faces)
+        {
+            int N_tets = (2*static_cast<int>(interior_faces.size()) + static_cast<int>(boundary_faces.size()))/4;
+            assert((2*interior_faces.size()+boundary_faces.size())%4 == 0);
+            std::vector<std::vector<face_key>> tets_faces(N_tets);
+            for (auto& f : interior_faces)
+            {
+                for(auto& tet_faces : tets_faces)
+                {
+                    if(tet_faces.empty() || is_neighbour(f, tet_faces))
+                    {
+                        tet_faces.push_back(f);
+                        break;
+                    }
+                }
+            }
+            for (auto& f : boundary_faces)
+            {
+                for(auto& tet_faces : tets_faces)
+                {
+                    if(tet_faces.empty() || is_neighbour(f, tet_faces))
+                    {
+                        tet_faces.push_back(f);
+                        break;
+                    }
+                }
+            }
+            for (auto& f : interior_faces)
+            {
+                if(!is_boundary(f))
+                {
+                    for(auto& tet_faces : tets_faces)
+                    {
+                        if(tet_faces.empty() || is_neighbour(f, tet_faces))
+                        {
+                            tet_faces.push_back(f);
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            std::vector<tet_key> new_tets;
+            for(auto& tet_faces : tets_faces)
+            {
+                assert(tet_faces.size() == 4);
+                new_tets.push_back(mesh.insert_tetrahedron(tet_faces[0], tet_faces[1], tet_faces[2], tet_faces[3]));
+            }
+            assert(new_tets.size() == N_tets);
+            return new_tets;
+        }
         {
             auto faces = get_faces(eid);
             auto tets = get_tets(eid);
@@ -962,23 +1014,8 @@ namespace is_mesh {
             // Create tets
             auto boundary_faces = get_faces(tets);
             assert(boundary_faces.size() == 6);
-            std::vector<face_key> tet_faces1 = {new_face};
-            std::vector<face_key> tet_faces2 = {new_face};
-            for (auto f : boundary_faces)
-            {
-                if(is_neighbour(f, tet_faces1))
-                {
-                    tet_faces1.push_back(f);
-                }
-                else
-                {
-                    tet_faces2.push_back(f);
-                }
-            }
-            assert(tet_faces1.size() == 4 && tet_faces2.size() == 4);
-            std::vector<tet_key> new_tets;
-            new_tets.push_back(mesh.insert_tetrahedron(tet_faces1[0], tet_faces1[1], tet_faces1[2], tet_faces1[3]));
-            new_tets.push_back(mesh.insert_tetrahedron(tet_faces2[0], tet_faces2[1], tet_faces2[2], tet_faces2[3]));
+            auto new_tets = create_tetrahedra({new_face}, boundary_faces);
+            assert(new_tets.size() == 2);
             
             // Remove tets
             for(auto t : tets)
@@ -1023,20 +1060,7 @@ namespace is_mesh {
             // Create tetrahedra
             std::vector<face_key> boundary_faces = get_faces(tets);
             assert(boundary_faces.size() == 6);
-            std::vector<tet_key> new_tets;
-            for (int i = 0; i < 3; i++)
-            {
-                std::vector<FaceKey> tet_faces = {new_faces[i], new_faces[(i+1)%new_faces.size()]};
-                for (auto f : boundary_faces)
-                {
-                    if(is_neighbour(f, tet_faces))
-                    {
-                        tet_faces.push_back(f);
-                    }
-                }
-                assert(tet_faces.size() == 4);
-                new_tets.push_back(mesh.insert_tetrahedron(tet_faces[0], tet_faces[1], tet_faces[2], tet_faces[3]));
-            }
+            auto new_tets = create_tetrahedra(new_faces, boundary_faces);
             assert(new_tets.size() == 3);
             
             // Remove tetrahedra
@@ -1121,37 +1145,8 @@ namespace is_mesh {
             // Create tetrahedra
             std::vector<face_key> boundary_faces = get_faces(tets);
             assert(boundary_faces.size() == 4);
-            std::vector<tet_key> new_tets;
-            for (int i = 0; i < 2; i++) {
-                std::vector<face_key> tet_faces = {new_faces[i]};
-                
-                for (auto f2 : boundary_faces)
-                {
-                    if(is_neighbour(f2, tet_faces))
-                    {
-                        tet_faces.push_back(f2);
-                        break;
-                    }
-                }
-                for (auto f2 : new_faces)
-                {
-                    if(is_neighbour(f2, tet_faces))
-                    {
-                        tet_faces.push_back(f2);
-                        break;
-                    }
-                }
-                for (auto f2 : boundary_faces)
-                {
-                    if(is_neighbour(f2, tet_faces))
-                    {
-                        tet_faces.push_back(f2);
-                        break;
-                    }
-                }
-                assert(tet_faces.size() == 4);
-                new_tets.push_back(mesh.insert_tetrahedron(tet_faces[0], tet_faces[1], tet_faces[2], tet_faces[3]));
-            }
+            auto new_tets = create_tetrahedra(new_faces, boundary_faces);
+            assert(new_tets.size() == 2);
             
             // Remove tetrahedra
             for(auto t : tets)
@@ -1216,37 +1211,7 @@ namespace is_mesh {
             // Create tetrahedra
             std::vector<face_key> boundary_faces = get_faces(tets);
             assert(boundary_faces.size() == 8);
-            std::vector<tet_key> new_tets;
-            for (auto f1 : new_faces) {
-                std::vector<face_key> tet_faces = {f1};
-                
-                for (auto f2 : boundary_faces)
-                {
-                    if(is_neighbour(f2, tet_faces))
-                    {
-                        tet_faces.push_back(f2);
-                        break;
-                    }
-                }
-                for (auto f2 : new_faces)
-                {
-                    if(is_neighbour(f2, tet_faces))
-                    {
-                        tet_faces.push_back(f2);
-                        break;
-                    }
-                }
-                for (auto f2 : boundary_faces)
-                {
-                    if(is_neighbour(f2, tet_faces))
-                    {
-                        tet_faces.push_back(f2);
-                        break;
-                    }
-                }
-                assert(tet_faces.size() == 4);
-                new_tets.push_back(mesh.insert_tetrahedron(tet_faces[0], tet_faces[1], tet_faces[2], tet_faces[3]));
-            }
+            auto new_tets = create_tetrahedra(new_faces, boundary_faces);
             assert(new_tets.size() == 4);
             
             // Remove tetrahedra
