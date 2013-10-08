@@ -914,6 +914,24 @@ namespace is_mesh {
         }
         
         void flip_32_new(const edge_key& eid)
+        template<typename key_type>
+        bool is_neighbour(const key_type& key, const std::vector<key_type>& keys)
+        {
+            int i = 0;
+            for (auto k1 : *mesh.lookup_simplex(key).get_boundary())
+            {
+                for (auto k2 : keys)
+                {
+                    auto boundary = *mesh.lookup_simplex(k2).get_boundary();
+                    if(std::find(boundary.begin(), boundary.end(), k1) != boundary.end())
+                    {
+                        i++;
+                        break;
+                    }
+                }
+            }
+            return i == keys.size();
+        }
         {
             auto tets = get_tets(eid);
             
