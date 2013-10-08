@@ -964,7 +964,6 @@ namespace is_mesh {
             {
                 face_edges.push_back(interior_edge);
             }
-            
             for (auto e : exterior_edges)
             {
                 for(auto& face_edges : faces_edges)
@@ -1096,9 +1095,9 @@ namespace is_mesh {
             mesh.remove(fid);
             
             // Create tetrahedra
-            std::vector<face_key> boundary_faces = get_faces(tets);
-            assert(boundary_faces.size() == 6);
-            auto new_tets = create_tetrahedra(new_faces, boundary_faces);
+            std::vector<face_key> exterior_faces = get_faces(tets);
+            assert(exterior_faces.size() == 6);
+            auto new_tets = create_tetrahedra(new_faces, exterior_faces);
             assert(new_tets.size() == 3);
             
             // Remove tetrahedra
@@ -1292,9 +1291,7 @@ namespace is_mesh {
         {
             mesh.garbage_collect();
         }
-        
-    private:
-        
+                
         void validity_check()
         {
             std::cout << "Validity check" << std::endl;
