@@ -934,6 +934,36 @@ namespace is_mesh {
         }
         
         std::vector<tet_key> create_tetrahedra(const std::vector<face_key>& interior_faces, const std::vector<face_key>& boundary_faces)
+        std::vector<face_key> create_faces(const edge_key& interior_edge, const std::vector<edge_key>& exterior_edges)
+        {
+            assert(exterior_edges.size()%3 == 0);
+            std::vector<std::vector<edge_key>> faces_edges(exterior_edges.size()/3);
+            for(auto& face_edges : faces_edges)
+            {
+                face_edges.push_back(interior_edge);
+            }
+            
+            for (auto e : exterior_edges)
+            {
+                for(auto& face_edges : faces_edges)
+                {
+                    if(is_neighbour(e, face_edges))
+                    {
+                        face_edges.push_back(e);
+                        break;
+                    }
+                }
+            }
+            
+            std::vector<face_key> new_faces;
+            for(auto& face_edges : faces_edges)
+            {
+                assert(face_edges.size() == 3);
+                new_faces.push_back(mesh.insert_face(face_edges[0], face_edges[1], face_edges[2]));
+            }
+            return new_faces;
+        }
+        
         {
             int N_tets = (2*static_cast<int>(interior_faces.size()) + static_cast<int>(boundary_faces.size()))/4;
             assert((2*interior_faces.size()+boundary_faces.size())%4 == 0);
