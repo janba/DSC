@@ -763,48 +763,62 @@ namespace is_mesh {
         node_key collapse_new(edge_key& eid)
         {
             auto nids = get_nodes(eid);
-            NodeKey n = nids[1]; // The node to survive.
-#ifdef DEBUG
-            assert(nids[0].is_valid());
-            assert(nids[1].is_valid());
-#endif
-            simplex_set st_e;
-            star(eid, st_e);
+            auto fids = get_faces(eid);
+            auto tids = get_tets(eid);
+            node_key n = nids[1];
             
-            // Remove edge, merge nodes
-            mesh.merge(nids[1], nids[0]);
+            // Remove edge
             mesh.remove(eid);
             
-            // Remove faces, merge edges
-            for(auto fit = st_e.faces_begin(); fit != st_e.faces_end(); fit++)
+            // Remove faces
+            std::vector<std::vector<edge_key>> merge_edges;
+            for(auto f : fids)
             {
-                auto edges = get_edges(*fit);
+                auto edges = get_edges(f);
                 assert(edges.size() == 2);
                 auto nodes = get_nodes(edges[0]);
-                if(nodes[0] == n || nodes[1] == n)
+                assert(nodes.size() == 2);
+                
+                if(nodes[0] != n && nodes[1] != n)
                 {
-                    mesh.merge(edges[0], edges[1]);
+                    assert(get_nodes(edges[1])[0] == n || get_nodes(edges[1])[1] == n);
+                    std::swap(edges[0], edges[1]);
                 }
-                else {
-                    mesh.merge(edges[1], edges[0]);
-                }
-                mesh.remove(*fit);
+                merge_edges.push_back(edges);
+                mesh.remove(f);
             }
             
-            // Remove tetrahedra, merge faces
-            for(auto tit = st_e.tetrahedra_begin(); tit != st_e.tetrahedra_end(); tit++)
+            // Remove tetrahedra
+            std::vector<std::vector<face_key>> merge_faces;
+            for(auto t : tids)
             {
-                auto faces = get_faces(*tit);
+                auto faces = get_faces(t);
                 assert(faces.size() == 2);
                 auto nodes = get_nodes(faces[0]);
-                if(nodes[0] == n || nodes[1] == n || nodes[2] == n)
+                assert(nodes.size() == 3);
+                
+                if(nodes[0] != n && nodes[1] != n && nodes[2] != n)
                 {
-                    mesh.merge(faces[0], faces[1]);
+                    assert(get_nodes(faces[1])[0] == n || get_nodes(faces[1])[1] == n || get_nodes(faces[1])[2] == n);
+                    std::swap(faces[0], faces[1]);
                 }
-                else {
-                    mesh.merge(faces[1], faces[0]);
-                }
-                mesh.remove(*tit);
+                merge_faces.push_back(faces);
+                mesh.remove(t);
+            }
+            
+            // Merge nodes
+            mesh.merge(n, nids[0]);
+            
+            for (auto &eids : merge_edges)
+            {
+                assert(get_nodes(eids[0])[0] == n || get_nodes(eids[0])[1] == n);
+                mesh.merge(eids[0], eids[1]);
+            }
+            
+            for (auto &fids : merge_faces)
+            {
+                assert(get_nodes(fids[0])[0] == n || get_nodes(fids[0])[1] == n || get_nodes(fids[0])[2] == n);
+                mesh.merge(fids[0], fids[1]);
             }
             
             simplex_set st_n, cl_st_n;
