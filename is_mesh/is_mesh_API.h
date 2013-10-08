@@ -520,6 +520,15 @@ namespace is_mesh {
             return *(cl1.faces_begin());
         }
         
+        std::vector<tet_key> get_tets(const node_key& nid)
+        {
+            std::vector<tet_key> tets;
+            for (auto eid : *mesh.lookup_simplex(nid).get_co_boundary()) {
+                tets = uni(tets, get_tets(eid));
+            }
+            return tets;
+        }
+        
         std::vector<tet_key> get_tets(const edge_key& eid)
         {
             std::vector<tet_key> tets;
