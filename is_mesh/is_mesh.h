@@ -48,7 +48,7 @@ namespace is_mesh
         //expose some types from the kernel
         typedef typename node_kernel_type::size_type                                 size_type;
         
-    private:
+    public:
         node_kernel_type*                  m_node_kernel;
         edge_kernel_type*                  m_edge_kernel;
         face_kernel_type*                  m_face_kernel;
@@ -275,48 +275,42 @@ namespace is_mesh
          * Helper function for orient_face[...] methods.
          * fk must be a face of sk, dim(sk) = dimension, dim(fk) = dimension-1.
          */
-        void orient_face_helper(const TetrahedronKey& sk, const FaceKey& fk, bool consistently)
+        void orient_face_helper(const TetrahedronKey& tid, const FaceKey& fid, bool consistently)
         {
-            auto simplex_boundary = lookup_simplex(sk).get_boundary();
-            auto face_boundary = lookup_simplex(fk).get_boundary();
-            
-            auto sb_it = simplex_boundary->begin();
-            auto fb_it = face_boundary->begin();
-            
+            auto face_boundary = lookup_simplex(fid).get_boundary();
             std::vector<EdgeKey> new_face_boundary(face_boundary->size());
             
             unsigned char f_index = 0, i = 0;
             
-            while (sb_it != simplex_boundary->end())
+            for (auto f : *lookup_simplex(tid).get_boundary())
             {
-                if (*sb_it == fk)
+                if (f == fid)
                 {
                     f_index = i+1;
                 }
                 else
                 {
-                    EdgeKey ek;
-                    bool res = get_intersection(fk, *sb_it, ek);
+                    EdgeKey eid;
+                    bool res = get_intersection(fid, f, eid);
                     assert(res || !"Two faces of the same simplex do not intersect?!");
-                    new_face_boundary[i] = ek;
-                    ++fb_it;
+                    new_face_boundary[i] = eid;
                     ++i;
                 }
-                ++sb_it;
             }
             
-            assert(f_index > 0 || !"fk is not a face of sk");
+            assert(f_index > 0 || !"fid is not a face of tid");
             
-            i = 0;
-            /**/
             face_boundary->clear();
-            for (; i < new_face_boundary.size(); ++i)
-                face_boundary->push_back(new_face_boundary[i]);
+            for (auto e : new_face_boundary)
+            {
+                face_boundary->push_back(e);
+            }
             
             f_index %= 2;
-            if ((f_index == 0 && consistently) ||
-                (f_index == 1 && !consistently))
-                invert_orientation(fk);
+            if ((f_index == 0 && consistently) || (f_index == 1 && !consistently))
+            {
+                invert_orientation(fid);
+            }
         }
         
         /**
@@ -1664,7 +1658,7 @@ namespace is_mesh
             }
             
             lookup_simplex(key1).merge(simplex);
-            unsafe_remove(key2);
+            remove(key2);
         }
         
         size_type size_nodes() { return m_node_kernel->size(); }
