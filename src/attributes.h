@@ -20,6 +20,9 @@ namespace DSC {
     
     class NodeAttributes
     {
+    public:
+        typedef vec3 vec3;
+    private:
         vec3 p;
         vec3 p_new;
         std::bitset<3> flags;

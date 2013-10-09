@@ -221,5 +221,11 @@ namespace is_mesh
         {
             Simplex::set_compact(true);
         }
+        
+        void invert_orientation()
+        {
+            assert(m_boundary->size() == 4);
+            std::swap((*m_boundary)[2], (*m_boundary)[3]);
+        }
     };
 }

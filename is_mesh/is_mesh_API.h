@@ -355,8 +355,10 @@ namespace is_mesh {
         
         std::vector<node_key> get_nodes(const face_key& fid)
         {
+            assert(exists(fid));
             std::vector<node_key> nodes;
             for (auto eid : *mesh.lookup_simplex(fid).get_boundary()) {
+                assert(exists(eid));
                 mesh.orient_face_helper(fid, eid, true);
                 nodes.push_back(get_nodes(eid)[0]);
             }
@@ -365,16 +367,18 @@ namespace is_mesh {
         
         std::vector<node_key> get_nodes(const tet_key& tid)
         {
+            assert(exists(tid));
             std::vector<node_key> nodes;
             auto bit = mesh.lookup_simplex(tid).get_boundary();
             face_key fid = *bit->begin();
+            assert(exists(fid));
             mesh.orient_face_helper(tid, fid, true);
             for (auto nid : get_nodes(fid)) {
                 nodes.push_back(nid);
             }
             
-            for (auto nid : get_nodes(*(bit->begin()+1))) {
-
+            for (auto nid : get_nodes(*(bit->begin()+1)))
+            {
                 if(std::find(nodes.begin(), nodes.end(), nid) == nodes.end())
                 {
                     nodes.push_back(nid);
@@ -985,6 +989,43 @@ namespace is_mesh {
             return new_faces;
         }
         
+        bool is_inverted(const tet_key& tid)
+        {
+            auto nodes = get_nodes(tid);
+            std::vector<typename node_traits::vec3> verts;
+            for(auto &n : nodes)
+            {
+                assert(exists(n));
+                verts.push_back(mesh.lookup_simplex(n).get_pos());
+            }
+            return dot(verts[0]-verts[3], cross(verts[1]-verts[3], verts[2]-verts[3])) < 0.;
+        }
+        
+        /**
+         * Inserts a tetrahedron into the mesh. Updates the co-boundary of the boundary edges with the newly created tetrahedron.
+         * Leaves the closure of the tetrahedron in an uncompressed state.
+         */
+        TetrahedronKey insert_tetrahedron(FaceKey face1, FaceKey face2, FaceKey face3, FaceKey face4)
+        {
+            auto tetrahedron = mesh.m_tetrahedron_kernel->create();
+            //update relations
+            mesh.m_face_kernel->find(face1).add_co_face(tetrahedron.key());
+            mesh.m_face_kernel->find(face2).add_co_face(tetrahedron.key());
+            mesh.m_face_kernel->find(face3).add_co_face(tetrahedron.key());
+            mesh.m_face_kernel->find(face4).add_co_face(tetrahedron.key());
+            tetrahedron->add_face(face1);
+            tetrahedron->add_face(face2);
+            tetrahedron->add_face(face3);
+            tetrahedron->add_face(face4);
+            
+            if(is_inverted(tetrahedron.key()))
+            {
+                tetrahedron->invert_orientation();
+            }
+            
+            return tetrahedron.key();
+        }
+        
         tet_key create_tetrahedron(const std::vector<face_key>& interior_faces, std::vector<face_key>& exterior_faces)
         {
             std::vector<face_key> tet_faces {exterior_faces.back()};
@@ -1007,7 +1048,7 @@ namespace is_mesh {
                 }
             }
             assert(tet_faces.size() == 4);
-            return mesh.insert_tetrahedron(tet_faces[0], tet_faces[1], tet_faces[2], tet_faces[3]);
+            return insert_tetrahedron(tet_faces[0], tet_faces[1], tet_faces[2], tet_faces[3]);
         }
         
         std::vector<tet_key> create_tetrahedra(const std::vector<face_key>& interior_faces, const std::vector<face_key>& exterior_faces)
@@ -1025,6 +1066,7 @@ namespace is_mesh {
             assert(new_tets.size() == N_tets);
             return new_tets;
         }
+        
         {
             auto faces = get_faces(eid);
             auto tets = get_tets(eid);
@@ -1140,6 +1182,7 @@ namespace is_mesh {
         
         void flip_22_new(const face_key& fid1, const face_key& fid2)
         {
+            assert(false || !"2-2 flip is not working yet");
             edge_key eid = intersection(get_edges(fid1), get_edges(fid2)).front();
             node_key nid1 = difference(get_nodes(eid), get_nodes(fid1)).front();
             node_key nid2 = difference(get_nodes(eid), get_nodes(fid2)).front();
