@@ -103,12 +103,18 @@ namespace is_mesh
         
         void add_co_face(co_boundary_key_type key)
         {
-            m_co_boundary->insert(key);
+            if(std::find(m_co_boundary->begin(), m_co_boundary->end(), key) == m_co_boundary->end())
+            {
+                m_co_boundary->insert(key);
+            }
         }
         
         void add_face(boundary_key_type key)
         {
-            m_boundary->push_back(key);
+            if(std::find(m_boundary->begin(), m_boundary->end(), key) == m_boundary->end())
+            {
+                m_boundary->push_back(key);
+            }
         }
         
         void remove_co_face(const co_boundary_key_type& key)
@@ -129,17 +135,11 @@ namespace is_mesh
         {
             for (auto key : *sim.get_boundary())
             {
-                if(std::find(m_boundary->begin(), m_boundary->end(), key) == m_boundary->end())
-                {
-                    add_face(key);
-                }
+                add_face(key);
             }
             for (auto key : *sim.get_co_boundary())
             {
-                if(std::find(m_co_boundary->begin(), m_co_boundary->end(), key) == m_co_boundary->end())
-                {
-                    add_co_face(key);
-                }
+                add_co_face(key);
             }
         }
         
