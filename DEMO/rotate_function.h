@@ -88,23 +88,40 @@ public:
                 edges.push_back(eit.key());
             }
         }
-                
+        
 //        for (auto e : edges) {
-//            dsc.split_edge(e);
+//            dsc.split(e);
 //        }
-//        
+//
+//        int i = 0;
 //        for (auto e : edges) {
 //            if(dsc.exists(e))
 //            {
-//                dsc.collapse(e);
-//                break;
+//                auto nid = dsc.collapse(e, false);
+//                std::cout << nid.is_valid() << std::endl;
 //            }
+//            i++;
 //        }
-        
+//        
+//        int i = 0;
 //        for (auto e : edges) {
-//            if(dsc.exists(e) && dsc.is_flippable(e))
+//            if(dsc.exists(e) && dsc.get_tets(e).size() == 4 && i < 5)
 //            {
-//                dsc.flip(e);
+//                auto fids = dsc.get_faces(e);
+//                std::vector<DSC::DeformableSimplicialComplex<>::face_key> temp;
+//                for(auto f : fids)
+//                {
+//                    if(dsc.is_interface(f))
+//                    {
+//                        temp.push_back(f);
+//                    }
+//                }
+//                if(temp.size() == 2)
+//                {
+//                    std::cout << "Flip" << std::endl;
+//                    dsc.flip_44(temp[0], temp[1]);
+//                    i++;
+//                }
 //            }
 //        }
 //        dsc.validity_check();
