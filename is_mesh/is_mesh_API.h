@@ -353,26 +353,32 @@ namespace is_mesh {
             return nodes;
         }
         
-        std::vector<node_key> get_nodes(const face_key& fid)
+        std::vector<node_key> get_nodes(const face_key& fid, bool sort = true)
         {
             assert(exists(fid));
             std::vector<node_key> nodes;
             for (auto eid : *mesh.lookup_simplex(fid).get_boundary()) {
                 assert(exists(eid));
-                mesh.orient_face_helper(fid, eid, true);
+                if(sort)
+                {
+                    mesh.orient_face_helper(fid, eid, true);
+                }
                 nodes.push_back(get_nodes(eid)[0]);
             }
             return nodes;
         }
         
-        std::vector<node_key> get_nodes(const tet_key& tid)
+        std::vector<node_key> get_nodes(const tet_key& tid, bool sort = true)
         {
             assert(exists(tid));
             std::vector<node_key> nodes;
             auto bit = mesh.lookup_simplex(tid).get_boundary();
             face_key fid = *bit->begin();
             assert(exists(fid));
-            mesh.orient_face_helper(tid, fid, true);
+            if(sort)
+            {
+                mesh.orient_face_helper(tid, fid, true);
+            }
             for (auto nid : get_nodes(fid)) {
                 nodes.push_back(nid);
             }
@@ -403,13 +409,16 @@ namespace is_mesh {
             return edges;
         }
         
-        std::vector<edge_key> get_edges(const tet_key& tid)
+        std::vector<edge_key> get_edges(const tet_key& tid, bool sort = true)
         {
             std::vector<edge_key> edges;
             int j = 0;
             for(auto fid : *mesh.lookup_simplex(tid).get_boundary())
             {
-                mesh.orient_face_helper(tid, fid, true);
+                if(sort)
+                {
+                    mesh.orient_face_helper(tid, fid, true);
+                }
                 auto f_edges = get_edges(fid);
                 if(edges.size() == 0)
                 {
