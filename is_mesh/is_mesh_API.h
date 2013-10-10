@@ -1079,6 +1079,9 @@ namespace is_mesh {
             auto faces = get_faces(eid);
             auto tets = get_tets(eid);
             assert(tets.size() == 3);
+            int label = get_label(tets[0]);
+            assert(label == get_label(tets[1]));
+            assert(label == get_label(tets[1]));
             
             // Find edges for the new face
             auto edges = get_edges(tets);
@@ -1119,9 +1122,7 @@ namespace is_mesh {
             
             // Update flags
             for (auto t : new_tets) {
-                simplex_set cl_t;
-                closure(t, cl_t);
-                update(cl_t);
+                set_label(t, label);
             }
         }
         
@@ -1130,6 +1131,9 @@ namespace is_mesh {
             auto nodes = get_apices(fid);
             auto edges = get_edges(fid);
             auto tets = get_tets(fid);
+            int label = get_label(tets[0]);
+            assert(label == get_label(tets[1]));
+            assert(label == get_label(tets[1]));
             
             // Create edge
             edge_key new_edge = mesh.insert_edge(nodes[0], nodes[1]);
@@ -1157,9 +1161,7 @@ namespace is_mesh {
             
             // Update flags
             for (auto t : new_tets) {
-                simplex_set cl_t;
-                closure(t, cl_t);
-                update(cl_t);
+                set_label(t, label);
             }
         }
         
@@ -1257,6 +1259,8 @@ namespace is_mesh {
             node_key nid2 = difference(get_nodes(eid), get_nodes(fid2)).front();
             auto faces = get_faces(eid);
             auto tets = get_tets(eid);
+            assert(tets.size() == 4);
+            std::vector<int> labels = {get_label(tets[3]), get_label(tets[2]), get_label(tets[1]), get_label(tets[0])};
             
             // Find the edges for creating the faces
             std::vector<edge_key> exterior_edges = get_edges(tets);
@@ -1301,10 +1305,9 @@ namespace is_mesh {
             }
             
             // Update flags
-            for (auto t : new_tets) {
-                simplex_set cl_t;
-                closure(t, cl_t);
-                update(cl_t);
+            for(int i = 0; i < 4; i++)
+            {
+                set_label(new_tets[i], labels[i]);
             }
         }
         
