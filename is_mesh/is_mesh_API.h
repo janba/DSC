@@ -773,7 +773,127 @@ namespace is_mesh {
             return n;
         }
         
-        node_key collapse_new(edge_key& eid)
+        node_key split_new(const edge_key& eid)
+        {
+            std::cout << "SPLIT" << std::endl;
+            auto nids = get_nodes(eid);
+            auto fids = get_faces(eid);
+            auto tids = get_tets(eid);
+            auto nid = nids[1];
+            
+            // Split edge
+            auto new_nid = mesh.insert_node();
+            mesh.lookup_simplex(new_nid).set_pos(0.5*(mesh.lookup_simplex(nids[0]).get_pos() + mesh.lookup_simplex(nids[1]).get_pos()));
+            
+            mesh.lookup_simplex(nid).remove_co_face(eid);
+            mesh.lookup_simplex(new_nid).add_co_face(eid);
+            auto& edge = mesh.lookup_simplex(eid);
+            edge.remove_face(nid);
+            edge.add_face(new_nid);
+            
+            auto new_eid = mesh.insert_edge(new_nid, nids[1]);
+            
+            // Update faces, create faces
+            std::vector<edge_key> new_f_eids;
+            std::vector<face_key> new_fids;
+            for (auto f : fids)
+            {
+                auto eids = get_edges(f);
+                assert(eids.size() == 3);
+                auto temp = uni(uni(get_nodes(eids[0]), get_nodes(eids[1])), get_nodes(eids[2]));
+                assert(temp.size() == 4);
+                auto e_nids = difference(temp, nids);
+                assert(e_nids.size() == 2);
+                new_f_eids.push_back(mesh.insert_edge(e_nids[0], e_nids[1]));
+                
+                EdgeKey f_eid;
+                assert(get_edges(f).size() == 3);
+                for (auto e : get_edges(f)) {
+                    if(get_nodes(e)[0] == nid || get_nodes(e)[1] == nid)
+                    {
+                        f_eid = e;
+                        break;
+                    }
+                }
+                
+                mesh.lookup_simplex(f_eid).remove_co_face(f);
+                mesh.lookup_simplex(new_f_eids.back()).add_co_face(f);
+                auto& face = mesh.lookup_simplex(f);
+                face.remove_face(f_eid);
+                face.add_face(new_f_eids.back());
+                new_fids.push_back(mesh.insert_face(f_eid, new_f_eids.back(), new_eid));
+            }
+            
+            // Update tetrahedra, create tetrahedra
+            std::vector<tet_key> new_tids;
+            for (auto t : tids)
+            {
+                std::vector<edge_key> t_eids;
+                assert(get_faces(t).size() == 4);
+                for (auto f : get_faces(t))
+                {
+                    t_eids = uni(t_eids, get_edges(f));
+                }
+                
+                assert(t_eids.size() == 8);
+                auto f_eids = intersection(t_eids, new_f_eids);
+                assert(f_eids.size() == 2);
+                for(auto e : t_eids)
+                {
+                    if(is_neighbour(e, f_eids))
+                    {
+                        f_eids = uni(f_eids, {e});
+                    }
+                }
+                assert(f_eids.size() == 3);
+                auto new_t_fid = mesh.insert_face(f_eids[0], f_eids[1], f_eids[2]);
+                
+                FaceKey t_fid;
+                for (auto f : get_faces(t)) {
+                    if(get_nodes(f)[0] == nid || get_nodes(f)[1] == nid || get_nodes(f)[2] == nid)
+                    {
+                        t_fid = f;
+                        break;
+                    }
+                }
+                assert(t_fid.is_valid());
+                mesh.lookup_simplex(t_fid).remove_co_face(t);
+                mesh.lookup_simplex(new_t_fid).add_co_face(t);
+                auto& tet = mesh.lookup_simplex(t);
+                tet.remove_face(t_fid);
+                tet.add_face(new_t_fid);
+                
+                std::vector<face_key> t_fids = {new_t_fid, t_fid};
+                for (auto f : new_fids)
+                {
+                    if(is_neighbour(f, t_fids))
+                    {
+                        t_fids.push_back(f);
+                    }
+                }
+                assert(t_fids.size() == 4);
+                new_tids.push_back(mesh.insert_tetrahedron(t_fids[0], t_fids[1], t_fids[2], t_fids[3]));
+            }
+            
+            // Update flags
+            for (int i = 0; i < tids.size(); i++)
+            {
+                set_label(new_tids[i], get_label(tids[i]));
+            }
+            
+            for(auto t : uni(new_tids, tids))
+            {
+                if(is_inverted(t))
+                {
+                    mesh.lookup_simplex(t).invert_orientation();
+                }
+            }
+            
+            return new_nid;
+        }
+        
+        
+        node_key collapse_new(const edge_key& eid)
         {
             auto nids = get_nodes(eid);
             auto fids = get_faces(eid);
