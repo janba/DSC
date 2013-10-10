@@ -206,6 +206,9 @@ void UI::keyboard(unsigned char key, int x, int y) {
         case '4':
             expand_armadillo();
             break;
+        case '5':
+            rotate_blob();
+            break;
         case ' ':
             if(!CONTINUOUS)
             {
@@ -228,6 +231,7 @@ void UI::keyboard(unsigned char key, int x, int y) {
             {
                 std::cout << "TEST" << std::endl;
                 vel_fun->test(*dsc);
+                painter->update(*dsc);
             }
             break;
         case '\t':
@@ -352,6 +356,24 @@ void UI::rotate_cube()
     
     double size = 35.;
     ObjectGenerator::create_cube(*dsc, vec3(-size/2.), vec3(size), 1);
+    
+    start();
+}
+
+void UI::rotate_blob()
+{
+    stop();
+    // Build the Simplicial Complex
+    std::vector<real> points;
+    std::vector<int>  tets;
+    std::vector<int>  tet_labels;
+    import_tet_mesh(get_data_file_path("blob.dsc").data(), points, tets, tet_labels);
+    
+    DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(60.));
+    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain));
+    vel_fun = std::unique_ptr<VelocityFunc<>>(new RotateFunc(VELOCITY, ACCURACY));
+    
+    ObjectGenerator::create(*dsc, tet_labels);
     
     start();
 }

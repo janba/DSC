@@ -128,6 +128,8 @@ public:
 private:
     void rotate_cube();
     
+    void rotate_blob();
+    
     void smooth_armadillo();
     
     void expand_sphere();
