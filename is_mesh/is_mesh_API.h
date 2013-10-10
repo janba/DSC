@@ -1077,7 +1077,6 @@ namespace is_mesh {
             return false;
         }
         
-        void flip_32_new(const edge_key& eid)
         template<typename key_type>
         bool is_neighbour(const key_type& key, const std::vector<key_type>& keys)
         {
@@ -1204,6 +1203,7 @@ namespace is_mesh {
             return new_tets;
         }
         
+        void flip_32_new(const edge_key& eid)
         {
             auto faces = get_faces(eid);
             auto tets = get_tets(eid);
