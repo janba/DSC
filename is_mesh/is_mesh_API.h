@@ -778,17 +778,17 @@ namespace is_mesh {
             std::vector<std::vector<edge_key>> merge_edges;
             for(auto f : fids)
             {
-                auto edges = get_edges(f);
-                assert(edges.size() == 2);
-                auto nodes = get_nodes(edges[0]);
+                auto eids = get_edges(f);
+                assert(eids.size() == 2);
+                auto nodes = get_nodes(eids[0]);
                 assert(nodes.size() == 2);
                 
                 if(nodes[0] != n && nodes[1] != n)
                 {
-                    assert(get_nodes(edges[1])[0] == n || get_nodes(edges[1])[1] == n);
-                    std::swap(edges[0], edges[1]);
+                    assert(get_nodes(eids[1])[0] == n || get_nodes(eids[1])[1] == n);
+                    std::swap(eids[0], eids[1]);
                 }
-                merge_edges.push_back(edges);
+                merge_edges.push_back(eids);
                 mesh.remove(f);
             }
             
@@ -796,17 +796,17 @@ namespace is_mesh {
             std::vector<std::vector<face_key>> merge_faces;
             for(auto t : tids)
             {
-                auto faces = get_faces(t);
-                assert(faces.size() == 2);
-                auto nodes = get_nodes(faces[0]);
+                auto fids = get_faces(t);
+                assert(fids.size() == 2);
+                auto nodes = get_nodes(fids[0]);
                 assert(nodes.size() == 3);
                 
                 if(nodes[0] != n && nodes[1] != n && nodes[2] != n)
                 {
-                    assert(get_nodes(faces[1])[0] == n || get_nodes(faces[1])[1] == n || get_nodes(faces[1])[2] == n);
-                    std::swap(faces[0], faces[1]);
+                    assert(get_nodes(fids[1])[0] == n || get_nodes(fids[1])[1] == n || get_nodes(fids[1])[2] == n);
+                    std::swap(fids[0], fids[1]);
                 }
-                merge_faces.push_back(faces);
+                merge_faces.push_back(fids);
                 mesh.remove(t);
             }
             
@@ -815,20 +815,28 @@ namespace is_mesh {
             
             for (auto &eids : merge_edges)
             {
-                assert(get_nodes(eids[0])[0] == n || get_nodes(eids[0])[1] == n);
                 mesh.merge(eids[0], eids[1]);
             }
             
             for (auto &fids : merge_faces)
             {
-                assert(get_nodes(fids[0])[0] == n || get_nodes(fids[0])[1] == n || get_nodes(fids[0])[2] == n);
                 mesh.merge(fids[0], fids[1]);
             }
             
+            // Update flags
             simplex_set st_n, cl_st_n;
             star(n, st_n);
             closure(st_n, cl_st_n);
             update(cl_st_n);
+            
+            for(auto tit = st_n.tetrahedra_begin(); tit != st_n.tetrahedra_end(); tit++)
+            {
+                if(is_inverted(*tit))
+                {
+                    mesh.lookup_simplex(*tit).invert_orientation();
+                }
+            }
+            validity_check();
             return n;
         }
         
