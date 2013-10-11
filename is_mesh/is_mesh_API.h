@@ -1499,69 +1499,54 @@ namespace is_mesh {
         
         void flip_22_new(const face_key& fid1, const face_key& fid2)
         {
-            assert(false || !"2-2 flip is not working yet");
-            edge_key eid = intersection(get_edges(fid1), get_edges(fid2)).front();
-            node_key nid1 = difference(get_nodes(eid), get_nodes(fid1)).front();
-            node_key nid2 = difference(get_nodes(eid), get_nodes(fid2)).front();
+            std::cout << "FLIP 2-2" << std::endl;
+            SimplexSet<face_key> fids = {fid1, fid2};
+            SimplexSet<edge_key> eid = get_boundary(fids[0]) & get_boundary(fids[1]);
+            assert(eid.size() == 1);
             
-            auto nids = get_nodes(eid);
-            auto fids = get_faces(eid);
-            auto tids = get_tets(eid);
-            
-            // Find apices
-            
-            std::vector<node_key> apices;
-            for(auto f : difference(fids, {fid1, fid2}))
-            {
-                apices = uni(difference( get_nodes(f), nids), apices);
-            }
-            assert(apices.size() == 2);
+            auto e_nids = get_boundary(eid);
+            auto e_fids = get_co_boundary(eid);
+            auto e_tids = get_co_boundary(e_fids);
             
             // Reconnect edge
-            disconnect(nids[0], eid);
-            disconnect(nids[1], eid);
-            connect(nid1, eid);
-            connect(nid2, eid);
+            auto new_e_nids = get_boundary(get_boundary(fids)) - e_nids;
+            assert(new_e_nids.size() == 2);
+            
+            disconnect(e_nids[0], eid[0]);
+            disconnect(e_nids[1], eid[0]);
+            connect(new_e_nids[0], eid[0]);
+            connect(new_e_nids[1], eid[0]);
             
             // Reconnect faces
-            edge_key eid1 = intersection(get_edges(nids[0]), get_edges(nid1)).front();
-            edge_key eid2 = intersection(get_edges(nids[1]), get_edges(nid2)).front();
-            swap(eid1, fid1, eid2, fid2);
+            auto swap_eids = (get_co_boundary(e_nids[0]) & get_co_boundary(new_e_nids[0])) + (get_co_boundary(e_nids[1]) & get_co_boundary(new_e_nids[1]));
+            assert(swap_eids.size() == 2);
+            swap(swap_eids[0], fids[0], swap_eids[1], fids[1]);
             
-            for(auto f : difference(fids, {fid1, fid2}))
+            assert((e_fids - fids).size() <= 2);
+            for(auto f : (e_fids - fids))
             {
-                auto rm_eids = difference(get_edges(f), {eid});
+                auto rm_eids = get_boundary(f) - eid;
                 assert(rm_eids.size() == 2);
-                auto f_tids = get_tets(f);
-                assert(f_tids.size() == 2);
-                auto t_eids = uni(get_edges(f_tids[0], false), get_edges(f_tids[1], false));
-                assert(t_eids.size() == 9);
-                
-                auto temp = uni(uni(get_edges(f), get_edges(fid1)), get_edges(fid2));
-                assert(temp.size() == 7);
-                
-                auto add_eids = difference(t_eids, temp);
+                auto apex = get_boundary(get_boundary(f)) - (new_e_nids + e_nids);
+                assert(apex.size() == 1);
+                auto add_eids = get_co_boundary(apex) & get_co_boundary(new_e_nids);
                 assert(add_eids.size() == 2);
+                
                 disconnect(rm_eids[0], f);
                 disconnect(rm_eids[1], f);
                 connect(add_eids[0], f);
                 connect(add_eids[1], f);
+                
+                // Reconnect tetrahedra
+                auto tids = get_co_boundary(f);
+                assert(tids.size() == 2);
+                auto swap_fids = (get_boundary(tids) - e_fids) & get_co_boundary(swap_eids);
+                assert(swap_eids.size() == 2);
+                swap(swap_fids[0], tids[0], swap_fids[1], tids[1]);
             }
-            
-            // Reconnect tetrahedra
-            for (auto n : apices) {
-                auto fid1 = intersection(intersection(get_faces(n), get_faces(nids[0])), get_faces(nid1));
-                auto fid2 = intersection(intersection(get_faces(n), get_faces(nids[1])), get_faces(nid2));
-                assert(fid1.size() == 1);
-                assert(fid2.size() == 1);
-                auto tids_n = intersection(tids, get_tets(n));
-                assert(tids_n.size() == 2);
-                swap(fid1[0], tids_n[0], fid2[0], tids_n[1]);
-            }
-            validity_check();
             
             // Ensure correct orientation
-            for(auto t : tids)
+            for(auto t : e_tids)
             {
                 if(is_inverted(t))
                 {
@@ -1570,7 +1555,7 @@ namespace is_mesh {
             }
             
             // Update flags
-            for (auto t : tids) {
+            for (auto t : e_tids) {
                 simplex_set cl_t;
                 closure(t, cl_t);
                 update(cl_t);
