@@ -379,17 +379,35 @@ namespace is_mesh {
         
         SimplexSet<EdgeKey> get_co_boundary(const NodeKey& nid)
         {
-            return *mesh.lookup_simplex(nid).get_co_boundary();
+            auto temp = *mesh.lookup_simplex(nid).get_co_boundary();
+            SimplexSet<EdgeKey> res;
+            for(auto k : temp)
+            {
+                res.push_back(k);
+            }
+            return res;
         }
         
         SimplexSet<FaceKey> get_co_boundary(const EdgeKey& eid)
         {
-            return *mesh.lookup_simplex(eid).get_co_boundary();
+            auto temp = *mesh.lookup_simplex(eid).get_co_boundary();
+            SimplexSet<FaceKey> res;
+            for(auto k : temp)
+            {
+                res.push_back(k);
+            }
+            return res;
         }
         
         SimplexSet<TetrahedronKey> get_co_boundary(const FaceKey& fid)
         {
-            return *mesh.lookup_simplex(fid).get_co_boundary();
+            auto temp = *mesh.lookup_simplex(fid).get_co_boundary();
+            SimplexSet<TetrahedronKey> res;
+            for(auto k : temp)
+            {
+                res.push_back(k);
+            }
+            return res;
         }
         
         SimplexSet<NodeKey> get_boundary(const SimplexSet<EdgeKey>& set)
