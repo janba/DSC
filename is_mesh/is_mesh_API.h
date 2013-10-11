@@ -343,6 +343,39 @@ namespace is_mesh {
             return mesh.find_tetrahedron(k);
         }
         
+        template<typename boundary_type, typename key_type>
+        SimplexSet<boundary_type> get_boundary(const key_type& key)
+        {
+            return *mesh.lookup_simplex(key).get_boundary();
+        }
+        
+        template<typename boundary_type, typename key_type>
+        SimplexSet<boundary_type> get_boundary(const SimplexSet<key_type>& set)
+        {
+            SimplexSet<boundary_type> res;
+            for (auto &k : set)
+            {
+                res += get_boundary<boundary_type>(k);
+            }
+            return res;
+        }
+        
+        template<typename coboundary_type, typename key_type>
+        SimplexSet<coboundary_type> get_co_boundary(const key_type& key)
+        {
+            return *mesh.lookup_simplex(key).get_co_boundary();
+        }
+        
+        template<typename coboundary_type, typename key_type>
+        SimplexSet<coboundary_type> get_co_boundary(const SimplexSet<key_type>& set)
+        {
+            SimplexSet<coboundary_type> res;
+            for (auto &k : set)
+            {
+                res += get_co_boundary<coboundary_type>(k);
+            }
+            return res;
+        }
         
         std::vector<node_key> get_nodes(const edge_key& eid)
         {
