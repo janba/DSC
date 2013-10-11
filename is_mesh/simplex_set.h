@@ -81,6 +81,16 @@ namespace is_mesh
     }
     
     /**
+     *  Returns set without the element key.
+     */
+    template<typename key_type>
+    SimplexSet<key_type> operator-(const SimplexSet<key_type>& set, const key_type& key)
+    {
+        SimplexSet<key_type> set2 = {key};
+        return set - set2;
+    }
+    
+    /**
      *  Returns the intersection of the two sets.
      */
     template<typename key_type>
@@ -100,6 +110,7 @@ namespace is_mesh
     
     inline void simplex_set_test()
     {
+        std::cout << "Simplex set test" << std::endl;
         SimplexSet<int> A = {1,3,9,4};
         SimplexSet<int> B = {1,7,5,3,10};
         
