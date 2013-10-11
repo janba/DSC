@@ -1167,13 +1167,26 @@ namespace is_mesh {
             return keys;
         }
         
+        bool is_neighbour(const NodeKey& nid1, const NodeKey& nid2)
+        {
+            auto coboundary = get_co_boundary(nid1);
+            for (auto n : get_co_boundary(nid2))
+            {
+                if(coboundary.contains(n))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
         template<typename key_type>
         bool is_neighbour(const key_type& key1, const key_type& key2)
         {
-            auto boundary = *mesh.lookup_simplex(key1).get_boundary();
-            for (auto key : *mesh.lookup_simplex(key2).get_boundary())
+            auto boundary = get_boundary(key1);
+            for (auto k : get_boundary(key2))
             {
-                if(std::find(boundary.begin(), boundary.end(), key) != boundary.end())
+                if(boundary.contains(k))
                 {
                     return true;
                 }
