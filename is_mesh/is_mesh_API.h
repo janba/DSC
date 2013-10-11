@@ -800,23 +800,6 @@ namespace is_mesh {
             return n;
         }
         
-        node_key split(const tet_key& t)
-        {
-            int label = get_label(t);
-            
-            node_key n = mesh.split_tetrahedron(t);
-            
-            simplex_set st_n;
-            star(n, st_n);
-            for (auto tit = st_n.tetrahedra_begin(); tit != st_n.tetrahedra_end(); tit++)
-            {
-                set_label(*tit, label);
-            }
-            st_n.insert(n);
-            update(st_n);
-            return n;
-        }
-        
         node_key split_new(const edge_key& eid)
         {
             std::cout << "SPLIT" << std::endl;
