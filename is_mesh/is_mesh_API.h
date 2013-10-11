@@ -1341,52 +1341,47 @@ namespace is_mesh {
         
         face_key flip_32(const edge_key& eid)
         {
-            auto faces = get_faces(eid);
-            auto tets = get_tets(eid);
-            assert(tets.size() == 3);
-            int label = get_label(tets[0]);
-            assert(label == get_label(tets[1]));
-            assert(label == get_label(tets[1]));
-            
-            // Find edges for the new face
-            auto edges = get_edges(tets);
-            assert(edges.size() == 10);
-            std::vector<edge_key> face_edges;
-            for(auto& e : edges)
-            {
-                if(e != eid && !is_neighbour(e, eid))
-                {
-                    face_edges.push_back(e);
-                }
-            }
-            assert(face_edges.size() == 3);
+            std::cout << "FLIP 3-2" << std::endl;
+            auto e_nids = get_boundary(eid);
+            auto e_fids = get_co_boundary(eid);
+            assert(e_fids.size() == 3);
+            auto e_tids = get_co_boundary(e_fids);
+            assert(e_tids.size() == 3);
+            int label = get_label(e_tids[0]);
+            assert(label == get_label(e_tids[1]));
+            assert(label == get_label(e_tids[2]));
             
             // Remove edge
             mesh.remove(eid);
             
+            // Create face
+            auto f_eids = get_boundary(get_boundary(e_tids)) - get_boundary(e_fids);
+            assert(f_eids.size() == 3);
+            auto new_face = mesh.insert_face(f_eids[0], f_eids[1], f_eids[2]);
+            
             // Remove faces
-            for(auto f : faces)
+            for(auto f : e_fids)
             {
                 mesh.remove(f);
             }
             
-            // Create face
-            auto new_face = mesh.insert_face(face_edges[0], face_edges[1], face_edges[2]);
-            
             // Create tets
-            auto exterior_faces = get_faces(tets);
-            assert(exterior_faces.size() == 6);
-            auto new_tets = create_tetrahedra({new_face}, exterior_faces);
-            assert(new_tets.size() == 2);
+            auto exterior_faces = get_boundary(e_tids);
+            for (auto e : e_nids)
+            {
+                auto t_fids = exterior_faces & get_co_boundary(get_co_boundary(e));
+                assert(t_fids.size() == 3);
+                insert_tetrahedron(t_fids[0], t_fids[1], t_fids[2], new_face);
+            }
             
             // Remove tets
-            for(auto t : tets)
+            for(auto t : e_tids)
             {
                 mesh.remove(t);
             }
             
             // Update flags
-            for (auto t : new_tets) {
+            for (auto t : get_co_boundary(new_face)) {
                 set_label(t, label);
             }
             return new_face;
