@@ -1382,55 +1382,73 @@ namespace is_mesh {
             node_key nid1 = difference(get_nodes(eid), get_nodes(fid1)).front();
             node_key nid2 = difference(get_nodes(eid), get_nodes(fid2)).front();
             
-            auto faces = get_faces(eid);
-            auto tets = get_tets(eid);
+            auto nids = get_nodes(eid);
+            auto fids = get_faces(eid);
+            auto tids = get_tets(eid);
             
-            // Create edge
-            auto new_edge = mesh.insert_edge(nid1, nid2);
+            // Find apices
             
-            // Remove edge
-            mesh.remove(eid);
-            
-            // Create faces
-            std::vector<node_key> nodes = {nid1, nid2};
-            std::vector<edge_key> boundary_edges = get_edges(tets);
-            assert(boundary_edges.size() == 8);
-            
-            std::vector<face_key> new_faces;
-            for (auto e1 = boundary_edges.begin(); e1 != boundary_edges.end(); e1++)
+            std::vector<node_key> apices;
+            for(auto f : difference(fids, {fid1, fid2}))
             {
-                auto nodes1 = get_nodes(*e1);
-                for (auto e2 = e1+1; e2 != boundary_edges.end(); e2++)
+                apices = uni(difference( get_nodes(f), nids), apices);
+            }
+            assert(apices.size() == 2);
+            
+            // Reconnect edge
+            disconnect(nids[0], eid);
+            disconnect(nids[1], eid);
+            connect(nid1, eid);
+            connect(nid2, eid);
+            
+            // Reconnect faces
+            edge_key eid1 = intersection(get_edges(nids[0]), get_edges(nid1)).front();
+            edge_key eid2 = intersection(get_edges(nids[1]), get_edges(nid2)).front();
+            swap(eid1, fid1, eid2, fid2);
+            
+            for(auto f : difference(fids, {fid1, fid2}))
+            {
+                auto rm_eids = difference(get_edges(f), {eid});
+                assert(rm_eids.size() == 2);
+                auto f_tids = get_tets(f);
+                assert(f_tids.size() == 2);
+                auto t_eids = uni(get_edges(f_tids[0], false), get_edges(f_tids[1], false));
+                assert(t_eids.size() == 9);
+                
+                auto temp = uni(uni(get_edges(f), get_edges(fid1)), get_edges(fid2));
+                assert(temp.size() == 7);
+                
+                auto add_eids = difference(t_eids, temp);
+                assert(add_eids.size() == 2);
+                disconnect(rm_eids[0], f);
+                disconnect(rm_eids[1], f);
+                connect(add_eids[0], f);
+                connect(add_eids[1], f);
+            }
+            
+            // Reconnect tetrahedra
+            for (auto n : apices) {
+                auto fid1 = intersection(intersection(get_faces(n), get_faces(nids[0])), get_faces(nid1));
+                auto fid2 = intersection(intersection(get_faces(n), get_faces(nids[1])), get_faces(nid2));
+                assert(fid1.size() == 1);
+                assert(fid2.size() == 1);
+                auto tids_n = intersection(tids, get_tets(n));
+                assert(tids_n.size() == 2);
+                swap(fid1[0], tids_n[0], fid2[0], tids_n[1]);
+            }
+            validity_check();
+            
+            // Ensure correct orientation
+            for(auto t : tids)
+            {
+                if(is_inverted(t))
                 {
-                    auto nodes2 = get_nodes(*e2);
-                    if(intersection(nodes1, nodes2).size() == 1 && intersection(nodes, nodes2).size() == 1 && intersection(nodes1, nodes).size() == 1)
-                    {
-                        new_faces.push_back(mesh.insert_face(new_edge, *e1, *e2));
-                    }
+                    mesh.lookup_simplex(t).invert_orientation();
                 }
-            }
-            assert(new_faces.size() == 3);
-            
-            // Remove faces
-            for (auto f : faces)
-            {
-                mesh.remove(f);
-            }
-            
-            // Create tetrahedra
-            std::vector<face_key> boundary_faces = get_faces(tets);
-            assert(boundary_faces.size() == 4);
-            auto new_tets = create_tetrahedra(new_faces, boundary_faces);
-            assert(new_tets.size() == 2);
-            
-            // Remove tetrahedra
-            for(auto t : tets)
-            {
-                mesh.remove(t);
             }
             
             // Update flags
-            for (auto t : new_tets) {
+            for (auto t : tids) {
                 simplex_set cl_t;
                 closure(t, cl_t);
                 update(cl_t);
