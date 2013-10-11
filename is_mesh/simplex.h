@@ -64,21 +64,15 @@ namespace is_mesh
         {
             m_is_compact = s.m_is_compact;
             m_label      = s.m_label;
-            m_boundary   = 0;
-            m_co_boundary= 0;
-            if (s.m_boundary != 0)
+            m_boundary   = nullptr;
+            m_co_boundary= nullptr;
+            if (s.m_boundary != nullptr)
             {
-                m_boundary = new std::vector<boundary_key_type>();
-                std::copy(s.m_boundary->begin(), s.m_boundary->end(), m_boundary->begin());
+                m_boundary = new boundary_list(s.m_boundary->begin(), s.m_boundary->end());
             }
-            if (s.m_co_boundary != 0)
+            if (s.m_co_boundary != nullptr)
             {
-                m_co_boundary = new co_boundary_list();
-                for (auto &sb : *s.m_co_boundary)
-                {
-                    m_co_boundary->insert(sb);
-                }
-                //std::copy(s.m_co_boundary->begin(), s.m_co_boundary->end(), m_co_boundary->begin());
+                m_co_boundary = new co_boundary_list(s.m_co_boundary->begin(), s.m_co_boundary->end());
             }
         }
         
