@@ -10,7 +10,7 @@ namespace is_mesh
     public:
         using std::vector<key_type>::vector;
         
-        bool contains(const key_type& k)
+        bool contains(const key_type& k) const
         {
             return std::find(this->begin(), this->end(), k) != this->end();
         }
@@ -20,7 +20,7 @@ namespace is_mesh
             for (auto &k : set) {
                 if(!contains(k))
                 {
-                    push_back(k);
+                    this->push_back(k);
                 }
             }
             return *this;
@@ -32,12 +32,29 @@ namespace is_mesh
                 auto iter = std::find(this->begin(), this->end(), k);
                 if(iter != this->end())
                 {
-                    erase(iter);
+                    this->erase(iter);
                 }
             }
             return *this;
         }
     };
+    
+    template<typename key_type>
+    bool operator==(const SimplexSet<key_type>& A, const SimplexSet<key_type>& B)
+    {
+        if(A.size() == B.size())
+        {
+            for (auto k : A)
+            {
+                if(!B.contains(k))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
     
     /**
      *  Returns the union of the two sets.
@@ -69,7 +86,7 @@ namespace is_mesh
     template<typename key_type>
     SimplexSet<key_type> operator&(const SimplexSet<key_type>& set1, const SimplexSet<key_type>& set2)
     {
-        return set1 + set2 - (set1 | set2);
+        return (set1 + set2) - (set1 | set2);
     }
     
     /**
@@ -80,6 +97,25 @@ namespace is_mesh
     {
         return (set1 - set2) + (set2 - set1);
     }
+    
+    inline void simplex_set_test()
+    {
+        SimplexSet<int> A = {1,3,9,4};
+        SimplexSet<int> B = {1,7,5,3,10};
+        
+        SimplexSet<int> U = {1,3,9,4,7,5,10};
+        assert((A+B) == U);
+        
+        SimplexSet<int> C = {9,4};
+        assert((A-B) == C);
+        
+        SimplexSet<int> D = {9,4,7,5,10};
+        assert((A|B) == D);
+        
+        SimplexSet<int> I = {1,3};
+        assert((A&B) == I);
+    }
+    
     
     /**
      * This class holds simplices of dimension 0 to 3, and provides basic set
