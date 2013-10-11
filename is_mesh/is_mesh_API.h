@@ -35,6 +35,7 @@ namespace is_mesh {
             vectors_read(points, tets, mesh);
             init();
 //            validity_check();
+            simplex_set_test();
         }
         
         ///////////////
@@ -1470,10 +1471,10 @@ namespace is_mesh {
         template<typename child_key, typename parent_key>
         void swap(const child_key& ck1, const parent_key& pk1, const child_key& ck2, const parent_key& pk2)
         {
-            if(!contains(*mesh.lookup_simplex(pk1).get_boundary(), ck1))
+            if(!contains(get_boundary(pk1), ck1))
             {
-                assert(contains(*mesh.lookup_simplex(pk1).get_boundary(), ck2));
-                assert(contains(*mesh.lookup_simplex(pk2).get_boundary(), ck1));
+                assert(contains(get_boundary(pk1), ck2));
+                assert(contains(get_boundary(pk2), ck1));
                 
                 disconnect(ck1, pk2);
                 disconnect(ck2, pk1);
@@ -1481,8 +1482,8 @@ namespace is_mesh {
                 connect(ck2, pk2);
             }
             else {
-                assert(contains(*mesh.lookup_simplex(pk1).get_boundary(), ck1));
-                assert(contains(*mesh.lookup_simplex(pk2).get_boundary(), ck2));
+                assert(contains(get_boundary(pk1), ck1));
+                assert(contains(get_boundary(pk2), ck2));
                 
                 disconnect(ck1, pk1);
                 disconnect(ck2, pk2);
