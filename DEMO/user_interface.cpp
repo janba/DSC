@@ -227,9 +227,15 @@ void UI::keyboard(unsigned char key, int x, int y) {
             }
             break;
         case 't':
+            if(dsc)
+            {
+                std::cout << "TEST DSC" << std::endl;
+                dsc->test();
+                painter->update(*dsc);
+            }
             if(vel_fun)
             {
-                std::cout << "TEST" << std::endl;
+                std::cout << "TEST VELOCITY FUNCTION" << std::endl;
                 vel_fun->test(*dsc);
                 painter->update(*dsc);
             }
@@ -244,6 +250,7 @@ void UI::keyboard(unsigned char key, int x, int y) {
             if(dsc)
             {
                 std::cout << "TAKING SCREEN SHOT" << std::endl;
+                painter->set_view_position(camera_pos);
                 painter->save_painting("LOG");
             }
             break;

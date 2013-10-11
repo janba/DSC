@@ -2536,6 +2536,55 @@ namespace DSC {
             }
         }
         
+    public:
+        void test()
+        {
+            std::vector<edge_key> edges;
+            for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
+            {
+                auto neighbours = Complex::get_boundary(Complex::get_co_boundary(eit.key()));
+                bool ok = true;
+                for(auto e : neighbours)
+                {
+                    if(is_interface(e) && e < eit.key())
+                    {
+                        ok = false;
+                    }
+                }
+                if (ok && eit->is_interface())
+                {
+                    edges.push_back(eit.key());
+                }
+            }
+            
+            std::vector<edge_key> new_eids;
+            std::vector<vec3> verts;
+            for (auto e : edges) {
+                auto nids = Complex::get_boundary(e);
+                auto nid = Complex::split(e);
+                auto new_eid = (Complex::get_co_boundary(nids) & Complex::get_co_boundary(nid)) - e;
+                assert(new_eid.size() == 1);
+                new_eids.push_back(new_eid[0]);
+                verts.push_back(get_pos(nids[1]));
+            }
+            
+            for (int i = 0; i < new_eids.size(); i++) {
+                assert(Complex::exists(new_eids[i]));
+                auto nid = Complex::collapse(new_eids[i]);
+                assert(nid.is_valid());
+                set_pos(nid, verts[i]);
+                for(auto t : Complex::get_tets(nid))
+                {
+                    if(Complex::is_inverted(t))
+                    {
+                        Complex::get(t).invert_orientation();
+                    }
+                }
+            }
+            Complex::validity_check();
+            validity_check();
+        }
+        
     };
     
 }
