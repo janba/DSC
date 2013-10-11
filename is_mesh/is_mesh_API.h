@@ -1500,6 +1500,11 @@ namespace is_mesh {
         void flip_22_new(const face_key& fid1, const face_key& fid2)
         {
             std::cout << "FLIP 2-2" << std::endl;
+            flip_44(fid1, fid2);
+        }
+        
+        void flip_44_new(const face_key& fid1, const face_key& fid2)
+        {
             SimplexSet<face_key> fids = {fid1, fid2};
             SimplexSet<edge_key> eid = get_boundary(fids[0]) & get_boundary(fids[1]);
             assert(eid.size() == 1);
@@ -1559,65 +1564,6 @@ namespace is_mesh {
                 simplex_set cl_t;
                 closure(t, cl_t);
                 update(cl_t);
-            }
-        }
-        
-        void flip_44_new(const face_key& fid1, const face_key& fid2)
-        {
-            edge_key eid = intersection(get_edges(fid1), get_edges(fid2)).front();
-            node_key nid1 = difference(get_nodes(eid), get_nodes(fid1)).front();
-            node_key nid2 = difference(get_nodes(eid), get_nodes(fid2)).front();
-            auto faces = get_faces(eid);
-            auto tets = get_tets(eid);
-            assert(tets.size() == 4);
-            std::vector<int> labels = {get_label(tets[0]), get_label(tets[1]), get_label(tets[2]), get_label(tets[3])};
-            
-            // Find the edges for creating the faces
-            std::vector<edge_key> exterior_edges = get_edges(tets);
-            exterior_edges = difference(exterior_edges, {eid});
-            assert(exterior_edges.size() == 12);
-            
-            // Create edge
-            auto new_edge = mesh.insert_edge(nid1, nid2);
-            
-            // Remove edge
-            mesh.remove(eid);
-            
-            // Create faces
-            std::vector<face_key> new_faces = create_faces(new_edge, exterior_edges);
-            assert(new_faces.size() == 4);
-            
-            for (auto f1 : new_faces) {
-                for (auto f2 : new_faces) {
-                    if(f1 != f2)
-                    {
-                        assert(intersection(get_edges((f1)), get_edges(f2)).size() == 1);
-                    }
-                }
-            }
-            
-            // Remove faces
-            for (auto f : faces)
-            {
-                mesh.remove(f);
-            }
-            
-            // Create tetrahedra
-            std::vector<face_key> exterior_faces = get_faces(tets);
-            assert(exterior_faces.size() == 8);
-            auto new_tets = create_tetrahedra(new_faces, exterior_faces);
-            assert(new_tets.size() == 4);
-            
-            // Remove tetrahedra
-            for(auto t : tets)
-            {
-                mesh.remove(t);
-            }
-            
-            // Update flags
-            for(int i = 0; i < 4; i++)
-            {
-                set_label(new_tets[i], labels[i]);
             }
         }
         
