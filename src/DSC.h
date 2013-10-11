@@ -2537,9 +2537,9 @@ namespace DSC {
         }
         
     public:
-        void test()
+        void test_split_collapse()
         {
-            std::vector<edge_key> edges;
+            std::vector<edge_key> eids;
             for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
             {
                 auto neighbours = Complex::get_boundary(Complex::get_co_boundary(eit.key()));
@@ -2553,13 +2553,13 @@ namespace DSC {
                 }
                 if (ok && eit->is_interface())
                 {
-                    edges.push_back(eit.key());
+                    eids.push_back(eit.key());
                 }
             }
             
             std::vector<edge_key> new_eids;
             std::vector<vec3> verts;
-            for (auto e : edges) {
+            for (auto e : eids) {
                 auto nids = Complex::get_boundary(e);
                 auto nid = Complex::split(e);
                 auto new_eid = (Complex::get_co_boundary(nids) & Complex::get_co_boundary(nid)) - e;
@@ -2580,6 +2580,44 @@ namespace DSC {
                         Complex::get(t).invert_orientation();
                     }
                 }
+            }
+            Complex::validity_check();
+            validity_check();
+        }
+        
+        void test_flip23_flip32()
+        {
+            std::vector<face_key> fids;
+            for (auto fit = Complex::faces_begin(); fit != Complex::faces_end(); fit++)
+            {
+                if(is_safe_editable(fit.key()))
+                {
+                    auto neighbours = Complex::get_boundary(Complex::get_co_boundary(fit.key()));
+                    bool ok = true;
+                    for(auto f : neighbours)
+                    {
+                        if(f < fit.key())
+                        {
+                            ok = false;
+                        }
+                    }
+                    if (ok)
+                    {
+                        fids.push_back(fit.key());
+                    }
+                }
+            }
+            
+            std::vector<edge_key> new_eids;
+            for (auto f : fids) {
+                auto new_eid = Complex::flip_23(f);
+                assert(new_eid.is_valid());
+                new_eids.push_back(new_eid);
+            }
+            
+            for (auto e : new_eids) {
+                auto new_fid = Complex::flip_32(e);
+                assert(new_fid.is_valid());
             }
             Complex::validity_check();
             validity_check();
