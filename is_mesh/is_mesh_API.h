@@ -1339,7 +1339,7 @@ namespace is_mesh {
             return new_tets;
         }
         
-        void flip_32_new(const edge_key& eid)
+        face_key flip_32(const edge_key& eid)
         {
             auto faces = get_faces(eid);
             auto tets = get_tets(eid);
@@ -1389,9 +1389,10 @@ namespace is_mesh {
             for (auto t : new_tets) {
                 set_label(t, label);
             }
+            return new_face;
         }
         
-        void flip_23_new(const face_key& fid)
+        edge_key flip_23(const face_key& fid)
         {
             auto nodes = get_apices(fid);
             auto edges = get_edges(fid);
@@ -1428,6 +1429,7 @@ namespace is_mesh {
             for (auto t : new_tets) {
                 set_label(t, label);
             }
+            return new_edge;
         }
         
         node_key flip_23(const face_key& f)
