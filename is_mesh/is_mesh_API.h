@@ -34,7 +34,7 @@ namespace is_mesh {
         {
             vectors_read(points, tets, mesh);
             init();
-            validity_check();
+//            validity_check();
         }
         
         ///////////////
@@ -480,6 +480,17 @@ namespace is_mesh {
             return edges;
         }
         
+        std::vector<face_key> get_faces(const node_key& nid)
+        {
+            std::vector<face_key> fids;
+            for(auto e : *mesh.lookup_simplex(nid).get_co_boundary())
+            {
+                auto e_fids = get_faces(e);
+                fids.insert(fids.end(), e_fids.begin(), e_fids.end());
+            }
+            return fids;
+        }
+        
         std::vector<face_key> get_faces(const edge_key& eid)
         {
             auto coboundary = *mesh.lookup_simplex(eid).get_co_boundary();
@@ -784,6 +795,7 @@ namespace is_mesh {
             // Split edge
             auto new_nid = mesh.insert_node();
             mesh.lookup_simplex(new_nid).set_pos(0.5*(mesh.lookup_simplex(nids[0]).get_pos() + mesh.lookup_simplex(nids[1]).get_pos()));
+            mesh.lookup_simplex(new_nid).set_destination(0.5*(mesh.lookup_simplex(nids[0]).get_destination() + mesh.lookup_simplex(nids[1]).get_destination()));
             
             mesh.lookup_simplex(nid).remove_co_face(eid);
             mesh.lookup_simplex(new_nid).add_co_face(eid);
@@ -944,11 +956,13 @@ namespace is_mesh {
             
             for (auto &eids : merge_edges)
             {
+                assert(eids.size() == 2);
                 mesh.merge(eids[0], eids[1]);
             }
             
             for (auto &fids : merge_faces)
             {
+                assert(fids.size() == 2);
                 mesh.merge(fids[0], fids[1]);
             }
             
@@ -965,7 +979,6 @@ namespace is_mesh {
                     mesh.lookup_simplex(*tit).invert_orientation();
                 }
             }
-            validity_check();
             return n;
         }
         
@@ -1389,7 +1402,7 @@ namespace is_mesh {
             auto faces = get_faces(eid);
             auto tets = get_tets(eid);
             assert(tets.size() == 4);
-            std::vector<int> labels = {get_label(tets[3]), get_label(tets[2]), get_label(tets[1]), get_label(tets[0])};
+            std::vector<int> labels = {get_label(tets[0]), get_label(tets[1]), get_label(tets[2]), get_label(tets[3])};
             
             // Find the edges for creating the faces
             std::vector<edge_key> exterior_edges = get_edges(tets);
