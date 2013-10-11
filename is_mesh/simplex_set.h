@@ -4,6 +4,83 @@
 namespace is_mesh
 {
     
+    template<typename key_type>
+    class SimplexSet : public std::vector<key_type>
+    {
+    public:
+        using std::vector<key_type>::vector;
+        
+        bool contains(const key_type& k)
+        {
+            return std::find(this->begin(), this->end(), k) != this->end();
+        }
+        
+        SimplexSet<key_type> operator+=(const SimplexSet<key_type>& set)
+        {
+            for (auto &k : set) {
+                if(!contains(k))
+                {
+                    push_back(k);
+                }
+            }
+            return *this;
+        }
+        
+        SimplexSet<key_type> operator-=(const SimplexSet<key_type>& set)
+        {
+            for (auto &k : set) {
+                auto iter = std::find(this->begin(), this->end(), k);
+                if(iter != this->end())
+                {
+                    erase(iter);
+                }
+            }
+            return *this;
+        }
+    };
+    
+    /**
+     *  Returns the union of the two sets.
+     */
+    template<typename key_type>
+    SimplexSet<key_type> operator+(const SimplexSet<key_type>& set1, const SimplexSet<key_type>& set2)
+    {
+        SimplexSet<key_type> set;
+        set += set1;
+        set += set2;
+        return set;
+    }
+    
+    /**
+     *  Returns set1 without the elements in set2.
+     */
+    template<typename key_type>
+    SimplexSet<key_type> operator-(const SimplexSet<key_type>& set1, const SimplexSet<key_type>& set2)
+    {
+        SimplexSet<key_type> set;
+        set += set1;
+        set -= set2;
+        return set;
+    }
+    
+    /**
+     *  Returns the intersection of the two sets.
+     */
+    template<typename key_type>
+    SimplexSet<key_type> operator&(const SimplexSet<key_type>& set1, const SimplexSet<key_type>& set2)
+    {
+        return set1 + set2 - (set1 | set2);
+    }
+    
+    /**
+     *  Returns the difference between the two sets, ie. the elements which are in either set1 or set2 but not both.
+     */
+    template<typename key_type>
+    SimplexSet<key_type> operator|(const SimplexSet<key_type>& set1, const SimplexSet<key_type>& set2)
+    {
+        return (set1 - set2) + (set2 - set1);
+    }
+    
     /**
      * This class holds simplices of dimension 0 to 3, and provides basic set
      * operations upon a set of simplices.
