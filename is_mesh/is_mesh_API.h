@@ -1331,6 +1331,49 @@ namespace is_mesh {
             return n3;
         }
         
+        template<typename child_key, typename parent_key>
+        void connect(const child_key& ck, const parent_key& pk)
+        {
+            mesh.lookup_simplex(ck).add_co_face(pk);
+            mesh.lookup_simplex(pk).add_face(ck);
+        }
+        
+        template<typename child_key, typename parent_key>
+        void disconnect(const child_key& ck, const parent_key& pk)
+        {
+            mesh.lookup_simplex(ck).remove_co_face(pk);
+            mesh.lookup_simplex(pk).remove_face(ck);
+        }
+        
+        template<typename child_key, typename parent_key>
+        void swap(const child_key& ck1, const parent_key& pk1, const child_key& ck2, const parent_key& pk2)
+        {
+            if(!contains(*mesh.lookup_simplex(pk1).get_boundary(), ck1))
+            {
+                assert(contains(*mesh.lookup_simplex(pk1).get_boundary(), ck2));
+                assert(contains(*mesh.lookup_simplex(pk2).get_boundary(), ck1));
+                
+                disconnect(ck1, pk2);
+                disconnect(ck2, pk1);
+                connect(ck1, pk1);
+                connect(ck2, pk2);
+            }
+            else {
+                assert(contains(*mesh.lookup_simplex(pk1).get_boundary(), ck1));
+                assert(contains(*mesh.lookup_simplex(pk2).get_boundary(), ck2));
+                
+                disconnect(ck1, pk1);
+                disconnect(ck2, pk2);
+                connect(ck1, pk2);
+                connect(ck2, pk1);
+            }
+        }
+        
+        template<typename key_type>
+        bool contains(const std::vector<key_type>& keys, const key_type& key)
+        {
+            return std::find(keys.begin(), keys.end(), key) != keys.end();
+        }
         
         void flip_22_new(const face_key& fid1, const face_key& fid2)
         {
