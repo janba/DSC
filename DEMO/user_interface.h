@@ -126,6 +126,8 @@ public:
     void keyboard(unsigned char key, int x, int y);
     
 private:
+    void one_cell();
+    
     void rotate_cube();
     
     void rotate_blob();

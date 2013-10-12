@@ -209,6 +209,9 @@ void UI::keyboard(unsigned char key, int x, int y) {
         case '5':
             rotate_blob();
             break;
+        case '9':
+            one_cell();
+            break;
         case ' ':
             if(!CONTINUOUS)
             {
@@ -322,8 +325,11 @@ void UI::stop()
     {
         basic_log->write_message("MOTION STOPPED");
         basic_log->write_log(*dsc);
-        basic_log->write_log(*vel_fun);
-        basic_log->write_timings(*vel_fun);
+        if(vel_fun)
+        {
+            basic_log->write_log(*vel_fun);
+            basic_log->write_timings(*vel_fun);
+        }
     }
     basic_log = nullptr;
     vel_fun = nullptr;
@@ -334,19 +340,36 @@ void UI::start()
 {
     basic_log = std::unique_ptr<Log>(new Log(create_log_path()));
     painter->update(*dsc);
-    if(RECORD)
+    if(RECORD && vel_fun)
     {
         painter->set_view_position(camera_pos);
         painter->save_painting(basic_log->get_path(), vel_fun->get_time_step());
     }
     
-    basic_log->write_message(vel_fun->get_name().c_str());
+    if(vel_fun)
+    {
+        basic_log->write_message(vel_fun->get_name().c_str());
+        basic_log->write_log(*vel_fun);
+    }
     basic_log->write_log(*dsc);
-    basic_log->write_log(*vel_fun);
     
     update_title();
 	glutReshapeWindow(WIN_SIZE_X, WIN_SIZE_Y);
     glutPostRedisplay();
+}
+
+void UI::one_cell()
+{
+    stop();
+    real cell_size = 30.;
+    // Build the Simplicial Complex
+    std::vector<real> points;
+    std::vector<int>  tets;
+    Tetralizer::tetralize(vec3(cell_size), cell_size, points, tets);
+    
+    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(cell_size, points, tets));
+    
+    start();
 }
 
 void UI::rotate_cube()
