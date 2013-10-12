@@ -30,13 +30,13 @@ Painter::GLObject::GLObject(GLuint _shader, const CGLA::Vec4f& ambient_mat_, con
     if (position_att == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
     }
-    normal_att = glGetAttribLocation(shader, "normal");
-    if (normal_att == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'normal' attribute." << std::endl;
+    vector_att = glGetAttribLocation(shader, "vector");
+    if (vector_att == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'vector' attribute." << std::endl;
     }
     
     glEnableVertexAttribArray(position_att);
-    glEnableVertexAttribArray(normal_att);
+    glEnableVertexAttribArray(vector_att);
     check_gl_error();
 }
 
@@ -47,7 +47,7 @@ void Painter::GLObject::add_data(std::vector<DSC::vec3> _data)
     glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*data.size(), &data[0], GL_STATIC_DRAW);
 }
 
-void Painter::GLObject::draw()
+void Painter::GLObject::draw(GLenum mode)
 {
     if(data.size() != 0)
     {
@@ -74,9 +74,10 @@ void Painter::GLObject::draw()
         glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
         
         glVertexAttribPointer(position_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0);
-        glVertexAttribPointer(normal_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3));
+        glVertexAttribPointer(vector_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3));
         
-        glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(data.size())/2);
+        glDrawArrays(mode, 0, static_cast<int>(data.size())/2);
+        check_gl_error();
     }
 }
 
@@ -109,20 +110,22 @@ char* readShaderSource(const char* shaderFile)
 }
 
 // Create a GLSL program object from vertex and fragment shader files
-GLuint Painter::init_shader(const char* vShaderFile, const char* fShaderFile, const char* outputAttributeName)
+GLuint Painter::init_shader(const char* vShaderFile, const char* fShaderFile, const char* outputAttributeName, const char* gShaderFile)
 {
     struct Shader {
         const char*  filename;
         GLenum       type;
         GLchar*      source;
-    }  shaders[2] = {
-        { vShaderFile, GL_VERTEX_SHADER, NULL },
-        { fShaderFile, GL_FRAGMENT_SHADER, NULL }
     };
+    std::vector<Shader> shaders = { { vShaderFile, GL_VERTEX_SHADER, NULL }, { fShaderFile, GL_FRAGMENT_SHADER, NULL } };
+    if(gShaderFile)
+    {
+        shaders.push_back({ gShaderFile, GL_GEOMETRY_SHADER, NULL });
+    }
     
     GLuint program = glCreateProgram();
     
-    for ( int i = 0; i < 2; ++i ) {
+    for ( int i = 0; i < shaders.size(); ++i ) {
         Shader& s = shaders[i];
         s.source = readShaderSource( s.filename );
         if ( shaders[i].source == NULL ) {
@@ -181,6 +184,7 @@ GLuint Painter::init_shader(const char* vShaderFile, const char* fShaderFile, co
 Painter::Painter(const DSC::vec3& light_pos)
 {    
     // Initialize shader
+    line_shader = init_shader("shaders/line.vert", "shaders/line.frag", "fragColour", "shaders/line.geom");
     gouraud_shader = init_shader("shaders/gouraud.vert",  "shaders/gouraud.frag", "fragColour");
     
     // Send light position uniform to the shader
@@ -195,6 +199,7 @@ Painter::Painter(const DSC::vec3& light_pos)
     interface = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.1, 0.3, 0.1, 1.}, {0.5, 0.5, 0.5, 1.}, {0.3, 0.3, 0.3, 1.}));
     domain = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.1, 0.1, 0.3, 1.}, {0.2, 0.2, 0.3, 1.}, {0., 0., 0., 1.}));
     low_quality = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.3, 0.1, 0.1, 0.1}, {0.6, 0.4, 0.4, 0.2}, {0., 0., 0., 0.}));
+    edges = std::unique_ptr<GLObject>(new GLObject(line_shader, {0.7, 0.2, 0.2, 1.}, {0., 0., 0., 0.}, {0., 0., 0., 0.}));
     
     // Enable states
     glEnable(GL_DEPTH_TEST);
@@ -247,6 +252,13 @@ void Painter::reshape(int width, int height)
         std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
     }
     glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
+    
+    glUseProgram(line_shader);
+    GLuint PMatrixUniform = glGetUniformLocation(line_shader, "PMatrix");
+    if (PMatrixUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'PMatrix' uniform."<<std::endl;
+    }
+    glUniformMatrix4fv(PMatrixUniform, 1, GL_TRUE, &projectionMatrix[0][0]);
     check_gl_error();
 }
 
@@ -282,6 +294,25 @@ void Painter::set_view_position(DSC::vec3 pos)
         std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
     }
     glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
+    
+    glUseProgram(line_shader);
+    eyePosUniform = glGetUniformLocation(line_shader, "eyePos");
+    if (eyePosUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'eyePos' uniform."<<std::endl;
+    }
+    glUniform3fv(eyePosUniform, 1, &eye_pos[0]);
+    
+    MVMatrixUniform = glGetUniformLocation(line_shader, "MVMatrix");
+    if (MVMatrixUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
+    }
+    glUniformMatrix4fv(MVMatrixUniform, 1, GL_TRUE, &modelViewMatrix[0][0]);
+    
+    NormalMatrixUniform = glGetUniformLocation(line_shader, "NormalMatrix");
+    if (NormalMatrixUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'NormalMatrix' uniform."<<std::endl;
+    }
+    glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, &normalMatrix[0][0]);
     check_gl_error();
 }
 
@@ -295,6 +326,7 @@ void Painter::draw()
     domain->draw();
     
     glDisable(GL_CULL_FACE);
+    edges->draw(GL_POINTS);
     low_quality->draw();
     glEnable(GL_CULL_FACE);
     
@@ -304,6 +336,7 @@ void Painter::draw()
 void Painter::update(DSC::DeformableSimplicialComplex<>& dsc)
 {
     update_interface(dsc);
+//    update_edges(dsc);
     update_domain(dsc);
     update_low_quality(dsc);
 }
@@ -327,6 +360,21 @@ void Painter::update_interface(DSC::DeformableSimplicialComplex<>& dsc)
         }
     }
     interface->add_data(data);
+}
+
+void Painter::update_edges(DSC::DeformableSimplicialComplex<>& dsc)
+{
+    std::vector<DSC::vec3> data;
+    for (auto eit = dsc.edges_begin(); eit != dsc.edges_end(); eit++)
+    {
+        auto verts = dsc.get_pos(eit.key());
+        DSC::vec3 vector = verts[1] - verts[0];
+        
+        data.push_back(verts[0]);
+        data.push_back(vector);
+
+    }
+    edges->add_data(data);
 }
 
 bool is_boundary(DSC::DeformableSimplicialComplex<>& dsc, const DSC::DeformableSimplicialComplex<>::face_key& fid, std::vector<DSC::vec3>& verts)

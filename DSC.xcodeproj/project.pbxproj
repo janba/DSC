@@ -28,6 +28,9 @@
 		7A553ED417DA724800125178 /* stbi_DDS_aug.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A553ECA17DA724800125178 /* stbi_DDS_aug.h */; };
 		7A553ED517DA724800125178 /* stbi_DDS_aug_c.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A553ECB17DA724800125178 /* stbi_DDS_aug_c.h */; };
 		7A56303F17D57445005152B6 /* attributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A56303E17D57445005152B6 /* attributes.h */; };
+		7A8967BD1808F3FA00A55FB6 /* line.frag in Sources */ = {isa = PBXBuildFile; fileRef = 7A8967BA1808F3FA00A55FB6 /* line.frag */; };
+		7A8967BE1808F3FA00A55FB6 /* line.geom in Sources */ = {isa = PBXBuildFile; fileRef = 7A8967BB1808F3FA00A55FB6 /* line.geom */; };
+		7A8967BF1808F3FA00A55FB6 /* line.vert in Sources */ = {isa = PBXBuildFile; fileRef = 7A8967BC1808F3FA00A55FB6 /* line.vert */; };
 		7A90991C17D7A27000A66365 /* tetralizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A90991A17D7A27000A66365 /* tetralizer.cpp */; };
 		7A90991D17D7A27000A66365 /* tetralizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A90991B17D7A27000A66365 /* tetralizer.h */; };
 		7A9C209B17DFB4D40064171E /* ArithMatFloat.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9C205E17DFB4D40064171E /* ArithMatFloat.h */; };
@@ -149,6 +152,9 @@
 		7A553ECA17DA724800125178 /* stbi_DDS_aug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stbi_DDS_aug.h; sourceTree = "<group>"; };
 		7A553ECB17DA724800125178 /* stbi_DDS_aug_c.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stbi_DDS_aug_c.h; sourceTree = "<group>"; };
 		7A56303E17D57445005152B6 /* attributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = attributes.h; path = src/attributes.h; sourceTree = SOURCE_ROOT; };
+		7A8967BA1808F3FA00A55FB6 /* line.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = line.frag; sourceTree = "<group>"; };
+		7A8967BB1808F3FA00A55FB6 /* line.geom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = line.geom; sourceTree = "<group>"; };
+		7A8967BC1808F3FA00A55FB6 /* line.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = line.vert; sourceTree = "<group>"; };
 		7A90991A17D7A27000A66365 /* tetralizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tetralizer.cpp; path = src/tetralizer.cpp; sourceTree = SOURCE_ROOT; };
 		7A90991B17D7A27000A66365 /* tetralizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tetralizer.h; path = src/tetralizer.h; sourceTree = SOURCE_ROOT; };
 		7A9C205917DFB4CB0064171E /* libCGLA.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCGLA.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -296,6 +302,9 @@
 		7A38E82917E3B35A0075DC24 /* shaders */ = {
 			isa = PBXGroup;
 			children = (
+				7A8967BA1808F3FA00A55FB6 /* line.frag */,
+				7A8967BB1808F3FA00A55FB6 /* line.geom */,
+				7A8967BC1808F3FA00A55FB6 /* line.vert */,
 				7A38E82A17E3B35A0075DC24 /* gouraud.frag */,
 				7A38E82B17E3B35A0075DC24 /* gouraud.vert */,
 			);
@@ -664,10 +673,12 @@
 			files = (
 				7A9C209E17DFB4D40064171E /* ArithSqMat3x3Float.cpp in Sources */,
 				7A9C20A017DFB4D40064171E /* ArithSqMat4x4Float.cpp in Sources */,
+				7A8967BF1808F3FA00A55FB6 /* line.vert in Sources */,
 				7A9C20A417DFB4D40064171E /* ArithVec2Float.cpp in Sources */,
 				7A9C20A617DFB4D40064171E /* ArithVec3Float.cpp in Sources */,
 				7A9C20AF17DFB4D40064171E /* eigensolution.cpp in Sources */,
 				7A9C20B217DFB4D40064171E /* gel_rand.cpp in Sources */,
+				7A8967BE1808F3FA00A55FB6 /* line.geom in Sources */,
 				7A9C20B717DFB4D40064171E /* Mat3x3d.cpp in Sources */,
 				7A9C20B917DFB4D40064171E /* Mat3x3f.cpp in Sources */,
 				7A9C20BB17DFB4D40064171E /* Mat4x4d.cpp in Sources */,
@@ -677,6 +688,7 @@
 				7A9C20C917DFB4D40064171E /* Vec2i.cpp in Sources */,
 				7A9C20CD17DFB4D40064171E /* Vec3f.cpp in Sources */,
 				7A9C20D017DFB4D40064171E /* Vec3i.cpp in Sources */,
+				7A8967BD1808F3FA00A55FB6 /* line.frag in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

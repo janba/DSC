@@ -63,7 +63,7 @@ class Painter {
         std::vector<DSC::vec3> data;
         
         GLuint array_id, buffer_id;
-        GLuint position_att, normal_att;
+        GLuint position_att, vector_att;
         
         CGLA::Vec4f ambient_mat, diffuse_mat, specular_mat;
         
@@ -73,14 +73,14 @@ class Painter {
         
         void add_data(std::vector<DSC::vec3> _data);
         
-        void draw();
+        void draw(GLenum mode = GL_TRIANGLES);
         
     };
     
     int WIDTH, HEIGHT;
-    GLuint gouraud_shader;
+    GLuint gouraud_shader, line_shader;
     
-    std::unique_ptr<GLObject> interface, domain, low_quality;
+    std::unique_ptr<GLObject> interface, domain, low_quality, edges;
     
     // Uniform variables
     CGLA::Mat4x4f projectionMatrix, viewMatrix, modelMatrix = CGLA::rotation_Mat4x4f(CGLA::YAXIS, M_PI);
@@ -92,7 +92,7 @@ public:
     
 private:
     // Create a GLSL program object from vertex and fragment shader files
-    GLuint init_shader(const char* vShaderFile, const char* fShaderFile, const char* outputAttributeName);
+    GLuint init_shader(const char* vShaderFile, const char* fShaderFile, const char* outputAttributeName, const char* gShaderFile = nullptr);
     
 public:
     /**
@@ -125,6 +125,11 @@ private:
      Updates the drawn interface.
      */
     void update_interface(DSC::DeformableSimplicialComplex<>& dsc);
+    
+    /**
+     Updates the drawn edges.
+     */
+    void update_edges(DSC::DeformableSimplicialComplex<>& dsc);
     
     /**
      Updates the drawn boundary.
