@@ -1297,46 +1297,6 @@ namespace is_mesh {
             return tetrahedron.key();
         }
         
-        tet_key create_tetrahedron(const std::vector<face_key>& interior_faces, std::vector<face_key>& exterior_faces)
-        {
-            std::vector<face_key> tet_faces {exterior_faces.back()};
-            exterior_faces.pop_back();
-            for (auto& f : interior_faces)
-            {
-                if(std::find(tet_faces.begin(), tet_faces.end(), f) == tet_faces.end() && is_neighbour(f, tet_faces))
-                {
-                    tet_faces.push_back(f);
-                }
-            }
-            
-            for (auto fit = exterior_faces.begin(); fit != exterior_faces.end(); fit++)
-            {
-                if(is_neighbour(*fit, tet_faces))
-                {
-                    tet_faces.push_back(*fit);
-                    fit--;
-                    exterior_faces.erase(fit+1);
-                }
-            }
-            assert(tet_faces.size() == 4);
-            return insert_tetrahedron(tet_faces[0], tet_faces[1], tet_faces[2], tet_faces[3]);
-        }
-        
-        std::vector<tet_key> create_tetrahedra(const std::vector<face_key>& interior_faces, const std::vector<face_key>& exterior_faces)
-        {
-            int N_tets = (2*static_cast<int>(interior_faces.size()) + static_cast<int>(exterior_faces.size()))/4;
-            assert((2*interior_faces.size()+exterior_faces.size())%4 == 0);
-            
-            std::vector<face_key> exterior_faces_(exterior_faces.begin(), exterior_faces.end());
-            std::vector<tet_key> new_tets;
-            for(int i = 0; i < N_tets; i++)
-            {
-                new_tets.push_back(create_tetrahedron(interior_faces, exterior_faces_));
-            }
-            assert(exterior_faces_.size() == 0);
-            assert(new_tets.size() == N_tets);
-            return new_tets;
-        }
         
         face_key flip_32_new(const edge_key& eid)
         {
@@ -1482,10 +1442,10 @@ namespace is_mesh {
         template<typename child_key, typename parent_key>
         void swap(const child_key& ck1, const parent_key& pk1, const child_key& ck2, const parent_key& pk2)
         {
-            if(!contains(get_boundary(pk1), ck1))
+            if(!get_boundary(pk1).contains(ck1))
             {
-                assert(contains(get_boundary(pk1), ck2));
-                assert(contains(get_boundary(pk2), ck1));
+                assert(get_boundary(pk1).contains(ck2));
+                assert(get_boundary(pk2).contains(ck1));
                 
                 disconnect(ck1, pk2);
                 disconnect(ck2, pk1);
@@ -1493,8 +1453,8 @@ namespace is_mesh {
                 connect(ck2, pk2);
             }
             else {
-                assert(contains(get_boundary(pk1), ck1));
-                assert(contains(get_boundary(pk2), ck2));
+                assert(get_boundary(pk1).contains(ck1));
+                assert(get_boundary(pk2).contains(ck2));
                 
                 disconnect(ck1, pk1);
                 disconnect(ck2, pk2);
@@ -1503,11 +1463,6 @@ namespace is_mesh {
             }
         }
         
-        template<typename key_type>
-        bool contains(const std::vector<key_type>& keys, const key_type& key)
-        {
-            return std::find(keys.begin(), keys.end(), key) != keys.end();
-        }
         
         void flip_22_new(const face_key& fid1, const face_key& fid2)
         {
