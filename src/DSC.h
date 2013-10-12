@@ -2612,7 +2612,7 @@ namespace DSC {
             for (auto f : fids) {
                 auto new_eid = Complex::flip_23(f);
                 assert(new_eid.is_valid());
-                new_eids.push_back(new_eid);
+//                new_eids.push_back(new_eid);
             }
             
             for (auto e : new_eids) {

@@ -896,7 +896,6 @@ namespace is_mesh {
         
         node_key split_new(const edge_key& eid)
         {
-            std::cout << "SPLIT" << std::endl;
             auto nids = get_nodes(eid);
             auto fids = get_faces(eid);
             auto tids = get_tets(eid);
