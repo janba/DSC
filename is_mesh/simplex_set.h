@@ -18,10 +18,16 @@ namespace is_mesh
         SimplexSet<key_type> operator+=(const SimplexSet<key_type>& set)
         {
             for (auto &k : set) {
-                if(!contains(k))
-                {
-                    this->push_back(k);
-                }
+                *this += k;
+            }
+            return *this;
+        }
+        
+        SimplexSet<key_type> operator+=(const key_type& key)
+        {
+            if(!contains(key))
+            {
+                this->push_back(key);
             }
             return *this;
         }
@@ -29,11 +35,17 @@ namespace is_mesh
         SimplexSet<key_type> operator-=(const SimplexSet<key_type>& set)
         {
             for (auto &k : set) {
-                auto iter = std::find(this->begin(), this->end(), k);
-                if(iter != this->end())
-                {
-                    this->erase(iter);
-                }
+                *this -= k;
+            }
+            return *this;
+        }
+        
+        SimplexSet<key_type> operator-=(const key_type& key)
+        {
+            auto iter = std::find(this->begin(), this->end(), key);
+            if(iter != this->end())
+            {
+                this->erase(iter);
             }
             return *this;
         }
@@ -125,6 +137,12 @@ namespace is_mesh
         
         SimplexSet<int> I = {1,3};
         assert((A&B) == I);
+        
+        A -= 3;
+        A += 9;
+        A += 11;
+        SimplexSet<int> E = {1,9,4,11};
+        assert(A == E);
     }
     
     
