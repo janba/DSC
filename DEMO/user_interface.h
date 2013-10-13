@@ -32,7 +32,7 @@ class UI
     std::unique_ptr<Log> basic_log;
     
     std::unique_ptr<Painter> painter;
-    DSC::vec3 eye_pos = {30., 30., 100.};
+    DSC::vec3 eye_pos = {100., 30., 100.};
     DSC::vec3 camera_pos = {30., 30., 100.};
     DSC::vec3 light_pos = {0., 0., 50.};
     

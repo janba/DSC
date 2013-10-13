@@ -145,8 +145,8 @@ void UI::display()
     if (glutGet(GLUT_WINDOW_WIDTH) != WIN_SIZE_X || glutGet(GLUT_WINDOW_HEIGHT) != WIN_SIZE_Y) {
         return;
     }
-    GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.0001;
-    DSC::vec3 ep = DSC::vec3( eye_pos[0] * sinf(timeValue), eye_pos[1] * cosf(timeValue) , eye_pos[2]);
+    GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.0002;
+    DSC::vec3 ep = DSC::vec3( eye_pos[0] * sinf(timeValue), eye_pos[1] * cosf(timeValue) , eye_pos[2] * cosf(timeValue));
     painter->set_view_position(ep);
     painter->draw();
     glutSwapBuffers();
