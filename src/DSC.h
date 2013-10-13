@@ -2437,7 +2437,7 @@ namespace DSC {
         {
             min_quality = INFINITY;
             
-            histogram = std::vector<int>(180);
+            histogram = std::vector<int>(100);
             for (int i = 0; i < 100; ++i)
             {
                 histogram[i] = 0;
@@ -2447,7 +2447,11 @@ namespace DSC {
             {
                 real q = quality(tit.key());
                 min_quality = Util::min(min_quality, q);
-                histogram[(int)floor(q*100.)] += 1;
+                int index = static_cast<int>(floor(q*100.));
+#ifdef DEBUG
+                assert(index < 100 && index >= 0);
+#endif
+                histogram[index] += 1;
             }
         }
         
