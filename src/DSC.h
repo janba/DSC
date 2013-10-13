@@ -2543,35 +2543,45 @@ namespace DSC {
     public:
         void test_split_collapse()
         {
-            std::vector<edge_key> eids;
+            is_mesh::SimplexSet<edge_key> eids;
             for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
             {
                 auto neighbours = Complex::get_boundary(Complex::get_co_boundary(eit.key()));
                 bool ok = true;
                 for(auto e : neighbours)
                 {
-                    if(is_interface(e) && e < eit.key())
+                    if(e < eit.key())
                     {
                         ok = false;
                     }
                 }
-                if (ok && eit->is_interface())
+                if (ok)
                 {
-                    eids.push_back(eit.key());
+                    eids += eit.key();
                 }
             }
             
-            std::vector<edge_key> new_eids;
+            int j = 0;
+            std::cout << "Split test # = " << eids.size();
+            is_mesh::SimplexSet<edge_key> new_eids;
             std::vector<vec3> verts;
             for (auto e : eids) {
                 auto nids = Complex::get_boundary(e);
                 auto nid = Complex::split(e);
                 auto new_eid = (Complex::get_co_boundary(nids) & Complex::get_co_boundary(nid)) - e;
                 assert(new_eid.size() == 1);
-                new_eids.push_back(new_eid[0]);
+                new_eids += new_eid[0];
                 verts.push_back(get_pos(nids[1]));
+                j++;
+                if(j%100 == 0)
+                {
+                    std::cout << ".";
+                }
             }
+            std::cout << " DONE" << std::endl;
             
+            std::cout << "Collapse test # = " << new_eids.size();
+            j = 0;
             for (int i = 0; i < new_eids.size(); i++) {
                 assert(Complex::exists(new_eids[i]));
                 auto nid = Complex::collapse(new_eids[i]);
@@ -2584,45 +2594,74 @@ namespace DSC {
                         Complex::get(t).invert_orientation();
                     }
                 }
+                j++;
+                if(j%100 == 0)
+                {
+                    std::cout << ".";
+                }
             }
+            std::cout << " DONE" << std::endl;
+            Complex::garbage_collect();
             Complex::validity_check();
             validity_check();
         }
         
         void test_flip23_flip32()
         {
-            std::vector<face_key> fids;
+            is_mesh::SimplexSet<face_key> fids;
             for (auto fit = Complex::faces_begin(); fit != Complex::faces_end(); fit++)
             {
                 if(is_safe_editable(fit.key()))
                 {
+                    auto nids = Complex::get_boundary(Complex::get_boundary(fit.key()));
+                    nids += Complex::get_boundary(Complex::get_boundary(Complex::get_boundary(Complex::get_co_boundary(fit.key()))));
+                    real t = Util::intersection_ray_triangle<real>(get_pos(nids[3]), get_pos(nids[4]) - get_pos(nids[3]), get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]));
+                    
                     auto neighbours = Complex::get_boundary(Complex::get_co_boundary(fit.key()));
                     bool ok = true;
                     for(auto f : neighbours)
                     {
-                        if(f < fit.key())
+                        if(fids.contains(f))
                         {
                             ok = false;
                         }
                     }
-                    if (ok)
+                    if (ok && 0 < t && t < 1)
                     {
-                        fids.push_back(fit.key());
+                        fids += fit.key();
                     }
                 }
             }
             
-            std::vector<edge_key> new_eids;
+            std::cout << "Flip 2-3 test # = " << fids.size();
+            is_mesh::SimplexSet<edge_key> new_eids;
+            int i = 0;
             for (auto f : fids) {
+                assert(Complex::exists(f));
                 auto new_eid = Complex::flip_23(f);
                 assert(new_eid.is_valid());
-//                new_eids.push_back(new_eid);
+                new_eids += new_eid;
+                i++;
+                if(i%1000 == 0)
+                {
+                    std::cout << ".";
+                }
             }
+            std::cout << " DONE" << std::endl;
             
+            i=0;
+            std::cout << "Flip 3-2 test # = " << new_eids.size();
             for (auto e : new_eids) {
                 auto new_fid = Complex::flip_32(e);
                 assert(new_fid.is_valid());
+                i++;
+                if(i%1000 == 0)
+                {
+                    std::cout << ".";
+                }
             }
+            std::cout << " DONE" << std::endl;
+            Complex::garbage_collect();
             Complex::validity_check();
             validity_check();
         }
