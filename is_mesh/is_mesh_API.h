@@ -436,11 +436,38 @@ namespace is_mesh {
             return res;
         }
         
+        // Getters for getting the boundary/coboundary of a simplex:
         const SimplexSet<NodeKey>& get_nodes(const edge_key& eid)
         {
             return *get(eid).get_boundary();
         }
         
+        const SimplexSet<EdgeKey>& get_edges(const node_key& nid)
+        {
+            return *get(nid).get_co_boundary();
+        }
+        
+        const SimplexSet<EdgeKey>& get_edges(const face_key& fid)
+        {
+            return *get(fid).get_boundary();
+        }
+        
+        const SimplexSet<FaceKey>& get_faces(const EdgeKey& eid)
+        {
+            return *get(eid).get_co_boundary();
+        }
+        
+        const SimplexSet<FaceKey>& get_faces(const TetrahedronKey& tid)
+        {
+            return *get(tid).get_boundary();
+        }
+        
+        const SimplexSet<TetrahedronKey>& get_tets(const FaceKey& fid)
+        {
+            return *get(fid).get_co_boundary();
+        }
+        
+        // Getters for getting the boundary of a boundary etc.
         SimplexSet<NodeKey> get_nodes(const face_key& fid, bool sort = true)
         {
             SimplexSet<NodeKey> nids;
@@ -466,26 +493,6 @@ namespace is_mesh {
             nids += get_nodes(fids[1]);
             assert(nids.size() == 4);
             return nids;
-        }
-        
-        SimplexSet<NodeKey> get_nodes(const SimplexSet<tet_key>& tids)
-        {
-            SimplexSet<NodeKey> nids;
-            for(auto t : tids)
-            {
-                nids += get_nodes(t);
-            }
-            return nids;
-        }
-        
-        const SimplexSet<EdgeKey>& get_edges(const node_key& nid)
-        {
-            return *get(nid).get_co_boundary();
-        }
-        
-        const SimplexSet<EdgeKey>& get_edges(const face_key& fid)
-        {
-            return *get(fid).get_boundary();
         }
         
         SimplexSet<EdgeKey> get_edges(const tet_key& tid, bool sort = true)
@@ -515,6 +522,83 @@ namespace is_mesh {
             return eids;
         }
         
+        SimplexSet<FaceKey> get_faces(const NodeKey& nid)
+        {
+            SimplexSet<FaceKey> fids;
+            for(auto e : get_edges(nid))
+            {
+                fids += get_faces(e);
+            }
+            return fids;
+        }
+        
+        SimplexSet<TetrahedronKey> get_tets(const NodeKey& nid)
+        {
+            SimplexSet<TetrahedronKey> tids;
+            for (auto e : get_edges(nid))
+            {
+                tids += get_tets(e);
+            }
+            return tids;
+        }
+        
+        SimplexSet<TetrahedronKey> get_tets(const EdgeKey& eid)
+        {
+            SimplexSet<TetrahedronKey> tids;
+            for (auto f : get_faces(eid))
+            {
+                tids += get_tets(f);
+            }
+            return tids;
+        }
+        
+        // Getters which have a SimplexSet as input
+        template<typename key_type>
+        SimplexSet<NodeKey> get_nodes(const SimplexSet<key_type>& keys)
+        {
+            SimplexSet<NodeKey> nids;
+            for(auto k : keys)
+            {
+                nids += get_nodes(k);
+            }
+            return nids;
+        }
+        
+        template<typename key_type>
+        SimplexSet<EdgeKey> get_edges(const SimplexSet<key_type>& keys)
+        {
+            SimplexSet<EdgeKey> eids;
+            for(auto k : keys)
+            {
+                eids += get_edges(k);
+            }
+            return eids;
+        }
+        
+        template<typename key_type>
+        SimplexSet<FaceKey> get_faces(const SimplexSet<key_type>& keys)
+        {
+            SimplexSet<FaceKey> fids;
+            for(auto k : keys)
+            {
+                fids += get_faces(k);
+            }
+            return fids;
+        }
+        
+        template<typename key_type>
+        SimplexSet<TetrahedronKey> get_tets(const SimplexSet<key_type>& keys)
+        {
+            SimplexSet<TetrahedronKey> tids;
+            for(auto k : keys)
+            {
+                tids += get_tets(k);
+            }
+            return tids;
+        }
+        
+        // Other getter functions
+        
         EdgeKey get_edge(const NodeKey& nid1, const NodeKey& nid2)
         {
             SimplexSet<EdgeKey> eid = get_edges(nid1) & get_edges(nid2);
@@ -529,26 +613,6 @@ namespace is_mesh {
             return eid.front();
         }
         
-        SimplexSet<FaceKey> get_faces(const NodeKey& nid)
-        {
-            SimplexSet<FaceKey> fids;
-            for(auto e : get_edges(nid))
-            {
-                fids += get_faces(e);
-            }
-            return fids;
-        }
-        
-        const SimplexSet<FaceKey>& get_faces(const EdgeKey& eid)
-        {
-            return *get(eid).get_co_boundary();
-        }
-        
-        const SimplexSet<FaceKey>& get_faces(const TetrahedronKey& tid)
-        {
-            return *get(tid).get_boundary();
-        }
-        
         FaceKey get_face(const NodeKey& nid1, const NodeKey& nid2, const NodeKey& nid3)
         {
             SimplexSet<FaceKey> fid = (get_faces(nid1) & get_faces(nid2)) & get_faces(nid3);
@@ -561,29 +625,6 @@ namespace is_mesh {
             SimplexSet<FaceKey> fid = get_faces(tid1) & get_faces(tid2);
             assert(fid.size() == 1);
             return fid.front();
-        }
-        
-        SimplexSet<TetrahedronKey> get_tets(const NodeKey& nid)
-        {
-            SimplexSet<TetrahedronKey> tids;
-            for (auto e : get_edges(nid)) {
-                tids += get_tets(e);
-            }
-            return tids;
-        }
-        
-        SimplexSet<TetrahedronKey> get_tets(const EdgeKey& eid)
-        {
-            SimplexSet<TetrahedronKey> tids;
-            for (auto f : get_faces(eid)) {
-                tids += get_tets(f);
-            }
-            return tids;
-        }
-        
-        const SimplexSet<TetrahedronKey>& get_tets(const FaceKey& fid)
-        {
-            return *get(fid).get_co_boundary();
         }
         
         TetrahedronKey get_tet(const TetrahedronKey& tid, const FaceKey& fid)
