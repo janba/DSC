@@ -109,8 +109,6 @@ namespace is_mesh
             mesh.insert_tetrahedron( faces[0], faces[1], faces[2], faces[3] );
         }
         
-        
-        mesh.compress_all();
         return true;
     }
 }

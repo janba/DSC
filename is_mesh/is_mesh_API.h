@@ -34,7 +34,7 @@ namespace is_mesh {
         {
             vectors_read(points, tets, mesh);
             init();
-//            validity_check();
+            validity_check();
             simplex_set_test();
         }
         
@@ -842,7 +842,7 @@ namespace is_mesh {
             }
         }
         
-        node_key split(const edge_key & e)
+        node_key split_old(const edge_key & e)
         {
             std::map<tet_key, int> tt;
             simplex_set st_e;
@@ -868,7 +868,7 @@ namespace is_mesh {
             return n;
         }
         
-        node_key split(const face_key& f)
+        node_key split_old(const face_key& f)
         {
             std::map<tet_key, int> tt;
             simplex_set st_f;
@@ -894,7 +894,7 @@ namespace is_mesh {
             return n;
         }
         
-        node_key split_new(const edge_key& eid)
+        node_key split(const edge_key& eid)
         {
             auto nids = get_nodes(eid);
             auto fids = get_faces(eid);
@@ -1014,7 +1014,7 @@ namespace is_mesh {
         }
         
         
-        node_key collapse_new(const edge_key& eid)
+        node_key collapse(const edge_key& eid)
         {
             auto nids = get_nodes(eid);
             auto fids = get_faces(eid);
@@ -1091,7 +1091,7 @@ namespace is_mesh {
             return n;
         }
         
-        node_key collapse(edge_key& e)
+        node_key collapse_old(edge_key& e)
         {
             auto nodes = get_nodes(e);
 #ifdef DEBUG
@@ -1109,7 +1109,7 @@ namespace is_mesh {
             return n;
         }
         
-        node_key flip_32(const edge_key& e)
+        node_key flip_32_old(const edge_key& e)
         {
 #ifdef DEBUG
             assert(!is_interface(e) && !is_boundary(e));
@@ -1297,10 +1297,8 @@ namespace is_mesh {
             return tetrahedron.key();
         }
         
-        
-        face_key flip_32_new(const edge_key& eid)
+        face_key flip_32(const edge_key& eid)
         {
-            std::cout << "FLIP 3-2" << std::endl;
             auto e_nids = get_boundary(eid);
             auto e_fids = get_co_boundary(eid);
             assert(e_fids.size() == 3);
@@ -1347,9 +1345,8 @@ namespace is_mesh {
             return new_fid;
         }
         
-        edge_key flip_23_new(const face_key& fid)
+        edge_key flip_23(const face_key& fid)
         {
-            std::cout << "FLIP 2-3" << std::endl;
             auto f_tids = get_co_boundary(fid);
             assert(f_tids.size() == 2);
             auto f_eids = get_boundary(fid);
@@ -1401,7 +1398,7 @@ namespace is_mesh {
             return new_eid;
         }
         
-        node_key flip_23(const face_key& f)
+        node_key flip_23_old(const face_key& f)
         {
 #ifdef DEBUG
             assert(!is_interface(f) && !is_boundary(f));
@@ -1463,19 +1460,9 @@ namespace is_mesh {
             }
         }
         
-        
-        void flip_22_new(const face_key& fid1, const face_key& fid2)
-        {
-            std::cout << "FLIP 2-2" << std::endl;
-            flip_44(fid1, fid2);
-        }
-        
-        void flip_44_new(const face_key& fid1, const face_key& fid2)
+        void flip(const edge_key& eid, const face_key& fid1, const face_key& fid2)
         {
             SimplexSet<face_key> fids = {fid1, fid2};
-            SimplexSet<edge_key> eid = get_boundary(fids[0]) & get_boundary(fids[1]);
-            assert(eid.size() == 1);
-            
             auto e_nids = get_boundary(eid);
             auto e_fids = get_co_boundary(eid);
             auto e_tids = get_co_boundary(e_fids);
@@ -1484,10 +1471,10 @@ namespace is_mesh {
             auto new_e_nids = get_boundary(get_boundary(fids)) - e_nids;
             assert(new_e_nids.size() == 2);
             
-            disconnect(e_nids[0], eid[0]);
-            disconnect(e_nids[1], eid[0]);
-            connect(new_e_nids[0], eid[0]);
-            connect(new_e_nids[1], eid[0]);
+            disconnect(e_nids[0], eid);
+            disconnect(e_nids[1], eid);
+            connect(new_e_nids[0], eid);
+            connect(new_e_nids[1], eid);
             
             // Reconnect faces
             auto swap_eids = (get_co_boundary(e_nids[0]) & get_co_boundary(new_e_nids[0])) + (get_co_boundary(e_nids[1]) & get_co_boundary(new_e_nids[1]));
@@ -1534,12 +1521,33 @@ namespace is_mesh {
             }
         }
         
-        node_key flip_22(const face_key& f1, const face_key& f2)
+        
+        void flip_22(const face_key& fid1, const face_key& fid2)
+        {
+            SimplexSet<edge_key> eid = get_boundary(fid1) & get_boundary(fid2);
+            assert(eid.size() == 1);
+            assert(get_co_boundary(eid).size() == 3);
+            assert(get_co_boundary(get_co_boundary(eid)).size() == 2);
+            
+            flip(eid[0], fid1, fid2);
+        }
+        
+        void flip_44(const face_key& fid1, const face_key& fid2)
+        {
+            SimplexSet<edge_key> eid = get_boundary(fid1) & get_boundary(fid2);
+            assert(eid.size() == 1);
+            assert(get_co_boundary(eid).size() == 4);
+            assert(get_co_boundary(get_co_boundary(eid)).size() == 4);
+            
+            flip(eid[0], fid1, fid2);
+        }
+        
+        node_key flip_22_old(const face_key& f1, const face_key& f2)
         {
             return flip_44(f1, f2);
         }
         
-        node_key flip_44(const face_key& f1, const face_key& f2)
+        node_key flip_44_old(const face_key& f1, const face_key& f2)
         {
 #ifdef DEBUG
             assert((is_interface(f1) && is_interface(f2)) || (!is_interface(f1) && !is_interface(f2)));

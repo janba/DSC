@@ -1510,9 +1510,6 @@ namespace is_mesh
         EdgeKey insert_edge(NodeKey node1, NodeKey node2, bool is_compact =false)
         {
             edge_iterator edge = m_edge_kernel->create();
-            //first uncompress boundary
-            uncompress(node1);
-            uncompress(node2);
             //add the new simplex to the co-boundary relation of the boundary simplices
             m_node_kernel->find(node1).add_co_face(edge.key());
             m_node_kernel->find(node2).add_co_face(edge.key());
@@ -1530,12 +1527,6 @@ namespace is_mesh
         FaceKey insert_face(EdgeKey edge1, EdgeKey edge2, EdgeKey edge3)
         {
             face_iterator face = m_face_kernel->create();
-            //first uncompress full boundary - fast if allready uncompressed, else might be heavy
-            simplex_set_type set;
-            closure(edge1, set);
-            closure(edge2, set);
-            closure(edge3, set);
-            uncompress(set);
             //update relations
             m_edge_kernel->find(edge1).add_co_face(face.key());
             m_edge_kernel->find(edge2).add_co_face(face.key());
@@ -1553,13 +1544,6 @@ namespace is_mesh
         TetrahedronKey insert_tetrahedron(FaceKey face1, FaceKey face2, FaceKey face3, FaceKey face4)
         {
             auto tetrahedron = m_tetrahedron_kernel->create();
-            //first uncompress full boundary - fast if allready uncompressed, else might be heavy
-            simplex_set_type set;
-            closure(face1, set);
-            closure(face2, set);
-            closure(face3, set);
-            closure(face4, set);
-            uncompress(set);
             //update relations
             m_face_kernel->find(face1).add_co_face(tetrahedron.key());
             m_face_kernel->find(face2).add_co_face(tetrahedron.key());
