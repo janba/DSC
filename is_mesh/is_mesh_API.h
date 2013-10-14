@@ -129,12 +129,11 @@ namespace is_mesh {
         }
         
     public:
-        void set_label(const tet_key& t, int label)
+        void set_label(const tet_key& tid, int label)
         {
-            get(t).label(label);
-            simplex_set cl_t;
-            closure(t, cl_t);
-            update(cl_t);
+            get(tid).label(label);
+            SimplexSet<tet_key> tids = {tid};
+            update(tids);
         }
         
     private:
@@ -162,32 +161,35 @@ namespace is_mesh {
         /**
          * Updates the flags (is interface, is boundary, is crossing) of simplices in set.
          */
-        void update(simplex_set & set)
+        void update(const SimplexSet<tet_key>& tids)
         {
             // Update faces
-            for (auto fit = set.faces_begin(); fit != set.faces_end(); fit++)
+            auto fids = get_boundary(tids);
+            for (auto f : fids)
             {
-                if (exists(*fit))
+                if (exists(f))
                 {
-                    update_flag(*fit);
+                    update_flag(f);
                 }
             }
             
             // Update edges
-            for (auto eit = set.edges_begin(); eit != set.edges_end(); eit++)
+            auto eids = get_boundary(fids);
+            for (auto e : eids)
             {
-                if (exists(*eit))
+                if (exists(e))
                 {
-                    update_flag(*eit);
+                    update_flag(e);
                 }
             }
             
             // Update nodes
-            for (auto nit = set.nodes_begin(); nit != set.nodes_end(); nit++)
+            auto nids = get_boundary(eids);
+            for (auto n : nids)
             {
-                if (exists(*nit))
+                if (exists(n))
                 {
-                    update_flag(*nit);
+                    update_flag(n);
                 }
             }
         }
@@ -1023,19 +1025,16 @@ namespace is_mesh {
                 mesh.merge(fids[0], fids[1]);
             }
             
-            // Update flags
-            simplex_set st_n, cl_st_n;
-            star(n, st_n);
-            closure(st_n, cl_st_n);
-            update(cl_st_n);
-            
-            for(auto tit = st_n.tetrahedra_begin(); tit != st_n.tetrahedra_end(); tit++)
+            // Update flags and ensure no inverted tetrahedra.
+            SimplexSet<tet_key> changed_tids = get_co_boundary(get_co_boundary(get_co_boundary(n)));
+            for(auto t : changed_tids)
             {
-                if(is_inverted(*tit))
+                if(is_inverted(t))
                 {
-                    mesh.lookup_simplex(*tit).invert_orientation();
+                    get(t).invert_orientation();
                 }
             }
+            update(changed_tids);
             return n;
         }
         
@@ -1367,11 +1366,7 @@ namespace is_mesh {
             }
             
             // Update flags
-            for (auto t : e_tids) {
-                simplex_set cl_t;
-                closure(t, cl_t);
-                update(cl_t);
-            }
+            update(e_tids);
         }
         
         
