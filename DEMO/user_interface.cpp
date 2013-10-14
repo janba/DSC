@@ -234,7 +234,12 @@ void UI::keyboard(unsigned char key, int x, int y) {
             {
                 std::cout << "TEST DSC" << std::endl;
                 dsc->test_flip23_flip32();
+                painter->update(*dsc);
                 dsc->test_split_collapse();
+                painter->update(*dsc);
+                dsc->test_flip44();
+                painter->update(*dsc);
+                dsc->test_flip22();
                 painter->update(*dsc);
             }
             if(vel_fun)

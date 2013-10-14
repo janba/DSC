@@ -122,7 +122,7 @@ namespace is_mesh
     
     inline void simplex_set_test()
     {
-        std::cout << "Simplex set test" << std::endl;
+        std::cout << "Testing simplex set class: ";
         SimplexSet<int> A = {1,3,9,4};
         SimplexSet<int> B = {1,7,5,3,10};
         
@@ -143,6 +143,7 @@ namespace is_mesh
         A += 11;
         SimplexSet<int> E = {1,9,4,11};
         assert(A == E);
+        std::cout << "PASSED" << std::endl;
     }
     
     

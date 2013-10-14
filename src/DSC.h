@@ -2666,6 +2666,118 @@ namespace DSC {
             validity_check();
         }
         
+        void test_flip44()
+        {
+            is_mesh::SimplexSet<edge_key> eids;
+            for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
+            {
+                if(is_safe_editable(eit.key()) && Complex::get_co_boundary(eit.key()).size() == 4)
+                {
+                    auto neighbours = Complex::get_boundary(Complex::get_boundary(Complex::get_co_boundary(Complex::get_co_boundary(eit.key()))));
+                    bool ok = true;
+                    for(auto e : neighbours)
+                    {
+                        if(eids.contains(e))
+                        {
+                            ok = false;
+                        }
+                    }
+                    if (ok)
+                    {
+                        eids += eit.key();
+                    }
+                }
+            }
+            
+            std::cout << "Flip 4-4 test # = " << eids.size();
+            is_mesh::SimplexSet<face_key> flip_fids;
+            int i = 0;
+            for (auto e : eids) {
+                assert(Complex::exists(e));
+                auto fids = Complex::get_co_boundary(e);
+                assert(fids.size() == 4);
+                auto fid = fids - Complex::get_boundary(Complex::get_co_boundary(fids[0]));
+                assert(fid.size() == 1);
+                flip_fids += fid;
+                flip_fids += fids[0];
+                Complex::flip_44(fids[0], fid[0]);
+                i++;
+                if(i%1000 == 0)
+                {
+                    std::cout << ".";
+                }
+            }
+            std::cout << " DONE" << std::endl;
+            
+            i=0;
+            std::cout << "Flip 4-4 test # = " << eids.size();
+            for (int j = 0; j < flip_fids.size(); j+=2)
+            {
+                Complex::flip_44(flip_fids[j], flip_fids[j+1]);
+                i++;
+                if(i%1000 == 0)
+                {
+                    std::cout << ".";
+                }
+            }
+            std::cout << " DONE" << std::endl;
+            Complex::garbage_collect();
+            Complex::validity_check();
+            validity_check();
+        }
+        
+        void test_flip22()
+        {
+            is_mesh::SimplexSet<edge_key> eids;
+            for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
+            {
+                if(is_boundary(eit.key()) && Complex::get_co_boundary(eit.key()).size() == 3)
+                {
+                    auto neighbours = Complex::get_boundary(Complex::get_boundary(Complex::get_co_boundary(Complex::get_co_boundary(eit.key()))));
+                    bool ok = true;
+                    for(auto e : neighbours)
+                    {
+                        if(eids.contains(e))
+                        {
+                            ok = false;
+                        }
+                    }
+                    if (ok)
+                    {
+                        eids += eit.key();
+                    }
+                }
+            }
+            
+            std::cout << "Flip 2-2 test # = " << eids.size();
+            int i = 0;
+            for (auto e : eids) {
+                assert(Complex::exists(e));
+                auto fids = Complex::get_co_boundary(e);
+                assert(fids.size() == 3);
+                is_mesh::SimplexSet<face_key> flip_fids;
+                for(auto f : fids)
+                {
+                    if(is_boundary(f))
+                    {
+                        flip_fids += f;
+                    }
+                }
+                
+                assert(flip_fids.size() == 2);
+                Complex::flip_44(flip_fids[0], flip_fids[1]);
+                i++;
+                if(i%1000 == 0)
+                {
+                    std::cout << ".";
+                }
+            }
+            std::cout << " DONE" << std::endl;
+            Complex::garbage_collect();
+            Complex::validity_check();
+            validity_check();
+        }
+        
     };
     
 }

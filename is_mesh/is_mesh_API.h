@@ -1571,7 +1571,7 @@ namespace is_mesh {
                 
         void validity_check()
         {
-            std::cout << "Validity check" << std::endl;
+            std::cout << "Testing validity of simplicial complex: ";
             for(auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
                 assert(exists(tit.key()));
@@ -1616,7 +1616,7 @@ namespace is_mesh {
                 assert(get_nodes(tit.key()).size() == 4);
             }
             
-            std::cout << "Input mesh valid" << std::endl;
+            std::cout << "PASSED" << std::endl;
         }
     };
     
