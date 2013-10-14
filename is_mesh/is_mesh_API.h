@@ -842,58 +842,6 @@ namespace is_mesh {
             }
         }
         
-        node_key split_old(const edge_key & e)
-        {
-            std::map<tet_key, int> tt;
-            simplex_set st_e;
-            star(e, st_e);
-            
-            for (auto tit = st_e.tetrahedra_begin(); tit != st_e.tetrahedra_end(); tit++)
-            {
-                tt[*tit] = get_label(*tit);
-            }
-            
-            std::map<tet_key, tet_key> new_tets;
-            node_key n = mesh.split_edge_helper(e, new_tets);
-            
-            for (auto it = new_tets.begin(); it != new_tets.end(); it++)
-            {
-                set_label(it->first, tt[it->second]);
-            }
-            
-            simplex_set st_n;
-            star(n, st_n);
-            st_n.insert(n);
-            update(st_n);
-            return n;
-        }
-        
-        node_key split_old(const face_key& f)
-        {
-            std::map<tet_key, int> tt;
-            simplex_set st_f;
-            star(f, st_f);
-            
-            for (auto tit = st_f.tetrahedra_begin(); tit != st_f.tetrahedra_end(); tit++)
-            {
-                tt[*tit] = get_label(*tit);
-            }
-            
-            std::map<tet_key, tet_key> new_tets;
-            node_key n = mesh.split_face_helper(f, new_tets);
-            
-            for(auto it = new_tets.begin(); it != new_tets.end(); it++)
-            {
-                set_label(it->first, tt[it->second]);
-            }
-            
-            simplex_set st_n;
-            star(n, st_n);
-            st_n.insert(n);
-            update(st_n);
-            return n;
-        }
-        
         node_key split(const edge_key& eid)
         {
             auto nids = get_nodes(eid);
@@ -1091,48 +1039,6 @@ namespace is_mesh {
             return n;
         }
         
-        node_key collapse_old(edge_key& e)
-        {
-            auto nodes = get_nodes(e);
-#ifdef DEBUG
-            assert(nodes[0].is_valid());
-            assert(nodes[1].is_valid());
-#endif
-            node_key n = mesh.edge_collapse_helper(e, nodes[0], nodes[1]);
-            if (!n.is_valid()) {
-                return n;
-            }
-            simplex_set st_n, cl_st_n;
-            star(n, st_n);
-            closure(st_n, cl_st_n);
-            update(cl_st_n);
-            return n;
-        }
-        
-        node_key flip_32_old(const edge_key& e)
-        {
-#ifdef DEBUG
-            assert(!is_interface(e) && !is_boundary(e));
-#endif
-            simplex_set lk_e;
-            link(e, lk_e);
-#ifdef DEBUG
-            assert(lk_e.size_nodes() == 3);
-#endif
-            node_key n1 = *lk_e.nodes_begin();
-            node_key n2 = split(e);
-            edge_key e2 = get_edge(n1, n2);
-#ifdef DEBUG
-            assert(e2.is_valid());
-#endif
-            node_key n3 = collapse(e2);
-#ifdef DEBUG
-            assert(n3.is_valid());
-            assert(n1 == n3);
-#endif
-            return n3;
-        }
-        
         template<typename key_type>
         std::vector<key_type> difference(const std::vector<key_type>& keys1, const std::vector<key_type>& keys2)
         {
@@ -1229,35 +1135,6 @@ namespace is_mesh {
                 }
             }
             return i == keys.size();
-        }
-        
-        std::vector<face_key> create_faces(const edge_key& interior_edge, const std::vector<edge_key>& exterior_edges)
-        {
-            assert(exterior_edges.size()%3 == 0);
-            std::vector<std::vector<edge_key>> faces_edges(exterior_edges.size()/3);
-            for(auto& face_edges : faces_edges)
-            {
-                face_edges.push_back(interior_edge);
-            }
-            for (auto e : exterior_edges)
-            {
-                for(auto& face_edges : faces_edges)
-                {
-                    if(is_neighbour(e, face_edges))
-                    {
-                        face_edges.push_back(e);
-                        break;
-                    }
-                }
-            }
-            
-            std::vector<face_key> new_faces;
-            for(auto& face_edges : faces_edges)
-            {
-                assert(face_edges.size() == 3);
-                new_faces.push_back(mesh.insert_face(face_edges[0], face_edges[1], face_edges[2]));
-            }
-            return new_faces;
         }
         
         bool is_inverted(const tet_key& tid)
@@ -1398,30 +1275,6 @@ namespace is_mesh {
             return new_eid;
         }
         
-        node_key flip_23_old(const face_key& f)
-        {
-#ifdef DEBUG
-            assert(!is_interface(f) && !is_boundary(f));
-#endif
-            simplex_set lk_f;
-            link(f, lk_f);
-            node_key n1 = *lk_f.nodes_begin();
-#ifdef DEBUG
-            assert(lk_f.size_nodes() == 2);
-#endif
-            node_key n2 = split(f);
-            edge_key e = get_edge(n1, n2);
-#ifdef DEBUG
-            assert(e.is_valid());
-#endif
-            node_key n3 = collapse(e);
-#ifdef DEBUG
-            assert(n3.is_valid());
-            assert(n1 == n3);
-#endif
-            return n3;
-        }
-        
         template<typename child_key, typename parent_key>
         void connect(const child_key& ck, const parent_key& pk)
         {
@@ -1540,32 +1393,6 @@ namespace is_mesh {
             assert(get_co_boundary(get_co_boundary(eid)).size() == 4);
             
             flip(eid[0], fid1, fid2);
-        }
-        
-        node_key flip_22_old(const face_key& f1, const face_key& f2)
-        {
-            return flip_44(f1, f2);
-        }
-        
-        node_key flip_44_old(const face_key& f1, const face_key& f2)
-        {
-#ifdef DEBUG
-            assert((is_interface(f1) && is_interface(f2)) || (!is_interface(f1) && !is_interface(f2)));
-            assert((is_boundary(f1) && is_boundary(f2)) || (!is_boundary(f1) && !is_boundary(f2)));
-#endif
-            edge_key e1 = get_edge(f1, f2);
-            node_key n1 = get_apex(f1, e1);
-            node_key n2 = split(e1);
-            edge_key e2 = get_edge(n1, n2);
-#ifdef DEBUG
-            assert(e2.is_valid());
-#endif
-            node_key n3 = collapse(e2);
-#ifdef DEBUG
-            assert(n3.is_valid());
-            assert(n1 == n3);
-#endif
-            return n3;
         }
         
         ///////////////////////
