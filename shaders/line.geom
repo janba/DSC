@@ -16,9 +16,9 @@ void main()
     vec3 p = gl_in[0].gl_Position.xyz;
     vec3 E = normalize(eyePos - p);
     vec3 V = normalize(v[0]);
-    vec3 T = cross(E, V);
+    vec3 T = normalize(cross(E, V));
     
-    float w = 0.3;
+    float w = 0.1;
     
     gl_Position = PMatrix * vec4(p + w * T, 1.);
     colour = vertexColour[0];
