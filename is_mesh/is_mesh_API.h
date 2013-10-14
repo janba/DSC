@@ -753,24 +753,17 @@ namespace is_mesh {
             get(new_nid).set_pos(0.5*(get(nids[0]).get_pos() + get(nids[1]).get_pos()));
             get(new_nid).set_destination(0.5*(get(nids[0]).get_destination() + get(nids[1]).get_destination()));
             
-            get(nid).remove_co_face(eid);
-            get(new_nid).add_co_face(eid);
-            auto& edge = get(eid);
-            edge.remove_face(nid);
-            edge.add_face(new_nid);
+            disconnect(nid, eid);
+            connect(new_nid, eid);
             
-            auto new_eid = mesh.insert_edge(new_nid, nids[1]);
+            auto new_eid = mesh.insert_edge(new_nid, nid);
             
             // Update faces, create faces
             std::vector<edge_key> new_f_eids;
             std::vector<face_key> new_fids;
             for (auto f : fids)
             {
-                auto eids = get_edges(f);
-                assert(eids.size() == 3);
-                auto temp = uni(uni(get_nodes(eids[0]), get_nodes(eids[1])), get_nodes(eids[2]));
-                assert(temp.size() == 4);
-                auto e_nids = difference(temp, nids);
+                auto e_nids = get_nodes(get_edges(f)) - nids;
                 assert(e_nids.size() == 2);
                 new_f_eids.push_back(mesh.insert_edge(e_nids[0], e_nids[1]));
                 
