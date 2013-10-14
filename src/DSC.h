@@ -593,21 +593,25 @@ namespace DSC {
             flip_23_recursively(polygon1, n1, n2, K1, 0, k);
             flip_23_recursively(polygon1, n1, n2, K1, k, m1-1);
             
-            if(m2 > 2)
-            {
+            if(m2 <= 2) {
+                // Find the faces to flip about.
+                face_key f1 = Complex::get_face(n1, n2, polygon1.front());
+                face_key f2 = Complex::get_face(n1, n2, polygon1.back());
+                
+                if(is_boundary(f1) && is_boundary(f2))
+                {
+                    Complex::flip_22(f1, f2);
+                }
+            }
+            else {
                 k = K2[0][m2-1];
                 flip_23_recursively(polygon2, n1, n2, K2, 0, k);
                 flip_23_recursively(polygon2, n1, n2, K2, k, m2-1);
-            }
-            
-            // Find the faces to flip about.
-            face_key f1 = Complex::get_face(n1, n2, polygon1.front());
-            face_key f2 = Complex::get_face(n1, n2, polygon1.back());
-            
-            if(m2 <= 2) {
-                Complex::flip_22(f1, f2);
-            }
-            else {
+                
+                // Find the faces to flip about.
+                face_key f1 = Complex::get_face(n1, n2, polygon1.front());
+                face_key f2 = Complex::get_face(n1, n2, polygon1.back());
+                
                 Complex::flip_44(f1, f2);
             }
         }
