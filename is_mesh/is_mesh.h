@@ -206,7 +206,7 @@ namespace is_mesh
         template<typename key_type>
         void invert_orientation(key_type const & k)
         {
-            if (k.get_dim() == 0) return;
+            if (k.dim == 0) return;
             
             auto boundary = lookup_simplex(k).get_boundary();
             auto it = boundary->begin();
@@ -313,9 +313,9 @@ namespace is_mesh
         
         void orient_coface_helper(const FaceKey& sk, const TetrahedronKey& cfk, bool consistently)
         {
-            assert(sk.get_dim() == (cfk.get_dim() - 1) || !"sk is not a boundary face of cfk.");
-            assert(sk.get_dim() < 3 || !"No simplices of dimension more than three.");
-            assert(sk.get_dim() > 0 || !"Vertices are not oriented.");
+            assert(sk.dim == (cfk.dim - 1) || !"sk is not a boundary face of cfk.");
+            assert(sk.dim < 3 || !"No simplices of dimension more than three.");
+            assert(sk.dim > 0 || !"Vertices are not oriented.");
             
             auto coface_boundary = lookup_simplex(cfk).get_boundary();
             
@@ -355,9 +355,9 @@ namespace is_mesh
          */
         void orient_coface_helper(const EdgeKey& sk, const FaceKey& cfk, bool consistently)
         {
-            assert(sk.get_dim() == (cfk.get_dim() - 1) || !"sk is not a boundary face of cfk.");
-            assert(sk.get_dim() < 3 || !"No simplices of dimension more than three.");
-            assert(sk.get_dim() > 0 || !"Vertices are not oriented.");
+            assert(sk.dim == (cfk.dim - 1) || !"sk is not a boundary face of cfk.");
+            assert(sk.dim < 3 || !"No simplices of dimension more than three.");
+            assert(sk.dim > 0 || !"Vertices are not oriented.");
             
             auto coface_boundary = lookup_simplex(cfk).get_boundary();
             
@@ -429,13 +429,13 @@ namespace is_mesh
         template<typename key_type_face, typename key_type_simplex>
         bool in_boundary(key_type_face const & f, key_type_simplex const & s)
         {
-            if (f.get_dim() >= s.get_dim())
+            if (f.dim >= s.dim)
             {
                 //cannot be in boundary as dimensions are wrong
                 return false;
             }
             auto b_list = lookup_simplex(s).get_boundary();
-            if (f.get_dim()+1 < s.get_dim())
+            if (f.dim+1 < s.dim)
             {
                 //too far apart.. need to call recursively
                 bool in_bound = false;
@@ -475,7 +475,7 @@ namespace is_mesh
         template<typename simplex_key_s, typename simplex_key_t>
         void star_helper(simplex_key_s const & s, simplex_key_t const & t,  simplex_set_type & set)
         {
-            assert(s.get_dim() < t.get_dim() || !"Star traversed a wrong dimension simplex");
+            assert(s.dim < t.dim || !"Star traversed a wrong dimension simplex");
             
             auto& simplex = lookup_simplex(t);
             set.insert(t); //add ourself to the set
@@ -1010,7 +1010,7 @@ namespace is_mesh
         bool get_intersection(key_type_simplex const & k1, key_type_simplex const & k2, key_type_face & k)
         {
             assert(k1 != k2 || !"The same key for both input simplices");
-            assert(k1.get_dim() > 0 || !"Cannot intersect two vertices");
+            assert(k1.dim > 0 || !"Cannot intersect two vertices");
             
             for (auto bi1 : *lookup_simplex(k1).get_boundary())
             {

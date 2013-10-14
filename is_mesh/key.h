@@ -7,14 +7,13 @@ namespace is_mesh
     {
     protected:
         unsigned int key;
-        unsigned int dim;
         
-        Key() : Key(static_cast<unsigned int>(-1), static_cast<unsigned int>(-1))
+        Key() : Key(static_cast<unsigned int>(-1))
         {
             
         }
         
-        Key(unsigned int _key, unsigned int _dim) : key(_key), dim(_dim)
+        Key(unsigned int _key) : key(_key)
         {
             
         }
@@ -22,12 +21,7 @@ namespace is_mesh
     public:
         bool is_valid() const
         {
-            return dim != static_cast<unsigned int>(-1);
-        }
-        
-        const int get_dim() const
-        {
-            return dim;
+            return key != static_cast<unsigned int>(-1);
         }
         
         //conversion to int
@@ -53,29 +47,37 @@ namespace is_mesh
     class NodeKey : public Key
     {
     public:
+        constexpr const static int dim = 0;
+        
         NodeKey() : Key() {}
-        NodeKey(unsigned int k) : Key(k, 0) {}
+        NodeKey(unsigned int k) : Key(k) {}
     };
     
     class EdgeKey : public Key
     {
     public:
+        constexpr const static int dim = 1;
+        
         EdgeKey() : Key() {}
-        EdgeKey(unsigned int k) : Key(k, 1) {}
+        EdgeKey(unsigned int k) : Key(k) {}
     };
     
     class FaceKey : public Key
     {
     public:
+        constexpr const static int dim = 2;
+
         FaceKey() : Key() {}
-        FaceKey(unsigned int k) : Key(k, 2) {}
+        FaceKey(unsigned int k) : Key(k) {}
     };
     
     class TetrahedronKey : public Key
     {
     public:
+        constexpr const static int dim = 3;
+        
         TetrahedronKey() : Key() {}
-        TetrahedronKey(unsigned int k) : Key(k, 3) {}
+        TetrahedronKey(unsigned int k) : Key(k) {}
     };
     
 }
