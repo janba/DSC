@@ -468,6 +468,16 @@ namespace is_mesh {
             return nids;
         }
         
+        SimplexSet<NodeKey> get_nodes(const SimplexSet<tet_key>& tids)
+        {
+            SimplexSet<NodeKey> nids;
+            for(auto t : tids)
+            {
+                nids += get_nodes(t);
+            }
+            return nids;
+        }
+        
         const SimplexSet<EdgeKey>& get_edges(const node_key& nid)
         {
             return *get(nid).get_co_boundary();
@@ -555,78 +565,44 @@ namespace is_mesh {
         
         SimplexSet<TetrahedronKey> get_tets(const NodeKey& nid)
         {
-            SimplexSet<TetrahedronKey> tets;
-            for (auto eid : get_edges(nid)) {
-                tets = uni(tets, get_tets(eid));
+            SimplexSet<TetrahedronKey> tids;
+            for (auto e : get_edges(nid)) {
+                tids += get_tets(e);
             }
-            return tets;
+            return tids;
         }
         
-        std::vector<tet_key> get_tets(const edge_key& eid)
+        SimplexSet<TetrahedronKey> get_tets(const EdgeKey& eid)
         {
-            std::vector<tet_key> tets;
-            for (auto fid : *get(eid).get_co_boundary()) {
-                for (auto tid : *get(fid).get_co_boundary()) {
-                    if(std::find(tets.begin(), tets.end(), tid) == tets.end())
-                    {
-                        tets.push_back(tid);
-                    }
-                }
+            SimplexSet<TetrahedronKey> tids;
+            for (auto f : get_faces(eid)) {
+                tids += get_tets(f);
             }
-            return tets;
+            return tids;
         }
         
-        std::vector<tet_key> get_tets(const face_key& fid)
+        const SimplexSet<TetrahedronKey>& get_tets(const FaceKey& fid)
         {
-            auto coboundary = *get(fid).get_co_boundary();
-            return std::vector<tet_key>(coboundary.begin(), coboundary.end());
+            return *get(fid).get_co_boundary();
         }
         
-        tet_key get_tet(const tet_key& t, const face_key& f)
+        TetrahedronKey get_tet(const TetrahedronKey& tid, const FaceKey& fid)
         {
-            simplex_set st_f;
-            star(f, st_f);
-            for(auto tit = st_f.tetrahedra_begin(); tit != st_f.tetrahedra_end(); tit++)
-            {
-                if(*tit != t)
-                {
-                    return *tit;
-                }
-            }
-            return TetrahedronKey();
+            SimplexSet<TetrahedronKey> t = get_tets(fid) - tid;
+            assert(t.size() == 1);
+            return t.front();
         }
         
-        node_key get_apex(const tet_key& t, const face_key& f)
+        NodeKey get_apex(const FaceKey& fid, const EdgeKey& e)
         {
-            simplex_set cl_f, cl_t;
-            closure(t, cl_t);
-            closure(f, cl_f);
-            cl_t.difference(cl_f);
-            return *cl_t.nodes_begin();
+            SimplexSet<NodeKey> n = get_nodes(fid) - get_nodes(e);
+            assert(n.size() == 1);
+            return n.front();
         }
         
-        node_key get_apex(const face_key& f, const edge_key& e)
+        SimplexSet<NodeKey> get_apices(const FaceKey& fid)
         {
-            simplex_set cl_f, cl_e;
-            closure(f, cl_f);
-            closure(e, cl_e);
-            cl_f.difference(cl_e);
-#ifdef DEBUG
-            assert(cl_f.size_nodes() == 1);
-#endif
-            return *cl_f.nodes_begin();
-        }
-        
-        std::vector<node_key> get_apices(const face_key& f)
-        {
-            std::vector<node_key> apices;
-            simplex_set lk_f;
-            link(f, lk_f);
-            for(auto nit = lk_f.nodes_begin(); nit != lk_f.nodes_end(); nit++)
-            {
-                apices.push_back(*nit);
-            }
-            return apices;
+            return get_nodes(get_tets(fid)) - get_nodes(fid);
         }
         
         ////////////////////
