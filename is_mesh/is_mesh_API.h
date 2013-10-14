@@ -478,40 +478,34 @@ namespace is_mesh {
             return *get(fid).get_boundary();
         }
         
-        std::vector<edge_key> get_edges(const tet_key& tid, bool sort = true)
+        SimplexSet<EdgeKey> get_edges(const tet_key& tid, bool sort = true)
         {
-            std::vector<edge_key> edges;
-            int j = 0;
-            for(auto fid : *get(tid).get_boundary())
+            SimplexSet<EdgeKey> eids;
+            for(auto f : get_faces(tid))
             {
                 if(sort)
                 {
-                    mesh.orient_face_helper(tid, fid, true);
+                    mesh.orient_face_helper(tid, f, true);
                 }
-                auto f_edges = get_edges(fid);
-                if(edges.size() == 0)
+                SimplexSet<EdgeKey> f_eids = get_edges(f);
+                if(eids.size() == 0)
                 {
-                    for (auto eid : f_edges) {
-                        edges.push_back(eid);
-                    }
-                    edges.resize(6);
+                    eids += f_eids;
                 }
                 else {
-                    for (int i = 0; i < 3; i++)
+                    for(int i = 0; i < 3; i++)
                     {
-                        if(f_edges[i] == edges[0] || f_edges[i] == edges[1] || f_edges[i] == edges[2])
+                        if(eids.contains(f_eids[i]))
                         {
-                            edges[3+j] = f_edges[(i+1)%3];
-                            j++;
-                            break;
+                            eids += f_eids[(i+1)%3];
                         }
                     }
                 }
             }
-            return edges;
+            return eids;
         }
         
-        EdgeKey get_edge(const NodeKey& nid1, const node_key& nid2)
+        EdgeKey get_edge(const NodeKey& nid1, const NodeKey& nid2)
         {
             SimplexSet<EdgeKey> eid = get_edges(nid1) & get_edges(nid2);
             assert(eid.size() == 1);
@@ -525,84 +519,44 @@ namespace is_mesh {
             return eid.front();
         }
         
-        std::vector<edge_key> get_edges(const std::vector<tet_key>& tets)
+        SimplexSet<FaceKey> get_faces(const NodeKey& nid)
         {
-            std::vector<edge_key> edges;
-            for (auto t : tets)
+            SimplexSet<FaceKey> fids;
+            for(auto e : get_edges(nid))
             {
-                edges = uni(get_edges(t), edges);
-            }
-            return edges;
-        }
-        
-        std::vector<face_key> get_faces(const node_key& nid)
-        {
-            std::vector<face_key> fids;
-            for(auto e : *get(nid).get_co_boundary())
-            {
-                auto e_fids = get_faces(e);
-                fids.insert(fids.end(), e_fids.begin(), e_fids.end());
+                fids += get_faces(e);
             }
             return fids;
         }
         
-        std::vector<face_key> get_faces(const edge_key& eid)
+        const SimplexSet<FaceKey>& get_faces(const EdgeKey& eid)
         {
-            auto coboundary = *get(eid).get_co_boundary();
-            return std::vector<face_key>(coboundary.begin(), coboundary.end());
+            return *get(eid).get_co_boundary();
         }
         
-        std::vector<face_key> get_faces(const tet_key& tid)
+        const SimplexSet<FaceKey>& get_faces(const TetrahedronKey& tid)
         {
-            auto boundary = *get(tid).get_boundary();
-            return std::vector<face_key>(boundary.begin(), boundary.end());
+            return *get(tid).get_boundary();
         }
         
-        std::vector<face_key> get_faces(const std::vector<tet_key>& tids)
+        FaceKey get_face(const NodeKey& nid1, const NodeKey& nid2, const NodeKey& nid3)
         {
-            std::vector<face_key> faces;
-            for (auto tid : tids)
-            {
-                faces = uni(get_faces(tid), faces);
-            }
-            return faces;
+            SimplexSet<FaceKey> fid = (get_faces(nid1) & get_faces(nid2)) & get_faces(nid3);
+            assert(fid.size() == 1);
+            return fid.front();
         }
         
-        face_key get_face(const node_key& n1, const node_key& n2, const node_key& n3)
+        FaceKey get_face(const TetrahedronKey& tid1, const TetrahedronKey& tid2)
         {
-            simplex_set st1, st2, st3;
-            star(n1, st1);
-            star(n2, st2);
-            star(n3, st3);
-            
-            st1.intersection(st2);
-            st1.intersection(st3);
-            
-            if (st1.size_faces() != 1)
-            {
-                return FaceKey();
-            }
-            return *(st1.faces_begin());
+            SimplexSet<FaceKey> fid = get_faces(tid1) & get_faces(tid2);
+            assert(fid.size() == 1);
+            return fid.front();
         }
         
-        face_key get_face(const tet_key& t1, const tet_key& t2)
+        SimplexSet<TetrahedronKey> get_tets(const NodeKey& nid)
         {
-            simplex_set cl1, cl2;
-            closure(t1, cl1);
-            closure(t2, cl2);
-            cl1.intersection(cl2);
-            
-            if (cl1.size_faces() != 1)
-            {
-                return FaceKey();
-            }
-            return *(cl1.faces_begin());
-        }
-        
-        std::vector<tet_key> get_tets(const node_key& nid)
-        {
-            std::vector<tet_key> tets;
-            for (auto eid : *get(nid).get_co_boundary()) {
+            SimplexSet<TetrahedronKey> tets;
+            for (auto eid : get_edges(nid)) {
                 tets = uni(tets, get_tets(eid));
             }
             return tets;
