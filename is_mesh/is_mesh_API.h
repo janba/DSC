@@ -348,7 +348,7 @@ namespace is_mesh {
         
         SimplexSet<NodeKey> get_boundary(const EdgeKey& eid)
         {
-            std::vector<NodeKey> temp = *mesh.lookup_simplex(eid).get_boundary();
+            std::vector<NodeKey> temp = *get(eid).get_boundary();
             SimplexSet<NodeKey> res;
             for(auto k : temp)
             {
@@ -359,7 +359,7 @@ namespace is_mesh {
         
         SimplexSet<EdgeKey> get_boundary(const FaceKey& fid)
         {
-            std::vector<EdgeKey> temp = *mesh.lookup_simplex(fid).get_boundary();
+            std::vector<EdgeKey> temp = *get(fid).get_boundary();
             SimplexSet<EdgeKey> res;
             for(auto k : temp)
             {
@@ -370,7 +370,7 @@ namespace is_mesh {
         
         SimplexSet<FaceKey> get_boundary(const TetrahedronKey& tid)
         {
-            std::vector<FaceKey> temp =  *mesh.lookup_simplex(tid).get_boundary();
+            std::vector<FaceKey> temp =  *get(tid).get_boundary();
             SimplexSet<FaceKey> res;
             for(auto k : temp)
             {
@@ -382,7 +382,7 @@ namespace is_mesh {
         
         SimplexSet<EdgeKey> get_co_boundary(const NodeKey& nid)
         {
-            auto temp = *mesh.lookup_simplex(nid).get_co_boundary();
+            auto temp = *get(nid).get_co_boundary();
             SimplexSet<EdgeKey> res;
             for(auto k : temp)
             {
@@ -393,7 +393,7 @@ namespace is_mesh {
         
         SimplexSet<FaceKey> get_co_boundary(const EdgeKey& eid)
         {
-            auto temp = *mesh.lookup_simplex(eid).get_co_boundary();
+            auto temp = *get(eid).get_co_boundary();
             SimplexSet<FaceKey> res;
             for(auto k : temp)
             {
@@ -404,7 +404,7 @@ namespace is_mesh {
         
         SimplexSet<TetrahedronKey> get_co_boundary(const FaceKey& fid)
         {
-            auto temp = *mesh.lookup_simplex(fid).get_co_boundary();
+            auto temp = *get(fid).get_co_boundary();
             SimplexSet<TetrahedronKey> res;
             for(auto k : temp)
             {
@@ -476,7 +476,7 @@ namespace is_mesh {
         std::vector<node_key> get_nodes(const edge_key& eid)
         {
             std::vector<node_key> nodes;
-            for (auto nid : *mesh.lookup_simplex(eid).get_boundary()) {
+            for (auto nid : *get(eid).get_boundary()) {
                 nodes.push_back(nid);
             }
             return nodes;
@@ -486,7 +486,7 @@ namespace is_mesh {
         {
             assert(exists(fid));
             std::vector<node_key> nodes;
-            for (auto eid : *mesh.lookup_simplex(fid).get_boundary()) {
+            for (auto eid : *get(fid).get_boundary()) {
                 assert(exists(eid));
                 if(sort)
                 {
@@ -501,7 +501,7 @@ namespace is_mesh {
         {
             assert(exists(tid));
             std::vector<node_key> nodes;
-            auto bit = mesh.lookup_simplex(tid).get_boundary();
+            auto bit = get(tid).get_boundary();
             face_key fid = *bit->begin();
             assert(exists(fid));
             if(sort)
@@ -525,14 +525,14 @@ namespace is_mesh {
         
         std::vector<edge_key> get_edges(const node_key& nid)
         {
-            auto coboundary = *mesh.lookup_simplex(nid).get_co_boundary();
+            auto coboundary = *get(nid).get_co_boundary();
             return std::vector<edge_key>(coboundary.begin(), coboundary.end());
         }
         
         std::vector<edge_key> get_edges(const face_key& fid)
         {
             std::vector<edge_key> edges;
-            for (auto eid : *mesh.lookup_simplex(fid).get_boundary()) {
+            for (auto eid : *get(fid).get_boundary()) {
                 edges.push_back(eid);
             }
             return edges;
@@ -542,7 +542,7 @@ namespace is_mesh {
         {
             std::vector<edge_key> edges;
             int j = 0;
-            for(auto fid : *mesh.lookup_simplex(tid).get_boundary())
+            for(auto fid : *get(tid).get_boundary())
             {
                 if(sort)
                 {
@@ -612,7 +612,7 @@ namespace is_mesh {
         std::vector<face_key> get_faces(const node_key& nid)
         {
             std::vector<face_key> fids;
-            for(auto e : *mesh.lookup_simplex(nid).get_co_boundary())
+            for(auto e : *get(nid).get_co_boundary())
             {
                 auto e_fids = get_faces(e);
                 fids.insert(fids.end(), e_fids.begin(), e_fids.end());
@@ -622,13 +622,13 @@ namespace is_mesh {
         
         std::vector<face_key> get_faces(const edge_key& eid)
         {
-            auto coboundary = *mesh.lookup_simplex(eid).get_co_boundary();
+            auto coboundary = *get(eid).get_co_boundary();
             return std::vector<face_key>(coboundary.begin(), coboundary.end());
         }
         
         std::vector<face_key> get_faces(const tet_key& tid)
         {
-            auto boundary = *mesh.lookup_simplex(tid).get_boundary();
+            auto boundary = *get(tid).get_boundary();
             return std::vector<face_key>(boundary.begin(), boundary.end());
         }
         
@@ -676,7 +676,7 @@ namespace is_mesh {
         std::vector<tet_key> get_tets(const node_key& nid)
         {
             std::vector<tet_key> tets;
-            for (auto eid : *mesh.lookup_simplex(nid).get_co_boundary()) {
+            for (auto eid : *get(nid).get_co_boundary()) {
                 tets = uni(tets, get_tets(eid));
             }
             return tets;
@@ -685,8 +685,8 @@ namespace is_mesh {
         std::vector<tet_key> get_tets(const edge_key& eid)
         {
             std::vector<tet_key> tets;
-            for (auto fid : *mesh.lookup_simplex(eid).get_co_boundary()) {
-                for (auto tid : *mesh.lookup_simplex(fid).get_co_boundary()) {
+            for (auto fid : *get(eid).get_co_boundary()) {
+                for (auto tid : *get(fid).get_co_boundary()) {
                     if(std::find(tets.begin(), tets.end(), tid) == tets.end())
                     {
                         tets.push_back(tid);
@@ -698,7 +698,7 @@ namespace is_mesh {
         
         std::vector<tet_key> get_tets(const face_key& fid)
         {
-            auto coboundary = *mesh.lookup_simplex(fid).get_co_boundary();
+            auto coboundary = *get(fid).get_co_boundary();
             return std::vector<tet_key>(coboundary.begin(), coboundary.end());
         }
         
@@ -853,12 +853,12 @@ namespace is_mesh {
             
             // Split edge
             auto new_nid = mesh.insert_node();
-            mesh.lookup_simplex(new_nid).set_pos(0.5*(mesh.lookup_simplex(nids[0]).get_pos() + mesh.lookup_simplex(nids[1]).get_pos()));
-            mesh.lookup_simplex(new_nid).set_destination(0.5*(mesh.lookup_simplex(nids[0]).get_destination() + mesh.lookup_simplex(nids[1]).get_destination()));
+            get(new_nid).set_pos(0.5*(get(nids[0]).get_pos() + get(nids[1]).get_pos()));
+            get(new_nid).set_destination(0.5*(get(nids[0]).get_destination() + get(nids[1]).get_destination()));
             
-            mesh.lookup_simplex(nid).remove_co_face(eid);
-            mesh.lookup_simplex(new_nid).add_co_face(eid);
-            auto& edge = mesh.lookup_simplex(eid);
+            get(nid).remove_co_face(eid);
+            get(new_nid).add_co_face(eid);
+            auto& edge = get(eid);
             edge.remove_face(nid);
             edge.add_face(new_nid);
             
@@ -887,9 +887,9 @@ namespace is_mesh {
                     }
                 }
                 
-                mesh.lookup_simplex(f_eid).remove_co_face(f);
-                mesh.lookup_simplex(new_f_eids.back()).add_co_face(f);
-                auto& face = mesh.lookup_simplex(f);
+                get(f_eid).remove_co_face(f);
+                get(new_f_eids.back()).add_co_face(f);
+                auto& face = get(f);
                 face.remove_face(f_eid);
                 face.add_face(new_f_eids.back());
                 new_fids.push_back(mesh.insert_face(f_eid, new_f_eids.back(), new_eid));
@@ -928,9 +928,9 @@ namespace is_mesh {
                     }
                 }
                 assert(t_fid.is_valid());
-                mesh.lookup_simplex(t_fid).remove_co_face(t);
-                mesh.lookup_simplex(new_t_fid).add_co_face(t);
-                auto& tet = mesh.lookup_simplex(t);
+                get(t_fid).remove_co_face(t);
+                get(new_t_fid).add_co_face(t);
+                auto& tet = get(t);
                 tet.remove_face(t_fid);
                 tet.add_face(new_t_fid);
                 
@@ -956,7 +956,7 @@ namespace is_mesh {
             {
                 if(is_inverted(t))
                 {
-                    mesh.lookup_simplex(t).invert_orientation();
+                    get(t).invert_orientation();
                 }
             }
             
@@ -1121,11 +1121,11 @@ namespace is_mesh {
         bool is_neighbour(const key_type& key, const std::vector<key_type>& keys)
         {
             int i = 0;
-            for (auto k1 : *mesh.lookup_simplex(key).get_boundary())
+            for (auto k1 : *get(key).get_boundary())
             {
                 for (auto k2 : keys)
                 {
-                    auto boundary = *mesh.lookup_simplex(k2).get_boundary();
+                    auto boundary = *get(k2).get_boundary();
                     if(std::find(boundary.begin(), boundary.end(), k1) != boundary.end())
                     {
                         i++;
@@ -1143,7 +1143,7 @@ namespace is_mesh {
             for(auto &n : nodes)
             {
                 assert(exists(n));
-                verts.push_back(mesh.lookup_simplex(n).get_pos());
+                verts.push_back(get(n).get_pos());
             }
             return dot(verts[0]-verts[3], cross(verts[1]-verts[3], verts[2]-verts[3])) < 0.;
         }
@@ -1277,15 +1277,15 @@ namespace is_mesh {
         template<typename child_key, typename parent_key>
         void connect(const child_key& ck, const parent_key& pk)
         {
-            mesh.lookup_simplex(ck).add_co_face(pk);
-            mesh.lookup_simplex(pk).add_face(ck);
+            get(ck).add_co_face(pk);
+            get(pk).add_face(ck);
         }
         
         template<typename child_key, typename parent_key>
         void disconnect(const child_key& ck, const parent_key& pk)
         {
-            mesh.lookup_simplex(ck).remove_co_face(pk);
-            mesh.lookup_simplex(pk).remove_face(ck);
+            get(ck).remove_co_face(pk);
+            get(pk).remove_face(ck);
         }
         
         template<typename child_key, typename parent_key>
@@ -1361,7 +1361,7 @@ namespace is_mesh {
             {
                 if(is_inverted(t))
                 {
-                    mesh.lookup_simplex(t).invert_orientation();
+                    get(t).invert_orientation();
                 }
             }
             
