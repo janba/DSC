@@ -468,19 +468,14 @@ namespace is_mesh {
             return nids;
         }
         
-        std::vector<edge_key> get_edges(const node_key& nid)
+        const SimplexSet<EdgeKey>& get_edges(const node_key& nid)
         {
-            auto coboundary = *get(nid).get_co_boundary();
-            return std::vector<edge_key>(coboundary.begin(), coboundary.end());
+            return *get(nid).get_co_boundary();
         }
         
-        std::vector<edge_key> get_edges(const face_key& fid)
+        const SimplexSet<EdgeKey>& get_edges(const face_key& fid)
         {
-            std::vector<edge_key> edges;
-            for (auto eid : *get(fid).get_boundary()) {
-                edges.push_back(eid);
-            }
-            return edges;
+            return *get(fid).get_boundary();
         }
         
         std::vector<edge_key> get_edges(const tet_key& tid, bool sort = true)
@@ -516,32 +511,18 @@ namespace is_mesh {
             return edges;
         }
         
-        edge_key get_edge(const node_key& n1, const node_key& n2)
+        EdgeKey get_edge(const NodeKey& nid1, const node_key& nid2)
         {
-            simplex_set st1, st2;
-            star(n1, st1);
-            star(n2, st2);
-            st1.intersection(st2);
-            
-            if (st1.size_edges() != 1)
-            {
-                return EdgeKey();
-            }
-            return *(st1.edges_begin());
+            SimplexSet<EdgeKey> eid = get_edges(nid1) & get_edges(nid2);
+            assert(eid.size() == 1);
+            return eid.front();
         }
         
-        edge_key get_edge(const face_key& f1, const face_key& f2)
+        EdgeKey get_edge(const FaceKey& fid1, const FaceKey& fid2)
         {
-            simplex_set cl1, cl2;
-            closure(f1, cl1);
-            closure(f2, cl2);
-            cl1.intersection(cl2);
-            
-            if (cl1.size_edges() != 1)
-            {
-                return EdgeKey();
-            }
-            return *(cl1.edges_begin());
+            SimplexSet<EdgeKey> eid = get_edges(fid1) & get_edges(fid2);
+            assert(eid.size() == 1);
+            return eid.front();
         }
         
         std::vector<edge_key> get_edges(const std::vector<tet_key>& tets)
