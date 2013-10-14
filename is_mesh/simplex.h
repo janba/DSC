@@ -2,6 +2,7 @@
 
 #include <set>
 #include <is_mesh/key.h>
+#include "simplex_set.h"
 
 namespace is_mesh
 {
@@ -15,8 +16,8 @@ namespace is_mesh
     class Simplex
     {
     public:
-        typedef         std::vector<boundary_key_type>          boundary_list;
-        typedef         std::set<co_boundary_key_type>          co_boundary_list;
+        typedef SimplexSet<boundary_key_type>       boundary_list;
+        typedef SimplexSet<co_boundary_key_type>    co_boundary_list;
         
     protected:
         boundary_list* m_boundary = nullptr;
@@ -60,20 +61,12 @@ namespace is_mesh
         }
         
         //copy constructor - needed because simplices are stored in STL-like containers, ie. the kernel.
-        Simplex(const Simplex& s) //: m_co_boundary(0), m_boundary(0)
+        Simplex(const Simplex& s) : Simplex()
         {
             m_is_compact = s.m_is_compact;
             m_label      = s.m_label;
-            m_boundary   = nullptr;
-            m_co_boundary= nullptr;
-            if (s.m_boundary != nullptr)
-            {
-                m_boundary = new boundary_list(s.m_boundary->begin(), s.m_boundary->end());
-            }
-            if (s.m_co_boundary != nullptr)
-            {
-                m_co_boundary = new co_boundary_list(s.m_co_boundary->begin(), s.m_co_boundary->end());
-            }
+            std::copy(s.m_boundary->begin(), s.m_boundary->end(), m_boundary->begin());
+            std::copy(s.m_co_boundary->begin(), s.m_co_boundary->end(), m_co_boundary->begin());
         }
         
     public:
@@ -97,15 +90,15 @@ namespace is_mesh
         
         void add_co_face(co_boundary_key_type key)
         {
-            if(std::find(m_co_boundary->begin(), m_co_boundary->end(), key) == m_co_boundary->end())
+            if(!m_co_boundary->contains(key))
             {
-                m_co_boundary->insert(key);
+                m_co_boundary->push_back(key);
             }
         }
         
         void add_face(boundary_key_type key)
         {
-            if(std::find(m_boundary->begin(), m_boundary->end(), key) == m_boundary->end())
+            if(!m_boundary->contains(key))
             {
                 m_boundary->push_back(key);
             }
