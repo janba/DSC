@@ -22,12 +22,11 @@ namespace is_mesh
     protected:
         boundary_list* m_boundary = nullptr;
         co_boundary_list* m_co_boundary = nullptr;
-        bool             		m_is_compact;
         int              		m_label;       //used in coloring - to identify connected components.
         
     public:
         
-        Simplex() : m_is_compact(false), m_label(0)
+        Simplex() : m_label(0)
         {
             m_boundary    = new boundary_list();
             m_co_boundary = new co_boundary_list();
@@ -63,7 +62,6 @@ namespace is_mesh
         //copy constructor - needed because simplices are stored in STL-like containers, ie. the kernel.
         Simplex(const Simplex& s) : Simplex()
         {
-            m_is_compact = s.m_is_compact;
             m_label      = s.m_label;
             std::copy(s.m_boundary->begin(), s.m_boundary->end(), m_boundary->begin());
             std::copy(s.m_co_boundary->begin(), s.m_co_boundary->end(), m_co_boundary->begin());
@@ -129,9 +127,6 @@ namespace is_mesh
                 add_co_face(key);
             }
         }
-        
-        bool is_compact(){ return m_is_compact; }
-        void set_compact(bool c) { m_is_compact = c; }
     };
     
     ///////////////////////////////////////////////////////////////////////////////
@@ -183,11 +178,11 @@ namespace is_mesh
         
         Face() : Simplex<EdgeKey, TetrahedronKey>()
         {
-            Simplex::set_compact(true);
+            
         }
         Face(const type_traits & t) : type_traits(t), Simplex<EdgeKey, TetrahedronKey>()
         {
-            Simplex::set_compact(true);
+            
         }
     };
     
@@ -202,11 +197,11 @@ namespace is_mesh
         
         Tetrahedron() : Simplex<FaceKey, Key>()
         {
-            Simplex::set_compact(true);
+            
         }
         Tetrahedron(const type_traits & t) : type_traits(t), Simplex<FaceKey, Key>()
         {
-            Simplex::set_compact(true);
+            
         }
         
         void invert_orientation()

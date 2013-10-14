@@ -54,8 +54,6 @@ namespace is_mesh
         face_kernel_type*                  m_face_kernel;
         tetrahedron_kernel_type*           m_tetrahedron_kernel;
         
-        size_type                          m_uncompressed; //an estimate of the numbers of uncompressed simplices in the mesh
-        
     public:
         
         /**
@@ -576,7 +574,6 @@ namespace is_mesh
             m_edge_kernel = new edge_kernel_type();
             m_face_kernel = new face_kernel_type();
             m_tetrahedron_kernel = new tetrahedron_kernel_type();
-            m_uncompressed = 0;
         }
         
         /**
@@ -664,10 +661,9 @@ namespace is_mesh
         /**
          * Inserts a node into the mesh. Trivial.
          */
-        NodeKey insert_node(bool is_compact =false)
+        NodeKey insert_node()
         {
             node_iterator node = m_node_kernel->create();
-            node->set_compact(is_compact);
             return node.key();
         }
         
@@ -675,7 +671,7 @@ namespace is_mesh
          * Inserts an edge into the mesh. Updates the co-boundary of the boundary nodes with the newly created edge.
          * Leaves the closure of the edge in an uncompressed state.
          */
-        EdgeKey insert_edge(NodeKey node1, NodeKey node2, bool is_compact =false)
+        EdgeKey insert_edge(NodeKey node1, NodeKey node2)
         {
             edge_iterator edge = m_edge_kernel->create();
             //add the new simplex to the co-boundary relation of the boundary simplices
@@ -684,7 +680,6 @@ namespace is_mesh
             //set the boundary relation
             edge->add_face(node1);
             edge->add_face(node2);
-            edge->set_compact(is_compact);
             return edge.key();
         }
         
