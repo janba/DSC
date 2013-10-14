@@ -436,54 +436,36 @@ namespace is_mesh {
             return res;
         }
         
-        std::vector<node_key> get_nodes(const edge_key& eid)
+        const SimplexSet<NodeKey>& get_nodes(const edge_key& eid)
         {
-            std::vector<node_key> nodes;
-            for (auto nid : *get(eid).get_boundary()) {
-                nodes.push_back(nid);
-            }
-            return nodes;
+            return *get(eid).get_boundary();
         }
         
-        std::vector<node_key> get_nodes(const face_key& fid, bool sort = true)
+        SimplexSet<NodeKey> get_nodes(const face_key& fid, bool sort = true)
         {
-            assert(exists(fid));
-            std::vector<node_key> nodes;
-            for (auto eid : *get(fid).get_boundary()) {
-                assert(exists(eid));
+            SimplexSet<NodeKey> nids;
+            for (auto e : get_edges(fid)) {
                 if(sort)
                 {
-                    mesh.orient_face_helper(fid, eid, true);
+                    mesh.orient_face_helper(fid, e, true);
                 }
-                nodes.push_back(get_nodes(eid)[0]);
+                nids += get_nodes(e)[0];
             }
-            return nodes;
+            return nids;
         }
         
-        std::vector<node_key> get_nodes(const tet_key& tid, bool sort = true)
+        SimplexSet<NodeKey> get_nodes(const tet_key& tid, bool sort = true)
         {
-            assert(exists(tid));
-            std::vector<node_key> nodes;
-            auto bit = get(tid).get_boundary();
-            face_key fid = *bit->begin();
-            assert(exists(fid));
+            SimplexSet<NodeKey> nids;
+            auto fids = get_faces(tid);
             if(sort)
             {
-                mesh.orient_face_helper(tid, fid, true);
+                mesh.orient_face_helper(tid, fids[0], true);
             }
-            for (auto nid : get_nodes(fid)) {
-                nodes.push_back(nid);
-            }
-            
-            for (auto nid : get_nodes(*(bit->begin()+1)))
-            {
-                if(std::find(nodes.begin(), nodes.end(), nid) == nodes.end())
-                {
-                    nodes.push_back(nid);
-                    break;
-                }
-            }
-            return nodes;
+            nids += get_nodes(fids[0]);
+            nids += get_nodes(fids[1]);
+            assert(nids.size() == 4);
+            return nids;
         }
         
         std::vector<edge_key> get_edges(const node_key& nid)
