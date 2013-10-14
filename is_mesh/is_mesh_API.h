@@ -524,32 +524,17 @@ namespace is_mesh {
         
         SimplexSet<FaceKey> get_faces(const NodeKey& nid)
         {
-            SimplexSet<FaceKey> fids;
-            for(auto e : get_edges(nid))
-            {
-                fids += get_faces(e);
-            }
-            return fids;
+            return get_faces(get_edges(nid));
         }
         
         SimplexSet<TetrahedronKey> get_tets(const NodeKey& nid)
         {
-            SimplexSet<TetrahedronKey> tids;
-            for (auto e : get_edges(nid))
-            {
-                tids += get_tets(e);
-            }
-            return tids;
+            return get_tets(get_faces(get_edges(nid)));
         }
         
         SimplexSet<TetrahedronKey> get_tets(const EdgeKey& eid)
         {
-            SimplexSet<TetrahedronKey> tids;
-            for (auto f : get_faces(eid))
-            {
-                tids += get_tets(f);
-            }
-            return tids;
+            return get_tets(get_faces(eid));
         }
         
         // Getters which have a SimplexSet as input
