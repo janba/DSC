@@ -346,71 +346,34 @@ namespace is_mesh {
             return mesh.find_tetrahedron(k);
         }
         
-        SimplexSet<NodeKey> get_boundary(const EdgeKey& eid)
+        const SimplexSet<NodeKey>& get_boundary(const EdgeKey& eid)
         {
-            std::vector<NodeKey> temp = *get(eid).get_boundary();
-            SimplexSet<NodeKey> res;
-            for(auto k : temp)
-            {
-                res.push_back(k);
-            }
-            return res;
+            return *get(eid).get_boundary();
         }
         
-        SimplexSet<EdgeKey> get_boundary(const FaceKey& fid)
+        const SimplexSet<EdgeKey>& get_boundary(const FaceKey& fid)
         {
-            std::vector<EdgeKey> temp = *get(fid).get_boundary();
-            SimplexSet<EdgeKey> res;
-            for(auto k : temp)
-            {
-                res.push_back(k);
-            }
-            return res;
+            return *get(fid).get_boundary();
         }
         
-        SimplexSet<FaceKey> get_boundary(const TetrahedronKey& tid)
+        const SimplexSet<FaceKey>& get_boundary(const TetrahedronKey& tid)
         {
-            std::vector<FaceKey> temp =  *get(tid).get_boundary();
-            SimplexSet<FaceKey> res;
-            for(auto k : temp)
-            {
-                res.push_back(k);
-            }
-            return res;
+            return *get(tid).get_boundary();
         }
         
-        
-        SimplexSet<EdgeKey> get_co_boundary(const NodeKey& nid)
+        const SimplexSet<EdgeKey>& get_co_boundary(const NodeKey& nid)
         {
-            auto temp = *get(nid).get_co_boundary();
-            SimplexSet<EdgeKey> res;
-            for(auto k : temp)
-            {
-                res.push_back(k);
-            }
-            return res;
+            return *get(nid).get_co_boundary();
         }
         
-        SimplexSet<FaceKey> get_co_boundary(const EdgeKey& eid)
+        const SimplexSet<FaceKey>& get_co_boundary(const EdgeKey& eid)
         {
-            auto temp = *get(eid).get_co_boundary();
-            SimplexSet<FaceKey> res;
-            for(auto k : temp)
-            {
-                res.push_back(k);
-            }
-            return res;
+            return *get(eid).get_co_boundary();
         }
         
-        SimplexSet<TetrahedronKey> get_co_boundary(const FaceKey& fid)
+        const SimplexSet<TetrahedronKey>& get_co_boundary(const FaceKey& fid)
         {
-            auto temp = *get(fid).get_co_boundary();
-            SimplexSet<TetrahedronKey> res;
-            for(auto k : temp)
-            {
-                res.push_back(k);
-            }
-            return res;
+            return *get(fid).get_co_boundary();
         }
         
         SimplexSet<NodeKey> get_boundary(const SimplexSet<EdgeKey>& set)
