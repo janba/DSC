@@ -601,26 +601,6 @@ namespace is_mesh
         /**
          *
          */
-        node_type & find_node(const NodeKey k) { return m_node_kernel->find(k); }
-        
-        /**
-         *
-         */
-        edge_type & find_edge(const EdgeKey k) { return m_edge_kernel->find(k); }
-        
-        /**
-         *
-         */
-        face_type & find_face(const FaceKey k) { return m_face_kernel->find(k); }
-        
-        /**
-         *
-         */
-        tetrahedron_type & find_tetrahedron(const TetrahedronKey k) { return m_tetrahedron_kernel->find(k); }
-        
-        /**
-         *
-         */
         node_iterator nodes_begin() { return m_node_kernel->begin(); }
         
         /**
@@ -1056,7 +1036,7 @@ namespace is_mesh
             simplex_set_type::edge_set_iterator eit = temp.edges_begin();
             while (eit != temp.edges_end())
             {
-                auto ebnd = find_edge(*eit).get_boundary();
+                auto ebnd = lookup_simplex(*eit).get_boundary();
                 auto ebit = ebnd->begin();
                 if (*ebit == n1 || *ebit == n2)
                 {

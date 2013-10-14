@@ -79,8 +79,8 @@ namespace is_mesh
             y = points[3*i+1];
             z = points[3*i+2];
             mesh.insert_node();
-            mesh.find_node(cnt_nodes).set_pos(x,y,z);
-            mesh.find_node(cnt_nodes).set_destination(x,y,z);
+            mesh.lookup_simplex(NodeKey(cnt_nodes)).set_pos(x,y,z);
+            mesh.lookup_simplex(NodeKey(cnt_nodes)).set_destination(x,y,z);
             ++cnt_nodes;
         }
         

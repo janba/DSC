@@ -328,22 +328,22 @@ namespace is_mesh {
     public:
         typename Mesh::node_type & get(const node_key& k)
         {
-            return mesh.find_node(k);
+            return mesh.lookup_simplex(k);
         }
         
         typename Mesh::edge_type & get(const edge_key& k)
         {
-            return mesh.find_edge(k);
+            return mesh.lookup_simplex(k);
         }
         
         typename Mesh::face_type & get(const face_key& k)
         {
-            return mesh.find_face(k);
+            return mesh.lookup_simplex(k);
         }
         
         typename Mesh::tetrahedron_type & get(const tet_key& k)
         {
-            return mesh.find_tetrahedron(k);
+            return mesh.lookup_simplex(k);
         }
         
         const SimplexSet<NodeKey>& get_boundary(const EdgeKey& eid)
