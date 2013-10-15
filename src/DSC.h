@@ -1739,22 +1739,13 @@ namespace DSC {
         }
         
         /**
-         * Returns the minimum quality of neighbouring tetrahedra if the edge e is collapsed and the resulting node is moved to v_new.
+         * Returns the minimum quality of neighbouring tetrahedra if the edge e is collapsed and the resulting node is moved to p_new.
          */
-        real min_quality(const edge_key& e, const vec3& v_new)
+        real min_quality(const edge_key& eid, const vec3& p_new)
         {
-            auto nodes = Complex::get_nodes(e);
-            
-            simplex_set lk_n0, lk_n1;
-            Complex::link(nodes[0], lk_n0);
-            Complex::link(nodes[1], lk_n1);
-            
-            simplex_set st_e, cl_st_e;
-            Complex::star(e, st_e);
-            Complex::closure(st_e, cl_st_e);
-            lk_n0.add(lk_n1);
-            lk_n0.difference(cl_st_e);
-            return min_quality(lk_n0, v_new);
+            is_mesh::SimplexSet<node_key> nids = Complex::get_nodes(eid);
+            is_mesh::SimplexSet<face_key> fids = Complex::get_faces(Complex::get_tets(nids)) - Complex::get_faces(nids);
+            return min_quality(fids, p_new);
         }
         
         /**
@@ -2063,47 +2054,54 @@ namespace DSC {
         }
         
         /**
+         * Returns the minimum quality of the tetrahedra in simplex set s.
+         */
+        real min_quality(const is_mesh::SimplexSet<tet_key>& tids)
+        {
+            real q_min = INFINITY;
+            for (auto t : tids)
+            {
+                q_min = Util::min(quality(t), q_min);
+            }
+            return q_min;
+        }
+        
+        /**
          * Returns the minimum quality of the tetrahedra spanned by the vertices of the faces in s and pos.
          */
-        real min_quality(simplex_set& set, const vec3& pos)
+        real min_quality(const is_mesh::SimplexSet<face_key>& fids, const vec3& pos)
         {
             real min_q = INFINITY;
-            for(auto fit = set.faces_begin(); fit != set.faces_end(); fit++)
+            for(auto f : fids)
             {
-                auto verts = get_pos(*fit);
+                auto verts = get_pos(f);
                 min_q = Util::min(min_q, std::abs(Util::quality<real>(verts[0], verts[1], verts[2], pos)));
             }
             return min_q;
         }
         
         /**
-         * Returns the minimum quality among tetrahedra in the star of n.
+         * Returns the minimum quality among tetrahedra in the star of the node nid.
          */
-        real min_quality(const node_key& n)
+        real min_quality(const node_key& nid)
         {
-            simplex_set st_n;
-            Complex::star(n, st_n);
-            return min_quality(st_n);
+            return min_quality(Complex::get_tets(nid));
         }
         
         /**
-         * Returns the minimum quality among tetrahedra in the star of each end node of the edge e.
+         * Returns the minimum quality among tetrahedra in the star of the edge eid.
          */
-        real min_quality(const edge_key& e)
+        real min_quality(const edge_key& eid)
         {
-            simplex_set st_e;
-            Complex::star(e, st_e);
-            return min_quality(st_e);
+            return min_quality(Complex::get_tets(eid));
         }
         
         /**
-         * Returns minimum quality among the tetrahedra adjacent to face f.
+         * Returns minimum quality among the tetrahedra adjacent to face fid.
          */
-        real min_quality(const face_key& f)
+        real min_quality(const face_key& fid)
         {
-            simplex_set st_f;
-            Complex::star(f, st_f);
-            return min_quality(st_f);
+            return min_quality(Complex::get_tets(fid));
         }
         
     private:
