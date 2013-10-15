@@ -820,22 +820,19 @@ namespace DSC {
          */
         bool topological_face_removal(const node_key& apex1, const node_key& apex2)
         {
-            simplex_set lk_n1, lk_n2;
-            Complex::link(apex1, lk_n1);
-            Complex::link(apex2, lk_n2);
-            lk_n1.intersection(lk_n2);
-            for(auto f = lk_n1.faces_begin(); f != lk_n1.faces_end(); f++)
+            is_mesh::SimplexSet<face_key> fids = Complex::get_faces(Complex::get_tets(apex1)) & Complex::get_faces(Complex::get_tets(apex2));
+            for(auto f : fids)
             {
-                if(is_safe_editable(*f))
+                if(is_safe_editable(f))
                 {
-                    auto nodes = Complex::get_nodes(*f);
+                    auto nodes = Complex::get_nodes(f);
                     orient_cc(apex2, nodes);
                     
                     vec3 ray = get_pos(apex2) - get_pos(apex1);
                     real t = Util::intersection_ray_triangle<real>(get_pos(apex1), ray, get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
                     if(0. < t && t < 1.)
                     {
-                        if(topological_face_removal(*f))
+                        if(topological_face_removal(f))
                         {
                             return true;
                         }
