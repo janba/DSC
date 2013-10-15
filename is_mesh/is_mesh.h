@@ -748,35 +748,6 @@ namespace is_mesh
             m_tetrahedron_kernel->erase(tid);
         }
         
-        void merge(const NodeKey& key1, const NodeKey& key2)
-        {
-            auto& simplex = lookup_simplex(key2);
-            for(auto cob : *simplex.get_co_boundary())
-            {
-                lookup_simplex(cob).add_face(key1);
-            }
-            
-            lookup_simplex(key1).merge(simplex);
-            remove(key2);
-        }
-        
-        template<typename key_type>
-        void merge(const key_type& key1, const key_type& key2)
-        {
-            auto& simplex = lookup_simplex(key2);
-            for(auto cob : *simplex.get_co_boundary())
-            {
-                lookup_simplex(cob).add_face(key1);
-            }
-            for(auto bou : *simplex.get_boundary())
-            {
-                lookup_simplex(bou).add_co_face(key1);
-            }
-            
-            lookup_simplex(key1).merge(simplex);
-            remove(key2);
-        }
-        
         size_type size_nodes() { return m_node_kernel->size(); }
         size_type size_edges() { return m_edge_kernel->size(); }
         size_type size_faces() { return m_face_kernel->size(); }

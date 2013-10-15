@@ -815,14 +815,14 @@ namespace is_mesh {
             mesh.remove(eid);
             
             // Merge nodes
-            mesh.merge(nids[1], nids[0]);
+            merge(nids[1], nids[0]);
             
             // Remove faces
             for(auto f : fids)
             {
                 auto eids = get_edges(f);
                 mesh.remove(f);
-                mesh.merge(eids[0], eids[1]);
+                merge(eids[0], eids[1]);
             }
             
             // Remove tetrahedra
@@ -830,7 +830,7 @@ namespace is_mesh {
             {
                 auto fids = get_faces(t);
                 mesh.remove(t);
-                mesh.merge(fids[0], fids[1]);
+                merge(fids[0], fids[1]);
             }
             
             // Update flags and ensure no inverted tetrahedra.
@@ -861,6 +861,38 @@ namespace is_mesh {
             return dot(verts[0]-verts[3], cross(verts[1]-verts[3], verts[2]-verts[3])) < 0.;
         }
         
+    private:
+        
+        void merge(const NodeKey& key1, const NodeKey& key2)
+        {
+            auto& simplex = get(key2);
+            for(auto cob : *simplex.get_co_boundary())
+            {
+                get(cob).add_face(key1);
+            }
+            
+            get(key1).merge(simplex);
+            mesh.remove(key2);
+        }
+        
+        template<typename key_type>
+        void merge(const key_type& key1, const key_type& key2)
+        {
+            auto& simplex = get(key2);
+            for(auto cob : *simplex.get_co_boundary())
+            {
+                get(cob).add_face(key1);
+            }
+            for(auto bou : *simplex.get_boundary())
+            {
+                get(bou).add_co_face(key1);
+            }
+            
+            get(key1).merge(simplex);
+            mesh.remove(key2);
+        }
+        
+    public:
         /**
          * Inserts a node into the mesh. Trivial.
          */
@@ -927,6 +959,8 @@ namespace is_mesh {
             
             return tetrahedron.key();
         }
+        
+    public:
         
         face_key flip_32(const edge_key& eid)
         {
