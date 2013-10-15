@@ -2554,7 +2554,7 @@ namespace DSC {
                 bool ok = true;
                 for(auto e : neighbours)
                 {
-                    if(e < eit.key())
+                    if(eids.contains(e))
                     {
                         ok = false;
                     }
@@ -2769,7 +2769,7 @@ namespace DSC {
                 }
                 
                 assert(flip_fids.size() == 2);
-                Complex::flip_44(flip_fids[0], flip_fids[1]);
+                Complex::flip_22(flip_fids[0], flip_fids[1]);
                 i++;
                 if(i%1000 == 0)
                 {

@@ -370,7 +370,7 @@ void UI::one_cell()
     // Build the Simplicial Complex
     std::vector<real> points;
     std::vector<int>  tets;
-    Tetralizer::tetralize(vec3(cell_size), cell_size, points, tets);
+    Tetralizer::tetralize(vec3(2.*cell_size), cell_size, points, tets);
     
     dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(cell_size, points, tets));
     
