@@ -778,7 +778,7 @@ namespace is_mesh {
                 
                 SimplexSet<FaceKey> t_fids = get_faces(new_eid) & get_faces(get_edges(t_fid));
                 assert(t_fids.size() == 2);
-                new_tids += mesh.insert_tetrahedron(t_fids[0], t_fids[1], new_t_fid, t_fid);
+                new_tids += insert_tetrahedron(t_fids[0], t_fids[1], new_t_fid, t_fid);
             }
             
             // Update flags
@@ -787,7 +787,7 @@ namespace is_mesh {
                 set_label(new_tids[i], get_label(tids[i]));
             }
             
-            for(auto t : new_tids + tids)
+            for(auto t : tids)
             {
                 if(is_inverted(t))
                 {
