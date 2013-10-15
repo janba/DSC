@@ -69,8 +69,6 @@ namespace is_mesh
         std::map<util::edge_key, int> edge_map;
         std::map<util::face_key, int> face_map;
         
-        mesh.clear();
-        
         int cnt_nodes = 0;
         for (unsigned int i = 0; i < points.size()/3; ++i)
         {
@@ -79,8 +77,8 @@ namespace is_mesh
             y = points[3*i+1];
             z = points[3*i+2];
             mesh.insert_node();
-            mesh.lookup_simplex(NodeKey(cnt_nodes)).set_pos(x,y,z);
-            mesh.lookup_simplex(NodeKey(cnt_nodes)).set_destination(x,y,z);
+            mesh.get(NodeKey(cnt_nodes)).set_pos(x,y,z);
+            mesh.get(NodeKey(cnt_nodes)).set_destination(x,y,z);
             ++cnt_nodes;
         }
         

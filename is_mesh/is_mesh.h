@@ -590,17 +590,6 @@ namespace is_mesh
         /**
          *
          */
-        void clear()
-        {
-            m_node_kernel->clear();
-            m_edge_kernel->clear();
-            m_face_kernel->clear();
-            m_tetrahedron_kernel->clear();
-        }
-        
-        /**
-         *
-         */
         node_iterator nodes_begin() { return m_node_kernel->begin(); }
         
         /**

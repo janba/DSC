@@ -32,7 +32,7 @@ namespace is_mesh {
         template<typename real>
         ISMesh(std::vector<real> & points, std::vector<int> & tets)
         {
-            vectors_read(points, tets, mesh);
+            vectors_read(points, tets, *this);
             init();
             validity_check();
             simplex_set_test();
