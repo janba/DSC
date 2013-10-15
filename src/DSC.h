@@ -155,12 +155,11 @@ namespace DSC {
             }
             std::cout << "];" << std::endl;
             
-            simplex_set set;
-            Complex::link(n, set);
             std::cout << "\nedges = [";
-            for(auto eit = set.edges_begin(); eit != set.edges_end(); eit++)
+            auto eids = Complex::get_edges(Complex::get_tets(n)) - Complex::get_edges(n);
+            for(auto e : eids)
             {
-                auto verts = get_pos(*eit);
+                auto verts = get_pos(e);
                 vec3 p1 = verts[0];
                 vec3 p2 = verts[1];
                 std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
@@ -169,11 +168,11 @@ namespace DSC {
             std::cout << "];" << std::endl;
             
             std::cout << "\nIedges = [";
-            for(auto eit = set.edges_begin(); eit != set.edges_end(); eit++)
+            for(auto e : eids)
             {
-                if(is_interface(*eit))
+                if(is_interface(e))
                 {
-                    auto verts = get_pos(*eit);
+                    auto verts = get_pos(e);
                     vec3 p1 = verts[0];
                     vec3 p2 = verts[1];
                     std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
@@ -1550,12 +1549,12 @@ namespace DSC {
         {
             vec3 pos = get_pos(n);
             vec3 ray = destination - pos;
-            simplex_set ln;
-            Complex::link(n,ln);
+
             real min_t = INFINITY;
-            for(auto fit = ln.faces_begin(); fit != ln.faces_end(); fit++)
+            auto fids = Complex::get_faces(Complex::get_tets(n)) - Complex::get_faces(n);
+            for(auto f : fids)
             {
-                auto face_pos = get_pos(*fit);
+                auto face_pos = get_pos(f);
                 real t = Util::intersection_ray_plane<real>(pos, ray, face_pos[0], face_pos[1], face_pos[2]);
                 if (0. <= t)
                 {
