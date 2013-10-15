@@ -468,42 +468,33 @@ namespace is_mesh {
         }
         
         // Getters for getting the boundary of a boundary etc.
-        SimplexSet<NodeKey> get_nodes(const face_key& fid, bool sort = true)
+        SimplexSet<NodeKey> get_sorted_nodes(const face_key& fid)
         {
             SimplexSet<NodeKey> nids;
             for (auto e : get_edges(fid)) {
-                if(sort)
-                {
-                    mesh.orient_face_helper(fid, e, true);
-                }
+                mesh.orient_face_helper(fid, e, true);
                 nids += get_nodes(e)[0];
             }
             return nids;
         }
         
-        SimplexSet<NodeKey> get_nodes(const tet_key& tid, bool sort = true)
+        SimplexSet<NodeKey> get_sorted_nodes(const tet_key& tid)
         {
             SimplexSet<NodeKey> nids;
             auto fids = get_faces(tid);
-            if(sort)
-            {
-                mesh.orient_face_helper(tid, fids[0], true);
-            }
-            nids += get_nodes(fids[0]);
-            nids += get_nodes(fids[1]);
+            mesh.orient_face_helper(tid, fids[0], true);
+            nids += get_sorted_nodes(fids[0]);
+            nids += get_sorted_nodes(fids[1]);
             assert(nids.size() == 4);
             return nids;
         }
         
-        SimplexSet<EdgeKey> get_edges(const tet_key& tid, bool sort = true)
+        SimplexSet<EdgeKey> get_sorted_edges(const tet_key& tid)
         {
             SimplexSet<EdgeKey> eids;
             for(auto f : get_faces(tid))
             {
-                if(sort)
-                {
-                    mesh.orient_face_helper(tid, f, true);
-                }
+                mesh.orient_face_helper(tid, f, true);
                 SimplexSet<EdgeKey> f_eids = get_edges(f);
                 if(eids.size() == 0)
                 {
@@ -520,6 +511,21 @@ namespace is_mesh {
                 }
             }
             return eids;
+        }
+        
+        SimplexSet<NodeKey> get_nodes(const FaceKey& fid)
+        {
+            return get_nodes(get_edges(fid));
+        }
+        
+        SimplexSet<NodeKey> get_nodes(const tet_key& tid)
+        {
+            return get_nodes(get_edges(get_faces(tid)));
+        }
+        
+        SimplexSet<EdgeKey> get_edges(const tet_key& tid)
+        {
+            return get_edges(get_faces(tid));
         }
         
         SimplexSet<FaceKey> get_faces(const NodeKey& nid)
@@ -845,7 +851,7 @@ namespace is_mesh {
          */
         bool is_inverted(const tet_key& tid)
         {
-            auto nodes = get_nodes(tid);
+            auto nodes = get_sorted_nodes(tid);
             std::vector<typename node_traits::vec3> verts;
             for(auto &n : nodes)
             {

@@ -291,7 +291,7 @@ namespace DSC {
         std::vector<vec3> get_pos(const face_key & f)
         {
             std::vector<vec3> verts(3);
-            auto nodes = Complex::get_nodes(f);
+            auto nodes = Complex::get_sorted_nodes(f);
             for (int k = 0; k < 3; ++k)
             {
                 verts[k] = get_pos(nodes[k]);
@@ -303,7 +303,7 @@ namespace DSC {
         std::vector<vec3> get_pos(const tet_key& t)
         {
             std::vector<vec3> verts(4);
-            auto nodes = Complex::get_nodes(t);
+            auto nodes = Complex::get_sorted_nodes(t);
             for (int k = 0; k < 4; ++k)
             {
                 verts[k] = get_pos(nodes[k]);
