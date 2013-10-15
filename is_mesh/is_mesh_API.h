@@ -865,13 +865,10 @@ namespace is_mesh {
         
         void merge(const NodeKey& key1, const NodeKey& key2)
         {
-            auto& simplex = get(key2);
-            for(auto cob : *simplex.get_co_boundary())
+            for(auto e : get_edges(key2))
             {
-                get(cob).add_face(key1);
+                connect(key1, e);
             }
-            
-            get(key1).merge(simplex);
             mesh.remove(key2);
         }
         
@@ -879,16 +876,14 @@ namespace is_mesh {
         void merge(const key_type& key1, const key_type& key2)
         {
             auto& simplex = get(key2);
-            for(auto cob : *simplex.get_co_boundary())
+            for(auto k : *simplex.get_co_boundary())
             {
-                get(cob).add_face(key1);
+                connect(key1, k);
             }
-            for(auto bou : *simplex.get_boundary())
+            for(auto k : *simplex.get_boundary())
             {
-                get(bou).add_co_face(key1);
+                connect(k, key1);
             }
-            
-            get(key1).merge(simplex);
             mesh.remove(key2);
         }
         

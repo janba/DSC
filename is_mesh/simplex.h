@@ -115,18 +115,6 @@ namespace is_mesh
             assert(iter != m_boundary->end());
             m_boundary->erase(iter);
         }
-        
-        void merge(const Simplex& sim)
-        {
-            for (auto key : *sim.get_boundary())
-            {
-                add_face(key);
-            }
-            for (auto key : *sim.get_co_boundary())
-            {
-                add_co_face(key);
-            }
-        }
     };
     
     ///////////////////////////////////////////////////////////////////////////////
