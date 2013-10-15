@@ -738,22 +738,21 @@ namespace is_mesh {
             auto nids = get_nodes(eid);
             auto fids = get_faces(eid);
             auto tids = get_tets(eid);
-            auto nid = nids[1];
             
             // Split edge
             auto new_nid = mesh.insert_node();
             get(new_nid).set_pos(0.5*(get(nids[0]).get_pos() + get(nids[1]).get_pos()));
             get(new_nid).set_destination(0.5*(get(nids[0]).get_destination() + get(nids[1]).get_destination()));
             
-            disconnect(nid, eid);
+            disconnect(nids[1], eid);
             connect(new_nid, eid);
             
-            auto new_eid = mesh.insert_edge(new_nid, nid);
+            auto new_eid = mesh.insert_edge(new_nid, nids[1]);
             
             // Update faces, create faces
             for (auto f : fids)
             {
-                EdgeKey f_eid = (get_edges(f) & get_edges(nid)).front();
+                EdgeKey f_eid = (get_edges(f) & get_edges(nids[1])).front();
                 disconnect(f_eid, f);
                 
                 SimplexSet<NodeKey> new_e_nids = get_nodes(get_edges(f)) - nids[0];
@@ -809,59 +808,27 @@ namespace is_mesh {
             // Remove edge
             mesh.remove(eid);
             
+            // Merge nodes
+            mesh.merge(nids[1], nids[0]);
+            
             // Remove faces
-            std::vector<std::vector<edge_key>> merge_edges;
             for(auto f : fids)
             {
                 auto eids = get_edges(f);
-                assert(eids.size() == 2);
-                auto nodes = get_nodes(eids[0]);
-                assert(nodes.size() == 2);
-                
-                if(nodes[0] != n && nodes[1] != n)
-                {
-                    assert(get_nodes(eids[1])[0] == n || get_nodes(eids[1])[1] == n);
-                    std::swap(eids[0], eids[1]);
-                }
-                merge_edges.push_back(eids);
                 mesh.remove(f);
-            }
-            
-            // Remove tetrahedra
-            std::vector<std::vector<face_key>> merge_faces;
-            for(auto t : tids)
-            {
-                auto fids = get_faces(t);
-                assert(fids.size() == 2);
-                auto nodes = get_nodes(fids[0]);
-                assert(nodes.size() == 3);
-                
-                if(nodes[0] != n && nodes[1] != n && nodes[2] != n)
-                {
-                    assert(get_nodes(fids[1])[0] == n || get_nodes(fids[1])[1] == n || get_nodes(fids[1])[2] == n);
-                    std::swap(fids[0], fids[1]);
-                }
-                merge_faces.push_back(fids);
-                mesh.remove(t);
-            }
-            
-            // Merge nodes
-            mesh.merge(n, nids[0]);
-            
-            for (auto &eids : merge_edges)
-            {
-                assert(eids.size() == 2);
                 mesh.merge(eids[0], eids[1]);
             }
             
-            for (auto &fids : merge_faces)
+            // Remove tetrahedra
+            for(auto t : tids)
             {
-                assert(fids.size() == 2);
+                auto fids = get_faces(t);
+                mesh.remove(t);
                 mesh.merge(fids[0], fids[1]);
             }
             
             // Update flags and ensure no inverted tetrahedra.
-            SimplexSet<tet_key> changed_tids = get_co_boundary(get_co_boundary(get_co_boundary(n)));
+            SimplexSet<tet_key> changed_tids = get_tets(n);
             for(auto t : changed_tids)
             {
                 if(is_inverted(t))
