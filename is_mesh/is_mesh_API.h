@@ -840,6 +840,9 @@ namespace is_mesh {
             return n;
         }
         
+        /**
+         * Returns whether the tetrahedron with ID tid is inverted.
+         */
         bool is_inverted(const tet_key& tid)
         {
             auto nodes = get_nodes(tid);
@@ -902,10 +905,10 @@ namespace is_mesh {
         {
             auto tetrahedron = mesh.m_tetrahedron_kernel->create();
             //update relations
-            mesh.m_face_kernel->find(face1).add_co_face(tetrahedron.key());
-            mesh.m_face_kernel->find(face2).add_co_face(tetrahedron.key());
-            mesh.m_face_kernel->find(face3).add_co_face(tetrahedron.key());
-            mesh.m_face_kernel->find(face4).add_co_face(tetrahedron.key());
+            get(face1).add_co_face(tetrahedron.key());
+            get(face2).add_co_face(tetrahedron.key());
+            get(face3).add_co_face(tetrahedron.key());
+            get(face4).add_co_face(tetrahedron.key());
             tetrahedron->add_face(face1);
             tetrahedron->add_face(face2);
             tetrahedron->add_face(face3);
