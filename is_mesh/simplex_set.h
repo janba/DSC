@@ -15,7 +15,7 @@ namespace is_mesh
             return std::find(this->begin(), this->end(), k) != this->end();
         }
         
-        SimplexSet<key_type> operator+=(const SimplexSet<key_type>& set)
+        SimplexSet<key_type>& operator+=(const SimplexSet<key_type>& set)
         {
             for (auto &k : set) {
                 *this += k;
@@ -23,7 +23,7 @@ namespace is_mesh
             return *this;
         }
         
-        SimplexSet<key_type> operator+=(const key_type& key)
+        SimplexSet<key_type>& operator+=(const key_type& key)
         {
             if(!contains(key))
             {
@@ -32,7 +32,7 @@ namespace is_mesh
             return *this;
         }
         
-        SimplexSet<key_type> operator-=(const SimplexSet<key_type>& set)
+        SimplexSet<key_type>& operator-=(const SimplexSet<key_type>& set)
         {
             for (auto &k : set) {
                 *this -= k;
@@ -40,7 +40,7 @@ namespace is_mesh
             return *this;
         }
         
-        SimplexSet<key_type> operator-=(const key_type& key)
+        SimplexSet<key_type>& operator-=(const key_type& key)
         {
             auto iter = std::find(this->begin(), this->end(), key);
             if(iter != this->end())
@@ -69,15 +69,22 @@ namespace is_mesh
     }
     
     /**
-     *  Returns the union of the two sets.
+     *  Returns the union of the two sets A and B.
      */
     template<typename key_type>
-    SimplexSet<key_type> operator+(const SimplexSet<key_type>& set1, const SimplexSet<key_type>& set2)
+    SimplexSet<key_type> operator+(const SimplexSet<key_type>& A, const SimplexSet<key_type>& B)
     {
-        SimplexSet<key_type> set;
-        set += set1;
-        set += set2;
-        return set;
+        SimplexSet<key_type> C;
+        return (C += A) += B;
+    }
+    
+    /**
+     *  Returns the union of the two sets A and B.
+     */
+    template<typename key_type>
+    SimplexSet<key_type>&& operator+(SimplexSet<key_type>&& A, const SimplexSet<key_type>& B)
+    {
+        return std::move(A += B);
     }
     
     /**
@@ -143,6 +150,7 @@ namespace is_mesh
         A += 11;
         SimplexSet<int> E = {1,9,4,11};
         assert(A == E);
+        
         std::cout << "PASSED" << std::endl;
     }
     
