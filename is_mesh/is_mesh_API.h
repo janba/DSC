@@ -584,6 +584,13 @@ namespace is_mesh {
         
         // Other getter functions
         
+        NodeKey get_node(const EdgeKey& eid1, const EdgeKey& eid2)
+        {
+            SimplexSet<NodeKey> nid = get_nodes(eid1) & get_nodes(eid2);
+            assert(nid.size() == 1);
+            return nid.front();
+        }
+        
         EdgeKey get_edge(const NodeKey& nid1, const NodeKey& nid2)
         {
             SimplexSet<EdgeKey> eid = get_edges(nid1) & get_edges(nid2);
@@ -866,104 +873,6 @@ namespace is_mesh {
             return n;
         }
         
-        template<typename key_type>
-        std::vector<key_type> difference(const std::vector<key_type>& keys1, const std::vector<key_type>& keys2)
-        {
-            std::vector<key_type> keys;
-            for (auto &k1 : keys1) {
-                if(std::find(keys2.begin(), keys2.end(), k1) == keys2.end())
-                {
-                    keys.push_back(k1);
-                }
-            }
-            
-            for (auto &k2 : keys2) {
-                if(std::find(keys1.begin(), keys1.end(), k2) == keys1.end())
-                {
-                    keys.push_back(k2);
-                }
-            }
-            return keys;
-        }
-        
-        template<typename key_type>
-        std::vector<key_type> uni(const std::vector<key_type>& keys1, const std::vector<key_type>& keys2)
-        {
-            std::vector<key_type> keys;
-            for (auto &k : keys1) {
-                if(std::find(keys.begin(), keys.end(), k) == keys.end())
-                {
-                    keys.push_back(k);
-                }
-            }
-            for (auto &k : keys2) {
-                if(std::find(keys.begin(), keys.end(), k) == keys.end())
-                {
-                    keys.push_back(k);
-                }
-            }
-            return keys;
-        }
-        
-        template<typename key_type>
-        std::vector<key_type> intersection(const std::vector<key_type>& keys1, const std::vector<key_type>& keys2)
-        {
-            std::vector<key_type> keys;
-            for (auto &k1 : keys1) {
-                if(std::find(keys2.begin(), keys2.end(), k1) != keys2.end())
-                {
-                    keys.push_back(k1);
-                }
-            }
-            return keys;
-        }
-        
-        bool is_neighbour(const NodeKey& nid1, const NodeKey& nid2)
-        {
-            auto coboundary = get_co_boundary(nid1);
-            for (auto n : get_co_boundary(nid2))
-            {
-                if(coboundary.contains(n))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        
-        template<typename key_type>
-        bool is_neighbour(const key_type& key1, const key_type& key2)
-        {
-            auto boundary = get_boundary(key1);
-            for (auto k : get_boundary(key2))
-            {
-                if(boundary.contains(k))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        
-        template<typename key_type>
-        bool is_neighbour(const key_type& key, const std::vector<key_type>& keys)
-        {
-            int i = 0;
-            for (auto k1 : *get(key).get_boundary())
-            {
-                for (auto k2 : keys)
-                {
-                    auto boundary = *get(k2).get_boundary();
-                    if(std::find(boundary.begin(), boundary.end(), k1) != boundary.end())
-                    {
-                        i++;
-                        break;
-                    }
-                }
-            }
-            return i == keys.size();
-        }
-        
         bool is_inverted(const tet_key& tid)
         {
             auto nodes = get_nodes(tid);
@@ -1242,7 +1151,7 @@ namespace is_mesh {
                     assert((is_boundary(f) && cotets.size() == 1) || (!is_boundary(f) && cotets.size() == 2));
                     assert(std::find(cotets.begin(), cotets.end(), tit.key()) != cotets.end());
                     for (auto f2 : faces) {
-                        assert(f == f2 || is_neighbour(f, f2));
+                        assert(f == f2 || get_edge(f, f2).is_valid());
                     }
                     
                     // Check edges:
@@ -1254,7 +1163,7 @@ namespace is_mesh {
                         auto cofaces = get_faces(e);
                         assert(std::find(cofaces.begin(), cofaces.end(), f) != cofaces.end());
                         for (auto e2 : edges) {
-                            assert(e == e2 || is_neighbour(e, e2));
+                            assert(e == e2 || get_node(e, e2).is_valid());
                         }
                         
                         // Check nodes:
