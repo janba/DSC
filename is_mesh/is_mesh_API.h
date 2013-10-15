@@ -853,6 +853,48 @@ namespace is_mesh {
         }
         
         /**
+         * Inserts a node into the mesh. Trivial.
+         */
+        NodeKey insert_node()
+        {
+            auto node = mesh.m_node_kernel->create();
+            return node.key();
+        }
+        
+        /**
+         * Inserts an edge into the mesh. Updates the co-boundary of the boundary nodes with the newly created edge.
+         * Leaves the closure of the edge in an uncompressed state.
+         */
+        EdgeKey insert_edge(NodeKey node1, NodeKey node2)
+        {
+            auto edge = mesh.m_edge_kernel->create();
+            //add the new simplex to the co-boundary relation of the boundary simplices
+            get(node1).add_co_face(edge.key());
+            get(node2).add_co_face(edge.key());
+            //set the boundary relation
+            edge->add_face(node1);
+            edge->add_face(node2);
+            return edge.key();
+        }
+        
+        /**
+         * Inserts a face into the mesh. Updates the co-boundary of the boundary faces with the newly created face.
+         * Leaves the closure of the face in an uncompressed state.
+         */
+        FaceKey insert_face(EdgeKey edge1, EdgeKey edge2, EdgeKey edge3)
+        {
+            auto face = mesh.m_face_kernel->create();
+            //update relations
+            get(edge1).add_co_face(face.key());
+            get(edge2).add_co_face(face.key());
+            get(edge3).add_co_face(face.key());
+            face->add_face(edge1);
+            face->add_face(edge2);
+            face->add_face(edge3);
+            return face.key();
+        }
+        
+        /**
          * Inserts a tetrahedron into the mesh. Updates the co-boundary of the boundary edges with the newly created tetrahedron.
          * Leaves the closure of the tetrahedron in an uncompressed state.
          */
