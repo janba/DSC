@@ -2152,21 +2152,12 @@ namespace DSC {
         {
             for (auto tit = Complex::tetrahedra_begin(); tit != Complex::tetrahedra_end(); tit++)
             {
-                if (inverted(tit.key()))
+                if (Complex::is_inverted(tit.key()))
                 {
                     return false;
                 }
             }
             return true;
-        }
-        
-        /**
-         * Returns whether the tetrahedron with ID tid is inverted.
-         */
-        bool inverted(const tet_key& tid)
-        {
-            auto verts = get_pos(tid);
-            return Util::signed_volume<real>(verts[0], verts[1], verts[2], verts[3]) < 0.;
         }
         
         /**
@@ -2176,7 +2167,7 @@ namespace DSC {
         {
             for (auto tit = set.tetrahedra_begin(); tit != set.tetrahedra_end(); tit++)
             {
-                if (inverted(*tit))
+                if (Complex::is_inverted(*tit))
                 {
                     return true;
                 }
