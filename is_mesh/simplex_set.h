@@ -88,25 +88,59 @@ namespace is_mesh
     }
     
     /**
-     *  Returns set1 without the elements in set2.
+     *  Returns the union of the two sets A and B.
      */
     template<typename key_type>
-    SimplexSet<key_type> operator-(const SimplexSet<key_type>& set1, const SimplexSet<key_type>& set2)
+    SimplexSet<key_type>&& operator+(SimplexSet<key_type>&& A, SimplexSet<key_type>&& B)
     {
-        SimplexSet<key_type> set;
-        set += set1;
-        set -= set2;
-        return set;
+        return std::move(A) + B;
+    }
+
+    /**
+     *  Returns the union of the two sets A and B.
+     */
+    template<typename key_type>
+    SimplexSet<key_type>&& operator+(const SimplexSet<key_type>& A, SimplexSet<key_type>&& B)
+    {
+        return std::move(B) + A;
     }
     
     /**
-     *  Returns set without the element key.
+     *  Returns set A without the elements in set B.
      */
     template<typename key_type>
-    SimplexSet<key_type> operator-(const SimplexSet<key_type>& set, const key_type& key)
+    SimplexSet<key_type> operator-(const SimplexSet<key_type>& A, const SimplexSet<key_type>& B)
     {
-        SimplexSet<key_type> set2 = {key};
-        return set - set2;
+        SimplexSet<key_type> C;
+        return (C += A) -= B;
+    }
+    
+    /**
+     *  Returns set A without the elements in set B.
+     */
+    template<typename key_type>
+    SimplexSet<key_type>&& operator-(SimplexSet<key_type>&& A, const SimplexSet<key_type>& B)
+    {
+        return std::move(A -= B);
+    }
+    
+    /**
+     *  Returns set A without the element key.
+     */
+    template<typename key_type>
+    SimplexSet<key_type> operator-(const SimplexSet<key_type>& A, const key_type& key)
+    {
+        SimplexSet<key_type> B = {key};
+        return A - B;
+    }
+    
+    /**
+     *  Returns set A without the element key.
+     */
+    template<typename key_type>
+    SimplexSet<key_type>&& operator-(SimplexSet<key_type>&& A, const key_type& key)
+    {
+        return std::move(A -= key);
     }
     
     /**
