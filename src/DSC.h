@@ -1870,17 +1870,14 @@ namespace DSC {
         /**
          Returns the normal to interface node n.
          */
-        vec3 get_normal(const node_key & n)
+        vec3 get_normal(const node_key& nid)
         {
-            simplex_set st;
-            Complex::star(n, st);
-            
             vec3 result(0.);
-            for (auto fit = st.faces_begin(); fit != st.faces_end(); fit++)
+            for (auto f : Complex::get_faces(nid))
             {
-                if (is_interface(*fit))
+                if (is_interface(f))
                 {
-                    result += get_normal(*fit);
+                    result += get_normal(f);
                 }
             }
             if (Util::length(result) < EPSILON) {
@@ -1896,22 +1893,21 @@ namespace DSC {
          * Calculates the average position of the neighbouring nodes to node n.
          * If interface is true, the average position is only calculated among the neighbouring nodes which are interface.
          */
-        vec3 get_barycenter(const node_key& n, bool interface = false)
+        vec3 get_barycenter(const node_key& nid, bool interface = false)
         {
-            if(interface && !is_interface(n))
+            if(interface && !is_interface(nid))
             {
-                return get_pos(n);
+                return get_pos(nid);
             }
-            simplex_set lk_n;
-            Complex::link(n, lk_n);
             
+            is_mesh::SimplexSet<node_key> nids = Complex::get_nodes(Complex::get_tets(nid)) - nid;
             vec3 avg_pos(0.);
             int i = 0;
-            for (auto nit = lk_n.nodes_begin(); nit != lk_n.nodes_end(); nit++)
+            for (auto n : nids)
             {
-                if (!interface || is_interface(*nit))
+                if (!interface || is_interface(n))
                 {
-                    avg_pos += get_pos(*nit);
+                    avg_pos += get_pos(n);
                     i++;
                 }
             }
