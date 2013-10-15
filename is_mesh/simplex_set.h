@@ -144,21 +144,22 @@ namespace is_mesh
     }
     
     /**
-     *  Returns the intersection of the two sets.
+     *  Returns the intersection of sets A and B.
      */
     template<typename key_type>
-    SimplexSet<key_type> operator&(const SimplexSet<key_type>& set1, const SimplexSet<key_type>& set2)
+    SimplexSet<key_type> operator&(const SimplexSet<key_type>& A, const SimplexSet<key_type>& B)
     {
-        return (set1 + set2) - (set1 | set2);
+        SimplexSet<key_type> C = A;
+        return C - (A - B);
     }
     
     /**
-     *  Returns the difference between the two sets, ie. the elements which are in either set1 or set2 but not both.
+     *  Returns the intersection of sets A and B.
      */
     template<typename key_type>
-    SimplexSet<key_type> operator|(const SimplexSet<key_type>& set1, const SimplexSet<key_type>& set2)
+    SimplexSet<key_type>&& operator&(SimplexSet<key_type>&& A, const SimplexSet<key_type>& B)
     {
-        return (set1 - set2) + (set2 - set1);
+        return std::move(std::move(A) - (A - B));
     }
     
     inline void simplex_set_test()
@@ -172,9 +173,6 @@ namespace is_mesh
         
         SimplexSet<int> C = {9,4};
         assert((A-B) == C);
-        
-        SimplexSet<int> D = {9,4,7,5,10};
-        assert((A|B) == D);
         
         SimplexSet<int> I = {1,3};
         assert((A&B) == I);
