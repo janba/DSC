@@ -1388,19 +1388,18 @@ namespace DSC {
         /**
          * Performs Laplacian smoothing if it improves the minimum tetrahedron quality locally.
          */
-        bool smart_laplacian(const node_key& n, real alpha = 1.)
+        bool smart_laplacian(const node_key& nid, real alpha = 1.)
         {
-            simplex_set st_n;
-            Complex::star(n, st_n);
-            real q_old = min_quality(st_n);
+            is_mesh::SimplexSet<tet_key> tids = Complex::get_tets(nid);
+            real q_old = min_quality(tids);
 
-            vec3 old_pos = get_pos(n);
-            vec3 avg_pos = get_barycenter(n);
-            set_pos(n, old_pos + alpha * (avg_pos - old_pos));
+            vec3 old_pos = get_pos(nid);
+            vec3 avg_pos = get_barycenter(nid);
+            set_pos(nid, old_pos + alpha * (avg_pos - old_pos));
             
-            if (inverted(st_n) || min_quality(st_n) < q_old)
+            if (is_inverted(tids) || min_quality(tids) < q_old)
             {
-                set_pos(n, old_pos);
+                set_pos(nid, old_pos);
                 return false;
             }
             return true;
@@ -2158,6 +2157,21 @@ namespace DSC {
             for (auto tit = set.tetrahedra_begin(); tit != set.tetrahedra_end(); tit++)
             {
                 if (Complex::is_inverted(*tit))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        /**
+         * Returns whether any of the tetrahedra in the simplex set is inverted.
+         */
+        bool is_inverted(const is_mesh::SimplexSet<tet_key>& tids)
+        {
+            for (auto t : tids)
+            {
+                if (Complex::is_inverted(t))
                 {
                     return true;
                 }
