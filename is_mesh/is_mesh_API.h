@@ -739,7 +739,7 @@ namespace is_mesh {
             }
         }
         
-        node_key split(const edge_key& eid)
+        node_key split(const edge_key& eid, const typename node_traits::vec3& pos, const typename node_traits::vec3& destination)
         {
             auto nids = get_nodes(eid);
             auto fids = get_faces(eid);
@@ -747,8 +747,8 @@ namespace is_mesh {
             
             // Split edge
             auto new_nid = mesh.insert_node();
-            get(new_nid).set_pos(0.5*(get(nids[0]).get_pos() + get(nids[1]).get_pos()));
-            get(new_nid).set_destination(0.5*(get(nids[0]).get_destination() + get(nids[1]).get_destination()));
+            get(new_nid).set_pos(pos);
+            get(new_nid).set_destination(destination);
             
             disconnect(nids[1], eid);
             connect(new_nid, eid);

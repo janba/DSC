@@ -1693,21 +1693,18 @@ namespace DSC {
         /**
          * Split an edge e and returns the new node which is placed at the middle of e.
          */
-        node_key split(const edge_key & e)
+        node_key split(const edge_key& eid)
         {
-            auto verts = get_pos(e);
-            vec3 p = Util::barycenter(verts[0], verts[1]);
-            vec3 p_new = p;
-            if(is_interface(e))
+            auto verts = get_pos(eid);
+            vec3 pos = Util::barycenter(verts[0], verts[1]);
+            vec3 destination = pos;
+            if(is_interface(eid))
             {
-                auto dests = get_dest(e);
-                p_new = Util::barycenter(dests[0], dests[1]);
+                auto dests = get_dest(eid);
+                destination = Util::barycenter(dests[0], dests[1]);
             }
             
-            node_key n = Complex::split(e);
-            set_pos(n, p);
-            set_destination(n, p_new);
-            return n;
+            return Complex::split(eid, pos, destination);
         }
         
         ///////////////
@@ -2517,12 +2514,15 @@ namespace DSC {
             is_mesh::SimplexSet<edge_key> new_eids;
             std::vector<vec3> verts;
             for (auto e : eids) {
-                auto nids = Complex::get_boundary(e);
-                auto nid = Complex::split(e);
-                auto new_eid = (Complex::get_co_boundary(nids) & Complex::get_co_boundary(nid)) - e;
+                auto nids = Complex::get_nodes(e);
+                vec3 pos = Util::barycenter(get_pos(nids[0]), get_pos(nids[1]));
+                auto new_nid = Complex::split(e, pos, pos);
+                auto new_eid = (Complex::get_edges(nids) & Complex::get_edges(new_nid)) - e;
                 assert(new_eid.size() == 1);
                 new_eids += new_eid[0];
-                verts.push_back(get_pos(nids[1]));
+                auto old_nid = Complex::get_nodes(new_eid) - new_nid;
+                assert(old_nid.size() == 1);
+                verts.push_back(get_pos(old_nid[0]));
                 j++;
                 if(j%100 == 0)
                 {
