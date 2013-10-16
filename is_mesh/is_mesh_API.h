@@ -680,29 +680,9 @@ namespace is_mesh {
             mesh.star(set_, set);
         }
         
-        void closure(const node_key &n, simplex_set& set)
-        {
-            mesh.closure(n, set);
-        }
-        
-        void closure(const edge_key &e, simplex_set& set)
-        {
-            mesh.closure(e, set);
-        }
-        
-        void closure(const face_key &f, simplex_set& set)
-        {
-            mesh.closure(f, set);
-        }
-        
         void closure(const tet_key &t, simplex_set& set)
         {
             mesh.closure(t, set);
-        }
-        
-        void closure(simplex_set &set_, simplex_set& set)
-        {
-            mesh.closure(set_, set);
         }
         
         /**

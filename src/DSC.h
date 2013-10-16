@@ -1029,9 +1029,7 @@ namespace DSC {
                         i++;
                     }
                     else {
-                        simplex_set cl_f;
-                        Complex::closure(f, cl_f);
-                        edge_key e = longest_edge(cl_f);
+                        edge_key e = longest_edge(Complex::get_edges(f));
                         split(e);
                     }
                     j++;
@@ -1062,9 +1060,7 @@ namespace DSC {
                         i++;
                     }
                     else {
-                        simplex_set cl_t;
-                        Complex::closure(t, cl_t);
-                        edge_key e = longest_edge(cl_t);
+                        edge_key e = longest_edge(Complex::get_edges(t));
                         split(e);
                     }
                     j++;
@@ -1775,36 +1771,34 @@ namespace DSC {
             return node_key();
         }
         
-        bool collapse(const face_key& f, bool safe = true)
+        bool collapse(const face_key& fid, bool safe = true)
         {
-            simplex_set cl_f;
-            Complex::closure(f, cl_f);
-            while(cl_f.size_edges() > 0)
+            is_mesh::SimplexSet<edge_key> eids = Complex::get_edges(fid);
+            while(eids.size() > 0)
             {
-                edge_key e = shortest_edge(cl_f);
+                edge_key e = shortest_edge(eids);
                 node_key nid = collapse(e, safe);
                 if(nid.is_valid())
                 {
                     return true;
                 }
-                cl_f.erase(e);
+                eids -= e;
             }
             return false;
         }
         
-        bool collapse(const tet_key& t, bool safe = true)
+        bool collapse(const tet_key& tid, bool safe = true)
         {
-            simplex_set cl_t;
-            Complex::closure(t, cl_t);
-            while(cl_t.size_edges() > 0)
+            is_mesh::SimplexSet<edge_key> eids = Complex::get_edges(tid);
+            while(eids.size() > 0)
             {
-                edge_key e = shortest_edge(cl_t);
+                edge_key e = shortest_edge(eids);
                 node_key nid = collapse(e, safe);
                 if(nid.is_valid())
                 {
                     return true;
                 }
-                cl_t.erase(e);
+                eids -= e;
             }
             return false;
         }
@@ -1972,36 +1966,36 @@ namespace DSC {
         /**
          * Returns the shortest edge in the simplex set.
          */
-        edge_key shortest_edge(simplex_set& set)
+        edge_key shortest_edge(const is_mesh::SimplexSet<edge_key>& eids)
         {
             real min_l = INFINITY;
             edge_key min_e;
-            for(auto e = set.edges_begin(); e != set.edges_end(); e++)
+            for(auto e : eids)
             {
-                real l = length(*e);
+                real l = length(e);
                 if(l < min_l)
                 {
                     min_l = l;
-                    min_e = *e;
+                    min_e = e;
                 }
             }
             return min_e;
         }
         
         /**
-         * Returns the shortest edge in the simplex set.
+         * Returns the longest edge in the simplex set.
          */
-        edge_key longest_edge(simplex_set& set)
+        edge_key longest_edge(const is_mesh::SimplexSet<edge_key>& eids)
         {
             real max_l = -INFINITY;
             edge_key max_e;
-            for(auto e = set.edges_begin(); e != set.edges_end(); e++)
+            for(auto e : eids)
             {
-                real l = length(*e);
+                real l = length(e);
                 if(l > max_l)
                 {
                     max_l = l;
-                    max_e = *e;
+                    max_e = e;
                 }
             }
             return max_e;
