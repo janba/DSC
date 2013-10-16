@@ -519,49 +519,46 @@ namespace DSC {
             return polygon;
         }
         
-        void get_polygons(const edge_key& eid, is_mesh::SimplexSet<node_key>& polygon1, is_mesh::SimplexSet<node_key> polygon2)
+        std::vector<is_mesh::SimplexSet<node_key>> get_polygons(const edge_key& eid)
         {
-            is_mesh::SimplexSet<tet_key> tids = Complex::get_tets(eid);
-            is_mesh::SimplexSet<tet_key> tids1, tids2;
-            int label = get_label(tids.front());
-            for (auto t : tids)
+            std::vector<is_mesh::SimplexSet<tet_key>> tid_groups;
+            for (auto t : Complex::get_tets(eid))
             {
-                if(get_label(t) == label)
+                bool found = false;
+                for(auto& tids : tid_groups)
                 {
-                    tids1 += t;
-                }
-                else {
-                    tids2 += t;
-                    if(get_label(tids2.front()) != get_label(t)) // More than one boundary meets at edge eid.
+                    if(get_label(t) == get_label(tids.front()))
                     {
-                        return;
+                        tids += t;
+                        found = true;
+                        break;
                     }
                 }
+                if(!found)
+                {
+                    tid_groups.push_back({t});
+                }
             }
             
+            std::vector<is_mesh::SimplexSet<node_key>> polygons;
             is_mesh::SimplexSet<edge_key> m_eids = Complex::get_edges(Complex::get_faces(eid));
-            is_mesh::SimplexSet<edge_key> eids1 = Complex::get_edges(tids1) - m_eids;
-            is_mesh::SimplexSet<edge_key> eids2 = Complex::get_edges(tids2) - m_eids;
-            
-            if(eids1.size() > eids2.size())
+            for(auto& tids : tid_groups)
             {
-                polygon1 = get_polygon(eids1);
-                polygon2 = get_polygon(eids2);
+                is_mesh::SimplexSet<edge_key> eids = Complex::get_edges(tids) - m_eids;
+                is_mesh::SimplexSet<node_key> polygon = get_polygon(eids);
+                check_consistency(get_pos(eid), polygon);
+                polygons.push_back(polygon);
             }
-            else {
-                polygon1 = get_polygon(eids2);
-                polygon2 = get_polygon(eids1);
-            }
-            check_consistency(get_pos(eid), polygon1);
-            check_consistency(get_pos(eid), polygon2);
-        }
-        
-        std::vector<node_key> get_polygon(const edge_key& eid)
-        {
-            is_mesh::SimplexSet<edge_key> eids = Complex::get_edges(Complex::get_tets(eid)) - Complex::get_edges(Complex::get_faces(eid));
-            is_mesh::SimplexSet<node_key> polygon = get_polygon(eids);
-            check_consistency(get_pos(eid), polygon);
-            return polygon;
+            
+            struct {
+                bool operator()(const is_mesh::SimplexSet<node_key>& a, const is_mesh::SimplexSet<node_key>& b)
+                {
+                    return a.size() > b.size();
+                }
+            } compare;
+            std::sort(polygons.begin(), polygons.end(), compare);
+            
+            return polygons;
         }
         
         void flip_23_recursively(const std::vector<node_key>& polygon, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K, int i, int j)
@@ -588,16 +585,18 @@ namespace DSC {
          * Attempt to remove edge e by mesh reconnection using the dynamic programming method by Klincsek (see Shewchuk "Two Discrete Optimization Algorithms
          * for the Topological Improvement of Tetrahedral Meshes" article for details).
          */
-        bool topological_edge_removal(const edge_key& e)
+        bool topological_edge_removal(const edge_key& eid)
         {
-            std::vector<node_key> polygon = get_polygon(e);
-            std::vector<std::vector<int>> K;
-            real q_new = build_table(e, polygon, K);
+            std::vector<is_mesh::SimplexSet<node_key>> polygon = get_polygons(eid);
+            assert(polygon.size() == 1);
             
-            if (q_new > min_quality(e))
+            std::vector<std::vector<int>> K;
+            real q_new = build_table(eid, polygon.front(), K);
+            
+            if (q_new > min_quality(eid))
             {
-                auto nodes = Complex::get_nodes(e);
-                topological_edge_removal(polygon, nodes[0], nodes[1], K);
+                auto nodes = Complex::get_nodes(eid);
+                topological_edge_removal(polygon.front(), nodes[0], nodes[1], K);
                 return true;
             }
             return false;
@@ -634,28 +633,27 @@ namespace DSC {
             }
         }
         
-        bool topological_boundary_edge_removal(const edge_key& e)
+        bool topological_boundary_edge_removal(const edge_key& eid)
         {
-            is_mesh::SimplexSet<node_key> polygon1, polygon2;
-            get_polygons(e, polygon1, polygon2);
+            std::vector<is_mesh::SimplexSet<node_key>> polygons = get_polygons(eid);
             
-            if(polygon1.size() <= 2)
+            if(polygons.size() > 2 || polygons[0].size() <= 2)
             {
                 return false;
             }
             
             std::vector<std::vector<int>> K1, K2;
-            real q_new = build_table(e, polygon1, K1);
+            real q_new = build_table(eid, polygons[0], K1);
             
-            if(polygon2.size() > 2)
+            if(polygons[1].size() > 2)
             {
-                q_new = Util::min(q_new, build_table(e, polygon2, K2));
+                q_new = Util::min(q_new, build_table(eid, polygons[1], K2));
             }
             
-            if (q_new > min_quality(e))
+            if (q_new > min_quality(eid))
             {
-                auto nodes = Complex::get_nodes(e);
-                topological_boundary_edge_removal(polygon1, polygon2, nodes[0], nodes[1], K1, K2);
+                auto nodes = Complex::get_nodes(eid);
+                topological_boundary_edge_removal(polygons[0], polygons[1], nodes[0], nodes[1], K1, K2);
                 return true;
             }
             return false;
