@@ -714,34 +714,15 @@ namespace DSC {
         // TOPOLOGICAL FACE REMOVAL //
         //////////////////////////////
         
-        face_key get_neighbour(const face_key& f, const edge_key& e)
-        {
-            simplex_set st_e;
-            Complex::star(e, st_e);
-            if(st_e.size_faces() != 4)
-            {
-                return face_key();
-            }
-            
-            simplex_set st_f, cl_st_f;
-            Complex::star(f, st_f);
-            Complex::closure(st_f, cl_st_f);
-            
-            st_e.difference(cl_st_f);
-#ifdef DEBUG
-            assert(st_e.size_faces() == 1);
-#endif
-            return *st_e.faces_begin();
-        }
-        
         std::vector<edge_key> test_neighbour(const face_key& f, const node_key& a, const node_key& b, node_key& u, node_key& w, real& q_old, real& q_new)
         {
             edge_key e = Complex::get_edge(u,w);
-            face_key g = get_neighbour(f, e);
+            is_mesh::SimplexSet<face_key> g_set = Complex::get_faces(e) - Complex::get_faces(Complex::get_tets(f));
             real q = Util::quality<real>(get_pos(a), get_pos(b), get_pos(w), get_pos(u));
             
-            if(g.is_valid() && is_safe_editable(e))
+            if(g_set.size() == 1 && is_safe_editable(e))
             {
+                face_key g = g_set.front();
                 node_key v = Complex::get_apex(g, e);
                 real V_uv = Util::signed_volume<real>(get_pos(a), get_pos(b), get_pos(v), get_pos(u));
                 real V_vw = Util::signed_volume<real>(get_pos(a), get_pos(b), get_pos(w), get_pos(v));
