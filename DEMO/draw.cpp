@@ -437,14 +437,11 @@ void Painter::update_low_quality(DSC::DeformableSimplicialComplex<>& dsc)
     for (auto tit = dsc.tetrahedra_begin(); tit != dsc.tetrahedra_end(); tit++)
     {
         if(dsc.quality(tit.key()) < dsc.get_min_tet_quality())
-        {
-            typename DSC::DeformableSimplicialComplex<>::simplex_set cl_t;
-            dsc.closure(tit.key(), cl_t);
-            
-            for (auto fit = cl_t.faces_begin(); fit != cl_t.faces_end(); fit++)
+        {            
+            for (auto f : dsc.get_faces(tit.key()))
             {
-                auto nodes = dsc.get_nodes(*fit);
-                DSC::vec3 normal = dsc.get_normal(*fit);
+                auto nodes = dsc.get_nodes(f);
+                DSC::vec3 normal = dsc.get_normal(f);
                 
                 for(auto &n : nodes)
                 {

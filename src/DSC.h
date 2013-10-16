@@ -680,23 +680,20 @@ namespace DSC {
             {
                 if (Complex::exists(t) && quality(t) < MIN_TET_QUALITY)
                 {
-                    simplex_set cl_t;
-                    Complex::closure(t, cl_t);
-                    
-                    for (auto eit = cl_t.edges_begin(); eit != cl_t.edges_end(); eit++)
+                    for (auto e : Complex::get_edges(t))
                     {
-                        if (Complex::exists(*eit))
+                        if (Complex::exists(e))
                         {
-                            if(is_safe_editable(*eit))
+                            if(is_safe_editable(e))
                             {
-                                if(topological_edge_removal(*eit))
+                                if(topological_edge_removal(e))
                                 {
                                     i++;
                                 }
                             }
-                            else if(!is_boundary(*eit) && is_flippable(*eit))
+                            else if(!is_boundary(e) && is_flippable(e))
                             {
-                                if(topological_boundary_edge_removal(*eit))
+                                if(topological_boundary_edge_removal(e))
                                 {
                                     k++;
                                 }
@@ -861,14 +858,11 @@ namespace DSC {
             {
                 if (Complex::exists(t) && quality(t) < MIN_TET_QUALITY)
                 {
-                    simplex_set cl_t;
-                    Complex::closure(t, cl_t);
-                    
-                    for (auto fit = cl_t.faces_begin(); fit != cl_t.faces_end(); fit++)
+                    for (auto f : Complex::get_faces(t))
                     {
-                        if (is_safe_editable(*fit))
+                        if (is_safe_editable(f))
                         {
-                            auto apices = Complex::get_apices(*fit);
+                            auto apices = Complex::get_apices(f);
                             if(topological_face_removal(apices[0], apices[1]))
                             {
                                 i++;
@@ -1771,9 +1765,8 @@ namespace DSC {
             return node_key();
         }
         
-        bool collapse(const face_key& fid, bool safe = true)
+        bool collapse(is_mesh::SimplexSet<edge_key>& eids, bool safe)
         {
-            is_mesh::SimplexSet<edge_key> eids = Complex::get_edges(fid);
             while(eids.size() > 0)
             {
                 edge_key e = shortest_edge(eids);
@@ -1787,20 +1780,16 @@ namespace DSC {
             return false;
         }
         
+        bool collapse(const face_key& fid, bool safe = true)
+        {
+            is_mesh::SimplexSet<edge_key> eids = Complex::get_edges(fid);
+            return collapse(eids, safe);
+        }
+        
         bool collapse(const tet_key& tid, bool safe = true)
         {
             is_mesh::SimplexSet<edge_key> eids = Complex::get_edges(tid);
-            while(eids.size() > 0)
-            {
-                edge_key e = shortest_edge(eids);
-                node_key nid = collapse(e, safe);
-                if(nid.is_valid())
-                {
-                    return true;
-                }
-                eids -= e;
-            }
-            return false;
+            return collapse(eids, safe);
         }
         
         //////////////////////

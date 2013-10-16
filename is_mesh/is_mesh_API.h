@@ -254,41 +254,40 @@ namespace is_mesh {
             }
         }
         
-        void connected_component(simplex_set& st_n, const tet_key& t)
+        void connected_component(SimplexSet<TetrahedronKey>& tids, const tet_key& tid)
         {
-            int label = get_label(t);
-            st_n.erase(t);
-            simplex_set cl_t;
-            closure(t, cl_t);
+            int label = get_label(tid);
+            tids -= tid;
             
-            for(auto fit = cl_t.faces_begin(); fit != cl_t.faces_end(); fit++)
+            for(auto f : get_faces(tid))
             {
-                tet_key t2 = get_tet(t, *fit);
-                if(st_n.contains(t2) && label == get_label(t2))
+                tet_key tid2 = (get_tets(f) - tid).front();
+                if(tids.contains(tid2) && label == get_label(tid2))
                 {
-                    connected_component(st_n, t2);
+                    connected_component(tids, tid2);
                 }
             }
         }
         
         bool crossing(const node_key& n)
         {
-            simplex_set st_n;
-            star(n, st_n);
+            SimplexSet<TetrahedronKey> tids = get_tets(n);
             
             int c = 0;
-            while (st_n.size_tetrahedra() > 0)
+            while (tids.size() > 0)
             {
                 if(c == 2)
                 {
                     return true;
                 }
-                tet_key t = *st_n.tetrahedra_begin();
-                connected_component(st_n, t);
+                tet_key tid = tids.front();
+                connected_component(tids, tid);
                 c++;
             }
             return false;
         }
+        
+        
         
         void update_flag(const node_key & n)
         {
@@ -678,11 +677,6 @@ namespace is_mesh {
         void star(simplex_set &set_, simplex_set& set)
         {
             mesh.star(set_, set);
-        }
-        
-        void closure(const tet_key &t, simplex_set& set)
-        {
-            mesh.closure(t, set);
         }
         
         /**
