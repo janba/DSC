@@ -1414,7 +1414,7 @@ namespace DSC {
             vec3 avg_pos = get_barycenter(nid);
             set_pos(nid, old_pos + alpha * (avg_pos - old_pos));
             
-            if (is_inverted(tids) || min_quality(tids) < q_old)
+            if (min_quality(tids) < q_old)
             {
                 set_pos(nid, old_pos);
                 return false;
@@ -1713,55 +1713,27 @@ namespace DSC {
         ///////////////
         // COLLAPSES //
         ///////////////
-    private:
-        /**
-         * Collapses the edge e and moves the resulting node to the position p. Returns the new node if successful, otherwise NULL_NODE.
-         */
-        node_key collapse(edge_key& e, const vec3& p, const vec3& p_new)
-        {
-            node_key n_new = Complex::collapse(e);
-            
-            if (Complex::exists(n_new) && n_new.is_valid())
-            {
-                set_pos(n_new, p);
-                set_destination(n_new, p_new);
-            }
-            return n_new;
-        }
+    private:        
         
         /**
-         * Returns true if the collapse of the edge e does not result in any inverted tetrahedra.
-         * The merged nodes are assumed moved to p after the collapse.
+         * Returns the minimum quality of neighbouring tetrahedra if the edge e is collapsed and the resulting node is moved to pos.
          */
-        bool precond_collapse(const edge_key& e, const vec3& p)
-        {
-            auto nodes = Complex::get_nodes(e);
-            
-            simplex_set lk_n0, lk_n1, lk_e;
-            Complex::link(nodes[0], lk_n0);
-            Complex::link(nodes[1], lk_n1);
-            
-            simplex_set st_e, cl_st_e;
-            Complex::star(e, st_e);
-            Complex::closure(st_e, cl_st_e);
-            lk_n0.add(lk_n1);
-            lk_n0.difference(cl_st_e);
-            
-            if(will_invert(nodes[0], p, lk_n0) || will_invert(nodes[1], p, lk_n0))
-            {
-                return false;
-            }
-            return true;
-        }
-        
-        /**
-         * Returns the minimum quality of neighbouring tetrahedra if the edge e is collapsed and the resulting node is moved to p_new.
-         */
-        real min_quality(const edge_key& eid, const vec3& p_new)
+        real min_quality(const edge_key& eid, const vec3& pos)
         {
             is_mesh::SimplexSet<node_key> nids = Complex::get_nodes(eid);
-            is_mesh::SimplexSet<face_key> fids = Complex::get_faces(Complex::get_tets(nids)) - Complex::get_faces(nids);
-            return min_quality(fids, p_new);
+            is_mesh::SimplexSet<tet_key> tids = Complex::get_tets(nids) - Complex::get_tets(eid);
+            
+            vec3 p0 = get_pos(nids[0]);
+            vec3 p1 = get_pos(nids[1]);
+            set_pos(nids[0], pos);
+            set_pos(nids[1], pos);
+            
+            real q_min = min_quality(tids);
+            
+            set_pos(nids[0], p0);
+            set_pos(nids[1], p1);
+            
+            return q_min;
         }
         
         /**
@@ -1784,7 +1756,7 @@ namespace DSC {
             {
                 vec3 p = Util::barycenter(get_pos(nodes[0]), get_pos(nodes[1]));
                 real q = min_quality(e, p);
-                if (precond_collapse(e, p) && q > q_max)
+                if (q > q_max)
                 {
                     p_new_opt = Util::barycenter(get_dest(nodes[0]), get_dest(nodes[1]));
                     p_opt = p;
@@ -1797,7 +1769,7 @@ namespace DSC {
                 vec3 p = get_pos(nodes[1]);
                 real q = min_quality(e, p);
                 
-                if (precond_collapse(e, p) && q > q_max)
+                if (q > q_max)
                 {
                     p_new_opt = get_dest(nodes[1]);
                     p_opt = p;
@@ -1810,7 +1782,7 @@ namespace DSC {
                 vec3 p = get_pos(nodes[0]);
                 real q = min_quality(e, p);
                 
-                if (precond_collapse(e, p) && q > q_max)
+                if (q > q_max)
                 {
                     p_new_opt = get_dest(nodes[0]);
                     p_opt = p;
@@ -1820,7 +1792,7 @@ namespace DSC {
             real q = Util::min(min_quality(nodes[0]), min_quality(nodes[1]));
             if((!safe && q_max > EPSILON) || q_max > Util::min(q, MIN_TET_QUALITY))
             {
-                return collapse(e, p_opt, p_new_opt);
+                return Complex::collapse(e, p_opt, p_new_opt);
             }
             return node_key();
         }
@@ -2056,18 +2028,6 @@ namespace DSC {
             }
             return max_e;
         }
-        /**
-         * Returns the minimum quality of the tetrahedra in simplex set s.
-         */
-        real min_quality(simplex_set& set)
-        {
-            real q_min = INFINITY;
-            for (auto tit = set.tetrahedra_begin(); tit != set.tetrahedra_end(); tit++)
-            {
-                q_min = Util::min(quality(*tit), q_min);
-            }
-            return q_min;
-        }
         
         /**
          * Returns the minimum quality of the tetrahedra in simplex set s.
@@ -2077,23 +2037,13 @@ namespace DSC {
             real q_min = INFINITY;
             for (auto t : tids)
             {
+                if(Complex::is_inverted(t))
+                {
+                    return -1.;
+                }
                 q_min = Util::min(quality(t), q_min);
             }
             return q_min;
-        }
-        
-        /**
-         * Returns the minimum quality of the tetrahedra spanned by the vertices of the faces in s and pos.
-         */
-        real min_quality(const is_mesh::SimplexSet<face_key>& fids, const vec3& pos)
-        {
-            real min_q = INFINITY;
-            for(auto f : fids)
-            {
-                auto verts = get_pos(f);
-                min_q = Util::min(min_q, std::abs(Util::quality<real>(verts[0], verts[1], verts[2], pos)));
-            }
-            return min_q;
         }
         
         /**
@@ -2164,21 +2114,6 @@ namespace DSC {
                 }
             }
             return true;
-        }
-        
-        /**
-         * Returns whether any of the tetrahedra in the simplex set is inverted.
-         */
-        bool inverted(simplex_set& set)
-        {
-            for (auto tit = set.tetrahedra_begin(); tit != set.tetrahedra_end(); tit++)
-            {
-                if (Complex::is_inverted(*tit))
-                {
-                    return true;
-                }
-            }
-            return false;
         }
         
         /**
@@ -2600,9 +2535,8 @@ namespace DSC {
             j = 0;
             for (int i = 0; i < new_eids.size(); i++) {
                 assert(Complex::exists(new_eids[i]));
-                auto nid = Complex::collapse(new_eids[i]);
+                auto nid = Complex::collapse(new_eids[i], verts[i], verts[i]);
                 assert(nid.is_valid());
-                set_pos(nid, verts[i]);
                 for(auto t : Complex::get_tets(nid))
                 {
                     if(Complex::is_inverted(t))

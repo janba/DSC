@@ -804,18 +804,19 @@ namespace is_mesh {
         }
         
         
-        node_key collapse(const edge_key& eid)
+        node_key collapse(const edge_key& eid, const typename node_traits::vec3& pos, const typename node_traits::vec3& destination)
         {
             auto nids = get_nodes(eid);
             auto fids = get_faces(eid);
             auto tids = get_tets(eid);
-            node_key n = nids[1];
             
             // Remove edge
             mesh.remove(eid);
             
             // Merge nodes
-            merge(nids[1], nids[0]);
+            node_key nid = merge(nids[1], nids[0]);
+            get(nid).set_pos(pos);
+            get(nid).set_destination(destination);
             
             // Remove faces
             for(auto f : fids)
@@ -834,7 +835,7 @@ namespace is_mesh {
             }
             
             // Update flags and ensure no inverted tetrahedra.
-            SimplexSet<tet_key> changed_tids = get_tets(n);
+            SimplexSet<tet_key> changed_tids = get_tets(nid);
             for(auto t : changed_tids)
             {
                 if(is_inverted(t))
@@ -843,7 +844,7 @@ namespace is_mesh {
                 }
             }
             update(changed_tids);
-            return n;
+            return nid;
         }
         
         /**
@@ -855,7 +856,6 @@ namespace is_mesh {
             std::vector<typename node_traits::vec3> verts;
             for(auto &n : nodes)
             {
-                assert(exists(n));
                 verts.push_back(get(n).get_pos());
             }
             return dot(verts[0]-verts[3], cross(verts[1]-verts[3], verts[2]-verts[3])) < 0.;
@@ -863,17 +863,18 @@ namespace is_mesh {
         
     private:
         
-        void merge(const NodeKey& key1, const NodeKey& key2)
+        NodeKey merge(const NodeKey& key1, const NodeKey& key2)
         {
             for(auto e : get_edges(key2))
             {
                 connect(key1, e);
             }
             mesh.remove(key2);
+            return key1;
         }
         
         template<typename key_type>
-        void merge(const key_type& key1, const key_type& key2)
+        key_type merge(const key_type& key1, const key_type& key2)
         {
             auto& simplex = get(key2);
             for(auto k : *simplex.get_co_boundary())
@@ -885,6 +886,7 @@ namespace is_mesh {
                 connect(k, key1);
             }
             mesh.remove(key2);
+            return key1;
         }
         
     public:
