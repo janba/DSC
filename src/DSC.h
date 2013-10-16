@@ -128,12 +128,10 @@ namespace DSC {
             std::cout << "P = " << p[0] << ", " << p[1] << ", " << p[2] << std::endl;
             std::cout << "D = " << d[0] << ", " << d[1] << ", " << d[2]  << std::endl;
             
-            simplex_set st_n;
-            Complex::star(n, st_n);
             std::cout << "\nStar_edges = [";
-            for(auto eit = st_n.edges_begin(); eit != st_n.edges_end(); eit++)
+            for(auto e : Complex::get_edges(n))
             {
-                auto verts = get_pos(*eit);
+                auto verts = get_pos(e);
                 vec3 p1 = verts[0];
                 vec3 p2 = verts[1];
                 std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
@@ -142,11 +140,11 @@ namespace DSC {
             std::cout << "];" << std::endl;
             
             std::cout << "\nStar_Iedges = [";
-            for(auto eit = st_n.edges_begin(); eit != st_n.edges_end(); eit++)
+            for(auto e : Complex::get_edges(n))
             {
-                if(is_interface(*eit))
+                if(is_interface(e))
                 {
-                    auto verts = get_pos(*eit);
+                    auto verts = get_pos(e);
                     vec3 p1 = verts[0];
                     vec3 p2 = verts[1];
                     std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
@@ -1568,14 +1566,12 @@ namespace DSC {
             {
                 return false;
             }
-            simplex_set st_e;
-            Complex::star(e, st_e);
             std::vector<face_key> faces;
-            for(auto fit = st_e.faces_begin(); fit != st_e.faces_end(); fit++)
+            for(auto f : Complex::get_faces(e))
             {
-                if (is_interface(*fit) || is_boundary(*fit))
+                if (is_interface(f) || is_boundary(f))
                 {
-                    faces.push_back(*fit);
+                    faces.push_back(f);
                 }
             }
             if(faces.size() > 2)
@@ -2137,16 +2133,14 @@ namespace DSC {
             for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
             {
                 valid = valid & Complex::exists(eit.key());
-                simplex_set st_e;
-                Complex::star(eit.key(), st_e);
                 int boundary = 0;
                 int interface = 0;
-                for (auto fit = st_e.faces_begin(); fit != st_e.faces_end(); fit++) {
-                    if(is_boundary(*fit))
+                for (auto f : Complex::get_faces(eit.key())) {
+                    if(is_boundary(f))
                     {
                         boundary++;
                     }
-                    if(is_interface(*fit))
+                    if(is_interface(f))
                     {
                         interface++;
                     }

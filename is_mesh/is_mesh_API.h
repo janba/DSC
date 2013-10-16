@@ -164,7 +164,7 @@ namespace is_mesh {
         void update(const SimplexSet<tet_key>& tids)
         {
             // Update faces
-            auto fids = get_boundary(tids);
+            SimplexSet<FaceKey> fids = get_faces(tids);
             for (auto f : fids)
             {
                 if (exists(f))
@@ -174,7 +174,7 @@ namespace is_mesh {
             }
             
             // Update edges
-            auto eids = get_boundary(fids);
+            SimplexSet<EdgeKey> eids = get_edges(fids);
             for (auto e : eids)
             {
                 if (exists(e))
@@ -184,7 +184,7 @@ namespace is_mesh {
             }
             
             // Update nodes
-            auto nids = get_boundary(eids);
+            SimplexSet<NodeKey> nids = get_nodes(eids);
             for (auto n : nids)
             {
                 if (exists(n))
@@ -199,23 +199,19 @@ namespace is_mesh {
             set_interface(f, false);
             set_boundary(f, false);
             
-            simplex_set st_f;
-            star(f, st_f);
-            if (st_f.size_tetrahedra() == 1)
+            SimplexSet<TetrahedronKey> tids = get_tets(f);
+            if (tids.size() == 1)
             {
                 // On the boundary
                 set_boundary(f, true);
-                if (get_label(*(st_f.tetrahedra_begin())) != 0)
+                if (get_label(tids.front()) != 0)
                 {
                     set_interface(f, true);
                 }
             }
-            else if(st_f.size_tetrahedra() == 2)
+            else if(tids.size() == 2)
             {
-                auto tit = st_f.tetrahedra_begin();
-                int label0 = get_label(*tit);   ++tit;
-                int label1 = get_label(*tit);
-                if (label0 != label1)
+                if (get_label(tids.front()) != get_label(tids.back()))
                 {
                     // On the interface
                     set_interface(f, true);
@@ -229,19 +225,16 @@ namespace is_mesh {
             set_interface(e, false);
             set_crossing(e, false);
             
-            simplex_set st_e;
-            star(e, st_e);
-            
             int i = 0;
-            for (auto fit = st_e.faces_begin(); fit != st_e.faces_end(); fit++)
+            for (auto f : get_faces(e))
             {
-                if (exists(*fit))
+                if (exists(f))
                 {
-                    if (is_boundary(*fit))
+                    if (is_boundary(f))
                     {
                         set_boundary(e, true);
                     }
-                    if (is_interface(*fit))
+                    if (is_interface(f))
                     {
                         set_interface(e, true);
                         i++;
@@ -295,21 +288,19 @@ namespace is_mesh {
             set_boundary(n, false);
             set_crossing(n, false);
             
-            simplex_set st_n;
-            star(n, st_n);
-            for (auto eit = st_n.edges_begin(); eit != st_n.edges_end(); eit++)
+            for (auto e : get_edges(n))
             {
-                if (exists(*eit))
+                if (exists(e))
                 {
-                    if (is_interface(*eit))
+                    if (is_interface(e))
                     {
                         set_interface(n, true);
                     }
-                    if (is_boundary(*eit))
+                    if (is_boundary(e))
                     {
                         set_boundary(n, true);
                     }
-                    if (is_crossing(*eit))
+                    if (is_crossing(e))
                     {
                         set_crossing(n, true);
                     }
@@ -654,31 +645,6 @@ namespace is_mesh {
             return mesh.exists(k);
         }
         
-        void star(const node_key &n, simplex_set& set)
-        {
-            mesh.star(n, set);
-        }
-        
-        void star(const edge_key &e, simplex_set& set)
-        {
-            mesh.star(e, set);
-        }
-        
-        void star(const face_key &f, simplex_set& set)
-        {
-            mesh.star(f, set);
-        }
-        
-        void star(const tet_key &t, simplex_set& set)
-        {
-            mesh.star(t, set);
-        }
-        
-        void star(simplex_set &set_, simplex_set& set)
-        {
-            mesh.star(set_, set);
-        }
-        
         /**
          * Ensures consistent orientation of all faces to the two tetrahedra which are in the star of f.
          */
@@ -686,24 +652,20 @@ namespace is_mesh {
         {
             if (is_interface(fid))
             {
-                simplex_set st_f;
-                star(fid, st_f);
                 int label = -100;
-                for (auto tit = st_f.tetrahedra_begin(); tit != st_f.tetrahedra_end(); tit++)
+                for (auto t : get_tets(fid))
                 {
-                    int tl = get_label(*tit);
+                    int tl = get_label(t);
                     
                     if (tl > label)
                     {
-                        mesh.orient_faces_consistently(*tit);
+                        mesh.orient_faces_consistently(t);
                     }
                     label = tl;
                 }
             }
             else {
-                simplex_set st_f;
-                star(fid, st_f);
-                mesh.orient_faces_consistently(*st_f.tetrahedra_begin());
+                mesh.orient_faces_consistently(get_tets(fid).front());
             }
         }
         
