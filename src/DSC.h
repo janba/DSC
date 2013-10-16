@@ -1749,7 +1749,7 @@ namespace DSC {
             }
             auto nodes = Complex::get_nodes(e);
             
-            vec3 p_opt, p_new_opt;
+            vec3 pos_opt, destination_opt;
             real q_max = 0.;
             
             if (!is_boundary(nodes[0]) && !is_boundary(nodes[1]) && (!safe || (!is_interface(nodes[0]) && !is_interface(nodes[1]))))
@@ -1758,8 +1758,8 @@ namespace DSC {
                 real q = min_quality(e, p);
                 if (q > q_max)
                 {
-                    p_new_opt = Util::barycenter(get_dest(nodes[0]), get_dest(nodes[1]));
-                    p_opt = p;
+                    destination_opt = Util::barycenter(get_dest(nodes[0]), get_dest(nodes[1]));
+                    pos_opt = p;
                     q_max = q;
                 }
             }
@@ -1771,8 +1771,8 @@ namespace DSC {
                 
                 if (q > q_max)
                 {
-                    p_new_opt = get_dest(nodes[1]);
-                    p_opt = p;
+                    destination_opt = get_dest(nodes[1]);
+                    pos_opt = p;
                     q_max = q;
                 }
             }
@@ -1784,15 +1784,15 @@ namespace DSC {
                 
                 if (q > q_max)
                 {
-                    p_new_opt = get_dest(nodes[0]);
-                    p_opt = p;
+                    destination_opt = get_dest(nodes[0]);
+                    pos_opt = p;
                     q_max = q;
                 }
             }
-            real q = Util::min(min_quality(nodes[0]), min_quality(nodes[1]));
+            real q = min_quality(Complex::get_tets(nodes));
             if((!safe && q_max > EPSILON) || q_max > Util::min(q, MIN_TET_QUALITY))
             {
-                return Complex::collapse(e, p_opt, p_new_opt);
+                return Complex::collapse(e, pos_opt, destination_opt);
             }
             return node_key();
         }
