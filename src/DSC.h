@@ -519,8 +519,43 @@ namespace DSC {
             return polygon;
         }
         
+        void get_polygons(const edge_key& eid, is_mesh::SimplexSet<node_key>& polygon1, is_mesh::SimplexSet<node_key> polygon2)
         {
+            is_mesh::SimplexSet<tet_key> tids = Complex::get_tets(eid);
+            is_mesh::SimplexSet<tet_key> tids1, tids2;
+            int label = get_label(tids.front());
+            for (auto t : tids)
+            {
+                if(get_label(t) == label)
+                {
+                    tids1 += t;
+                }
+                else {
+                    tids2 += t;
+                    if(get_label(tids2.front()) != get_label(t)) // More than one boundary meets at edge eid.
+                    {
+                        return;
+                    }
+                }
+            }
             
+            is_mesh::SimplexSet<edge_key> m_eids = Complex::get_edges(Complex::get_faces(eid));
+            is_mesh::SimplexSet<edge_key> eids1 = Complex::get_edges(tids1) - m_eids;
+            is_mesh::SimplexSet<edge_key> eids2 = Complex::get_edges(tids2) - m_eids;
+            
+            if(eids1.size() > eids2.size())
+            {
+                polygon1 = get_polygon(eids1);
+                polygon2 = get_polygon(eids2);
+            }
+            else {
+                polygon1 = get_polygon(eids2);
+                polygon2 = get_polygon(eids1);
+            }
+            check_consistency(get_pos(eid), polygon1);
+            check_consistency(get_pos(eid), polygon2);
+        }
+        
         std::vector<node_key> get_polygon(const edge_key& eid)
         {
             is_mesh::SimplexSet<edge_key> eids = Complex::get_edges(Complex::get_tets(eid)) - Complex::get_edges(Complex::get_faces(eid));
@@ -528,58 +563,6 @@ namespace DSC {
             check_consistency(get_pos(eid), polygon);
             return polygon;
         }
-        
-        void get_half_polygon(const edge_key& e, std::vector<node_key>& polygon1, std::vector<node_key>& polygon2)
-        {
-            auto nodes = Complex::get_nodes(e);
-            std::vector<node_key> polygon = get_polygon(e);
-            int i1 = -1, i2 = -1;
-            for(int i = 0; i < polygon.size(); i++)
-            {
-                face_key f = Complex::get_face(nodes[0], nodes[1], polygon[i]);
-#ifdef DEBUG
-                assert(f.is_valid());
-#endif
-                if(is_interface(f) || is_boundary(f))
-                {
-                    if(i2 != -1) // More than one boundary meets at edge e.
-                    {
-                        return;
-                    }
-                    
-                    if(i1 == -1) {
-                        i1 = i;
-                    }
-                    else {
-                        i2 = i;
-                    }
-                }
-            }
-#ifdef DEBUG
-            assert(i2 != -1);
-#endif
-            
-            for(int i = i1; i != i2; i = (i+1)%polygon.size())
-            {
-                polygon1.push_back(polygon[i]);
-            }
-            polygon1.push_back(polygon[i2]);
-            
-            for(int i = i2; i != i1; i = (i+1)%polygon.size())
-            {
-                polygon2.push_back(polygon[i]);
-            }
-            polygon2.push_back(polygon[i1]);
-            
-            if(polygon1.size() <= 2)
-            {
-                swap(polygon1, polygon2);
-            }
-#ifdef DEBUG
-            assert(polygon1.size() > 2);
-#endif
-        }
-        
         
         void flip_23_recursively(const std::vector<node_key>& polygon, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K, int i, int j)
         {
@@ -653,8 +636,8 @@ namespace DSC {
         
         bool topological_boundary_edge_removal(const edge_key& e)
         {
-            std::vector<node_key> polygon1, polygon2;
-            get_half_polygon(e, polygon1, polygon2);
+            is_mesh::SimplexSet<node_key> polygon1, polygon2;
+            get_polygons(e, polygon1, polygon2);
             
             if(polygon1.size() <= 2)
             {
