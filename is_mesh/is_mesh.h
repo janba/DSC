@@ -967,66 +967,6 @@ namespace is_mesh
             return false;
         }
         
-        void link(TetrahedronKey const & k, simplex_set_type & result){}
-        
-        void link(FaceKey const & f, simplex_set_type & result)
-        {
-            simplex_set_type st_f, cl_f;
-            star(f, st_f);
-            closure(st_f, result);
-            closure(f, cl_f);
-            result.difference(cl_f);
-            result.difference(st_f);
-            result.clear_edges();
-            result.clear_faces();
-            result.clear_tetrahedra();
-        }
-                
-        void link(EdgeKey const & e, simplex_set_type & result)
-        {
-            simplex_set_type st_e, cl_e, temp;
-            star(e, st_e);
-            closure(st_e, temp);
-            closure(e, cl_e);
-            NodeKey n1, n2;
-            simplex_set_type::node_set_iterator nit = cl_e.nodes_begin();
-            n1 = *nit;  ++nit;  n2 = *nit;
-            temp.difference(st_e);
-            temp.difference(cl_e);
-            simplex_set_type::edge_set_iterator eit = temp.edges_begin();
-            while (eit != temp.edges_end())
-            {
-                auto ebnd = lookup_simplex(*eit).get_boundary();
-                auto ebit = ebnd->begin();
-                if (*ebit == n1 || *ebit == n2)
-                {
-                    ++eit;
-                    continue;
-                }
-                ++ebit;
-                if (*ebit == n1 || *ebit == n2)
-                {
-                    ++eit;
-                    continue;
-                }
-                result.insert(*eit);
-                ++eit;
-            }
-            temp.clear_edges();
-            temp.clear_faces();
-            temp.clear_tetrahedra();
-            result.add(temp);
-        }
-        
-        void link(NodeKey const & n, simplex_set_type & result)
-        {
-            simplex_set_type st_n;
-            star(n, st_n);
-            st_n.insert(n);
-            closure(st_n, result);
-            result.difference(st_n);
-        }
-        
         /**
          *
          */

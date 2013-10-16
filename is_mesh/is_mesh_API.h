@@ -705,12 +705,6 @@ namespace is_mesh {
             mesh.closure(set_, set);
         }
         
-        template<typename Key>
-        void link(const Key& k, simplex_set& set)
-        {
-            mesh.link(k, set);
-        }
-        
         /**
          * Ensures consistent orientation of all faces to the two tetrahedra which are in the star of f.
          */
