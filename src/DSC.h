@@ -1950,8 +1950,8 @@ namespace DSC {
         
         real quality(const tet_key& tid)
         {
-            auto verts = get_pos(tid);
-            return std::abs(Util::quality<real>(verts[0], verts[1], verts[2], verts[3]));
+            is_mesh::SimplexSet<node_key> nids = Complex::get_nodes(tid);
+            return std::abs(Util::quality<real>(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]), get_pos(nids[3])));
         }
         
         real min_angle(const face_key& f)
