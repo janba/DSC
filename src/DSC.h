@@ -482,14 +482,50 @@ namespace DSC {
             return Q[0][m-1];
         }
         
-        std::vector<node_key> get_polygon(edge_key const & e)
+        
+        node_key get_next(const node_key& nid, is_mesh::SimplexSet<edge_key>& eids)
         {
-            simplex_set lk_e;
-            Complex::link(e, lk_e);
-            std::vector<node_key> polygon;
+            for (auto e : eids)
+            {
+                auto n = Complex::get_nodes(e) - nid;
+                if(n.size() == 1)
+                {
+                    eids -= e;
+                    return n.front();
+                }
+            }
+            return is_mesh::NodeKey();
+        }
+        
+        is_mesh::SimplexSet<node_key> get_polygon(is_mesh::SimplexSet<edge_key>& eids)
+        {
+            is_mesh::SimplexSet<node_key> polygon = {Complex::get_nodes(eids[0]).front()};
+            node_key next_nid;
+            do {
+                next_nid = get_next(polygon.back(), eids);
+                if(next_nid.is_valid() && !polygon.contains(next_nid))
+                {
+                    polygon.insert(polygon.end(), next_nid);
+                }
+            } while(next_nid.is_valid());
             
-            sort_vertices(lk_e, polygon);
-            check_consistency(get_pos(e), polygon);
+            do {
+                next_nid = get_next(polygon.front(), eids);
+                if(next_nid.is_valid() && !polygon.contains(next_nid))
+                {
+                    polygon.insert(polygon.begin(), next_nid);
+                }
+            } while(next_nid.is_valid());
+            return polygon;
+        }
+        
+        {
+            
+        std::vector<node_key> get_polygon(const edge_key& eid)
+        {
+            is_mesh::SimplexSet<edge_key> eids = Complex::get_edges(Complex::get_tets(eid)) - Complex::get_edges(Complex::get_faces(eid));
+            is_mesh::SimplexSet<node_key> polygon = get_polygon(eids);
+            check_consistency(get_pos(eid), polygon);
             return polygon;
         }
         
