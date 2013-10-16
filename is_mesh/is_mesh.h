@@ -263,48 +263,6 @@ namespace is_mesh
         typename tetrahedron_kernel_type::iterator tetrahedra_end() { return m_tetrahedron_kernel->end(); }
         
         /**
-         * Inserts a node into the mesh. Trivial.
-         */
-        NodeKey insert_node()
-        {
-            node_iterator node = m_node_kernel->create();
-            return node.key();
-        }
-        
-        /**
-         * Inserts an edge into the mesh. Updates the co-boundary of the boundary nodes with the newly created edge.
-         * Leaves the closure of the edge in an uncompressed state.
-         */
-        EdgeKey insert_edge(NodeKey node1, NodeKey node2)
-        {
-            edge_iterator edge = m_edge_kernel->create();
-            //add the new simplex to the co-boundary relation of the boundary simplices
-            m_node_kernel->find(node1).add_co_face(edge.key());
-            m_node_kernel->find(node2).add_co_face(edge.key());
-            //set the boundary relation
-            edge->add_face(node1);
-            edge->add_face(node2);
-            return edge.key();
-        }
-        
-        /**
-         * Inserts a face into the mesh. Updates the co-boundary of the boundary faces with the newly created face.
-         * Leaves the closure of the face in an uncompressed state.
-         */
-        FaceKey insert_face(EdgeKey edge1, EdgeKey edge2, EdgeKey edge3)
-        {
-            face_iterator face = m_face_kernel->create();
-            //update relations
-            m_edge_kernel->find(edge1).add_co_face(face.key());
-            m_edge_kernel->find(edge2).add_co_face(face.key());
-            m_edge_kernel->find(edge3).add_co_face(face.key());
-            face->add_face(edge1);
-            face->add_face(edge2);
-            face->add_face(edge3);
-            return face.key();
-        }
-        
-        /**
          *
          */
         void remove(const NodeKey& nid)

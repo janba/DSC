@@ -676,14 +676,14 @@ namespace is_mesh {
             auto tids = get_tets(eid);
             
             // Split edge
-            auto new_nid = mesh.insert_node();
+            auto new_nid = insert_node();
             get(new_nid).set_pos(pos);
             get(new_nid).set_destination(destination);
             
             disconnect(nids[1], eid);
             connect(new_nid, eid);
             
-            auto new_eid = mesh.insert_edge(new_nid, nids[1]);
+            auto new_eid = insert_edge(new_nid, nids[1]);
             
             // Update faces, create faces
             for (auto f : fids)
@@ -693,10 +693,10 @@ namespace is_mesh {
                 
                 SimplexSet<NodeKey> new_e_nids = get_nodes(get_edges(f)) - nids[0];
                 assert(new_e_nids.size() == 2);
-                EdgeKey new_f_eid = mesh.insert_edge(new_e_nids[0], new_e_nids[1]);
+                EdgeKey new_f_eid = insert_edge(new_e_nids[0], new_e_nids[1]);
                 connect(new_f_eid, f);
                 
-                mesh.insert_face(f_eid, new_f_eid, new_eid);
+                insert_face(f_eid, new_f_eid, new_eid);
             }
             
             // Update tetrahedra, create tetrahedra
@@ -708,7 +708,7 @@ namespace is_mesh {
                 
                 SimplexSet<EdgeKey> new_f_eids = get_edges(get_faces(t)) - get_edges(nids[0]);
                 assert(new_f_eids.size() == 3);
-                FaceKey new_t_fid = mesh.insert_face(new_f_eids[0], new_f_eids[1], new_f_eids[2]);
+                FaceKey new_t_fid = insert_face(new_f_eids[0], new_f_eids[1], new_f_eids[2]);
                 connect(new_t_fid, t);
                 
                 SimplexSet<FaceKey> t_fids = get_faces(new_eid) & get_faces(get_edges(t_fid));
@@ -906,7 +906,7 @@ namespace is_mesh {
             // Create face
             auto f_eids = get_boundary(get_boundary(e_tids)) - get_boundary(e_fids);
             assert(f_eids.size() == 3);
-            auto new_fid = mesh.insert_face(f_eids[0], f_eids[1], f_eids[2]);
+            auto new_fid = insert_face(f_eids[0], f_eids[1], f_eids[2]);
             
             // Remove faces
             for(face_key& f : e_fids)
@@ -950,7 +950,7 @@ namespace is_mesh {
             // Create edge
             auto e_nids = get_boundary(get_boundary(get_boundary(f_tids))) - f_nids;
             assert(e_nids.size() == 2);
-            edge_key new_eid = mesh.insert_edge(e_nids[0], e_nids[1]);
+            edge_key new_eid = insert_edge(e_nids[0], e_nids[1]);
             
             // Create faces
             auto new_fs_eids = get_boundary(get_boundary(f_tids)) - f_eids;
@@ -959,7 +959,7 @@ namespace is_mesh {
             {
                 auto new_f_eids = new_fs_eids & get_co_boundary(n);
                 assert(new_f_eids.size() == 2);
-                mesh.insert_face(new_f_eids[0], new_f_eids[1], new_eid);
+                insert_face(new_f_eids[0], new_f_eids[1], new_eid);
             }
             
             // Remove face
