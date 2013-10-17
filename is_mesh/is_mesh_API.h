@@ -8,7 +8,9 @@
 
 #pragma once
 
-#include <is_mesh/is_mesh.h>
+#include <is_mesh/kernel.h>
+#include <is_mesh/simplex.h>
+#include <is_mesh/simplex_set.h>
 #include <is_mesh/is_mesh_lists_read.h>
 
 namespace is_mesh {
@@ -16,69 +18,88 @@ namespace is_mesh {
     template <typename node_traits, typename edge_traits, typename face_traits, typename tet_traits>
     class ISMesh
     {
-        typedef typename is_mesh::t4mesh< node_traits, tet_traits, edge_traits, face_traits> Mesh;
-        
     public:
         typedef NodeKey            node_key;
         typedef EdgeKey            edge_key;
         typedef FaceKey            face_key;
         typedef TetrahedronKey     tet_key;
         
+        typedef Node<node_traits>                                         node_type;
+        typedef Edge<edge_traits>                                         edge_type;
+        typedef Face<face_traits>                                         face_type;
+        typedef Tetrahedron<tet_traits>                           tetrahedron_type;
+        
     private:
-        Mesh mesh;
+        kernel<node_type, NodeKey>* m_node_kernel;
+        kernel<edge_type, EdgeKey>*                  m_edge_kernel;
+        kernel<face_type, FaceKey>*                  m_face_kernel;
+        kernel<tetrahedron_type, TetrahedronKey>*           m_tetrahedron_kernel;
         
     public:
         template<typename real>
         ISMesh(std::vector<real> & points, std::vector<int> & tets)
         {
+            m_node_kernel = new kernel<node_type, NodeKey>();
+            m_edge_kernel = new kernel<edge_type, EdgeKey>();
+            m_face_kernel = new kernel<face_type, FaceKey>();
+            m_tetrahedron_kernel = new kernel<tetrahedron_type, TetrahedronKey>();
+            
             vectors_read(points, tets, *this);
             init();
             validity_check();
             simplex_set_test();
         }
         
+        ~ISMesh()
+        {
+            delete m_tetrahedron_kernel;
+            delete m_face_kernel;
+            delete m_edge_kernel;
+            delete m_node_kernel;
+        }
+        
         ///////////////
         // ITERATORS //
         ///////////////
     public:
-        typename Mesh::node_iterator nodes_begin()
+        typename kernel<node_type, NodeKey>::iterator nodes_begin()
         {
-            return mesh.nodes_begin();
+            return m_node_kernel->begin();
         }
         
-        typename Mesh::node_iterator nodes_end()
+        typename kernel<node_type, NodeKey>::iterator nodes_end()
         {
-            return mesh.nodes_end();
+            return m_node_kernel->end();
         }
         
-        typename Mesh::edge_iterator edges_begin()
+        typename kernel<edge_type, EdgeKey>::iterator edges_begin()
         {
-            return mesh.edges_begin();
+            return m_edge_kernel->begin();
         }
         
-        typename Mesh::edge_iterator edges_end()
+        typename kernel<edge_type, EdgeKey>::iterator edges_end()
         {
-            return mesh.edges_end();
+            return m_edge_kernel->end();
         }
         
-        typename Mesh::face_iterator faces_begin()
+        typename kernel<face_type, FaceKey>::iterator faces_begin()
         {
-            return mesh.faces_begin();
+            return m_face_kernel->begin();
         }
         
-        typename Mesh::face_iterator faces_end()
+        typename kernel<face_type, FaceKey>::iterator faces_end()
         {
-            return mesh.faces_end();
+            return m_face_kernel->end();
         }
         
-        typename Mesh::tetrahedron_iterator tetrahedra_begin()
+        typename kernel<tetrahedron_type, TetrahedronKey>::iterator tetrahedra_begin()
         {
-            return mesh.tetrahedra_begin();
+            return m_tetrahedron_kernel->begin();
         }
         
-        typename Mesh::tetrahedron_iterator tetrahedra_end()
+        typename kernel<tetrahedron_type, TetrahedronKey>::iterator tetrahedra_end()
         {
-            return mesh.tetrahedra_end();
+            return m_tetrahedron_kernel->end();
         }
         
         /////////////////////
@@ -315,24 +336,24 @@ namespace is_mesh {
         // GETTER FUNCTIONS //
         //////////////////////
     public:
-        typename Mesh::node_type & get(const node_key& k)
+        node_type & get(const node_key& nid)
         {
-            return mesh.lookup_simplex(k);
+            return m_node_kernel->find(nid);
         }
         
-        typename Mesh::edge_type & get(const edge_key& k)
+        edge_type & get(const edge_key& eid)
         {
-            return mesh.lookup_simplex(k);
+            return m_edge_kernel->find(eid);
         }
         
-        typename Mesh::face_type & get(const face_key& k)
+        face_type & get(const face_key& fid)
         {
-            return mesh.lookup_simplex(k);
+            return m_face_kernel->find(fid);
         }
         
-        typename Mesh::tetrahedron_type & get(const tet_key& k)
+        tetrahedron_type & get(const tet_key& tid)
         {
-            return mesh.lookup_simplex(k);
+            return m_tetrahedron_kernel->find(tid);
         }
         
         const SimplexSet<NodeKey>& get_boundary(const EdgeKey& eid)
@@ -638,10 +659,39 @@ namespace is_mesh {
         ////////////////////
     public:
         
-        template<typename Key>
-        bool exists(const Key& k)
+        
+        
+        /**
+         *
+         */
+        bool exists(const TetrahedronKey& t)
         {
-            return mesh.exists(k);
+            return m_tetrahedron_kernel->is_valid(t);
+        }
+        
+        /**
+         *
+         */
+        bool exists(const FaceKey& f)
+        {
+            return m_face_kernel->is_valid(f);
+        }
+        
+        /**
+         *
+         */
+        bool exists(const EdgeKey& e)
+        {
+            return m_edge_kernel->is_valid(e);
+        }
+        
+        /**
+         *
+         */
+        bool exists(const NodeKey& n)
+        {
+            return m_node_kernel->is_valid(n);
+            
         }
         
         bool is_clockwise_order(const node_key& nid, SimplexSet<node_key>& nids)
@@ -821,7 +871,7 @@ namespace is_mesh {
             auto tids = get_tets(eid);
             
             // Remove edge
-            mesh.remove(eid);
+            remove(eid);
             
             // Merge nodes
             node_key nid = merge(nids[1], nids[0]);
@@ -832,7 +882,7 @@ namespace is_mesh {
             for(auto f : fids)
             {
                 auto eids = get_edges(f);
-                mesh.remove(f);
+                remove(f);
                 merge(eids[0], eids[1]);
             }
             
@@ -840,7 +890,7 @@ namespace is_mesh {
             for(auto t : tids)
             {
                 auto fids = get_faces(t);
-                mesh.remove(t);
+                remove(t);
                 merge(fids[0], fids[1]);
             }
             
@@ -879,7 +929,7 @@ namespace is_mesh {
             {
                 connect(key1, e);
             }
-            mesh.remove(key2);
+            remove(key2);
             return key1;
         }
         
@@ -895,7 +945,7 @@ namespace is_mesh {
             {
                 connect(k, key1);
             }
-            mesh.remove(key2);
+            remove(key2);
             return key1;
         }
         
@@ -905,7 +955,7 @@ namespace is_mesh {
          */
         NodeKey insert_node()
         {
-            auto node = mesh.m_node_kernel->create();
+            auto node = m_node_kernel->create();
             return node.key();
         }
         
@@ -915,7 +965,7 @@ namespace is_mesh {
          */
         EdgeKey insert_edge(NodeKey node1, NodeKey node2)
         {
-            auto edge = mesh.m_edge_kernel->create();
+            auto edge = m_edge_kernel->create();
             //add the new simplex to the co-boundary relation of the boundary simplices
             get(node1).add_co_face(edge.key());
             get(node2).add_co_face(edge.key());
@@ -931,7 +981,7 @@ namespace is_mesh {
          */
         FaceKey insert_face(EdgeKey edge1, EdgeKey edge2, EdgeKey edge3)
         {
-            auto face = mesh.m_face_kernel->create();
+            auto face = m_face_kernel->create();
             //update relations
             get(edge1).add_co_face(face.key());
             get(edge2).add_co_face(face.key());
@@ -948,7 +998,7 @@ namespace is_mesh {
          */
         TetrahedronKey insert_tetrahedron(FaceKey face1, FaceKey face2, FaceKey face3, FaceKey face4)
         {
-            auto tetrahedron = mesh.m_tetrahedron_kernel->create();
+            auto tetrahedron = m_tetrahedron_kernel->create();
             //update relations
             get(face1).add_co_face(tetrahedron.key());
             get(face2).add_co_face(tetrahedron.key());
@@ -967,6 +1017,67 @@ namespace is_mesh {
             return tetrahedron.key();
         }
         
+        
+        /**
+         *
+         */
+        void remove(const NodeKey& nid)
+        {
+            auto& node = get(nid);
+            for(auto eid : *node.get_co_boundary())
+            {
+                get(eid).remove_face(nid);
+            }
+            m_node_kernel->erase(nid);
+        }
+        
+        /**
+         *
+         */
+        void remove(const EdgeKey& eid)
+        {
+            auto& edge = get(eid);
+            for(auto fid : *edge.get_co_boundary())
+            {
+                get(fid).remove_face(eid);
+            }
+            for(auto nid : *edge.get_boundary())
+            {
+                get(nid).remove_co_face(eid);
+            }
+            m_edge_kernel->erase(eid);
+        }
+        
+        /**
+         *
+         */
+        void remove(const FaceKey& fid)
+        {
+            auto& face = get(fid);
+            for(auto tid : *face.get_co_boundary())
+            {
+                get(tid).remove_face(fid);
+            }
+            for(auto eid : *face.get_boundary())
+            {
+                get(eid).remove_co_face(fid);
+            }
+            m_face_kernel->erase(fid);
+        }
+        
+        /**
+         *
+         */
+        void remove(const TetrahedronKey& tid)
+        {
+            auto& tet = get(tid);
+            for(auto fid : *tet.get_boundary())
+            {
+                get(fid).remove_co_face(tid);
+            }
+            m_tetrahedron_kernel->erase(tid);
+        }
+        
     public:
         
         face_key flip_32(const edge_key& eid)
@@ -981,7 +1092,7 @@ namespace is_mesh {
             assert(label == get_label(e_tids[2]));
             
             // Remove edge
-            mesh.remove(eid);
+            remove(eid);
             
             // Create face
             auto f_eids = get_boundary(get_boundary(e_tids)) - get_boundary(e_fids);
@@ -991,7 +1102,7 @@ namespace is_mesh {
             // Remove faces
             for(face_key& f : e_fids)
             {
-                mesh.remove(f);
+                remove(f);
             }
             
             // Create tetrahedra
@@ -1006,7 +1117,7 @@ namespace is_mesh {
             // Remove tetrahedra
             for(tet_key& t : e_tids)
             {
-                mesh.remove(t);
+                remove(t);
             }
             
             // Update flags
@@ -1043,7 +1154,7 @@ namespace is_mesh {
             }
             
             // Remove face
-            mesh.remove(fid);
+            remove(fid);
             
             // Create tetrahedra
             auto new_ts_fids1 = get_boundary(f_tids);
@@ -1059,7 +1170,7 @@ namespace is_mesh {
             
             // Remove tetrahedra
             for (auto t : f_tids) {
-                mesh.remove(t);
+                remove(t);
             }
             
             // Update flags
@@ -1192,7 +1303,10 @@ namespace is_mesh {
         
         void garbage_collect()
         {
-            mesh.garbage_collect();
+            m_node_kernel->garbage_collect();
+            m_edge_kernel->garbage_collect();
+            m_face_kernel->garbage_collect();
+            m_tetrahedron_kernel->garbage_collect();
         }
                 
         void validity_check()

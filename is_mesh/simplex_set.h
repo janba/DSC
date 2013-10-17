@@ -1,6 +1,9 @@
 
 #pragma once
 
+#include <vector>
+#include "key.h"
+
 namespace is_mesh
 {
     
@@ -28,6 +31,15 @@ namespace is_mesh
             if(!contains(key))
             {
                 this->push_back(key);
+            }
+            return *this;
+        }
+        
+        SimplexSet<key_type>& operator+=(key_type&& key)
+        {
+            if(!contains(key))
+            {
+                this->push_back(std::move(key));
             }
             return *this;
         }

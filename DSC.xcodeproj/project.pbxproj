@@ -11,7 +11,6 @@
 		7A30ED1A17D951EB0051E6C0 /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A30ED1917D951EB0051E6C0 /* libGLEW.a */; };
 		7A45DB9C176E122100B9B388 /* key.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8F176E122100B9B388 /* key.h */; };
 		7A45DB9D176E122100B9B388 /* simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB90176E122100B9B388 /* simplex.h */; };
-		7A45DB9F176E122100B9B388 /* is_mesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB92176E122100B9B388 /* is_mesh.h */; };
 		7A45DBA0176E122100B9B388 /* kernel_iterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB93176E122100B9B388 /* kernel_iterator.h */; };
 		7A45DBA1176E122100B9B388 /* kernel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB94176E122100B9B388 /* kernel.h */; };
 		7A45DBA2176E122100B9B388 /* simplex_set.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB95176E122100B9B388 /* simplex_set.h */; };
@@ -135,7 +134,6 @@
 		7A38E82B17E3B35A0075DC24 /* gouraud.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = gouraud.vert; sourceTree = "<group>"; };
 		7A45DB8F176E122100B9B388 /* key.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = key.h; path = is_mesh/key.h; sourceTree = "<group>"; };
 		7A45DB90176E122100B9B388 /* simplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simplex.h; path = is_mesh/simplex.h; sourceTree = "<group>"; };
-		7A45DB92176E122100B9B388 /* is_mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh.h; path = is_mesh/is_mesh.h; sourceTree = "<group>"; };
 		7A45DB93176E122100B9B388 /* kernel_iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = kernel_iterator.h; path = is_mesh/kernel_iterator.h; sourceTree = "<group>"; };
 		7A45DB94176E122100B9B388 /* kernel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = kernel.h; path = is_mesh/kernel.h; sourceTree = "<group>"; };
 		7A45DB95176E122100B9B388 /* simplex_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simplex_set.h; path = is_mesh/simplex_set.h; sourceTree = "<group>"; };
@@ -292,7 +290,6 @@
 				7A45DB95176E122100B9B388 /* simplex_set.h */,
 				7A45DB93176E122100B9B388 /* kernel_iterator.h */,
 				7A45DB94176E122100B9B388 /* kernel.h */,
-				7A45DB92176E122100B9B388 /* is_mesh.h */,
 				7AB27FB317FCEC0C00BFC866 /* is_mesh_lists_read.h */,
 				7AF7E9C0176B524700F43714 /* is_mesh_API.h */,
 			);
@@ -543,7 +540,6 @@
 				7AF7E9C1176B524700F43714 /* is_mesh_API.h in Headers */,
 				7A45DB9C176E122100B9B388 /* key.h in Headers */,
 				7A45DB9D176E122100B9B388 /* simplex.h in Headers */,
-				7A45DB9F176E122100B9B388 /* is_mesh.h in Headers */,
 				7A45DBA0176E122100B9B388 /* kernel_iterator.h in Headers */,
 				7A45DBA1176E122100B9B388 /* kernel.h in Headers */,
 				7A45DBA2176E122100B9B388 /* simplex_set.h in Headers */,

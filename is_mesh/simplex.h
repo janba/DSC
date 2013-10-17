@@ -1,7 +1,5 @@
 #pragma once
 
-#include <set>
-#include <is_mesh/key.h>
 #include "simplex_set.h"
 
 namespace is_mesh
