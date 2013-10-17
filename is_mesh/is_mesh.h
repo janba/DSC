@@ -92,7 +92,7 @@ namespace is_mesh
          * Helper function for orient_face[...] methods.
          * fk must be a face of sk, dim(sk) = dimension, dim(fk) = dimension-1.
          */
-        void orient_face_helper(const TetrahedronKey& tid, const FaceKey& fid, bool consistently)
+        void orient_face_helper(const TetrahedronKey& tid, const FaceKey& fid)
         {
             auto face_boundary = lookup_simplex(fid).get_boundary();
             std::vector<EdgeKey> new_face_boundary(face_boundary->size());
@@ -124,7 +124,7 @@ namespace is_mesh
             }
             
             f_index %= 2;
-            if ((f_index == 0 && consistently) || (f_index == 1 && !consistently))
+            if (f_index == 0)
             {
                 lookup_simplex(fid).invert_orientation();
             }
@@ -135,7 +135,7 @@ namespace is_mesh
          * Helper function for orient_face[...] methods.
          * fk must be a face of sk, dim(sk) = dimension, dim(fk) = dimension-1.
          */
-        void orient_face_helper(const FaceKey& fid, const EdgeKey& eid, bool consistently)
+        void orient_face_helper(const FaceKey& fid, const EdgeKey& eid)
         {
             auto simplex_boundary = lookup_simplex(fid).get_boundary();
             auto face_boundary = lookup_simplex(eid).get_boundary();
@@ -174,8 +174,7 @@ namespace is_mesh
                 face_boundary->push_back(new_face_boundary[i]);
             
             f_index %= 2;
-            if ((f_index == 0 && consistently) ||
-                (f_index == 1 && !consistently))
+            if (f_index == 0)
             {
                 lookup_simplex(eid).invert_orientation();
             }

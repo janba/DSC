@@ -461,7 +461,7 @@ namespace is_mesh {
         {
             SimplexSet<NodeKey> nids;
             for (auto e : get_edges(fid)) {
-                mesh.orient_face_helper(fid, e, true);
+                mesh.orient_face_helper(fid, e);
                 nids += get_nodes(e)[0];
             }
             return nids;
@@ -471,7 +471,7 @@ namespace is_mesh {
         {
             SimplexSet<NodeKey> nids;
             auto fids = get_faces(tid);
-            mesh.orient_face_helper(tid, fids[0], true);
+            mesh.orient_face_helper(tid, fids[0]);
             nids += get_sorted_nodes(fids[0]);
             nids += get_sorted_nodes(fids[1]);
             assert(nids.size() == 4);
@@ -686,11 +686,11 @@ namespace is_mesh {
                         tid = t;
                     }
                 }
-                mesh.orient_face_helper(tid, fid, true);
+                mesh.orient_face_helper(tid, fid);
             }
             else if (is_boundary(fid))
             {
-                mesh.orient_face_helper(get_tets(fid).front(), fid, true);
+                mesh.orient_face_helper(get_tets(fid).front(), fid);
             }
         }
         
