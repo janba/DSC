@@ -644,23 +644,27 @@ namespace is_mesh {
             return mesh.exists(k);
         }
         
-        /*
-         * Orient the nodes in a counter clockwise order seen from the node a.
-         */
-        void orient_cc(const node_key& a, SimplexSet<node_key>& nodes)
+        bool is_clockwise_order(const node_key& nid, SimplexSet<node_key>& nids)
         {
-            auto x = get(a).get_pos() - get(nodes[0]).get_pos();
-            auto y = get(nodes[1]).get_pos() - get(nodes[0]).get_pos();
-            auto z = get(nodes[2]).get_pos() - get(nodes[0]).get_pos();
+            auto x = get(nid).get_pos() - get(nids[0]).get_pos();
+            auto y = get(nids[1]).get_pos() - get(nids[0]).get_pos();
+            auto z = get(nids[2]).get_pos() - get(nids[0]).get_pos();
             auto val = dot(x, cross(y,z));
+            
 #ifdef DEBUG
             assert(val != 0.);
 #endif
-            if(val > 0.)
+            return val > 0.;
+        }
+        
+        /*
+         * Orient the nodes in a counter clockwise order seen from the node a.
+         */
+        void orient_cc(const node_key& nid, SimplexSet<node_key>& nids)
+        {
+            if(is_clockwise_order(nid, nids))
             {
-                node_key t = nodes[0];
-                nodes[0] = nodes[2];
-                nodes[2] = t;
+                std::swap(nids[0], nids[2]);
             }
         }
         
