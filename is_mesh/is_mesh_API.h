@@ -471,7 +471,7 @@ namespace is_mesh {
         {
             SimplexSet<NodeKey> nids;
             auto fids = get_faces(tid);
-            orient(tid, fids[0]);
+            orient_edges(tid, fids[0]);
             nids += get_sorted_nodes(fids[0]);
             nids += get_nodes(fids[1]);
             assert(nids.size() == 4);
@@ -699,7 +699,7 @@ namespace is_mesh {
         /**
          * Ensures a counter clockwise orientation of the edges of the face fid seen from the tetrahedron tid.
          */
-        void orient(const TetrahedronKey& tid, const FaceKey& fid)
+        void orient_edges(const TetrahedronKey& tid, const FaceKey& fid)
         {
             SimplexSet<EdgeKey> eids = get_edges(fid);
             SimplexSet<EdgeKey> new_eids;
@@ -723,16 +723,8 @@ namespace is_mesh {
             }
         }
         
-        void orient_edges(const TetrahedronKey& tid)
-        {
-            for (auto f : get_faces(tid))
-            {
-                orient_face(tid, f);
-            }
-        }
-        
         /**
-         * Ensures consistent orientation of the face fid if fid is an interface or boundary face.
+         * Ensures consistent orientation of the nodes of face fid if fid is an interface or boundary face.
          */
         void orient_face(const face_key& fid)
         {
@@ -749,11 +741,11 @@ namespace is_mesh {
                         tid = t;
                     }
                 }
-                orient(tid, fid);
+                orient_edges(tid, fid);
             }
             else if (is_boundary(fid))
             {
-                orient(get_tets(fid).front(), fid);
+                orient_edges(get_tets(fid).front(), fid);
             }
         }
         
