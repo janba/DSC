@@ -34,7 +34,6 @@ namespace DSC {
         typedef typename Complex::edge_key      edge_key;
         typedef typename Complex::face_key      face_key;
         typedef typename Complex::tet_key       tet_key;
-        typedef typename Complex::simplex_set   simplex_set;
         
     private:
         DesignDomain *design_domain;
@@ -1098,25 +1097,19 @@ namespace DSC {
         /**
          * Attempt to remove the cap f by splitting the longest edge and collapsing it with cap's apex.
          */
-        bool remove_cap(const face_key& f)
+        bool remove_cap(const face_key& fid)
         {
             // Find longest edge
-            simplex_set cl_f;
-            Complex::closure(f, cl_f);
-            edge_key e = longest_edge(cl_f);
+            edge_key eid = longest_edge(Complex::get_edges(fid));
             
             // Find apex
-            simplex_set cl_e;
-            Complex::closure(e, cl_e);
-            cl_f.difference(cl_e);
-            node_key apex = *cl_f.nodes_begin();
-            
+            node_key apex = (Complex::get_nodes(fid) - Complex::get_nodes(eid)).front();
             // Find the projected position of the apex
-            auto verts = get_pos(e);
+            auto verts = get_pos(eid);
             vec3 p = Util::project(get_pos(apex), verts[0], verts[1]);
             
             // Split longest edge
-            node_key n = split(e);
+            node_key n = split(eid);
             set_pos(n, p);
             
             // Collapse new edge
@@ -1127,12 +1120,10 @@ namespace DSC {
         /**
          * Attempt to remove the cap f by splitting the longest edge and collapsing it with cap's apex.
          */
-        bool remove_needle(const face_key& f)
+        bool remove_needle(const face_key& fid)
         {
             // Find shortest edge
-            simplex_set cl_f;
-            Complex::closure(f, cl_f);
-            edge_key e = shortest_edge(cl_f);
+            edge_key e = shortest_edge(Complex::get_edges(fid));
             
             // Remove edge
             return collapse(e) != Complex::NULL_NODE;
@@ -1185,13 +1176,12 @@ namespace DSC {
          * Remove a degenerate tetrahedron of a type "sliver" by splitting the two longest edges
          * and collapsing the newly created vertices together. Return true if successful.
          */
-        bool remove_sliver(const tet_key & t)
+        bool remove_sliver(const tet_key& tid)
         {
-            simplex_set cl_t;
-            Complex::closure(t, cl_t);
-            edge_key e1 = longest_edge(cl_t);
-            cl_t.erase(e1);
-            edge_key e2 = longest_edge(cl_t);
+            is_mesh::SimplexSet<edge_key> eids = Complex::get_edges(tid);
+            edge_key e1 = longest_edge(eids);
+            eids -= e1;
+            edge_key e2 = longest_edge(eids);
             
             node_key n1 = split(e1);
             node_key n2 = split(e2);
@@ -1204,22 +1194,20 @@ namespace DSC {
          * Remove a degenerate tetrahedron of a type "cap" by splitting the face opposite cap's apex and collapsing cap's apex with the newly created vertex.
          * Return true if successful.
          */
-        bool remove_cap(const tet_key & t)
+        bool remove_cap(const tet_key& tid)
         {
             // Find the largest face
-            simplex_set cl_t;
-            Complex::closure(t, cl_t);
-            face_key f = largest_face(cl_t);
+            face_key fid = largest_face(Complex::get_faces(tid));
             
             // Find the apex
-            node_key apex = Complex::get_apex(t, f);
+            node_key apex = Complex::get_nodes(tid) - Complex::get_nodes(fid);
             
             // Project the apex
-            auto verts = get_pos(f);
+            auto verts = get_pos(fid);
             vec3 p = Util::project(get_pos(apex), verts);
             
             // Split the face
-            node_key n = split(f);
+            node_key n = split(fid);
             set_pos(n, p);
             
             // Collapse edge
@@ -1231,18 +1219,17 @@ namespace DSC {
          * Remove a degenerate tetrahedron of a type "wedge" or "needle" by collapsing the shortest edge.
          * Return true if successful.
          */
-        bool remove_wedge(const tet_key & t)
+        bool remove_wedge(const tet_key& tid)
         {
-            simplex_set cl_t;
-            Complex::closure(t, cl_t);
-            while(cl_t.size_edges() > 2)
+            is_mesh::SimplexSet<edge_key> eids = Complex::get_edges(tid);
+            while(eids.size() > 2)
             {
-                edge_key e = shortest_edge(cl_t);
+                edge_key e = shortest_edge(eids);
                 if(collapse(e) != Complex::NULL_NODE)
                 {
                     return true;
                 }
-                cl_t.erase(e);
+                eids -= e;
             }
             return false;
             
@@ -1263,18 +1250,17 @@ namespace DSC {
          * Remove a tetrahedron of a type "needle" by splitting the tetrahedron.
          * Return true if successful.
          */
-        bool remove_needle(const tet_key & t)
+        bool remove_needle(const tet_key& tid)
         {
-            simplex_set cl_t;
-            Complex::closure(t, cl_t);
-            while(cl_t.size_edges() > 1)
+            is_mesh::SimplexSet<edge_key> eids = Complex::get_edges(tid);
+            while(eids.size() > 1)
             {
-                edge_key e = shortest_edge(cl_t);
+                edge_key e = shortest_edge(eids);
                 if(collapse(e) != Complex::NULL_NODE)
                 {
                     return true;
                 }
-                cl_t.erase(e);
+                eids -= e;
             }
             return false;
             //        split(t);
@@ -1286,18 +1272,17 @@ namespace DSC {
          * This function detects what type of degeneracy tetrahedron t is (sliver, cap, needle or wedge)
          * and selects appropriate degeneracy removal routine.
          */
-        bool remove_tet(const tet_key & t)
+        bool remove_tet(const tet_key& tid)
         {
             // Find the largest face
-            simplex_set cl_t;
-            Complex::closure(t, cl_t);
-            face_key f = largest_face(cl_t);
+            is_mesh::SimplexSet<edge_key> fids = Complex::get_faces(tid);
+            face_key fid = largest_face(fids);
             
             // Find the apex
-            node_key apex = Complex::get_apex(t, f);
+            node_key apex = Complex::get_nodes(tid) - Complex::get_nodes(fid);
             
             // Project the apex
-            auto verts = get_pos(f);
+            auto verts = get_pos(fid);
             vec3 proj_apex = Util::project(get_pos(apex), verts);
             
             // Find barycentric coordinates
@@ -1305,11 +1290,11 @@ namespace DSC {
             
             if(barycentric_coords[0] > 0.2 && barycentric_coords[1] > 0.2 && barycentric_coords[2] > 0.2) // The tetrahedron is a cap
             {
-                return remove_cap(t);
+                return remove_cap(tid);
             }
             else if(barycentric_coords[0] < -0.2 || barycentric_coords[1] < -0.2 || barycentric_coords[2] < -0.2) // The tetrahedron is a sliver
             {
-                return remove_sliver(t);
+                return remove_sliver(tid);
             }
             
             real mean_dist = 0.;
@@ -1328,11 +1313,11 @@ namespace DSC {
             
             if(close == 2) // The tetrahedron is a needle
             {
-                return remove_needle(t);
+                return remove_needle(tid);
             }
             else if(close == 1) // The tetrahedron is a wedge
             {
-                return remove_wedge(t);
+                return remove_wedge(tid);
             }
             return false;
         }
@@ -1588,34 +1573,6 @@ namespace DSC {
                 return true;
             }
             return false;
-        }
-        
-        /**
-         * Flips the edge e (which is a special case of the edge remove operation in the embedding mesh).
-         * Relabels the tetrahedra accordingly so that the interface mesh geometry does not change.
-         */
-        bool flip(const edge_key & e)
-        {
-            simplex_set st_e;
-            Complex::star(e, st_e);
-            std::vector<face_key> faces;
-            for(auto fit = st_e.faces_begin(); fit != st_e.faces_end(); fit++)
-            {
-                if (is_interface(*fit) || is_boundary(*fit))
-                {
-                    faces.push_back(*fit);
-                }
-            }
-            if(faces.size() > 2)
-            {
-                return false;
-            }
-#ifdef DEBUG
-            assert(faces.size() == 2);
-#endif
-            
-            node_key n = Complex::flip_44(faces[0], faces[1]);
-            return n != Complex::NULL_NODE;
         }
         
         ////////////
@@ -1932,11 +1889,11 @@ namespace DSC {
         /**
          * Returns the largest face in the simplex set.
          */
-        face_key largest_face(simplex_set& set)
+        face_key largest_face(const is_mesh::SimplexSet<face_key>& fids)
         {
             real max_a = -INFINITY;
             face_key max_f;
-            for(auto f = set.faces_begin(); f != set.faces_end(); f++)
+            for(auto f : fids)
             {
                 real a = area(*f);
                 if(a > max_a)
@@ -2088,25 +2045,6 @@ namespace DSC {
             return false;
         }
         
-        /**
-         * Returns whether any of the tetrahedra in the simplex set will invert if node n is moved to p_new.
-         */
-        bool will_invert(const node_key& n, const vec3 p_new, simplex_set& set)
-        {
-            vec3 p = get_pos(n);
-            for(auto fit = set.faces_begin(); fit != set.faces_end(); fit++)
-            {
-                auto verts = get_pos(*fit);
-                real vol1 = Util::signed_volume<real>(verts[0], verts[1], verts[2], p);
-                real vol2 = Util::signed_volume<real>(verts[0], verts[1], verts[2], p_new);
-                if(Util::sign(vol1) !=  Util::sign(vol2))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        
         void validity_check()
         {
             bool valid = simplicial_complex_criterion_check();
@@ -2153,45 +2091,6 @@ namespace DSC {
             assert(valid);
         }
         
-        /**
-         * Sort the vertices from set according to their connectivity and returned the sorted vertices in sorted_vertices.
-         */
-        void sort_vertices(simplex_set& set, std::vector<node_key>& sorted_vertices)
-        {
-            sorted_vertices = std::vector<node_key>();
-            sorted_vertices.push_back(*(set.nodes_begin()));
-            
-            std::map<edge_key, bool> edge_used;
-            for(auto eit = set.edges_begin(); eit != set.edges_end(); eit++)
-            {
-                edge_used[*eit] = false;
-            }
-            
-            while(sorted_vertices.size() < set.size_nodes())
-            {
-                for (auto eit = set.edges_begin(); eit != set.edges_end(); eit++)
-                {
-                    if(!edge_used[*eit])
-                    {
-                        auto nodes = Complex::get_nodes(*eit);
-                        
-                        if (nodes[0] == sorted_vertices.back())
-                        {
-                            sorted_vertices.push_back(nodes[1]);
-                            edge_used[*eit] = true;
-                            break;
-                        }
-                        else if (nodes[1] == sorted_vertices.back())
-                        {
-                            sorted_vertices.push_back(nodes[0]);
-                            edge_used[*eit] = true;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        
         ////////////////////////
         // DOCUMENT FUNCTIONS //
         ////////////////////////
@@ -2224,7 +2123,7 @@ namespace DSC {
                     indices.push_back(vert_index[nodes[2]]);
                 }
             }
-        } // extract_interface
+        }
         
         void extract_tet_mesh(std::vector<vec3>& points, std::vector< std::vector<int> >& tets)
         {

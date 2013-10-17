@@ -30,8 +30,6 @@ namespace is_mesh
         typedef Face<FaceTraits>                                         face_type;
         typedef Tetrahedron<TetrahedronTraits>                           tetrahedron_type;
         
-        typedef          simplex_set<NodeKey, EdgeKey, FaceKey, TetrahedronKey>            simplex_set_type;
-        
     public:
         typedef          kernel<node_type, NodeKey>                            node_kernel_type;
         typedef          kernel<edge_type, EdgeKey>                            edge_kernel_type;

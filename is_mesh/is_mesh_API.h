@@ -23,7 +23,6 @@ namespace is_mesh {
         typedef EdgeKey            edge_key;
         typedef FaceKey            face_key;
         typedef TetrahedronKey     tet_key;
-        typedef typename Mesh::simplex_set_type         simplex_set;
         
     private:
         Mesh mesh;
