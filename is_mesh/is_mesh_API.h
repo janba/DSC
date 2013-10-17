@@ -669,7 +669,7 @@ namespace is_mesh {
         }
         
         /**
-         * Ensures consistent orientation of all faces to the two tetrahedra which are in the star of f.
+         * Ensures consistent orientation of the face fid if fid is an interface or boundary face.
          */
         void orient_face(const face_key& fid)
         {
@@ -688,7 +688,8 @@ namespace is_mesh {
                 }
                 mesh.orient_face_helper(tid, fid, true);
             }
-            else {
+            else if (is_boundary(fid))
+            {
                 mesh.orient_face_helper(get_tets(fid).front(), fid, true);
             }
         }

@@ -86,24 +86,6 @@ namespace is_mesh
             return m_tetrahedron_kernel->find(k);
         }
         
-        /**
-         * Marek
-         * Helper function performing a single transposition on simplex's boundary list.
-         */
-        template<typename key_type>
-        void invert_orientation(key_type const & k)
-        {
-            if (k.dim == 0) return;
-            
-            auto boundary = lookup_simplex(k).get_boundary();
-            auto it = boundary->begin();
-            
-            ++it;
-            
-            auto temp = *it;
-            *it = *(boundary->begin());
-            *(boundary->begin()) = temp;
-        }
         
         /**
          * Marek
@@ -144,7 +126,7 @@ namespace is_mesh
             f_index %= 2;
             if ((f_index == 0 && consistently) || (f_index == 1 && !consistently))
             {
-                invert_orientation(fid);
+                lookup_simplex(fid).invert_orientation();
             }
         }
         
@@ -194,7 +176,9 @@ namespace is_mesh
             f_index %= 2;
             if ((f_index == 0 && consistently) ||
                 (f_index == 1 && !consistently))
-                invert_orientation(eid);
+            {
+                lookup_simplex(eid).invert_orientation();
+            }
         }
         
     public:
@@ -320,24 +304,6 @@ namespace is_mesh
             m_tetrahedron_kernel->erase(tid);
         }
         
-        size_type size_nodes() { return m_node_kernel->size(); }
-        size_type size_edges() { return m_edge_kernel->size(); }
-        size_type size_faces() { return m_face_kernel->size(); }
-        size_type size_tetrahedra() { return m_tetrahedron_kernel->size(); }
-        size_type size() { return size_nodes() + size_edges() + size_faces() + size_tetrahedra(); }
-        
-        
-        /**
-         * Marek
-         * Induces consistent orientations on all faces of the tetrahedra with ID tid.
-         */
-        void orient_faces_consistently(const TetrahedronKey& tid)
-        {
-            for (auto it : *lookup_simplex(tid).get_boundary())
-            {
-                orient_face_helper(tid, it, true);
-            }
-        }
         
         /**
          * Marek
