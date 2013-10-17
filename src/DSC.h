@@ -748,26 +748,6 @@ namespace DSC {
             return std::vector<edge_key>();
         }
         
-        /*
-         * Orient the nodes in a counter clockwise order seen from the node a.
-         */
-        void orient_cc(const node_key& a, std::vector<node_key>& nodes)
-        {
-            vec3 x = get_pos(a) - get_pos(nodes[0]);
-            vec3 y = get_pos(nodes[1]) - get_pos(nodes[0]);
-            vec3 z = get_pos(nodes[2]) - get_pos(nodes[0]);
-            real val = Util::dot(x, Util::cross(y,z));
-#ifdef DEBUG
-            assert(val != 0.);
-#endif
-            if(val > 0.)
-            {
-                node_key t = nodes[0];
-                nodes[0] = nodes[2];
-                nodes[2] = t;
-            }
-        }
-        
         /**
          * Attempt to remove the faces sandwiched between the apices of f using multi-face removal. The face f is used as a starting point.
          */
@@ -775,7 +755,7 @@ namespace DSC {
         {
             auto apices = Complex::get_apices(f);
             auto nodes = Complex::get_nodes(f);
-            orient_cc(apices[0], nodes);
+            this->orient_cc(apices[0], nodes);
             
             real q_01_new, q_01_old, q_12_new, q_12_old, q_20_new, q_20_old;
             auto e01 = test_neighbour(f, apices[0], apices[1], nodes[0], nodes[1], q_01_old, q_01_new);
@@ -817,7 +797,7 @@ namespace DSC {
                 if(is_safe_editable(f))
                 {
                     auto nodes = Complex::get_nodes(f);
-                    orient_cc(apex2, nodes);
+                    this->orient_cc(apex2, nodes);
                     
                     vec3 ray = get_pos(apex2) - get_pos(apex1);
                     real t = Util::intersection_ray_triangle<real>(get_pos(apex1), ray, get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
@@ -2355,8 +2335,7 @@ namespace DSC {
             std::vector<vec3> verts;
             for (auto e : eids) {
                 auto nids = Complex::get_nodes(e);
-                vec3 pos = Util::barycenter(get_pos(nids[0]), get_pos(nids[1]));
-                auto new_nid = Complex::split(e, pos, pos);
+                auto new_nid = split(e);
                 auto new_eid = (Complex::get_edges(nids) & Complex::get_edges(new_nid)) - e;
                 assert(new_eid.size() == 1);
                 new_eids += new_eid[0];
@@ -2377,13 +2356,6 @@ namespace DSC {
                 assert(Complex::exists(new_eids[i]));
                 auto nid = Complex::collapse(new_eids[i], verts[i], verts[i]);
                 assert(nid.is_valid());
-                for(auto t : Complex::get_tets(nid))
-                {
-                    if(Complex::is_inverted(t))
-                    {
-                        Complex::get(t).invert_orientation();
-                    }
-                }
                 j++;
                 if(j%100 == 0)
                 {

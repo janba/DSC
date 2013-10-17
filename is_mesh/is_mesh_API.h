@@ -644,6 +644,26 @@ namespace is_mesh {
             return mesh.exists(k);
         }
         
+        /*
+         * Orient the nodes in a counter clockwise order seen from the node a.
+         */
+        void orient_cc(const node_key& a, SimplexSet<node_key>& nodes)
+        {
+            auto x = get(a).get_pos() - get(nodes[0]).get_pos();
+            auto y = get(nodes[1]).get_pos() - get(nodes[0]).get_pos();
+            auto z = get(nodes[2]).get_pos() - get(nodes[0]).get_pos();
+            auto val = dot(x, cross(y,z));
+#ifdef DEBUG
+            assert(val != 0.);
+#endif
+            if(val > 0.)
+            {
+                node_key t = nodes[0];
+                nodes[0] = nodes[2];
+                nodes[2] = t;
+            }
+        }
+        
         /**
          * Ensures consistent orientation of all faces to the two tetrahedra which are in the star of f.
          */
