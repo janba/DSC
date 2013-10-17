@@ -935,16 +935,15 @@ namespace is_mesh {
             return tetrahedron.key();
         }
         
-        
+    private:
         /**
          *
          */
         void remove(const NodeKey& nid)
         {
-            auto& node = get(nid);
-            for(auto eid : node.get_co_boundary())
+            for(auto e : get_edges(nid))
             {
-                get(eid).remove_face(nid);
+                get(e).remove_face(nid);
             }
             m_node_kernel->erase(nid);
         }
@@ -954,14 +953,13 @@ namespace is_mesh {
          */
         void remove(const EdgeKey& eid)
         {
-            auto& edge = get(eid);
-            for(auto fid : edge.get_co_boundary())
+            for(auto f : get_faces(eid))
             {
-                get(fid).remove_face(eid);
+                get(f).remove_face(eid);
             }
-            for(auto nid : edge.get_boundary())
+            for(auto n : get_nodes(eid))
             {
-                get(nid).remove_co_face(eid);
+                get(n).remove_co_face(eid);
             }
             m_edge_kernel->erase(eid);
         }
@@ -971,14 +969,13 @@ namespace is_mesh {
          */
         void remove(const FaceKey& fid)
         {
-            auto& face = get(fid);
-            for(auto tid : face.get_co_boundary())
+            for(auto t : get_tets(fid))
             {
-                get(tid).remove_face(fid);
+                get(t).remove_face(fid);
             }
-            for(auto eid : face.get_boundary())
+            for(auto e : get_edges(fid))
             {
-                get(eid).remove_co_face(fid);
+                get(e).remove_co_face(fid);
             }
             m_face_kernel->erase(fid);
         }
@@ -988,10 +985,9 @@ namespace is_mesh {
          */
         void remove(const TetrahedronKey& tid)
         {
-            auto& tet = get(tid);
-            for(auto fid : tet.get_boundary())
+            for(auto f : get_faces(tid))
             {
-                get(fid).remove_co_face(tid);
+                get(f).remove_co_face(tid);
             }
             m_tetrahedron_kernel->erase(tid);
         }
