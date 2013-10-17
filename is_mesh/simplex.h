@@ -153,6 +153,12 @@ namespace is_mesh
         {
             
         }
+        
+        void invert_orientation()
+        {
+            assert(m_boundary->size() == 2);
+            std::swap((*m_boundary)[0], (*m_boundary)[1]);
+        }
     };
     
     ///////////////////////////////////////////////////////////////////////////////
@@ -171,6 +177,12 @@ namespace is_mesh
         Face(const type_traits & t) : type_traits(t), Simplex<EdgeKey, TetrahedronKey>()
         {
             
+        }
+        
+        void invert_orientation()
+        {
+            assert(m_boundary->size() == 3);
+            std::swap((*m_boundary)[1], (*m_boundary)[2]);
         }
     };
     

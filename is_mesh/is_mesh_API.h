@@ -676,19 +676,20 @@ namespace is_mesh {
             if (is_interface(fid))
             {
                 int label = -100;
+                tet_key tid;
                 for (auto t : get_tets(fid))
                 {
                     int tl = get_label(t);
-                    
                     if (tl > label)
                     {
-                        mesh.orient_faces_consistently(t);
+                        label = tl;
+                        tid = t;
                     }
-                    label = tl;
                 }
+                mesh.orient_face_helper(tid, fid, true);
             }
             else {
-                mesh.orient_faces_consistently(get_tets(fid).front());
+                mesh.orient_face_helper(get_tets(fid).front(), fid, true);
             }
         }
         
