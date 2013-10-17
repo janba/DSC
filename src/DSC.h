@@ -1109,8 +1109,7 @@ namespace DSC {
             vec3 p = Util::project(get_pos(apex), verts[0], verts[1]);
             
             // Split longest edge
-            node_key n = split(eid);
-            set_pos(n, p);
+            node_key n = Complex::split(eid, p, p);
             
             // Collapse new edge
             edge_key e_rem = Complex::get_edge(apex, n);
@@ -1207,8 +1206,7 @@ namespace DSC {
             vec3 p = Util::project(get_pos(apex), verts);
             
             // Split the face
-            node_key n = split(fid);
-            set_pos(n, p);
+            node_key n = Complex::split(fid, p, p);
             
             // Collapse edge
             edge_key e = Complex::get_edge(n, apex);
@@ -1584,34 +1582,19 @@ namespace DSC {
          */
         node_key split(const tet_key& tid)
         {
-            auto verts = get_pos(tid);
-            vec3 p = Util::barycenter(verts[0], verts[1], verts[2], verts[3]);
-            
-            node_key n = Complex::split(tid);
-            set_pos(n, p);
-            set_destination(n, p);
-            return n;
+            is_mesh::SimplexSet<edge_key> eids = Complex::get_edges(tid);
+            edge_key eid = get_longest_edge(eids);
+            return split(eid);
         }
         
         /**
          * Split a face f and returns the new node which is positioned at the barycenter of the vertices of f.
          */
-        node_key split(const face_key & f)
+        node_key split(const face_key& fid)
         {
-            std::vector<node_key> nodes;
-            Complex::get_nodes(f, nodes);
-            vec3 p = Util::barycenter(get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
-            vec3 p_new = p;
-            if(is_interface(f))
-            {
-                p_new = Util::barycenter(get_dest(nodes[0]), get_dest(nodes[1]), get_dest(nodes[2]));
-            }
-            
-            node_key n = Complex::split(f);
-            set_pos(n, p);
-            set_destination(n, p_new);
-            
-            return n;
+            is_mesh::SimplexSet<edge_key> eids = Complex::get_edges(fid);
+            edge_key eid = get_longest_edge(eids);
+            return split(eid);
         }
         
         /**
