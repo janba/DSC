@@ -364,125 +364,35 @@ namespace is_mesh {
             return m_tetrahedron_kernel->find(tid);
         }
         
-        const SimplexSet<NodeKey>& get_boundary(const EdgeKey& eid)
-        {
-            return *get(eid).get_boundary();
-        }
-        
-        const SimplexSet<EdgeKey>& get_boundary(const FaceKey& fid)
-        {
-            return *get(fid).get_boundary();
-        }
-        
-        const SimplexSet<FaceKey>& get_boundary(const TetrahedronKey& tid)
-        {
-            return *get(tid).get_boundary();
-        }
-        
-        const SimplexSet<EdgeKey>& get_co_boundary(const NodeKey& nid)
-        {
-            return *get(nid).get_co_boundary();
-        }
-        
-        const SimplexSet<FaceKey>& get_co_boundary(const EdgeKey& eid)
-        {
-            return *get(eid).get_co_boundary();
-        }
-        
-        const SimplexSet<TetrahedronKey>& get_co_boundary(const FaceKey& fid)
-        {
-            return *get(fid).get_co_boundary();
-        }
-        
-        SimplexSet<NodeKey> get_boundary(const SimplexSet<EdgeKey>& set)
-        {
-            SimplexSet<NodeKey> res;
-            for (auto &k : set)
-            {
-                res += get_boundary(k);
-            }
-            return res;
-        }
-        
-        SimplexSet<EdgeKey> get_boundary(const SimplexSet<FaceKey>& set)
-        {
-            SimplexSet<EdgeKey> res;
-            for (auto &k : set)
-            {
-                res += get_boundary(k);
-            }
-            return res;
-        }
-        
-        SimplexSet<FaceKey> get_boundary(const SimplexSet<TetrahedronKey>& set)
-        {
-            SimplexSet<FaceKey> res;
-            for (auto &k : set)
-            {
-                res += get_boundary(k);
-            }
-            return res;
-        }
-        
-        SimplexSet<EdgeKey> get_co_boundary(const SimplexSet<NodeKey>& set)
-        {
-            SimplexSet<EdgeKey> res;
-            for (auto &k : set)
-            {
-                res += get_co_boundary(k);
-            }
-            return res;
-        }
-        
-        SimplexSet<FaceKey> get_co_boundary(const SimplexSet<EdgeKey>& set)
-        {
-            SimplexSet<FaceKey> res;
-            for (auto &k : set)
-            {
-                res += get_co_boundary(k);
-            }
-            return res;
-        }
-        
-        SimplexSet<TetrahedronKey> get_co_boundary(const SimplexSet<FaceKey>& set)
-        {
-            SimplexSet<TetrahedronKey> res;
-            for (auto &k : set)
-            {
-                res += get_co_boundary(k);
-            }
-            return res;
-        }
-        
         // Getters for getting the boundary/coboundary of a simplex:
         const SimplexSet<NodeKey>& get_nodes(const edge_key& eid)
         {
-            return *get(eid).get_boundary();
+            return get(eid).get_boundary();
         }
         
         const SimplexSet<EdgeKey>& get_edges(const node_key& nid)
         {
-            return *get(nid).get_co_boundary();
+            return get(nid).get_co_boundary();
         }
         
         const SimplexSet<EdgeKey>& get_edges(const face_key& fid)
         {
-            return *get(fid).get_boundary();
+            return get(fid).get_boundary();
         }
         
         const SimplexSet<FaceKey>& get_faces(const EdgeKey& eid)
         {
-            return *get(eid).get_co_boundary();
+            return get(eid).get_co_boundary();
         }
         
         const SimplexSet<FaceKey>& get_faces(const TetrahedronKey& tid)
         {
-            return *get(tid).get_boundary();
+            return get(tid).get_boundary();
         }
         
         const SimplexSet<TetrahedronKey>& get_tets(const FaceKey& fid)
         {
-            return *get(fid).get_co_boundary();
+            return get(fid).get_co_boundary();
         }
         
         // Getters for getting the boundary of a boundary etc.
@@ -945,11 +855,11 @@ namespace is_mesh {
         key_type merge(const key_type& key1, const key_type& key2)
         {
             auto& simplex = get(key2);
-            for(auto k : *simplex.get_co_boundary())
+            for(auto k : simplex.get_co_boundary())
             {
                 connect(key1, k);
             }
-            for(auto k : *simplex.get_boundary())
+            for(auto k : simplex.get_boundary())
             {
                 connect(k, key1);
             }
@@ -1032,7 +942,7 @@ namespace is_mesh {
         void remove(const NodeKey& nid)
         {
             auto& node = get(nid);
-            for(auto eid : *node.get_co_boundary())
+            for(auto eid : node.get_co_boundary())
             {
                 get(eid).remove_face(nid);
             }
@@ -1045,11 +955,11 @@ namespace is_mesh {
         void remove(const EdgeKey& eid)
         {
             auto& edge = get(eid);
-            for(auto fid : *edge.get_co_boundary())
+            for(auto fid : edge.get_co_boundary())
             {
                 get(fid).remove_face(eid);
             }
-            for(auto nid : *edge.get_boundary())
+            for(auto nid : edge.get_boundary())
             {
                 get(nid).remove_co_face(eid);
             }
@@ -1062,11 +972,11 @@ namespace is_mesh {
         void remove(const FaceKey& fid)
         {
             auto& face = get(fid);
-            for(auto tid : *face.get_co_boundary())
+            for(auto tid : face.get_co_boundary())
             {
                 get(tid).remove_face(fid);
             }
-            for(auto eid : *face.get_boundary())
+            for(auto eid : face.get_boundary())
             {
                 get(eid).remove_co_face(fid);
             }
@@ -1079,7 +989,7 @@ namespace is_mesh {
         void remove(const TetrahedronKey& tid)
         {
             auto& tet = get(tid);
-            for(auto fid : *tet.get_boundary())
+            for(auto fid : tet.get_boundary())
             {
                 get(fid).remove_co_face(tid);
             }
@@ -1090,10 +1000,10 @@ namespace is_mesh {
         
         face_key flip_32(const edge_key& eid)
         {
-            auto e_nids = get_boundary(eid);
-            auto e_fids = get_co_boundary(eid);
+            SimplexSet<NodeKey> e_nids = get_nodes(eid);
+            SimplexSet<FaceKey> e_fids = get_faces(eid);
             assert(e_fids.size() == 3);
-            auto e_tids = get_co_boundary(e_fids);
+            SimplexSet<TetrahedronKey> e_tids = get_tets(e_fids);
             assert(e_tids.size() == 3);
             int label = get_label(e_tids[0]);
             assert(label == get_label(e_tids[1]));
@@ -1103,9 +1013,9 @@ namespace is_mesh {
             remove(eid);
             
             // Create face
-            auto f_eids = get_boundary(get_boundary(e_tids)) - get_boundary(e_fids);
+            SimplexSet<EdgeKey> f_eids = get_edges(e_tids) - get_edges(e_fids);
             assert(f_eids.size() == 3);
-            auto new_fid = insert_face(f_eids[0], f_eids[1], f_eids[2]);
+            FaceKey new_fid = insert_face(f_eids[0], f_eids[1], f_eids[2]);
             
             // Remove faces
             for(face_key& f : e_fids)
@@ -1114,10 +1024,10 @@ namespace is_mesh {
             }
             
             // Create tetrahedra
-            auto exterior_fids = get_boundary(e_tids);
+            SimplexSet<FaceKey> exterior_fids = get_faces(e_tids);
             for (node_key& n : e_nids)
             {
-                auto t_fids = exterior_fids & get_co_boundary(get_co_boundary(n));
+                SimplexSet<FaceKey> t_fids = exterior_fids & get_faces(n);
                 assert(t_fids.size() == 3);
                 insert_tetrahedron(t_fids[0], t_fids[1], t_fids[2], new_fid);
             }
@@ -1129,8 +1039,8 @@ namespace is_mesh {
             }
             
             // Update flags
-            assert(get_co_boundary(new_fid).size() == 2);
-            for (auto t : get_co_boundary(new_fid)) {
+            assert(get_tets(new_fid).size() == 2);
+            for (auto t : get_tets(new_fid)) {
                 set_label(t, label);
             }
             return new_fid;
@@ -1138,25 +1048,25 @@ namespace is_mesh {
         
         edge_key flip_23(const face_key& fid)
         {
-            auto f_tids = get_co_boundary(fid);
+            SimplexSet<TetrahedronKey> f_tids = get_tets(fid);
             assert(f_tids.size() == 2);
-            auto f_eids = get_boundary(fid);
+            SimplexSet<EdgeKey> f_eids = get_edges(fid);
             assert(f_eids.size() == 3);
-            auto f_nids = get_boundary(f_eids);
+            SimplexSet<NodeKey> f_nids = get_nodes(f_eids);
             int label = get_label(f_tids[0]);
             assert(label == get_label(f_tids[1]));
             
             // Create edge
-            auto e_nids = get_boundary(get_boundary(get_boundary(f_tids))) - f_nids;
+            SimplexSet<NodeKey> e_nids = get_nodes(f_tids) - f_nids;
             assert(e_nids.size() == 2);
             edge_key new_eid = insert_edge(e_nids[0], e_nids[1]);
             
             // Create faces
-            auto new_fs_eids = get_boundary(get_boundary(f_tids)) - f_eids;
+            SimplexSet<EdgeKey> new_fs_eids = get_edges(f_tids) - f_eids;
             assert(new_fs_eids.size() == 6);
             for (node_key& n : f_nids)
             {
-                auto new_f_eids = new_fs_eids & get_co_boundary(n);
+                auto new_f_eids = new_fs_eids & get_edges(n);
                 assert(new_f_eids.size() == 2);
                 insert_face(new_f_eids[0], new_f_eids[1], new_eid);
             }
@@ -1165,13 +1075,13 @@ namespace is_mesh {
             remove(fid);
             
             // Create tetrahedra
-            auto new_ts_fids1 = get_boundary(f_tids);
-            auto new_ts_fids2 = get_co_boundary(new_eid);
+            SimplexSet<FaceKey> new_ts_fids1 = get_faces(f_tids);
+            SimplexSet<FaceKey> new_ts_fids2 = get_faces(new_eid);
             assert(new_ts_fids1.size() == 6);
             assert(new_ts_fids2.size() == 3);
             for (edge_key& e : f_eids)
             {
-                auto new_t_fids = (new_ts_fids1 & get_co_boundary(e)) + (new_ts_fids2 & get_co_boundary(get_co_boundary(get_boundary(e))));
+                SimplexSet<FaceKey> new_t_fids = (new_ts_fids1 & get_faces(e)) + (new_ts_fids2 & get_faces(get_nodes(e)));
                 assert(new_t_fids.size() == 4);
                 insert_tetrahedron(new_t_fids[0], new_t_fids[1], new_t_fids[2], new_t_fids[3]);
             }
@@ -1182,8 +1092,8 @@ namespace is_mesh {
             }
             
             // Update flags
-            assert(get_co_boundary(get_co_boundary(new_eid)).size() == 3);
-            for (auto t : get_co_boundary(get_co_boundary(new_eid))) {
+            assert(get_tets(new_eid).size() == 3);
+            for (auto t : get_tets(new_eid)) {
                 set_label(t, label);
             }
             return new_eid;
@@ -1206,10 +1116,10 @@ namespace is_mesh {
         template<typename child_key, typename parent_key>
         void swap(const child_key& ck1, const parent_key& pk1, const child_key& ck2, const parent_key& pk2)
         {
-            if(!get_boundary(pk1).contains(ck1))
+            if(!get(pk1).get_boundary().contains(ck1))
             {
-                assert(get_boundary(pk1).contains(ck2));
-                assert(get_boundary(pk2).contains(ck1));
+                assert(get(pk1).get_boundary().contains(ck2));
+                assert(get(pk2).get_boundary().contains(ck1));
                 
                 disconnect(ck1, pk2);
                 disconnect(ck2, pk1);
@@ -1217,8 +1127,8 @@ namespace is_mesh {
                 connect(ck2, pk2);
             }
             else {
-                assert(get_boundary(pk1).contains(ck1));
-                assert(get_boundary(pk2).contains(ck2));
+                assert(get(pk1).get_boundary().contains(ck1));
+                assert(get(pk2).get_boundary().contains(ck2));
                 
                 disconnect(ck1, pk1);
                 disconnect(ck2, pk2);
@@ -1230,12 +1140,12 @@ namespace is_mesh {
         void flip(const edge_key& eid, const face_key& fid1, const face_key& fid2)
         {
             SimplexSet<face_key> fids = {fid1, fid2};
-            auto e_nids = get_boundary(eid);
-            auto e_fids = get_co_boundary(eid);
-            auto e_tids = get_co_boundary(e_fids);
+            SimplexSet<NodeKey> e_nids = get_nodes(eid);
+            SimplexSet<FaceKey> e_fids = get_faces(eid);
+            SimplexSet<TetrahedronKey> e_tids = get_tets(e_fids);
             
             // Reconnect edge
-            auto new_e_nids = get_boundary(get_boundary(fids)) - e_nids;
+            SimplexSet<NodeKey> new_e_nids = get_nodes(fids) - e_nids;
             assert(new_e_nids.size() == 2);
             
             disconnect(e_nids[0], eid);
@@ -1244,18 +1154,18 @@ namespace is_mesh {
             connect(new_e_nids[1], eid);
             
             // Reconnect faces
-            auto swap_eids = (get_co_boundary(e_nids[0]) & get_co_boundary(new_e_nids[0])) + (get_co_boundary(e_nids[1]) & get_co_boundary(new_e_nids[1]));
+            SimplexSet<EdgeKey> swap_eids = (get_edges(e_nids[0]) & get_edges(new_e_nids[0])) + (get_edges(e_nids[1]) & get_edges(new_e_nids[1]));
             assert(swap_eids.size() == 2);
             swap(swap_eids[0], fids[0], swap_eids[1], fids[1]);
             
             assert((e_fids - fids).size() <= 2);
             for(auto f : (e_fids - fids))
             {
-                auto rm_eids = get_boundary(f) - eid;
+                SimplexSet<EdgeKey> rm_eids = get_edges(f) - eid;
                 assert(rm_eids.size() == 2);
-                auto apex = get_boundary(get_boundary(f)) - (new_e_nids + e_nids);
+                SimplexSet<NodeKey> apex = get_nodes(f) - (new_e_nids + e_nids);
                 assert(apex.size() == 1);
-                auto add_eids = get_co_boundary(apex) & get_co_boundary(new_e_nids);
+                SimplexSet<EdgeKey> add_eids = get_edges(apex) & get_edges(new_e_nids);
                 assert(add_eids.size() == 2);
                 
                 disconnect(rm_eids[0], f);
@@ -1264,9 +1174,9 @@ namespace is_mesh {
                 connect(add_eids[1], f);
                 
                 // Reconnect tetrahedra
-                auto tids = get_co_boundary(f);
+                SimplexSet<TetrahedronKey> tids = get_tets(f);
                 assert(tids.size() == 2);
-                auto swap_fids = (get_boundary(tids) - e_fids) & get_co_boundary(swap_eids);
+                SimplexSet<FaceKey> swap_fids = (get_faces(tids) - e_fids) & get_faces(swap_eids);
                 assert(swap_eids.size() == 2);
                 swap(swap_fids[0], tids[0], swap_fids[1], tids[1]);
             }
@@ -1287,20 +1197,20 @@ namespace is_mesh {
         
         void flip_22(const face_key& fid1, const face_key& fid2)
         {
-            SimplexSet<edge_key> eid = get_boundary(fid1) & get_boundary(fid2);
+            SimplexSet<edge_key> eid = get_edges(fid1) & get_edges(fid2);
             assert(eid.size() == 1);
-            assert(get_co_boundary(eid).size() == 3);
-            assert(get_co_boundary(get_co_boundary(eid)).size() == 2);
+            assert(get_faces(eid).size() == 3);
+            assert(get_tets(eid).size() == 2);
             
             flip(eid[0], fid1, fid2);
         }
         
         void flip_44(const face_key& fid1, const face_key& fid2)
         {
-            SimplexSet<edge_key> eid = get_boundary(fid1) & get_boundary(fid2);
+            SimplexSet<edge_key> eid = get_edges(fid1) & get_edges(fid2);
             assert(eid.size() == 1);
-            assert(get_co_boundary(eid).size() == 4);
-            assert(get_co_boundary(get_co_boundary(eid)).size() == 4);
+            assert(get_faces(eid).size() == 4);
+            assert(get_tets(eid).size() == 4);
             
             flip(eid[0], fid1, fid2);
         }

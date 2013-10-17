@@ -2314,7 +2314,7 @@ namespace DSC {
             is_mesh::SimplexSet<edge_key> eids;
             for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
             {
-                auto neighbours = Complex::get_boundary(Complex::get_co_boundary(eit.key()));
+                auto neighbours = Complex::get_edges(Complex::get_faces(eit.key()));
                 bool ok = true;
                 for(auto e : neighbours)
                 {
@@ -2375,11 +2375,11 @@ namespace DSC {
             {
                 if(is_safe_editable(fit.key()))
                 {
-                    auto nids = Complex::get_boundary(Complex::get_boundary(fit.key()));
-                    nids += Complex::get_boundary(Complex::get_boundary(Complex::get_boundary(Complex::get_co_boundary(fit.key()))));
+                    auto nids = Complex::get_nodes(fit.key());
+                    nids += Complex::get_nodes(Complex::get_tets(fit.key()));
                     real t = Util::intersection_ray_triangle<real>(get_pos(nids[3]), get_pos(nids[4]) - get_pos(nids[3]), get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]));
                     
-                    auto neighbours = Complex::get_boundary(Complex::get_co_boundary(fit.key()));
+                    auto neighbours = Complex::get_faces(Complex::get_tets(fit.key()));
                     bool ok = true;
                     for(auto f : neighbours)
                     {
@@ -2433,9 +2433,9 @@ namespace DSC {
             is_mesh::SimplexSet<edge_key> eids;
             for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
             {
-                if(is_safe_editable(eit.key()) && Complex::get_co_boundary(eit.key()).size() == 4)
+                if(is_safe_editable(eit.key()) && Complex::get_faces(eit.key()).size() == 4)
                 {
-                    auto neighbours = Complex::get_boundary(Complex::get_boundary(Complex::get_co_boundary(Complex::get_co_boundary(eit.key()))));
+                    auto neighbours = Complex::get_edges(Complex::get_tets(eit.key()));
                     bool ok = true;
                     for(auto e : neighbours)
                     {
@@ -2456,9 +2456,9 @@ namespace DSC {
             int i = 0;
             for (auto e : eids) {
                 assert(Complex::exists(e));
-                auto fids = Complex::get_co_boundary(e);
+                auto fids = Complex::get_faces(e);
                 assert(fids.size() == 4);
-                auto fid = fids - Complex::get_boundary(Complex::get_co_boundary(fids[0]));
+                auto fid = fids - Complex::get_faces(Complex::get_tets(fids[0]));
                 assert(fid.size() == 1);
                 flip_fids += fid;
                 flip_fids += fids[0];
@@ -2493,9 +2493,9 @@ namespace DSC {
             is_mesh::SimplexSet<edge_key> eids;
             for (auto eit = Complex::edges_begin(); eit != Complex::edges_end(); eit++)
             {
-                if(is_boundary(eit.key()) && Complex::get_co_boundary(eit.key()).size() == 3)
+                if(is_boundary(eit.key()) && Complex::get_faces(eit.key()).size() == 3)
                 {
-                    auto neighbours = Complex::get_boundary(Complex::get_boundary(Complex::get_co_boundary(Complex::get_co_boundary(eit.key()))));
+                    auto neighbours = Complex::get_edges(Complex::get_tets(eit.key()));
                     bool ok = true;
                     for(auto e : neighbours)
                     {
@@ -2515,7 +2515,7 @@ namespace DSC {
             int i = 0;
             for (auto e : eids) {
                 assert(Complex::exists(e));
-                auto fids = Complex::get_co_boundary(e);
+                auto fids = Complex::get_faces(e);
                 assert(fids.size() == 3);
                 is_mesh::SimplexSet<face_key> flip_fids;
                 for(auto f : fids)

@@ -83,21 +83,13 @@ namespace is_mesh
         
     public:
         
-        co_boundary_list* get_co_boundary() const
+        const co_boundary_list& get_co_boundary() const
         {
-            return m_co_boundary;
+            return *m_co_boundary;
         }
-        boundary_list* get_boundary() const
+        const boundary_list& get_boundary() const
         {
-            return m_boundary;
-        }
-        co_boundary_list* get_co_boundary()
-        {
-            return m_co_boundary;
-        }
-        boundary_list* get_boundary()
-        {
-            return m_boundary;
+            return *m_boundary;
         }
         
         void add_co_face(co_boundary_key_type key)
