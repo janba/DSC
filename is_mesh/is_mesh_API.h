@@ -460,8 +460,8 @@ namespace is_mesh {
         SimplexSet<NodeKey> get_sorted_nodes(const face_key& fid)
         {
             SimplexSet<NodeKey> nids;
+            orient_nodes(fid);
             for (auto e : get_edges(fid)) {
-                mesh.orient_face_helper(fid, e);
                 nids += get_nodes(e)[0];
             }
             return nids;
@@ -471,9 +471,9 @@ namespace is_mesh {
         {
             SimplexSet<NodeKey> nids;
             auto fids = get_faces(tid);
-            mesh.orient_face_helper(tid, fids[0]);
+            orient(tid, fids[0]);
             nids += get_sorted_nodes(fids[0]);
-            nids += get_sorted_nodes(fids[1]);
+            nids += get_nodes(fids[1]);
             assert(nids.size() == 4);
             return nids;
         }
@@ -483,7 +483,7 @@ namespace is_mesh {
             SimplexSet<EdgeKey> eids;
             for(auto f : get_faces(tid))
             {
-                mesh.orient_face_helper(tid, f, true);
+                orient(tid, f);
                 SimplexSet<EdgeKey> f_eids = get_edges(f);
                 if(eids.size() == 0)
                 {
@@ -668,6 +668,69 @@ namespace is_mesh {
             }
         }
         
+        void orient_nodes(const FaceKey& fid)
+        {
+            SimplexSet<EdgeKey> eids = get_edges(fid);
+            
+            for(int i = 0; i < eids.size(); i++)
+            {
+                edge_key eid = eids[i];
+                node_key nid = get_node(eid, eids[(i+1)%eids.size()]);
+                if(get_nodes(eid)[1] != nid)
+                {
+                    get(eid).invert_orientation();
+                }
+            }
+        }
+        
+        template<typename key_type>
+        bool is_same_orientation(const SimplexSet<key_type>& keys1, const SimplexSet<key_type>& keys2)
+        {
+            for (int i = 0; i < keys2.size(); i++) {
+                if(keys2[i] == keys1[0])
+                {
+                    return keys2[(i+1)%keys2.size()] == keys1[1];
+                }
+            }
+            assert(false);
+            return false;
+        }
+        
+        /**
+         * Ensures a counter clockwise orientation of the edges of the face fid seen from the tetrahedron tid.
+         */
+        void orient(const TetrahedronKey& tid, const FaceKey& fid)
+        {
+            SimplexSet<EdgeKey> eids = get_edges(fid);
+            SimplexSet<EdgeKey> new_eids;
+            
+            int f_index, i = 0;
+            for(auto f : get_faces(tid))
+            {
+                if(f != fid)
+                {
+                    new_eids += get_edge(f, fid);
+                }
+                else {
+                    f_index = i;
+                }
+                i++;
+            }
+            bool same_orientation = is_same_orientation(eids, new_eids);
+            if ((same_orientation && f_index%2 == 1) || (!same_orientation && f_index%2 == 0))
+            {
+                get(fid).invert_orientation();
+            }
+        }
+        
+        void orient_edges(const TetrahedronKey& tid)
+        {
+            for (auto f : get_faces(tid))
+            {
+                orient_face(tid, f);
+            }
+        }
+        
         /**
          * Ensures consistent orientation of the face fid if fid is an interface or boundary face.
          */
@@ -686,11 +749,11 @@ namespace is_mesh {
                         tid = t;
                     }
                 }
-                mesh.orient_face_helper(tid, fid);
+                orient(tid, fid);
             }
             else if (is_boundary(fid))
             {
-                mesh.orient_face_helper(get_tets(fid).front(), fid);
+                orient(get_tets(fid).front(), fid);
             }
         }
         

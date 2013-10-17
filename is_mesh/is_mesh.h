@@ -141,7 +141,6 @@ namespace is_mesh
             auto face_boundary = lookup_simplex(eid).get_boundary();
             
             auto sb_it = simplex_boundary->begin();
-            auto fb_it = face_boundary->begin();
             
             std::vector<NodeKey> new_face_boundary(face_boundary->size());
             
@@ -159,7 +158,6 @@ namespace is_mesh
                     bool res = get_intersection(eid, *sb_it, ek);
                     assert(res || !"Two faces of the same simplex do not intersect?!");
                     new_face_boundary[i] = ek;
-                    ++fb_it;
                     ++i;
                 }
                 ++sb_it;
