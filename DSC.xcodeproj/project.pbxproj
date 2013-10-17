@@ -111,7 +111,7 @@
 		7AF7E9BA176B402200F43714 /* user_interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF7E9B8176B402200F43714 /* user_interface.cpp */; };
 		7AF7E9BD176B412900F43714 /* draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF7E9BB176B412900F43714 /* draw.cpp */; };
 		7AF7E9BF176B4FE400F43714 /* DSC.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AF7E9BE176B4FE400F43714 /* DSC.h */; };
-		7AF7E9C1176B524700F43714 /* is_mesh_API.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AF7E9C0176B524700F43714 /* is_mesh_API.h */; };
+		7AF7E9C1176B524700F43714 /* is_mesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AF7E9C0176B524700F43714 /* is_mesh.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -240,7 +240,7 @@
 		7AF7E9BB176B412900F43714 /* draw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = draw.cpp; sourceTree = "<group>"; };
 		7AF7E9BC176B412900F43714 /* draw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = draw.h; sourceTree = "<group>"; };
 		7AF7E9BE176B4FE400F43714 /* DSC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DSC.h; path = src/DSC.h; sourceTree = SOURCE_ROOT; };
-		7AF7E9C0176B524700F43714 /* is_mesh_API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh_API.h; path = is_mesh/is_mesh_API.h; sourceTree = "<group>"; };
+		7AF7E9C0176B524700F43714 /* is_mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh.h; path = is_mesh/is_mesh.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -291,7 +291,7 @@
 				7A45DB93176E122100B9B388 /* kernel_iterator.h */,
 				7A45DB94176E122100B9B388 /* kernel.h */,
 				7AB27FB317FCEC0C00BFC866 /* is_mesh_lists_read.h */,
-				7AF7E9C0176B524700F43714 /* is_mesh_API.h */,
+				7AF7E9C0176B524700F43714 /* is_mesh.h */,
 			);
 			name = ISMesh;
 			sourceTree = "<group>";
@@ -537,7 +537,7 @@
 				7AE27AF917675B04000F8238 /* velocity_function.h in Headers */,
 				7AF7E9BF176B4FE400F43714 /* DSC.h in Headers */,
 				7AB27FB417FD0A1D00BFC866 /* is_mesh_lists_read.h in Headers */,
-				7AF7E9C1176B524700F43714 /* is_mesh_API.h in Headers */,
+				7AF7E9C1176B524700F43714 /* is_mesh.h in Headers */,
 				7A45DB9C176E122100B9B388 /* key.h in Headers */,
 				7A45DB9D176E122100B9B388 /* simplex.h in Headers */,
 				7A45DBA0176E122100B9B388 /* kernel_iterator.h in Headers */,

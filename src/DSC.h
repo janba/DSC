@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "is_mesh_API.h"
+#include "is_mesh.h"
 #include "util.h"
 #include "attributes.h"
 #include "design_domain.h"
