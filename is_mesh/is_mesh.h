@@ -408,10 +408,9 @@ namespace is_mesh {
         
         SimplexSet<NodeKey> get_sorted_nodes(const tet_key& tid)
         {
-            SimplexSet<NodeKey> nids;
-            auto fids = get_faces(tid);
+            const SimplexSet<FaceKey>& fids = get_faces(tid);
             orient_edges(tid, fids[0]);
-            nids += get_sorted_nodes(fids[0]);
+            SimplexSet<NodeKey> nids = get_sorted_nodes(fids[0]);
             nids += get_nodes(fids[1]);
             assert(nids.size() == 4);
             return nids;
@@ -523,7 +522,7 @@ namespace is_mesh {
          */
         NodeKey get_node(const EdgeKey& eid1, const EdgeKey& eid2)
         {
-            SimplexSet<NodeKey> nids = get_nodes(eid2);
+            const SimplexSet<NodeKey>& nids = get_nodes(eid2);
             for (auto& n : get_nodes(eid1)) {
                 if(nids.contains(n))
                 {
@@ -539,7 +538,7 @@ namespace is_mesh {
          */
         EdgeKey get_edge(const NodeKey& nid1, const NodeKey& nid2)
         {
-            SimplexSet<EdgeKey> eids = get_edges(nid2);
+            const SimplexSet<EdgeKey>& eids = get_edges(nid2);
             for (auto& e : get_edges(nid1)) {
                 if(eids.contains(e))
                 {
@@ -555,7 +554,7 @@ namespace is_mesh {
          */
         EdgeKey get_edge(const FaceKey& fid1, const FaceKey& fid2)
         {
-            SimplexSet<EdgeKey> eids = get_edges(fid2);
+            const SimplexSet<EdgeKey>& eids = get_edges(fid2);
             for (auto& e : get_edges(fid1)) {
                 if(eids.contains(e))
                 {
@@ -581,7 +580,7 @@ namespace is_mesh {
          */
         FaceKey get_face(const TetrahedronKey& tid1, const TetrahedronKey& tid2)
         {
-            SimplexSet<EdgeKey> fids = get_faces(tid2);
+            const SimplexSet<EdgeKey>& fids = get_faces(tid2);
             for (auto& f : get_faces(tid1)) {
                 if(fids.contains(f))
                 {
