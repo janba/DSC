@@ -669,7 +669,7 @@ namespace DSC {
             if(g_set.size() == 1 && is_safe_editable(e))
             {
                 face_key g = g_set.front();
-                node_key v = Complex::get_apex(g, e);
+                node_key v = (Complex::get_nodes(g) - Complex::get_nodes(e)).front();
                 real V_uv = Util::signed_volume<real>(Complex::get_pos(a), Complex::get_pos(b), Complex::get_pos(v), Complex::get_pos(u));
                 real V_vw = Util::signed_volume<real>(Complex::get_pos(a), Complex::get_pos(b), Complex::get_pos(w), Complex::get_pos(v));
                 real V_wu = Util::signed_volume<real>(Complex::get_pos(a), Complex::get_pos(b), Complex::get_pos(u), Complex::get_pos(w));
@@ -705,7 +705,7 @@ namespace DSC {
          */
         bool topological_face_removal(const face_key& f)
         {
-            auto apices = Complex::get_apices(f);
+            auto apices = Complex::get_nodes(Complex::get_tets(f)) - Complex::get_nodes(f);
             auto nodes = Complex::get_nodes(f);
             this->orient_cc(apices[0], nodes);
             
@@ -791,7 +791,7 @@ namespace DSC {
                     {
                         if (is_safe_editable(f))
                         {
-                            auto apices = Complex::get_apices(f);
+                            auto apices = Complex::get_nodes(Complex::get_tets(f)) - Complex::get_nodes(f);
                             if(topological_face_removal(apices[0], apices[1]))
                             {
                                 i++;

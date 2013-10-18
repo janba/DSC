@@ -566,6 +566,9 @@ namespace is_mesh {
             return EdgeKey();
         }
         
+        /**
+         *  Returns the face between the nodes nid1, nid2 and nid3.
+         */
         FaceKey get_face(const NodeKey& nid1, const NodeKey& nid2, const NodeKey& nid3)
         {
             SimplexSet<FaceKey> fid = (get_faces(nid1) & get_faces(nid2)) & get_faces(nid3);
@@ -588,27 +591,6 @@ namespace is_mesh {
             assert(false);
             return FaceKey();
         }
-        
-        TetrahedronKey get_tet(const TetrahedronKey& tid, const FaceKey& fid)
-        {
-            SimplexSet<TetrahedronKey> t = get_tets(fid) - tid;
-            assert(t.size() == 1);
-            return t.front();
-        }
-        
-        NodeKey get_apex(const FaceKey& fid, const EdgeKey& e)
-        {
-            SimplexSet<NodeKey> n = get_nodes(fid) - get_nodes(e);
-            assert(n.size() == 1);
-            return n.front();
-        }
-        
-        SimplexSet<NodeKey> get_apices(const FaceKey& fid)
-        {
-            return get_nodes(get_tets(fid)) - get_nodes(fid);
-        }
-        
-        
         
         /**
          * Returns the position of node nid.

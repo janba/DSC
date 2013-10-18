@@ -397,7 +397,7 @@ bool is_boundary(DSC::DeformableSimplicialComplex<>& dsc, const DSC::DeformableS
             }
             if(boundary)
             {
-                auto apices = dsc.get_apices(fid);
+                auto apices = dsc.get_nodes(dsc.get_tets(fid)) - dsc.get_nodes(fid);
                 if(DSC::Util::is_inside(dsc.get_pos(apices[0]), plane.p, plane.n) != DSC::Util::is_inside(dsc.get_pos(apices[1]), plane.p, plane.n))
                 {
                     if(dot(dsc.get_normal(fid), plane.n) > 0.)
