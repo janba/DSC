@@ -609,9 +609,9 @@ namespace is_mesh {
             return verts;
         }
         
-        ////////////////////
-        // MESH FUNCTIONS //
-        ////////////////////
+        //////////////////////
+        // EXISTS FUNCTIONS //
+        //////////////////////
     public:
         
         /**
@@ -647,6 +647,12 @@ namespace is_mesh {
             
         }
         
+        
+        ///////////////////////////
+        // ORIENTATION FUNCTIONS //
+        ///////////////////////////
+        
+    private:
         bool is_clockwise_order(const NodeKey& nid, SimplexSet<NodeKey>& nids)
         {
             auto x = get(nid).get_pos() - get(nids[0]).get_pos();
@@ -658,17 +664,6 @@ namespace is_mesh {
             assert(val != 0.);
 #endif
             return val > 0.;
-        }
-        
-        /*
-         * Orient the nodes in a counter clockwise order seen from the node a.
-         */
-        void orient_cc(const NodeKey& nid, SimplexSet<NodeKey>& nids)
-        {
-            if(is_clockwise_order(nid, nids))
-            {
-                std::swap(nids[0], nids[2]);
-            }
         }
         
         void orient_nodes(const FaceKey& fid)
@@ -726,6 +721,7 @@ namespace is_mesh {
             }
         }
         
+    public:
         /**
          * Ensures consistent orientation of the nodes of face fid if fid is an interface or boundary face.
          */
@@ -754,112 +750,15 @@ namespace is_mesh {
             }
         }
         
-        NodeKey split(const EdgeKey& eid, const typename node_traits::vec3& pos, const typename node_traits::vec3& destination)
+        /*
+         * Orient the nodes in a counter clockwise order seen from the node a.
+         */
+        void orient_cc(const NodeKey& nid, SimplexSet<NodeKey>& nids)
         {
-            auto nids = get_nodes(eid);
-            auto fids = get_faces(eid);
-            auto tids = get_tets(eid);
-            
-            // Split edge
-            auto new_nid = insert_node();
-            get(new_nid).set_pos(pos);
-            get(new_nid).set_destination(destination);
-            
-            disconnect(nids[1], eid);
-            connect(new_nid, eid);
-            
-            auto new_eid = insert_edge(new_nid, nids[1]);
-            
-            // Update faces, create faces
-            for (auto f : fids)
+            if(is_clockwise_order(nid, nids))
             {
-                EdgeKey f_eid = (get_edges(f) & get_edges(nids[1])).front();
-                disconnect(f_eid, f);
-                
-                SimplexSet<NodeKey> new_e_nids = get_nodes(get_edges(f)) - nids[0];
-                assert(new_e_nids.size() == 2);
-                EdgeKey new_f_eid = insert_edge(new_e_nids[0], new_e_nids[1]);
-                connect(new_f_eid, f);
-                
-                insert_face(f_eid, new_f_eid, new_eid);
+                std::swap(nids[0], nids[2]);
             }
-            
-            // Update tetrahedra, create tetrahedra
-            SimplexSet<TetrahedronKey> new_tids;
-            for (auto t : tids)
-            {
-                FaceKey t_fid = (get_faces(t) - get_faces(nids[0])).front();
-                disconnect(t_fid, t);
-                
-                SimplexSet<EdgeKey> new_f_eids = get_edges(get_faces(t)) - get_edges(nids[0]);
-                assert(new_f_eids.size() == 3);
-                FaceKey new_t_fid = insert_face(new_f_eids[0], new_f_eids[1], new_f_eids[2]);
-                connect(new_t_fid, t);
-                
-                SimplexSet<FaceKey> t_fids = get_faces(new_eid) & get_faces(get_edges(t_fid));
-                assert(t_fids.size() == 2);
-                new_tids += insert_tetrahedron(t_fids[0], t_fids[1], new_t_fid, t_fid);
-            }
-            
-            // Update flags
-            for (int i = 0; i < tids.size(); i++)
-            {
-                set_label(new_tids[i], get_label(tids[i]));
-            }
-            
-            for(auto t : tids)
-            {
-                if(is_inverted(t))
-                {
-                    get(t).invert_orientation();
-                }
-            }
-            
-            return new_nid;
-        }
-        
-        
-        NodeKey collapse(const EdgeKey& eid, const typename node_traits::vec3& pos, const typename node_traits::vec3& destination)
-        {
-            auto nids = get_nodes(eid);
-            auto fids = get_faces(eid);
-            auto tids = get_tets(eid);
-            
-            // Remove edge
-            remove(eid);
-            
-            // Merge nodes
-            NodeKey nid = merge(nids[1], nids[0]);
-            get(nid).set_pos(pos);
-            get(nid).set_destination(destination);
-            
-            // Remove faces
-            for(auto f : fids)
-            {
-                auto eids = get_edges(f);
-                remove(f);
-                merge(eids[0], eids[1]);
-            }
-            
-            // Remove tetrahedra
-            for(auto t : tids)
-            {
-                auto fids = get_faces(t);
-                remove(t);
-                merge(fids[0], fids[1]);
-            }
-            
-            // Update flags and ensure no inverted tetrahedra.
-            SimplexSet<TetrahedronKey> changed_tids = get_tets(nid);
-            for(auto t : changed_tids)
-            {
-                if(is_inverted(t))
-                {
-                    get(t).invert_orientation();
-                }
-            }
-            update(changed_tids);
-            return nid;
         }
         
         /**
@@ -876,34 +775,10 @@ namespace is_mesh {
             return dot(verts[0]-verts[3], cross(verts[1]-verts[3], verts[2]-verts[3])) < 0.;
         }
         
-    private:
-        
-        NodeKey merge(const NodeKey& key1, const NodeKey& key2)
-        {
-            for(auto e : get_edges(key2))
-            {
-                connect(key1, e);
-            }
-            remove(key2);
-            return key1;
-        }
-        
-        template<typename key_type>
-        key_type merge(const key_type& key1, const key_type& key2)
-        {
-            auto& simplex = get(key2);
-            for(auto k : simplex.get_co_boundary())
-            {
-                connect(key1, k);
-            }
-            for(auto k : simplex.get_boundary())
-            {
-                connect(k, key1);
-            }
-            remove(key2);
-            return key1;
-        }
-        
+        ////////////////////
+        // MESH FUNCTIONS //
+        ////////////////////
+    
     public:
         /**
          * Inserts a node into the mesh. Trivial.
@@ -1029,7 +904,179 @@ namespace is_mesh {
             m_tetrahedron_kernel->erase(tid);
         }
         
-    public:
+        NodeKey merge(const NodeKey& key1, const NodeKey& key2)
+        {
+            for(auto e : get_edges(key2))
+            {
+                connect(key1, e);
+            }
+            remove(key2);
+            return key1;
+        }
+        
+        template<typename child_key, typename parent_key>
+        void connect(const child_key& ck, const parent_key& pk)
+        {
+            get(ck).add_co_face(pk);
+            get(pk).add_face(ck);
+        }
+        
+        template<typename child_key, typename parent_key>
+        void disconnect(const child_key& ck, const parent_key& pk)
+        {
+            get(ck).remove_co_face(pk);
+            get(pk).remove_face(ck);
+        }
+        
+        template<typename child_key, typename parent_key>
+        void swap(const child_key& ck1, const parent_key& pk1, const child_key& ck2, const parent_key& pk2)
+        {
+            if(!get(pk1).get_boundary().contains(ck1))
+            {
+                assert(get(pk1).get_boundary().contains(ck2));
+                assert(get(pk2).get_boundary().contains(ck1));
+                
+                disconnect(ck1, pk2);
+                disconnect(ck2, pk1);
+                connect(ck1, pk1);
+                connect(ck2, pk2);
+            }
+            else {
+                assert(get(pk1).get_boundary().contains(ck1));
+                assert(get(pk2).get_boundary().contains(ck2));
+                
+                disconnect(ck1, pk1);
+                disconnect(ck2, pk2);
+                connect(ck1, pk2);
+                connect(ck2, pk1);
+            }
+        }
+        
+        template<typename key_type>
+        key_type merge(const key_type& key1, const key_type& key2)
+        {
+            auto& simplex = get(key2);
+            for(auto k : simplex.get_co_boundary())
+            {
+                connect(key1, k);
+            }
+            for(auto k : simplex.get_boundary())
+            {
+                connect(k, key1);
+            }
+            remove(key2);
+            return key1;
+        }
+        
+    protected:
+        
+        NodeKey split(const EdgeKey& eid, const typename node_traits::vec3& pos, const typename node_traits::vec3& destination)
+        {
+            auto nids = get_nodes(eid);
+            auto fids = get_faces(eid);
+            auto tids = get_tets(eid);
+            
+            // Split edge
+            auto new_nid = insert_node();
+            get(new_nid).set_pos(pos);
+            get(new_nid).set_destination(destination);
+            
+            disconnect(nids[1], eid);
+            connect(new_nid, eid);
+            
+            auto new_eid = insert_edge(new_nid, nids[1]);
+            
+            // Update faces, create faces
+            for (auto f : fids)
+            {
+                EdgeKey f_eid = (get_edges(f) & get_edges(nids[1])).front();
+                disconnect(f_eid, f);
+                
+                SimplexSet<NodeKey> new_e_nids = get_nodes(get_edges(f)) - nids[0];
+                assert(new_e_nids.size() == 2);
+                EdgeKey new_f_eid = insert_edge(new_e_nids[0], new_e_nids[1]);
+                connect(new_f_eid, f);
+                
+                insert_face(f_eid, new_f_eid, new_eid);
+            }
+            
+            // Update tetrahedra, create tetrahedra
+            SimplexSet<TetrahedronKey> new_tids;
+            for (auto t : tids)
+            {
+                FaceKey t_fid = (get_faces(t) - get_faces(nids[0])).front();
+                disconnect(t_fid, t);
+                
+                SimplexSet<EdgeKey> new_f_eids = get_edges(get_faces(t)) - get_edges(nids[0]);
+                assert(new_f_eids.size() == 3);
+                FaceKey new_t_fid = insert_face(new_f_eids[0], new_f_eids[1], new_f_eids[2]);
+                connect(new_t_fid, t);
+                
+                SimplexSet<FaceKey> t_fids = get_faces(new_eid) & get_faces(get_edges(t_fid));
+                assert(t_fids.size() == 2);
+                new_tids += insert_tetrahedron(t_fids[0], t_fids[1], new_t_fid, t_fid);
+            }
+            
+            // Update flags
+            for (int i = 0; i < tids.size(); i++)
+            {
+                set_label(new_tids[i], get_label(tids[i]));
+            }
+            
+            for(auto t : tids)
+            {
+                if(is_inverted(t))
+                {
+                    get(t).invert_orientation();
+                }
+            }
+            
+            return new_nid;
+        }
+        
+        
+        NodeKey collapse(const EdgeKey& eid, const typename node_traits::vec3& pos, const typename node_traits::vec3& destination)
+        {
+            auto nids = get_nodes(eid);
+            auto fids = get_faces(eid);
+            auto tids = get_tets(eid);
+            
+            // Remove edge
+            remove(eid);
+            
+            // Merge nodes
+            NodeKey nid = merge(nids[1], nids[0]);
+            get(nid).set_pos(pos);
+            get(nid).set_destination(destination);
+            
+            // Remove faces
+            for(auto f : fids)
+            {
+                auto eids = get_edges(f);
+                remove(f);
+                merge(eids[0], eids[1]);
+            }
+            
+            // Remove tetrahedra
+            for(auto t : tids)
+            {
+                auto fids = get_faces(t);
+                remove(t);
+                merge(fids[0], fids[1]);
+            }
+            
+            // Update flags and ensure no inverted tetrahedra.
+            SimplexSet<TetrahedronKey> changed_tids = get_tets(nid);
+            for(auto t : changed_tids)
+            {
+                if(is_inverted(t))
+                {
+                    get(t).invert_orientation();
+                }
+            }
+            update(changed_tids);
+            return nid;
+        }
         
         FaceKey flip_32(const EdgeKey& eid)
         {
@@ -1132,44 +1179,6 @@ namespace is_mesh {
             return new_eid;
         }
         
-        template<typename child_key, typename parent_key>
-        void connect(const child_key& ck, const parent_key& pk)
-        {
-            get(ck).add_co_face(pk);
-            get(pk).add_face(ck);
-        }
-        
-        template<typename child_key, typename parent_key>
-        void disconnect(const child_key& ck, const parent_key& pk)
-        {
-            get(ck).remove_co_face(pk);
-            get(pk).remove_face(ck);
-        }
-        
-        template<typename child_key, typename parent_key>
-        void swap(const child_key& ck1, const parent_key& pk1, const child_key& ck2, const parent_key& pk2)
-        {
-            if(!get(pk1).get_boundary().contains(ck1))
-            {
-                assert(get(pk1).get_boundary().contains(ck2));
-                assert(get(pk2).get_boundary().contains(ck1));
-                
-                disconnect(ck1, pk2);
-                disconnect(ck2, pk1);
-                connect(ck1, pk1);
-                connect(ck2, pk2);
-            }
-            else {
-                assert(get(pk1).get_boundary().contains(ck1));
-                assert(get(pk2).get_boundary().contains(ck2));
-                
-                disconnect(ck1, pk1);
-                disconnect(ck2, pk2);
-                connect(ck1, pk2);
-                connect(ck2, pk1);
-            }
-        }
-        
         void flip(const EdgeKey& eid, const FaceKey& fid1, const FaceKey& fid2)
         {
             SimplexSet<FaceKey> fids = {fid1, fid2};
@@ -1251,6 +1260,7 @@ namespace is_mesh {
         ///////////////////////
         // UTILITY FUNCTIONS //
         ///////////////////////
+    public:
         
         void garbage_collect()
         {
