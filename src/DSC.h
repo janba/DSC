@@ -2219,8 +2219,10 @@ namespace DSC {
             for (auto nit = ISMesh::nodes_begin(); nit != ISMesh::nodes_end(); nit++)
             {
                 total++;
-                if (nit->is_interface())
+                if (is_interface(nit.key()))
+                {
                     object++;
+                }
             }
         }
         
@@ -2231,8 +2233,10 @@ namespace DSC {
             for (auto eit = ISMesh::edges_begin(); eit != ISMesh::edges_end(); eit++)
             {
                 total++;
-                if (eit->is_interface())
+                if (is_interface(eit.key()))
+                {
                     object++;
+                }
             }
         }
         
@@ -2243,8 +2247,10 @@ namespace DSC {
             for (auto fit = ISMesh::faces_begin(); fit != ISMesh::faces_end(); fit++)
             {
                 total++;
-                if (fit->is_interface())
+                if (is_interface(fit.key()))
+                {
                     object++;
+                }
             }
         }
         
@@ -2256,7 +2262,9 @@ namespace DSC {
             {
                 total++;
                 if (get_label(tit.key()) != 0)
+                {
                     object++;
+                }
             }
         }
         
