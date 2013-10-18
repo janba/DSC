@@ -30,10 +30,10 @@ namespace DSC {
         typedef is_mesh::ISMesh<node_att, edge_att, face_att, tet_att> ISMesh;
     public:
         
-        typedef typename ISMesh::node_key      node_key;
-        typedef typename ISMesh::edge_key      edge_key;
-        typedef typename ISMesh::face_key      face_key;
-        typedef typename ISMesh::tet_key       tet_key;
+        typedef is_mesh::NodeKey      node_key;
+        typedef is_mesh::EdgeKey      edge_key;
+        typedef is_mesh::FaceKey      face_key;
+        typedef is_mesh::TetrahedronKey       tet_key;
         
     private:
         DesignDomain *design_domain;
@@ -1515,7 +1515,7 @@ namespace DSC {
         node_key split(const tet_key& tid)
         {
             is_mesh::SimplexSet<edge_key> eids = ISMesh::get_edges(tid);
-            edge_key eid = get_longest_edge(eids);
+            edge_key eid = longest_edge(eids);
             return split(eid);
         }
         
@@ -1525,7 +1525,7 @@ namespace DSC {
         node_key split(const face_key& fid)
         {
             is_mesh::SimplexSet<edge_key> eids = ISMesh::get_edges(fid);
-            edge_key eid = get_longest_edge(eids);
+            edge_key eid = longest_edge(eids);
             return split(eid);
         }
         
@@ -1810,11 +1810,11 @@ namespace DSC {
             face_key max_f;
             for(auto f : fids)
             {
-                real a = area(*f);
+                real a = area(f);
                 if(a > max_a)
                 {
                     max_a = a;
-                    max_f = *f;
+                    max_f = f;
                 }
             }
             return max_f;
