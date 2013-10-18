@@ -275,10 +275,13 @@ namespace is_mesh {
             
             for(auto f : get_faces(tid))
             {
-                TetrahedronKey tid2 = (get_tets(f) - tid).front();
-                if(tids.contains(tid2) && label == get_label(tid2))
+                if(!is_boundary(f))
                 {
-                    connected_component(tids, tid2);
+                    TetrahedronKey tid2 = (get_tets(f) - tid).front();
+                    if(tids.contains(tid2) && label == get_label(tid2))
+                    {
+                        connected_component(tids, tid2);
+                    }
                 }
             }
         }
