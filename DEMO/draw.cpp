@@ -440,6 +440,7 @@ void Painter::update_low_quality(DSC::DeformableSimplicialComplex<>& dsc)
         {            
             for (auto f : dsc.get_faces(tit.key()))
             {
+                dsc.orient_nodes(tit.key(), f);
                 auto nodes = dsc.get_nodes(f);
                 DSC::vec3 normal = dsc.get_normal(f);
                 

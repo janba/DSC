@@ -652,7 +652,7 @@ namespace is_mesh {
         // ORIENTATION FUNCTIONS //
         ///////////////////////////
         
-    private:
+    public:
         bool is_clockwise_order(const NodeKey& nid, SimplexSet<NodeKey>& nids)
         {
             auto x = get(nid).get_pos() - get(nids[0]).get_pos();
@@ -721,6 +721,15 @@ namespace is_mesh {
             }
         }
         
+        /**
+         * Ensures a counter clockwise orientation of the edges and nodes of the face fid seen from the tetrahedron tid.
+         */
+        void orient_nodes(const TetrahedronKey& tid, const FaceKey& fid)
+        {
+            orient_edges(tid, fid);
+            orient_nodes(fid);
+        }
+        
     public:
         /**
          * Ensures consistent orientation of the nodes of face fid if fid is an interface or boundary face.
@@ -740,13 +749,11 @@ namespace is_mesh {
                         tid = t;
                     }
                 }
-                orient_edges(tid, fid);
-                orient_nodes(fid);
+                orient_nodes(tid, fid);
             }
             else if (is_boundary(fid))
             {
-                orient_edges(get_tets(fid).front(), fid);
-                orient_nodes(fid);
+                orient_nodes(get_tets(fid).front(), fid);
             }
         }
         
