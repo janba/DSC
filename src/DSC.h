@@ -1454,7 +1454,7 @@ namespace DSC {
             auto fids = Complex::get_faces(Complex::get_tets(n)) - Complex::get_faces(n);
             for(auto f : fids)
             {
-                auto face_pos = Complex::get_pos(f);
+                auto face_pos = Complex::get_pos(Complex::get_nodes(f));
                 real t = Util::intersection_ray_plane<real>(pos, ray, face_pos[0], face_pos[1], face_pos[2]);
                 if (0. <= t)
                 {
@@ -1670,7 +1670,7 @@ namespace DSC {
         vec3 get_normal(const face_key& fid)
         {
             Complex::orient_face(fid);
-            auto pos = Complex::get_pos(fid);
+            auto pos = Complex::get_pos(Complex::get_nodes(fid));
             return Util::normal_direction(pos[0], pos[1], pos[2]);
         }
         
@@ -1786,7 +1786,7 @@ namespace DSC {
         
         real quality(const face_key& fid)
         {
-            auto verts = Complex::get_pos(fid);
+            auto verts = Complex::get_pos(Complex::get_nodes(fid));
             auto angles = Util::cos_angles<real>(verts[0], verts[1], verts[2]);
             real worst_a;
             for(auto a : angles)

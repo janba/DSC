@@ -599,18 +599,10 @@ namespace is_mesh {
             return verts;
         }
         
-        /// Returns the positions of the nodes of face f.
-        std::vector<typename node_traits::vec3> get_pos(const face_key& fid)
-        {
-            return get_pos(get_sorted_nodes(fid));
-        }
-        
         ////////////////////
         // MESH FUNCTIONS //
         ////////////////////
     public:
-        
-        
         
         /**
          *
@@ -743,10 +735,12 @@ namespace is_mesh {
                     }
                 }
                 orient_edges(tid, fid);
+                orient_nodes(fid);
             }
             else if (is_boundary(fid))
             {
                 orient_edges(get_tets(fid).front(), fid);
+                orient_nodes(fid);
             }
         }
         
