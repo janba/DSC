@@ -101,8 +101,8 @@ namespace is_mesh
     template<typename key_type>
     SimplexSet<key_type> operator+(const SimplexSet<key_type>& A, const SimplexSet<key_type>& B)
     {
-        SimplexSet<key_type> C;
-        return (C += A) += B;
+        SimplexSet<key_type> C = A;
+        return C += B;
     }
     
     /**
@@ -138,8 +138,8 @@ namespace is_mesh
     template<typename key_type>
     SimplexSet<key_type> operator-(const SimplexSet<key_type>& A, const SimplexSet<key_type>& B)
     {
-        SimplexSet<key_type> C;
-        return (C += A) -= B;
+        SimplexSet<key_type> C = A;
+        return C -= B;
     }
     
     /**

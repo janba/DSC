@@ -572,6 +572,33 @@ namespace is_mesh {
             return get_nodes(get_tets(fid)) - get_nodes(fid);
         }
         
+        
+        
+        /**
+         * Returns the position of node nid.
+         */
+        typename node_traits::vec3 get_pos(const NodeKey& nid)
+        {
+            auto p = get(nid).get_pos();
+#ifdef DEBUG
+            assert(!Util::isnan(p[0]) && !Util::isnan(p[1]) && !Util::isnan(p[2]));
+#endif
+            return p;
+        }
+        
+        /**
+         * Returns the positions of nodes nids.
+         */
+        std::vector<typename node_traits::vec3> get_pos(const SimplexSet<NodeKey>& nids)
+        {
+            std::vector<typename node_traits::vec3> verts;
+            for (auto n : nids)
+            {
+                verts.push_back(get_pos(n));
+            }
+            return verts;
+        }
+        
         ////////////////////
         // MESH FUNCTIONS //
         ////////////////////

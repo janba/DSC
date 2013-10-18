@@ -262,49 +262,27 @@ namespace DSC {
         /**
          * Returns the position of node n.
          */
-        vec3 get_pos(const node_key& n)
+        vec3 get_pos(const node_key& nid)
         {
-            vec3 p = Complex::get(n).get_pos();
-#ifdef DEBUG
-            assert(!Util::isnan(p[0]) && !Util::isnan(p[1]) && !Util::isnan(p[2]));
-#endif
-            return p;
+            return Complex::get_pos(nid);
         }
         
         /// Returns the positions of the nodes of edge e.
-        std::vector<vec3> get_pos(const edge_key & e)
+        std::vector<vec3> get_pos(const edge_key & eid)
         {
-            std::vector<vec3> verts(2);
-            auto nodes = Complex::get_nodes(e);
-            for (int k = 0; k < 2; ++k)
-            {
-                verts[k] = get_pos(nodes[k]);
-            }
-            return verts;
+            return Complex::get_pos(Complex::get_nodes(eid));
         }
         
         /// Returns the positions of the nodes of face f.
-        std::vector<vec3> get_pos(const face_key & f)
+        std::vector<vec3> get_pos(const face_key& fid)
         {
-            std::vector<vec3> verts(3);
-            auto nodes = Complex::get_sorted_nodes(f);
-            for (int k = 0; k < 3; ++k)
-            {
-                verts[k] = get_pos(nodes[k]);
-            }
-            return verts;
+            return Complex::get_pos(Complex::get_sorted_nodes(fid));
         }
         
         /// Returns the positions of the nodes of tetrahedron t.
-        std::vector<vec3> get_pos(const tet_key& t)
+        std::vector<vec3> get_pos(const tet_key& tid)
         {
-            std::vector<vec3> verts(4);
-            auto nodes = Complex::get_sorted_nodes(t);
-            for (int k = 0; k < 4; ++k)
-            {
-                verts[k] = get_pos(nodes[k]);
-            }
-            return verts;
+            return Complex::get_pos(Complex::get_sorted_nodes(tid));
         }
         
     protected:
