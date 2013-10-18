@@ -611,12 +611,6 @@ namespace is_mesh {
             return get_pos(get_sorted_nodes(fid));
         }
         
-        /// Returns the positions of the nodes of tetrahedron t.
-        std::vector<typename node_traits::vec3> get_pos(const tet_key& tid)
-        {
-            return get_pos(get_sorted_nodes(tid));
-        }
-        
         ////////////////////
         // MESH FUNCTIONS //
         ////////////////////

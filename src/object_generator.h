@@ -52,7 +52,7 @@ namespace DSC {
             for (auto tit = dsc.tetrahedra_begin(); tit != dsc.tetrahedra_end(); tit++)
             {
                 bool inside = true;
-                auto verts = dsc.get_pos(tit.key());
+                auto verts = dsc.get_pos(dsc.get_nodes(tit.key()));
                 for (auto &v : verts)
                 {
                     if((center - v).length() > radius)
@@ -76,7 +76,7 @@ namespace DSC {
             for (auto tit = dsc.tetrahedra_begin(); tit != dsc.tetrahedra_end(); tit++)
             {
                 bool inside = true;
-                auto verts = dsc.get_pos(tit.key());
+                auto verts = dsc.get_pos(dsc.get_nodes(tit.key()));
                 for (auto &v : verts)
                 {
                     for(int i = 0; i < 3; i++)

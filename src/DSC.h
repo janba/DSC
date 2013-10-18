@@ -2108,9 +2108,9 @@ namespace DSC {
             return acos(cos_dihedral_angle(f1, f2));
         }
         
-        std::vector<real> cos_dihedral_angles(const tet_key& t)
+        std::vector<real> cos_dihedral_angles(const tet_key& tid)
         {
-            auto verts = Complex::get_pos(t);
+            auto verts = Complex::get_pos(Complex::get_nodes(tid));
             std::vector<real> angles;
             std::vector<int> apices;
             for (int i = 0; i < verts.size(); i++) {
