@@ -676,7 +676,7 @@ namespace is_mesh {
                 NodeKey nid = get_node(eid, eids[(i+1)%eids.size()]);
                 if(get_nodes(eid)[1] != nid)
                 {
-                    get(eid).invert_orientation();
+                    get(eid).invert_boundary_orientation();
                 }
             }
         }
@@ -717,7 +717,7 @@ namespace is_mesh {
             bool same_orientation = is_same_orientation(eids, new_eids);
             if ((same_orientation && f_index%2 == 1) || (!same_orientation && f_index%2 == 0))
             {
-                get(fid).invert_orientation();
+                get(fid).invert_boundary_orientation();
             }
         }
         
@@ -841,7 +841,7 @@ namespace is_mesh {
             
             if(is_inverted(tetrahedron.key()))
             {
-                tetrahedron->invert_orientation();
+                tetrahedron->invert_boundary_orientation();
             }
             
             return tetrahedron.key();
@@ -1027,7 +1027,7 @@ namespace is_mesh {
             {
                 if(is_inverted(t))
                 {
-                    get(t).invert_orientation();
+                    get(t).invert_boundary_orientation();
                 }
             }
             
@@ -1071,7 +1071,7 @@ namespace is_mesh {
             {
                 if(is_inverted(t))
                 {
-                    get(t).invert_orientation();
+                    get(t).invert_boundary_orientation();
                 }
             }
             update(changed_tids);
@@ -1228,7 +1228,7 @@ namespace is_mesh {
             {
                 if(is_inverted(t))
                 {
-                    get(t).invert_orientation();
+                    get(t).invert_boundary_orientation();
                 }
             }
             

@@ -62,8 +62,6 @@ namespace is_mesh
     class NodeKey : public Key
     {
     public:
-        constexpr const static int dim = 0;
-        
         NodeKey() : Key() {}
         NodeKey(unsigned int k) : Key(k) {}
     };
@@ -71,8 +69,6 @@ namespace is_mesh
     class EdgeKey : public Key
     {
     public:
-        constexpr const static int dim = 1;
-        
         EdgeKey() : Key() {}
         EdgeKey(unsigned int k) : Key(k) {}
     };
@@ -80,8 +76,6 @@ namespace is_mesh
     class FaceKey : public Key
     {
     public:
-        constexpr const static int dim = 2;
-
         FaceKey() : Key() {}
         FaceKey(unsigned int k) : Key(k) {}
     };
@@ -89,8 +83,6 @@ namespace is_mesh
     class TetrahedronKey : public Key
     {
     public:
-        constexpr const static int dim = 3;
-        
         TetrahedronKey() : Key() {}
         TetrahedronKey(unsigned int k) : Key(k) {}
     };
