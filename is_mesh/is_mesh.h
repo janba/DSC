@@ -518,25 +518,52 @@ namespace is_mesh {
         
         // Other getter functions
         
+        /**
+         *  Returns the node shared by the edges eid1 and eid2.
+         */
         NodeKey get_node(const EdgeKey& eid1, const EdgeKey& eid2)
         {
-            SimplexSet<NodeKey> nid = get_nodes(eid1) & get_nodes(eid2);
-            assert(nid.size() == 1);
-            return nid.front();
+            SimplexSet<NodeKey> nids = get_nodes(eid2);
+            for (auto& n : get_nodes(eid1)) {
+                if(nids.contains(n))
+                {
+                    return n;
+                }
+            }
+            assert(false);
+            return NodeKey();
         }
         
+        /**
+         *  Returns the edge between the nodes nid1 and nid2.
+         */
         EdgeKey get_edge(const NodeKey& nid1, const NodeKey& nid2)
         {
-            SimplexSet<EdgeKey> eid = get_edges(nid1) & get_edges(nid2);
-            assert(eid.size() == 1);
-            return eid.front();
+            SimplexSet<EdgeKey> eids = get_edges(nid2);
+            for (auto& e : get_edges(nid1)) {
+                if(eids.contains(e))
+                {
+                    return e;
+                }
+            }
+            assert(false);
+            return EdgeKey();
         }
         
+        /**
+         *  Returns the edge shared by the faces fid1 and fid2.
+         */
         EdgeKey get_edge(const FaceKey& fid1, const FaceKey& fid2)
         {
-            SimplexSet<EdgeKey> eid = get_edges(fid1) & get_edges(fid2);
-            assert(eid.size() == 1);
-            return eid.front();
+            SimplexSet<EdgeKey> eids = get_edges(fid2);
+            for (auto& e : get_edges(fid1)) {
+                if(eids.contains(e))
+                {
+                    return e;
+                }
+            }
+            assert(false);
+            return EdgeKey();
         }
         
         FaceKey get_face(const NodeKey& nid1, const NodeKey& nid2, const NodeKey& nid3)
@@ -546,11 +573,20 @@ namespace is_mesh {
             return fid.front();
         }
         
+        /**
+         *  Returns the face shared by the tetrahedra tid1 and tid2.
+         */
         FaceKey get_face(const TetrahedronKey& tid1, const TetrahedronKey& tid2)
         {
-            SimplexSet<FaceKey> fid = get_faces(tid1) & get_faces(tid2);
-            assert(fid.size() == 1);
-            return fid.front();
+            SimplexSet<EdgeKey> fids = get_faces(tid2);
+            for (auto& f : get_faces(tid1)) {
+                if(fids.contains(f))
+                {
+                    return f;
+                }
+            }
+            assert(false);
+            return FaceKey();
         }
         
         TetrahedronKey get_tet(const TetrahedronKey& tid, const FaceKey& fid)
