@@ -122,7 +122,7 @@ namespace DSC {
         void print(const node_key& n)
         {
             std::cout << "Node: " << n << std::endl;
-            vec3 p = get_pos(n);
+            vec3 p = Complex::get_pos(n);
             vec3 d = get_dest(n);
             std::cout << "P = " << p[0] << ", " << p[1] << ", " << p[2] << std::endl;
             std::cout << "D = " << d[0] << ", " << d[1] << ", " << d[2]  << std::endl;
@@ -130,7 +130,7 @@ namespace DSC {
             std::cout << "\nStar_edges = [";
             for(auto e : Complex::get_edges(n))
             {
-                auto verts = get_pos(e);
+                auto verts = Complex::get_pos(e);
                 vec3 p1 = verts[0];
                 vec3 p2 = verts[1];
                 std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
@@ -143,7 +143,7 @@ namespace DSC {
             {
                 if(is_interface(e))
                 {
-                    auto verts = get_pos(e);
+                    auto verts = Complex::get_pos(e);
                     vec3 p1 = verts[0];
                     vec3 p2 = verts[1];
                     std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
@@ -156,7 +156,7 @@ namespace DSC {
             auto eids = Complex::get_edges(Complex::get_tets(n)) - Complex::get_edges(n);
             for(auto e : eids)
             {
-                auto verts = get_pos(e);
+                auto verts = Complex::get_pos(e);
                 vec3 p1 = verts[0];
                 vec3 p2 = verts[1];
                 std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
@@ -169,7 +169,7 @@ namespace DSC {
             {
                 if(is_interface(e))
                 {
-                    auto verts = get_pos(e);
+                    auto verts = Complex::get_pos(e);
                     vec3 p1 = verts[0];
                     vec3 p2 = verts[1];
                     std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
@@ -259,32 +259,6 @@ namespace DSC {
             return Complex::get_label(t);
         }
         
-        /**
-         * Returns the position of node n.
-         */
-        vec3 get_pos(const node_key& nid)
-        {
-            return Complex::get_pos(nid);
-        }
-        
-        /// Returns the positions of the nodes of edge e.
-        std::vector<vec3> get_pos(const edge_key & eid)
-        {
-            return Complex::get_pos(Complex::get_nodes(eid));
-        }
-        
-        /// Returns the positions of the nodes of face f.
-        std::vector<vec3> get_pos(const face_key& fid)
-        {
-            return Complex::get_pos(Complex::get_sorted_nodes(fid));
-        }
-        
-        /// Returns the positions of the nodes of tetrahedron t.
-        std::vector<vec3> get_pos(const tet_key& tid)
-        {
-            return Complex::get_pos(Complex::get_sorted_nodes(tid));
-        }
-        
     protected:
         /**
          * Sets the position of node n.
@@ -301,7 +275,7 @@ namespace DSC {
             {
                 return Complex::get(n).get_destination();
             }
-            return get_pos(n);
+            return Complex::get_pos(n);
         }
         
         /// Returns the destinations of the nodes of edge e.
@@ -349,7 +323,7 @@ namespace DSC {
             {
                 if(design_domain)
                 {
-                    vec3 p = get_pos(nid);
+                    vec3 p = Complex::get_pos(nid);
                     vec3 vec = dest - p;
                     design_domain->clamp_vector(p, vec);
                     Complex::get(nid).set_destination(p + vec);
@@ -415,7 +389,7 @@ namespace DSC {
          */
         real build_table(const edge_key& e, const std::vector<node_key>& polygon, std::vector<std::vector<int>>& K)
         {
-            auto verts = get_pos(e);
+            auto verts = Complex::get_pos(e);
             
             const int m = (int) polygon.size();
             
@@ -433,8 +407,8 @@ namespace DSC {
                 {
                     for (int k = i+1; k < j; k++)
                     {
-                        real q2 = Util::quality<real>(get_pos(polygon[i]), get_pos(polygon[k]), verts[0], get_pos(polygon[j]));
-                        real q1 = Util::quality<real>(get_pos(polygon[k]), get_pos(polygon[i]), verts[1], get_pos(polygon[j]));
+                        real q2 = Util::quality<real>(Complex::get_pos(polygon[i]), Complex::get_pos(polygon[k]), verts[0], Complex::get_pos(polygon[j]));
+                        real q1 = Util::quality<real>(Complex::get_pos(polygon[k]), Complex::get_pos(polygon[i]), verts[1], Complex::get_pos(polygon[j]));
                         real q = Util::min(q1, q2);
                         if (k < j-1)
                         {
@@ -521,7 +495,7 @@ namespace DSC {
             {
                 is_mesh::SimplexSet<edge_key> eids = Complex::get_edges(tids) - m_eids;
                 is_mesh::SimplexSet<node_key> polygon = get_polygon(eids);
-                check_consistency(get_pos(eid), polygon);
+                check_consistency(Complex::get_pos(eid), polygon);
                 polygons.push_back(polygon);
             }
             
@@ -690,20 +664,20 @@ namespace DSC {
         {
             edge_key e = Complex::get_edge(u,w);
             is_mesh::SimplexSet<face_key> g_set = Complex::get_faces(e) - Complex::get_faces(Complex::get_tets(f));
-            real q = Util::quality<real>(get_pos(a), get_pos(b), get_pos(w), get_pos(u));
+            real q = Util::quality<real>(Complex::get_pos(a), Complex::get_pos(b), Complex::get_pos(w), Complex::get_pos(u));
             
             if(g_set.size() == 1 && is_safe_editable(e))
             {
                 face_key g = g_set.front();
                 node_key v = Complex::get_apex(g, e);
-                real V_uv = Util::signed_volume<real>(get_pos(a), get_pos(b), get_pos(v), get_pos(u));
-                real V_vw = Util::signed_volume<real>(get_pos(a), get_pos(b), get_pos(w), get_pos(v));
-                real V_wu = Util::signed_volume<real>(get_pos(a), get_pos(b), get_pos(u), get_pos(w));
+                real V_uv = Util::signed_volume<real>(Complex::get_pos(a), Complex::get_pos(b), Complex::get_pos(v), Complex::get_pos(u));
+                real V_vw = Util::signed_volume<real>(Complex::get_pos(a), Complex::get_pos(b), Complex::get_pos(w), Complex::get_pos(v));
+                real V_wu = Util::signed_volume<real>(Complex::get_pos(a), Complex::get_pos(b), Complex::get_pos(u), Complex::get_pos(w));
                 
                 if((V_uv > 0. && V_vw > 0.) || (V_vw > 0. && V_wu > 0.) || (V_wu > 0. && V_uv > 0.))
                 {
-                    q_old = Util::min(Util::quality<real>(get_pos(a), get_pos(u), get_pos(w), get_pos(v)),
-                                     Util::quality<real>(get_pos(u), get_pos(v), get_pos(b), get_pos(w)));
+                    q_old = Util::min(Util::quality<real>(Complex::get_pos(a), Complex::get_pos(u), Complex::get_pos(w), Complex::get_pos(v)),
+                                     Util::quality<real>(Complex::get_pos(u), Complex::get_pos(v), Complex::get_pos(b), Complex::get_pos(w)));
                     
                     real q_uv_old, q_uv_new, q_vw_old, q_vw_new;
                     auto uv_edges = test_neighbour(g, a, b, u, v, q_uv_old, q_uv_new);
@@ -777,8 +751,8 @@ namespace DSC {
                     auto nodes = Complex::get_nodes(f);
                     this->orient_cc(apex2, nodes);
                     
-                    vec3 ray = get_pos(apex2) - get_pos(apex1);
-                    real t = Util::intersection_ray_triangle<real>(get_pos(apex1), ray, get_pos(nodes[0]), get_pos(nodes[1]), get_pos(nodes[2]));
+                    vec3 ray = Complex::get_pos(apex2) - Complex::get_pos(apex1);
+                    real t = Util::intersection_ray_triangle<real>(Complex::get_pos(apex1), ray, Complex::get_pos(nodes[0]), Complex::get_pos(nodes[1]), Complex::get_pos(nodes[2]));
                     if(0. < t && t < 1.)
                     {
                         if(topological_face_removal(f))
@@ -1063,8 +1037,8 @@ namespace DSC {
             // Find apex
             node_key apex = (Complex::get_nodes(fid) - Complex::get_nodes(eid)).front();
             // Find the projected position of the apex
-            auto verts = get_pos(eid);
-            vec3 p = Util::project(get_pos(apex), verts[0], verts[1]);
+            auto verts = Complex::get_pos(eid);
+            vec3 p = Util::project(Complex::get_pos(apex), verts[0], verts[1]);
             
             // Split longest edge
             node_key n = Complex::split(eid, p, p);
@@ -1160,8 +1134,8 @@ namespace DSC {
             node_key apex = Complex::get_nodes(tid) - Complex::get_nodes(fid);
             
             // Project the apex
-            auto verts = get_pos(fid);
-            vec3 p = Util::project(get_pos(apex), verts);
+            auto verts = Complex::get_pos(fid);
+            vec3 p = Util::project(Complex::get_pos(apex), verts);
             
             // Split the face
             node_key n = Complex::split(fid, p, p);
@@ -1238,8 +1212,8 @@ namespace DSC {
             node_key apex = Complex::get_nodes(tid) - Complex::get_nodes(fid);
             
             // Project the apex
-            auto verts = get_pos(fid);
-            vec3 proj_apex = Util::project(get_pos(apex), verts);
+            auto verts = Complex::get_pos(fid);
+            vec3 proj_apex = Util::project(Complex::get_pos(apex), verts);
             
             // Find barycentric coordinates
             std::vector<real> barycentric_coords = Util::barycentric_coords<real>(proj_apex, verts[0], verts[1], verts[2]);
@@ -1320,7 +1294,7 @@ namespace DSC {
             is_mesh::SimplexSet<tet_key> tids = Complex::get_tets(nid);
             real q_old = min_quality(tids);
 
-            vec3 old_pos = get_pos(nid);
+            vec3 old_pos = Complex::get_pos(nid);
             vec3 avg_pos = get_barycenter(nid);
             set_pos(nid, old_pos + alpha * (avg_pos - old_pos));
             
@@ -1444,7 +1418,7 @@ namespace DSC {
          */
         bool move_vertex(const node_key & n)
         {
-            vec3 pos = get_pos(n);
+            vec3 pos = Complex::get_pos(n);
             vec3 destination = get_dest(n);
             real l = Util::length(destination - pos);
             
@@ -1458,7 +1432,7 @@ namespace DSC {
             l = Util::max(Util::min(l*t - l*MIN_DEFORMATION, l), 0.);
             set_pos(n, pos + l*Util::normalize(destination - pos));
             
-            if (Util::length(destination - get_pos(n)) < EPSILON)
+            if (Util::length(destination - Complex::get_pos(n)) < EPSILON)
             {
                 return true;
             }
@@ -1473,14 +1447,14 @@ namespace DSC {
          */
         real intersection_with_link(const node_key & n, const vec3& destination)
         {
-            vec3 pos = get_pos(n);
+            vec3 pos = Complex::get_pos(n);
             vec3 ray = destination - pos;
 
             real min_t = INFINITY;
             auto fids = Complex::get_faces(Complex::get_tets(n)) - Complex::get_faces(n);
             for(auto f : fids)
             {
-                auto face_pos = get_pos(f);
+                auto face_pos = Complex::get_pos(f);
                 real t = Util::intersection_ray_plane<real>(pos, ray, face_pos[0], face_pos[1], face_pos[2]);
                 if (0. <= t)
                 {
@@ -1560,7 +1534,7 @@ namespace DSC {
          */
         node_key split(const edge_key& eid)
         {
-            auto verts = get_pos(eid);
+            auto verts = Complex::get_pos(eid);
             vec3 pos = Util::barycenter(verts[0], verts[1]);
             vec3 destination = pos;
             if(is_interface(eid))
@@ -1585,8 +1559,8 @@ namespace DSC {
             is_mesh::SimplexSet<node_key> nids = Complex::get_nodes(eid);
             is_mesh::SimplexSet<tet_key> tids = Complex::get_tets(nids) - Complex::get_tets(eid);
             
-            vec3 p0 = get_pos(nids[0]);
-            vec3 p1 = get_pos(nids[1]);
+            vec3 p0 = Complex::get_pos(nids[0]);
+            vec3 p1 = Complex::get_pos(nids[1]);
             set_pos(nids[0], pos);
             set_pos(nids[1], pos);
             
@@ -1616,7 +1590,7 @@ namespace DSC {
             
             if (!is_boundary(nodes[0]) && !is_boundary(nodes[1]) && (!safe || (!is_interface(nodes[0]) && !is_interface(nodes[1]))))
             {
-                vec3 p = Util::barycenter(get_pos(nodes[0]), get_pos(nodes[1]));
+                vec3 p = Util::barycenter(Complex::get_pos(nodes[0]), Complex::get_pos(nodes[1]));
                 real q = min_quality(e, p);
                 if (q > q_max)
                 {
@@ -1628,7 +1602,7 @@ namespace DSC {
             
             if (!is_boundary(nodes[0]) && (!safe || !is_interface(nodes[0])))
             {
-                vec3 p = get_pos(nodes[1]);
+                vec3 p = Complex::get_pos(nodes[1]);
                 real q = min_quality(e, p);
                 
                 if (q > q_max)
@@ -1641,7 +1615,7 @@ namespace DSC {
             
             if (!is_boundary(nodes[1]) && (!safe || !is_interface(nodes[1])))
             {
-                vec3 p = get_pos(nodes[0]);
+                vec3 p = Complex::get_pos(nodes[0]);
                 real q = min_quality(e, p);
                 
                 if (q > q_max)
@@ -1696,7 +1670,7 @@ namespace DSC {
         vec3 get_normal(const face_key& fid)
         {
             Complex::orient_face(fid);
-            auto pos = get_pos(fid);
+            auto pos = Complex::get_pos(fid);
             return Util::normal_direction(pos[0], pos[1], pos[2]);
         }
         
@@ -1730,7 +1704,7 @@ namespace DSC {
         {
             if(interface && !is_interface(nid))
             {
-                return get_pos(nid);
+                return Complex::get_pos(nid);
             }
             
             is_mesh::SimplexSet<node_key> nids = Complex::get_nodes(Complex::get_tets(nid)) - nid;
@@ -1740,7 +1714,7 @@ namespace DSC {
             {
                 if (!interface || is_interface(n))
                 {
-                    avg_pos += get_pos(n);
+                    avg_pos += Complex::get_pos(n);
                     i++;
                 }
             }
@@ -1758,7 +1732,7 @@ namespace DSC {
         
         real length(const edge_key& eid)
         {
-            auto verts = get_pos(eid);
+            auto verts = Complex::get_pos(eid);
             return Util::length(verts[0] - verts[1]);
         }
         
@@ -1770,7 +1744,7 @@ namespace DSC {
         
         real area(const face_key& fid)
         {
-            auto verts = get_pos(fid);
+            auto verts = Complex::get_pos(fid);
             return Util::area<real>(verts[0], verts[1], verts[2]);
         }
         
@@ -1782,7 +1756,7 @@ namespace DSC {
         
         real volume(const tet_key& tid)
         {
-            auto verts = get_pos(tid);
+            auto verts = Complex::get_pos(tid);
             return Util::volume<real>(verts[0], verts[1], verts[2], verts[3]);
         }
         
@@ -1795,24 +1769,24 @@ namespace DSC {
         real quality(const tet_key& tid)
         {
             is_mesh::SimplexSet<node_key> nids = Complex::get_nodes(tid);
-            return std::abs(Util::quality<real>(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]), get_pos(nids[3])));
+            return std::abs(Util::quality<real>(Complex::get_pos(nids[0]), Complex::get_pos(nids[1]), Complex::get_pos(nids[2]), Complex::get_pos(nids[3])));
         }
         
         real min_angle(const face_key& f)
         {
-            auto verts = get_pos(f);
+            auto verts = Complex::get_pos(f);
             return Util::min_angle<real>(verts[0], verts[1], verts[2]);
         }
         
         real max_angle(const face_key& f)
         {
-            auto verts = get_pos(f);
+            auto verts = Complex::get_pos(f);
             return Util::max_angle<real>(verts[0], verts[1], verts[2]);
         }
         
         real quality(const face_key& fid)
         {
-            auto verts = get_pos(fid);
+            auto verts = Complex::get_pos(fid);
             auto angles = Util::cos_angles<real>(verts[0], verts[1], verts[2]);
             real worst_a;
             for(auto a : angles)
@@ -1938,7 +1912,7 @@ namespace DSC {
             
             for (unsigned int i = 0; i < n; ++i)
             {
-                vp[i] = get_pos(polygon[i]);
+                vp[i] = Complex::get_pos(polygon[i]);
             }
             
             real sum = 0;
@@ -2046,7 +2020,7 @@ namespace DSC {
             {
                 if (nit->is_interface())
                 {
-                    verts.push_back(get_pos(nit.key()));
+                    verts.push_back(Complex::get_pos(nit.key()));
                     vert_index[nit.key()] = static_cast<int>(verts.size());
                 }
             }
@@ -2075,7 +2049,7 @@ namespace DSC {
             for (auto nit = Complex::nodes_begin(); nit != Complex::nodes_end(); nit++)
             {
                 indices[nit.key()] = counter;
-                points.push_back(get_pos(nit.key()));
+                points.push_back(Complex::get_pos(nit.key()));
                 ++counter;
             }
             
@@ -2112,14 +2086,14 @@ namespace DSC {
                     {
                         if(i < j)
                         {
-                            verts.push_back(get_pos(nodes[i]));
+                            verts.push_back(Complex::get_pos(nodes[i]));
                         }
                         found = true;
                     }
                 }
                 if(!found)
                 {
-                    apices.push_back(get_pos(nodes[i]));
+                    apices.push_back(Complex::get_pos(nodes[i]));
                 }
             }
             
@@ -2136,7 +2110,7 @@ namespace DSC {
         
         std::vector<real> cos_dihedral_angles(const tet_key& t)
         {
-            auto verts = get_pos(t);
+            auto verts = Complex::get_pos(t);
             std::vector<real> angles;
             std::vector<int> apices;
             for (int i = 0; i < verts.size(); i++) {
@@ -2319,7 +2293,7 @@ namespace DSC {
                 new_eids += new_eid[0];
                 auto old_nid = Complex::get_nodes(new_eid) - new_nid;
                 assert(old_nid.size() == 1);
-                verts.push_back(get_pos(old_nid[0]));
+                verts.push_back(Complex::get_pos(old_nid[0]));
                 j++;
                 if(j%100 == 0)
                 {
@@ -2355,7 +2329,7 @@ namespace DSC {
                 {
                     auto nids = Complex::get_nodes(fit.key());
                     nids += Complex::get_nodes(Complex::get_tets(fit.key()));
-                    real t = Util::intersection_ray_triangle<real>(get_pos(nids[3]), get_pos(nids[4]) - get_pos(nids[3]), get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]));
+                    real t = Util::intersection_ray_triangle<real>(Complex::get_pos(nids[3]), Complex::get_pos(nids[4]) - Complex::get_pos(nids[3]), Complex::get_pos(nids[0]), Complex::get_pos(nids[1]), Complex::get_pos(nids[2]));
                     
                     auto neighbours = Complex::get_faces(Complex::get_tets(fit.key()));
                     bool ok = true;
