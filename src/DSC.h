@@ -130,7 +130,7 @@ namespace DSC {
             std::cout << "\nStar_edges = [";
             for(auto e : Complex::get_edges(n))
             {
-                auto verts = Complex::get_pos(e);
+                auto verts = Complex::get_pos(Complex::get_nodes(e));
                 vec3 p1 = verts[0];
                 vec3 p2 = verts[1];
                 std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
@@ -143,7 +143,7 @@ namespace DSC {
             {
                 if(is_interface(e))
                 {
-                    auto verts = Complex::get_pos(e);
+                    auto verts = Complex::get_pos(Complex::get_nodes(e));
                     vec3 p1 = verts[0];
                     vec3 p2 = verts[1];
                     std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
@@ -156,7 +156,7 @@ namespace DSC {
             auto eids = Complex::get_edges(Complex::get_tets(n)) - Complex::get_edges(n);
             for(auto e : eids)
             {
-                auto verts = Complex::get_pos(e);
+                auto verts = Complex::get_pos(Complex::get_nodes(e));
                 vec3 p1 = verts[0];
                 vec3 p2 = verts[1];
                 std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
@@ -169,7 +169,7 @@ namespace DSC {
             {
                 if(is_interface(e))
                 {
-                    auto verts = Complex::get_pos(e);
+                    auto verts = Complex::get_pos(Complex::get_nodes(e));
                     vec3 p1 = verts[0];
                     vec3 p2 = verts[1];
                     std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
@@ -389,7 +389,7 @@ namespace DSC {
          */
         real build_table(const edge_key& e, const std::vector<node_key>& polygon, std::vector<std::vector<int>>& K)
         {
-            auto verts = Complex::get_pos(e);
+            auto verts = Complex::get_pos(Complex::get_nodes(e));
             
             const int m = (int) polygon.size();
             
@@ -495,7 +495,7 @@ namespace DSC {
             {
                 is_mesh::SimplexSet<edge_key> eids = Complex::get_edges(tids) - m_eids;
                 is_mesh::SimplexSet<node_key> polygon = get_polygon(eids);
-                check_consistency(Complex::get_pos(eid), polygon);
+                check_consistency(Complex::get_pos(Complex::get_nodes(eid)), polygon);
                 polygons.push_back(polygon);
             }
             
@@ -1534,7 +1534,7 @@ namespace DSC {
          */
         node_key split(const edge_key& eid)
         {
-            auto verts = Complex::get_pos(eid);
+            auto verts = Complex::get_pos(Complex::get_nodes(eid));
             vec3 pos = Util::barycenter(verts[0], verts[1]);
             vec3 destination = pos;
             if(is_interface(eid))
@@ -1732,7 +1732,7 @@ namespace DSC {
         
         real length(const edge_key& eid)
         {
-            auto verts = Complex::get_pos(eid);
+            auto verts = Complex::get_pos(Complex::get_nodes(eid));
             return Util::length(verts[0] - verts[1]);
         }
         

@@ -367,7 +367,7 @@ void Painter::update_edges(DSC::DeformableSimplicialComplex<>& dsc)
     std::vector<DSC::vec3> data;
     for (auto eit = dsc.edges_begin(); eit != dsc.edges_end(); eit++)
     {
-        auto verts = dsc.get_pos(eit.key());
+        auto verts = dsc.get_pos(dsc.get_nodes(eit.key()));
         DSC::vec3 vector = verts[1] - verts[0];
         
         data.push_back(verts[0]);

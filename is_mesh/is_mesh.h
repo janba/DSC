@@ -599,12 +599,6 @@ namespace is_mesh {
             return verts;
         }
         
-        /// Returns the positions of the nodes of edge e.
-        std::vector<typename node_traits::vec3> get_pos(const edge_key& eid)
-        {
-            return get_pos(get_nodes(eid));
-        }
-        
         /// Returns the positions of the nodes of face f.
         std::vector<typename node_traits::vec3> get_pos(const face_key& fid)
         {
