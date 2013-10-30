@@ -31,12 +31,12 @@ namespace DSC {
         
         NodeAttributes() : p(0.,0.,0.), p_new(0.,0.,0.) {}
         
-        vec3 get_pos()
+        const vec3& get_pos() const
         {
             return p;
         }
         
-        vec3 get_destination()
+        const vec3& get_destination() const
         {
             return p_new;
         }
@@ -61,17 +61,17 @@ namespace DSC {
             p_new = p_;
         }
         
-        bool is_crossing()
+        bool is_crossing() const
         {
             return flags[2];
         }
         
-        bool is_boundary()
+        bool is_boundary() const
         {
             return flags[1];
         }
         
-        bool is_interface()
+        bool is_interface() const
         {
             return flags[0];
         }

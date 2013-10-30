@@ -117,13 +117,17 @@ namespace DSC {
         }
         
     private:
+        using ISMesh::is_interface;
+        using ISMesh::is_boundary;
+        
+        using ISMesh::get;
         
         // For debugging!
         void print(const node_key& n)
         {
             std::cout << "Node: " << n << std::endl;
             vec3 p = ISMesh::get_pos(n);
-            vec3 d = get_dest(n);
+            vec3 d = get(n).get_destination();
             std::cout << "P = " << p[0] << ", " << p[1] << ", " << p[2] << std::endl;
             std::cout << "D = " << d[0] << ", " << d[1] << ", " << d[2]  << std::endl;
             
@@ -187,12 +191,6 @@ namespace DSC {
         {
             
         }
-    
-        template<typename key>
-        bool is_interface(const key& k)
-        {
-            return ISMesh::is_interface(k);
-        }
         
         template<typename key>
         bool is_boundary(const key& k)
@@ -200,17 +198,11 @@ namespace DSC {
             return ISMesh::is_boundary(k);
         }
         
-        template<typename key>
-        bool is_crossing(const key& k)
-        {
-            return ISMesh::is_crossing(k);
-        }
-        
     protected:
         
         virtual bool is_unsafe_editable(const node_key& nid)
         {
-            return ISMesh::exists(nid) && !is_boundary(nid);
+            return ISMesh::exists(nid) && !get(nid).is_boundary();
         }
         
         virtual bool is_unsafe_editable(const edge_key& eid)
@@ -230,7 +222,7 @@ namespace DSC {
         
         virtual bool is_safe_editable(const node_key& nid)
         {
-            return is_unsafe_editable(nid) && !is_interface(nid);
+            return is_unsafe_editable(nid) && !get(nid).is_interface();
         }
         
         virtual bool is_safe_editable(const edge_key& eid)
@@ -251,7 +243,7 @@ namespace DSC {
     public:
         virtual bool is_movable(const node_key& nid)
         {
-            return is_unsafe_editable(nid) && is_interface(nid) && !is_crossing(nid);
+            return is_unsafe_editable(nid) && get(nid).is_interface() && !get(nid).is_crossing();
         }
         
         int get_label(const tet_key& t)
@@ -269,13 +261,13 @@ namespace DSC {
         }
         
     public:
-        vec3 get_dest(const node_key& n)
+        vec3 get_dest(const node_key& nid)
         {
-            if(is_movable(n))
+            if(is_movable(nid))
             {
-                return ISMesh::get(n).get_destination();
+                return get(nid).get_destination();
             }
-            return ISMesh::get_pos(n);
+            return get(nid).get_pos();
         }
         
         /// Returns the destinations of the nodes of edge e.
@@ -1419,7 +1411,7 @@ namespace DSC {
         bool move_vertex(const node_key & n)
         {
             vec3 pos = ISMesh::get_pos(n);
-            vec3 destination = get_dest(n);
+            vec3 destination = get(n).get_destination();
             real l = Util::length(destination - pos);
             
             if (l < 1e-4*AVG_EDGE_LENGTH) // The vertex is not moved
@@ -1979,7 +1971,7 @@ namespace DSC {
             for (auto nit = ISMesh::nodes_begin(); nit != ISMesh::nodes_end(); nit++)
             {
                 valid = valid & ISMesh::exists(nit.key());
-                valid = valid & !(is_interface(nit.key()) && is_boundary(nit.key())); // Check that the interface has not reached the boundary
+                valid = valid & !(nit->is_interface() && is_boundary(nit.key())); // Check that the interface has not reached the boundary
             }
             assert(valid);
             
@@ -2219,7 +2211,7 @@ namespace DSC {
             for (auto nit = ISMesh::nodes_begin(); nit != ISMesh::nodes_end(); nit++)
             {
                 total++;
-                if (is_interface(nit.key()))
+                if (nit->is_interface())
                 {
                     object++;
                 }

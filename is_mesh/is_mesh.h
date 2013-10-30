@@ -107,8 +107,22 @@ namespace is_mesh {
         // LABEL FUNCTIONS //
         /////////////////////
     public:
-        template<typename key>
-        bool is_interface(const key& k)
+        bool is_interface(const NodeKey& k)
+        {
+            return get(k).is_interface();
+        }
+        
+        bool is_interface(const EdgeKey& k)
+        {
+            return get(k).is_interface();
+        }
+        
+        bool is_interface(const FaceKey& k)
+        {
+            return get(k).is_interface();
+        }
+        
+        bool is_interface(const TetrahedronKey& k)
         {
             return get(k).is_interface();
         }
@@ -117,12 +131,6 @@ namespace is_mesh {
         bool is_boundary(const key& k)
         {
             return get(k).is_boundary();
-        }
-        
-        template<typename key>
-        bool is_crossing(const key& k)
-        {
-            return get(k).is_crossing();
         }
         
         int get_label(const TetrahedronKey& t)
@@ -324,13 +332,13 @@ namespace is_mesh {
                     {
                         set_boundary(n, true);
                     }
-                    if (is_crossing(e))
+                    if (ISMesh::get(e).is_crossing())
                     {
                         set_crossing(n, true);
                     }
                 }
             }
-            if(!is_crossing(n) && is_interface(n) && crossing(n))
+            if(!get(n).is_crossing() && is_interface(n) && crossing(n))
             {
                 set_crossing(n, true);
             }
@@ -643,7 +651,6 @@ namespace is_mesh {
         bool exists(const NodeKey& n)
         {
             return m_node_kernel->is_valid(n);
-            
         }
         
         
