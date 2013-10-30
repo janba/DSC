@@ -40,7 +40,10 @@ namespace is_mesh
         }
         
         //conversion to int
-        operator unsigned int() { return key; }
+        operator unsigned int() const
+        {
+            return key;
+        }
         
         friend inline bool operator==(Key    const & a, Key    const & b)   { return a.key == b.key; }
         friend inline bool operator==(Key          & a, Key          & b)   { return a.key == b.key; }

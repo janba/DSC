@@ -29,15 +29,13 @@ namespace is_mesh
     template<typename boundary_key_type, typename co_boundary_key_type>
     class Simplex
     {
-        SimplexSet<boundary_key_type>* m_boundary = nullptr;
-        SimplexSet<co_boundary_key_type>* m_co_boundary = nullptr;
-        
+        SimplexSet<boundary_key_type>* m_boundary = new SimplexSet<boundary_key_type>();
+        SimplexSet<co_boundary_key_type>* m_co_boundary = new SimplexSet<co_boundary_key_type>();
     public:
         
         Simplex()
         {
-            m_boundary    = new SimplexSet<boundary_key_type>();
-            m_co_boundary = new SimplexSet<co_boundary_key_type>();
+            
         }
         
         ~Simplex()
