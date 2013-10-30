@@ -122,13 +122,15 @@ namespace DSC {
         using ISMesh::get_edges;
         using ISMesh::get_faces;
         using ISMesh::get_tets;
+        
+        using ISMesh::get_pos;
     private:
         
         // For debugging!
         void print(const node_key& n)
         {
             std::cout << "Node: " << n << std::endl;
-            vec3 p = ISMesh::get_pos(n);
+            vec3 p = get_pos(n);
             vec3 d = get(n).get_destination();
             std::cout << "P = " << p[0] << ", " << p[1] << ", " << p[2] << std::endl;
             std::cout << "D = " << d[0] << ", " << d[1] << ", " << d[2]  << std::endl;
@@ -136,7 +138,7 @@ namespace DSC {
             std::cout << "\nStar_edges = [";
             for(auto e : ISMesh::get_edges(n))
             {
-                auto verts = ISMesh::get_pos(ISMesh::get_nodes(e));
+                auto verts = get_pos(get_nodes(e));
                 vec3 p1 = verts[0];
                 vec3 p2 = verts[1];
                 std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
@@ -149,7 +151,7 @@ namespace DSC {
             {
                 if(get(e).is_interface())
                 {
-                    auto verts = ISMesh::get_pos(ISMesh::get_nodes(e));
+                    auto verts = get_pos(get_nodes(e));
                     vec3 p1 = verts[0];
                     vec3 p2 = verts[1];
                     std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
@@ -159,10 +161,10 @@ namespace DSC {
             std::cout << "];" << std::endl;
             
             std::cout << "\nedges = [";
-            auto eids = ISMesh::get_edges(ISMesh::get_tets(n)) - ISMesh::get_edges(n);
+            auto eids = get_edges(get_tets(n)) - get_edges(n);
             for(auto e : eids)
             {
-                auto verts = ISMesh::get_pos(ISMesh::get_nodes(e));
+                auto verts = get_pos(get_nodes(e));
                 vec3 p1 = verts[0];
                 vec3 p2 = verts[1];
                 std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
@@ -311,13 +313,13 @@ namespace DSC {
             {
                 if(design_domain)
                 {
-                    vec3 p = ISMesh::get_pos(nid);
+                    vec3 p = get_pos(nid);
                     vec3 vec = dest - p;
                     design_domain->clamp_vector(p, vec);
-                    ISMesh::get(nid).set_destination(p + vec);
+                    get(nid).set_destination(p + vec);
                 }
                 else {
-                    ISMesh::get(nid).set_destination(dest);
+                    get(nid).set_destination(dest);
                 }
             }
         }
@@ -1406,7 +1408,7 @@ namespace DSC {
          */
         bool move_vertex(const node_key & n)
         {
-            vec3 pos = ISMesh::get_pos(n);
+            vec3 pos = get_pos(n);
             vec3 destination = get(n).get_destination();
             real l = Util::length(destination - pos);
             
@@ -1420,7 +1422,7 @@ namespace DSC {
             l = Util::max(Util::min(l*t - l*MIN_DEFORMATION, l), 0.);
             set_pos(n, pos + l*Util::normalize(destination - pos));
             
-            if (Util::length(destination - ISMesh::get_pos(n)) < EPSILON)
+            if (Util::length(destination - get_pos(n)) < EPSILON)
             {
                 return true;
             }
@@ -1435,7 +1437,7 @@ namespace DSC {
          */
         real intersection_with_link(const node_key & n, const vec3& destination)
         {
-            vec3 pos = ISMesh::get_pos(n);
+            vec3 pos = get_pos(n);
             vec3 ray = destination - pos;
 
             real min_t = INFINITY;
@@ -1756,25 +1758,25 @@ namespace DSC {
         
         real quality(const tet_key& tid)
         {
-            is_mesh::SimplexSet<node_key> nids = ISMesh::get_nodes(tid);
-            return std::abs(Util::quality<real>(ISMesh::get_pos(nids[0]), ISMesh::get_pos(nids[1]), ISMesh::get_pos(nids[2]), ISMesh::get_pos(nids[3])));
+            auto verts = get_pos(get_nodes(tid));
+            return std::abs(Util::quality<real>(verts[0], verts[1], verts[2], verts[3]));
         }
         
         real min_angle(const face_key& f)
         {
-            auto verts = ISMesh::get_pos(f);
+            auto verts = get_pos(get_nodes(f));
             return Util::min_angle<real>(verts[0], verts[1], verts[2]);
         }
         
         real max_angle(const face_key& f)
         {
-            auto verts = ISMesh::get_pos(f);
+            auto verts = get_pos(get_nodes(f));
             return Util::max_angle<real>(verts[0], verts[1], verts[2]);
         }
         
         real quality(const face_key& fid)
         {
-            auto verts = ISMesh::get_pos(ISMesh::get_nodes(fid));
+            auto verts = get_pos(get_nodes(fid));
             auto angles = Util::cos_angles<real>(verts[0], verts[1], verts[2]);
             real worst_a;
             for(auto a : angles)
@@ -2037,14 +2039,14 @@ namespace DSC {
             for (auto nit = ISMesh::nodes_begin(); nit != ISMesh::nodes_end(); nit++)
             {
                 indices[nit.key()] = counter;
-                points.push_back(ISMesh::get_pos(nit.key()));
+                points.push_back(nit->get_pos());
                 ++counter;
             }
             
             for (auto tit = ISMesh::tetrahedra_begin(); tit != ISMesh::tetrahedra_end(); tit++)
             {
                 std::vector<int> tet;
-                auto nodes = ISMesh::get_nodes(tit.key());
+                auto nodes = get_nodes(tit.key());
                 
                 for (auto &n : nodes)
                 {
@@ -2323,11 +2325,11 @@ namespace DSC {
             {
                 if(is_safe_editable(fit.key()))
                 {
-                    auto nids = ISMesh::get_nodes(fit.key());
-                    nids += ISMesh::get_nodes(ISMesh::get_tets(fit.key()));
-                    real t = Util::intersection_ray_triangle<real>(ISMesh::get_pos(nids[3]), ISMesh::get_pos(nids[4]) - ISMesh::get_pos(nids[3]), ISMesh::get_pos(nids[0]), ISMesh::get_pos(nids[1]), ISMesh::get_pos(nids[2]));
+                    auto nids = get_nodes(fit.key());
+                    nids += get_nodes(get_tets(fit.key()));
+                    real t = Util::intersection_ray_triangle<real>(get_pos(nids[3]), get_pos(nids[4]) - get_pos(nids[3]), get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]));
                     
-                    auto neighbours = ISMesh::get_faces(ISMesh::get_tets(fit.key()));
+                    auto neighbours = get_faces(get_tets(fit.key()));
                     bool ok = true;
                     for(auto f : neighbours)
                     {

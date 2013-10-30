@@ -31,11 +31,17 @@ namespace DSC {
         
         NodeAttributes() : p(0.,0.,0.), p_new(0.,0.,0.) {}
         
+        /**
+         * Returns the position of the node.
+         */
         const vec3& get_pos() const
         {
             return p;
         }
         
+        /**
+         * Returns the destination of the node.
+         */
         const vec3& get_destination() const
         {
             return p_new;

@@ -52,7 +52,7 @@ public:
         {
             if(nit->is_interface() && !nit->is_crossing())
             {
-                p = dsc.get_pos(nit.key());
+                p = nit->get_pos();
                 new_pos = p + VELOCITY * (dsc.get_barycenter(nit.key(), true) - p);
                 dsc.set_destination(nit.key(), new_pos);
             }
