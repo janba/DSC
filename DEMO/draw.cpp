@@ -337,7 +337,7 @@ void Painter::update(DSC::DeformableSimplicialComplex<>& dsc)
 {
     update_interface(dsc);
 //    update_edges(dsc);
-    update_domain(dsc);
+//    update_domain(dsc);
     update_low_quality(dsc);
 }
 
