@@ -541,18 +541,19 @@ namespace DSC {
             return false;
         }
         
-        void topological_boundary_edge_removal(const std::vector<node_key>& polygon1, const std::vector<node_key>& polygon2, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K1, std::vector<std::vector<int>>& K2)
+        void topological_boundary_edge_removal(const std::vector<node_key>& polygon1, const std::vector<node_key>& polygon2, const edge_key& eid, std::vector<std::vector<int>>& K1, std::vector<std::vector<int>>& K2)
         {
+            auto nids = get_nodes(eid);
             const int m1 = static_cast<int>(polygon1.size());
             const int m2 = static_cast<int>(polygon2.size());
             int k = K1[0][m1-1];
-            flip_23_recursively(polygon1, n1, n2, K1, 0, k);
-            flip_23_recursively(polygon1, n1, n2, K1, k, m1-1);
+            flip_23_recursively(polygon1, nids[0], nids[1], K1, 0, k);
+            flip_23_recursively(polygon1, nids[0], nids[1], K1, k, m1-1);
             
             if(m2 <= 2) {
                 // Find the faces to flip about.
-                face_key f1 = ISMesh::get_face(n1, n2, polygon1.front());
-                face_key f2 = ISMesh::get_face(n1, n2, polygon1.back());
+                face_key f1 = ISMesh::get_face(nids[0], nids[1], polygon1.front());
+                face_key f2 = ISMesh::get_face(nids[0], nids[1], polygon1.back());
                 
                 if(get(f1).is_boundary() && get(f2).is_boundary())
                 {
@@ -561,12 +562,12 @@ namespace DSC {
             }
             else {
                 k = K2[0][m2-1];
-                flip_23_recursively(polygon2, n1, n2, K2, 0, k);
-                flip_23_recursively(polygon2, n1, n2, K2, k, m2-1);
+                flip_23_recursively(polygon2, nids[0], nids[1], K2, 0, k);
+                flip_23_recursively(polygon2, nids[0], nids[1], K2, k, m2-1);
                 
                 // Find the faces to flip about.
-                face_key f1 = ISMesh::get_face(n1, n2, polygon1.front());
-                face_key f2 = ISMesh::get_face(n1, n2, polygon1.back());
+                face_key f1 = ISMesh::get_face(nids[0], nids[1], polygon1.front());
+                face_key f2 = ISMesh::get_face(nids[0], nids[1], polygon1.back());
                 
                 ISMesh::flip_44(f1, f2);
             }
@@ -584,15 +585,18 @@ namespace DSC {
             std::vector<std::vector<int>> K1, K2;
             real q_new = build_table(eid, polygons[0], K1);
             
-            if(polygons[1].size() > 2)
+            if(polygons.size() == 2 && polygons[1].size() > 2)
             {
                 q_new = Util::min(q_new, build_table(eid, polygons[1], K2));
+            }
+            else
+            {
+                polygons.push_back({polygons[0].front(), polygons[0].back()});
             }
             
             if (q_new > min_quality(eid))
             {
-                auto nodes = ISMesh::get_nodes(eid);
-                topological_boundary_edge_removal(polygons[0], polygons[1], nodes[0], nodes[1], K1, K2);
+                topological_boundary_edge_removal(polygons[0], polygons[1], eid, K1, K2);
                 return true;
             }
             return false;
@@ -630,7 +634,7 @@ namespace DSC {
                                     i++;
                                 }
                             }
-                            else if(!get(e).is_boundary() && is_flippable(e))
+                            else if(is_flippable(e))
                             {
                                 if(topological_boundary_edge_removal(e))
                                 {
@@ -1870,7 +1874,7 @@ namespace DSC {
          */
         real min_quality(const node_key& nid)
         {
-            return min_quality(ISMesh::get_tets(nid));
+            return min_quality(get_tets(nid));
         }
         
         /**
@@ -1878,7 +1882,7 @@ namespace DSC {
          */
         real min_quality(const edge_key& eid)
         {
-            return min_quality(ISMesh::get_tets(eid));
+            return min_quality(get_tets(eid));
         }
         
         /**
@@ -1886,7 +1890,7 @@ namespace DSC {
          */
         real min_quality(const face_key& fid)
         {
-            return min_quality(ISMesh::get_tets(fid));
+            return min_quality(get_tets(fid));
         }
         
     private:
