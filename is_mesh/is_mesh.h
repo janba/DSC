@@ -592,11 +592,7 @@ namespace is_mesh {
          */
         typename node_traits::vec3 get_pos(const NodeKey& nid)
         {
-            auto p = get(nid).get_pos();
-#ifdef DEBUG
-            assert(!Util::isnan(p[0]) && !Util::isnan(p[1]) && !Util::isnan(p[2]));
-#endif
-            return p;
+            return get(nid).get_pos();
         }
         
         /**
