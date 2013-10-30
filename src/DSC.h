@@ -116,11 +116,13 @@ namespace DSC {
             delete design_domain;
         }
         
-    private:
-        using ISMesh::is_interface;
-        using ISMesh::is_boundary;
-        
         using ISMesh::get;
+        
+        using ISMesh::get_nodes;
+        using ISMesh::get_edges;
+        using ISMesh::get_faces;
+        using ISMesh::get_tets;
+    private:
         
         // For debugging!
         void print(const node_key& n)
@@ -145,7 +147,7 @@ namespace DSC {
             std::cout << "\nStar_Iedges = [";
             for(auto e : ISMesh::get_edges(n))
             {
-                if(is_interface(e))
+                if(get(e).is_interface())
                 {
                     auto verts = ISMesh::get_pos(ISMesh::get_nodes(e));
                     vec3 p1 = verts[0];
@@ -171,7 +173,7 @@ namespace DSC {
             std::cout << "\nIedges = [";
             for(auto e : eids)
             {
-                if(is_interface(e))
+                if(get(e).is_interface())
                 {
                     auto verts = ISMesh::get_pos(ISMesh::get_nodes(e));
                     vec3 p1 = verts[0];
@@ -192,12 +194,6 @@ namespace DSC {
             
         }
         
-        template<typename key>
-        bool is_boundary(const key& k)
-        {
-            return ISMesh::is_boundary(k);
-        }
-        
     protected:
         
         virtual bool is_unsafe_editable(const node_key& nid)
@@ -207,12 +203,12 @@ namespace DSC {
         
         virtual bool is_unsafe_editable(const edge_key& eid)
         {
-            return ISMesh::exists(eid) && !is_boundary(eid);
+            return ISMesh::exists(eid) && !get(eid).is_boundary();
         }
         
         virtual bool is_unsafe_editable(const face_key& fid)
         {
-            return ISMesh::exists(fid) && !is_boundary(fid);
+            return ISMesh::exists(fid) && !get(fid).is_boundary();
         }
         
         virtual bool is_unsafe_editable(const tet_key& tid)
@@ -227,12 +223,12 @@ namespace DSC {
         
         virtual bool is_safe_editable(const edge_key& eid)
         {
-            return is_unsafe_editable(eid) && !is_interface(eid);
+            return is_unsafe_editable(eid) && !get(eid).is_interface();
         }
         
         virtual bool is_safe_editable(const face_key& fid)
         {
-            return is_unsafe_editable(fid) && !is_interface(fid);
+            return is_unsafe_editable(fid) && !get(fid).is_interface();
         }
         
         virtual bool is_safe_editable(const tet_key& tid)
@@ -556,7 +552,7 @@ namespace DSC {
                 face_key f1 = ISMesh::get_face(n1, n2, polygon1.front());
                 face_key f2 = ISMesh::get_face(n1, n2, polygon1.back());
                 
-                if(is_boundary(f1) && is_boundary(f2))
+                if(get(f1).is_boundary() && get(f2).is_boundary())
                 {
                     ISMesh::flip_22(f1, f2);
                 }
@@ -632,7 +628,7 @@ namespace DSC {
                                     i++;
                                 }
                             }
-                            else if(!is_boundary(e) && is_flippable(e))
+                            else if(!get(e).is_boundary() && is_flippable(e))
                             {
                                 if(topological_boundary_edge_removal(e))
                                 {
@@ -810,7 +806,7 @@ namespace DSC {
             std::vector<edge_key> edges;
             for (auto eit = ISMesh::edges_begin(); eit != ISMesh::edges_end(); eit++)
             {
-                if (is_unsafe_editable(eit.key()) && is_interface(eit.key()) && length(eit.key()) > MAX_LENGTH)
+                if (is_unsafe_editable(eit.key()) && eit->is_interface() && length(eit.key()) > MAX_LENGTH)
                 {
                     edges.push_back(eit.key());
                 }
@@ -818,7 +814,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto &e : edges)
             {
-                if (is_unsafe_editable(e) && is_interface(e) && length(e) > MAX_LENGTH)
+                if (is_unsafe_editable(e) && get(e).is_interface() && length(e) > MAX_LENGTH)
                 {
                     node_key nid = split(e);
                     if(nid.is_valid())
@@ -1469,14 +1465,14 @@ namespace DSC {
          */
         bool is_flippable(const edge_key & e)
         {
-            if(!is_interface(e) && !is_boundary(e))
+            if(!get(e).is_interface() && !get(e).is_boundary())
             {
                 return false;
             }
             std::vector<face_key> faces;
             for(auto f : ISMesh::get_faces(e))
             {
-                if (is_interface(f) || is_boundary(f))
+                if (get(f).is_interface() || get(f).is_boundary())
                 {
                     faces.push_back(f);
                 }
@@ -1529,7 +1525,7 @@ namespace DSC {
             auto verts = ISMesh::get_pos(ISMesh::get_nodes(eid));
             vec3 pos = Util::barycenter(verts[0], verts[1]);
             vec3 destination = pos;
-            if(is_interface(eid))
+            if(get(eid).is_interface())
             {
                 auto dests = get_dest(eid);
                 destination = Util::barycenter(dests[0], dests[1]);
@@ -1580,7 +1576,7 @@ namespace DSC {
             vec3 pos_opt, destination_opt;
             real q_max = 0.;
             
-            if (!is_boundary(nodes[0]) && !is_boundary(nodes[1]) && (!safe || (!is_interface(nodes[0]) && !is_interface(nodes[1]))))
+            if (!get(nodes[0]).is_boundary() && !get(nodes[1]).is_boundary() && (!safe || (!get(nodes[0]).is_interface() && !get(nodes[1]).is_interface())))
             {
                 vec3 p = Util::barycenter(ISMesh::get_pos(nodes[0]), ISMesh::get_pos(nodes[1]));
                 real q = min_quality(e, p);
@@ -1592,7 +1588,7 @@ namespace DSC {
                 }
             }
             
-            if (!is_boundary(nodes[0]) && (!safe || !is_interface(nodes[0])))
+            if (!get(nodes[0]).is_boundary() && (!safe || !get(nodes[0]).is_interface()))
             {
                 vec3 p = ISMesh::get_pos(nodes[1]);
                 real q = min_quality(e, p);
@@ -1605,7 +1601,7 @@ namespace DSC {
                 }
             }
             
-            if (!is_boundary(nodes[1]) && (!safe || !is_interface(nodes[1])))
+            if (!get(nodes[1]).is_boundary() && (!safe || !get(nodes[1]).is_interface()))
             {
                 vec3 p = ISMesh::get_pos(nodes[0]);
                 real q = min_quality(e, p);
@@ -1674,7 +1670,7 @@ namespace DSC {
             vec3 result(0.);
             for (auto f : ISMesh::get_faces(nid))
             {
-                if (is_interface(f))
+                if (get(f).is_interface())
                 {
                     result += get_normal(f);
                 }
@@ -1694,7 +1690,7 @@ namespace DSC {
          */
         vec3 get_barycenter(const node_key& nid, bool interface = false)
         {
-            if(interface && !is_interface(nid))
+            if(interface && !get(nid).is_interface())
             {
                 return ISMesh::get_pos(nid);
             }
@@ -1704,7 +1700,7 @@ namespace DSC {
             int i = 0;
             for (auto n : nids)
             {
-                if (!interface || is_interface(n))
+                if (!interface || get(n).is_interface())
                 {
                     avg_pos += ISMesh::get_pos(n);
                     i++;
@@ -1971,7 +1967,7 @@ namespace DSC {
             for (auto nit = ISMesh::nodes_begin(); nit != ISMesh::nodes_end(); nit++)
             {
                 valid = valid & ISMesh::exists(nit.key());
-                valid = valid & !(nit->is_interface() && is_boundary(nit.key())); // Check that the interface has not reached the boundary
+                valid = valid & !(nit->is_interface() && nit->is_boundary()); // Check that the interface has not reached the boundary
             }
             assert(valid);
             
@@ -1981,18 +1977,18 @@ namespace DSC {
                 int boundary = 0;
                 int interface = 0;
                 for (auto f : ISMesh::get_faces(eit.key())) {
-                    if(is_boundary(f))
+                    if(get(f).is_boundary())
                     {
                         boundary++;
                     }
-                    if(is_interface(f))
+                    if(get(f).is_interface())
                     {
                         interface++;
                     }
                 }
-                valid = valid & ((is_interface(eit.key()) && interface >= 2) || (!is_interface(eit.key()) && interface == 0)); // Check that the interface is not corrupted
+                valid = valid & ((eit->is_interface() && interface >= 2) || (!eit->is_interface() && interface == 0)); // Check that the interface is not corrupted
                 assert(valid);
-                valid = valid & ((is_boundary(eit.key()) && boundary == 2) || (!is_boundary(eit.key()) && boundary == 0)); // Check that the boundary is not corrupted
+                valid = valid & ((eit->is_boundary() && boundary == 2) || (!eit->is_boundary() && boundary == 0)); // Check that the boundary is not corrupted
                 assert(valid);
             }
             assert(valid);
@@ -2225,7 +2221,7 @@ namespace DSC {
             for (auto eit = ISMesh::edges_begin(); eit != ISMesh::edges_end(); eit++)
             {
                 total++;
-                if (is_interface(eit.key()))
+                if (eit->is_interface())
                 {
                     object++;
                 }
@@ -2239,7 +2235,7 @@ namespace DSC {
             for (auto fit = ISMesh::faces_begin(); fit != ISMesh::faces_end(); fit++)
             {
                 total++;
-                if (is_interface(fit.key()))
+                if (fit->is_interface())
                 {
                     object++;
                 }
@@ -2253,7 +2249,7 @@ namespace DSC {
             for (auto tit = ISMesh::tetrahedra_begin(); tit != ISMesh::tetrahedra_end(); tit++)
             {
                 total++;
-                if (get_label(tit.key()) != 0)
+                if (tit->label() != 0)
                 {
                     object++;
                 }
@@ -2385,9 +2381,9 @@ namespace DSC {
             is_mesh::SimplexSet<edge_key> eids;
             for (auto eit = ISMesh::edges_begin(); eit != ISMesh::edges_end(); eit++)
             {
-                if(is_safe_editable(eit.key()) && ISMesh::get_faces(eit.key()).size() == 4)
+                if(is_safe_editable(eit.key()) && get_faces(eit.key()).size() == 4)
                 {
-                    auto neighbours = ISMesh::get_edges(ISMesh::get_tets(eit.key()));
+                    auto neighbours = get_edges(get_tets(eit.key()));
                     bool ok = true;
                     for(auto e : neighbours)
                     {
@@ -2408,9 +2404,9 @@ namespace DSC {
             int i = 0;
             for (auto e : eids) {
                 assert(ISMesh::exists(e));
-                auto fids = ISMesh::get_faces(e);
+                auto fids = get_faces(e);
                 assert(fids.size() == 4);
-                auto fid = fids - ISMesh::get_faces(ISMesh::get_tets(fids[0]));
+                auto fid = fids - get_faces(get_tets(fids[0]));
                 assert(fid.size() == 1);
                 flip_fids += fid;
                 flip_fids += fids[0];
@@ -2445,9 +2441,9 @@ namespace DSC {
             is_mesh::SimplexSet<edge_key> eids;
             for (auto eit = ISMesh::edges_begin(); eit != ISMesh::edges_end(); eit++)
             {
-                if(is_boundary(eit.key()) && ISMesh::get_faces(eit.key()).size() == 3)
+                if(eit->is_boundary() && get_faces(eit.key()).size() == 3)
                 {
-                    auto neighbours = ISMesh::get_edges(ISMesh::get_tets(eit.key()));
+                    auto neighbours = get_edges(get_tets(eit.key()));
                     bool ok = true;
                     for(auto e : neighbours)
                     {
@@ -2467,12 +2463,12 @@ namespace DSC {
             int i = 0;
             for (auto e : eids) {
                 assert(ISMesh::exists(e));
-                auto fids = ISMesh::get_faces(e);
+                auto fids = get_faces(e);
                 assert(fids.size() == 3);
                 is_mesh::SimplexSet<face_key> flip_fids;
                 for(auto f : fids)
                 {
-                    if(is_boundary(f))
+                    if(get(f).is_boundary())
                     {
                         flip_fids += f;
                     }

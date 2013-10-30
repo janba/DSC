@@ -107,31 +107,6 @@ namespace is_mesh {
         // LABEL FUNCTIONS //
         /////////////////////
     public:
-        bool is_interface(const NodeKey& k)
-        {
-            return get(k).is_interface();
-        }
-        
-        bool is_interface(const EdgeKey& k)
-        {
-            return get(k).is_interface();
-        }
-        
-        bool is_interface(const FaceKey& k)
-        {
-            return get(k).is_interface();
-        }
-        
-        bool is_interface(const TetrahedronKey& k)
-        {
-            return get(k).is_interface();
-        }
-        
-        template<typename key>
-        bool is_boundary(const key& k)
-        {
-            return get(k).is_boundary();
-        }
         
         int get_label(const TetrahedronKey& t)
         {
@@ -259,11 +234,11 @@ namespace is_mesh {
             {
                 if (exists(f))
                 {
-                    if (is_boundary(f))
+                    if (get(f).is_boundary())
                     {
                         set_boundary(e, true);
                     }
-                    if (is_interface(f))
+                    if (get(f).is_interface())
                     {
                         set_interface(e, true);
                         i++;
@@ -283,7 +258,7 @@ namespace is_mesh {
             
             for(auto f : get_faces(tid))
             {
-                if(!is_boundary(f))
+                if(!get(f).is_boundary())
                 {
                     TetrahedronKey tid2 = (get_tets(f) - tid).front();
                     if(tids.contains(tid2) && label == get_label(tid2))
@@ -324,21 +299,21 @@ namespace is_mesh {
             {
                 if (exists(e))
                 {
-                    if (is_interface(e))
+                    if (get(e).is_interface())
                     {
                         set_interface(n, true);
                     }
-                    if (is_boundary(e))
+                    if (get(e).is_boundary())
                     {
                         set_boundary(n, true);
                     }
-                    if (ISMesh::get(e).is_crossing())
+                    if (get(e).is_crossing())
                     {
                         set_crossing(n, true);
                     }
                 }
             }
-            if(!get(n).is_crossing() && is_interface(n) && crossing(n))
+            if(!get(n).is_crossing() && get(n).is_interface() && crossing(n))
             {
                 set_crossing(n, true);
             }
@@ -742,7 +717,7 @@ namespace is_mesh {
          */
         void orient_face(const FaceKey& fid)
         {
-            if (is_interface(fid))
+            if (get(fid).is_interface())
             {
                 int label = -100;
                 TetrahedronKey tid;
@@ -757,7 +732,7 @@ namespace is_mesh {
                 }
                 orient_nodes(tid, fid);
             }
-            else if (is_boundary(fid))
+            else if (get(fid).is_boundary())
             {
                 orient_nodes(get_tets(fid).front(), fid);
             }
@@ -1295,7 +1270,7 @@ namespace is_mesh {
                 for (auto f : faces) {
                     assert(exists(f));
                     auto cotets = get_tets(f);
-                    assert((is_boundary(f) && cotets.size() == 1) || (!is_boundary(f) && cotets.size() == 2));
+                    assert((get(f).is_boundary() && cotets.size() == 1) || (!get(f).is_boundary() && cotets.size() == 2));
                     assert(std::find(cotets.begin(), cotets.end(), tit.key()) != cotets.end());
                     for (auto f2 : faces) {
                         assert(f == f2 || get_edge(f, f2).is_valid());

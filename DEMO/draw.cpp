@@ -379,7 +379,7 @@ void Painter::update_edges(DSC::DeformableSimplicialComplex<>& dsc)
 
 bool is_boundary(DSC::DeformableSimplicialComplex<>& dsc, const DSC::DeformableSimplicialComplex<>::face_key& fid, std::vector<DSC::vec3>& verts)
 {
-    if(dsc.is_boundary(fid))
+    if(dsc.get(fid).is_boundary())
     {
         std::swap(verts[0], verts[2]);
         return true;
