@@ -999,14 +999,14 @@ namespace is_mesh {
             FaceKey new_fid = insert_face(f_eids[0], f_eids[1], f_eids[2]);
             
             // Remove faces
-            for(FaceKey& f : e_fids)
+            for(const FaceKey& f : e_fids)
             {
                 remove(f);
             }
             
             // Create tetrahedra
             SimplexSet<FaceKey> exterior_fids = get_faces(e_tids);
-            for (NodeKey& n : e_nids)
+            for (const NodeKey& n : e_nids)
             {
                 SimplexSet<FaceKey> t_fids = exterior_fids & get_faces(n);
                 assert(t_fids.size() == 3);
@@ -1014,7 +1014,7 @@ namespace is_mesh {
             }
             
             // Remove tetrahedra
-            for(TetrahedronKey& t : e_tids)
+            for(const TetrahedronKey& t : e_tids)
             {
                 remove(t);
             }
@@ -1029,9 +1029,9 @@ namespace is_mesh {
         
         EdgeKey flip_23(const FaceKey& fid)
         {
-            SimplexSet<TetrahedronKey> f_tids = get_tets(fid);
+            const SimplexSet<TetrahedronKey>& f_tids = get_tets(fid);
             assert(f_tids.size() == 2);
-            SimplexSet<EdgeKey> f_eids = get_edges(fid);
+            const SimplexSet<EdgeKey>& f_eids = get_edges(fid);
             assert(f_eids.size() == 3);
             SimplexSet<NodeKey> f_nids = get_nodes(f_eids);
             int label = get_label(f_tids[0]);
@@ -1045,7 +1045,7 @@ namespace is_mesh {
             // Create faces
             SimplexSet<EdgeKey> new_fs_eids = get_edges(f_tids) - f_eids;
             assert(new_fs_eids.size() == 6);
-            for (NodeKey& n : f_nids)
+            for (const NodeKey& n : f_nids)
             {
                 auto new_f_eids = new_fs_eids & get_edges(n);
                 assert(new_f_eids.size() == 2);
@@ -1056,11 +1056,11 @@ namespace is_mesh {
             remove(fid);
             
             // Create tetrahedra
-            SimplexSet<FaceKey> new_ts_fids1 = get_faces(f_tids);
-            SimplexSet<FaceKey> new_ts_fids2 = get_faces(new_eid);
+            const SimplexSet<FaceKey>& new_ts_fids1 = get_faces(f_tids);
+            const SimplexSet<FaceKey>& new_ts_fids2 = get_faces(new_eid);
             assert(new_ts_fids1.size() == 6);
             assert(new_ts_fids2.size() == 3);
-            for (EdgeKey& e : f_eids)
+            for (const EdgeKey& e : f_eids)
             {
                 SimplexSet<FaceKey> new_t_fids = (new_ts_fids1 & get_faces(e)) + (new_ts_fids2 & get_faces(get_nodes(e)));
                 assert(new_t_fids.size() == 4);
