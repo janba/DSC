@@ -352,7 +352,7 @@ namespace DSC {
          * Build a table K for the dynamic programming method by Klincsek (see Shewchuk "Two Discrete Optimization Algorithms
          * for the Topological Improvement of Tetrahedral Meshes" article for details).
          */
-        real build_table(const edge_key& e, const std::vector<node_key>& polygon, std::vector<std::vector<int>>& K)
+        real build_table(const edge_key& e, const is_mesh::SimplexSet<node_key>& polygon, std::vector<std::vector<int>>& K)
         {
             auto verts = ISMesh::get_pos(ISMesh::get_nodes(e));
             
@@ -460,7 +460,7 @@ namespace DSC {
             {
                 is_mesh::SimplexSet<edge_key> eids = ISMesh::get_edges(tids) - m_eids;
                 is_mesh::SimplexSet<node_key> polygon = get_polygon(eids);
-                check_consistency(ISMesh::get_pos(ISMesh::get_nodes(eid)), polygon);
+                check_consistency(ISMesh::get_pos(get_nodes(eid)), polygon);
                 polygons.push_back(polygon);
             }
             
@@ -475,7 +475,7 @@ namespace DSC {
             return polygons;
         }
         
-        void flip_23_recursively(const std::vector<node_key>& polygon, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K, int i, int j)
+        void flip_23_recursively(const is_mesh::SimplexSet<node_key>& polygon, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K, int i, int j)
         {
             if(j >= i+2)
             {
@@ -486,7 +486,7 @@ namespace DSC {
             }
         }
         
-        void topological_edge_removal(const std::vector<node_key>& polygon, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K)
+        void topological_edge_removal(const is_mesh::SimplexSet<node_key>& polygon, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K)
         {
             const int m = static_cast<int>(polygon.size());
             int k = K[0][m-1];
@@ -509,14 +509,14 @@ namespace DSC {
             
             if (q_new > min_quality(eid))
             {
-                auto nodes = ISMesh::get_nodes(eid);
+                const is_mesh::SimplexSet<node_key>& nodes = get_nodes(eid);
                 topological_edge_removal(polygon.front(), nodes[0], nodes[1], K);
                 return true;
             }
             return false;
         }
         
-        void topological_boundary_edge_removal(const std::vector<node_key>& polygon1, const std::vector<node_key>& polygon2, const edge_key& eid, std::vector<std::vector<int>>& K1, std::vector<std::vector<int>>& K2)
+        void topological_boundary_edge_removal(const is_mesh::SimplexSet<node_key>& polygon1, const is_mesh::SimplexSet<node_key>& polygon2, const edge_key& eid, std::vector<std::vector<int>>& K1, std::vector<std::vector<int>>& K2)
         {
             auto nids = get_nodes(eid);
             const int m1 = static_cast<int>(polygon1.size());
@@ -629,7 +629,7 @@ namespace DSC {
         // TOPOLOGICAL FACE REMOVAL //
         //////////////////////////////
         
-        std::vector<edge_key> test_neighbour(const face_key& f, const node_key& a, const node_key& b, node_key& u, node_key& w, real& q_old, real& q_new)
+        std::vector<edge_key> test_neighbour(const face_key& f, const node_key& a, const node_key& b, const node_key& u, const node_key& w, real& q_old, real& q_new)
         {
             edge_key e = ISMesh::get_edge(u,w);
             is_mesh::SimplexSet<face_key> g_set = ISMesh::get_faces(e) - ISMesh::get_faces(ISMesh::get_tets(f));
@@ -674,8 +674,8 @@ namespace DSC {
          */
         bool topological_face_removal(const face_key& f)
         {
-            auto apices = ISMesh::get_nodes(ISMesh::get_tets(f)) - ISMesh::get_nodes(f);
-            auto nodes = ISMesh::get_nodes(f);
+            is_mesh::SimplexSet<node_key> apices = get_nodes(get_tets(f)) - get_nodes(f);
+            is_mesh::SimplexSet<node_key> nodes = get_nodes(f);
             this->orient_cc(apices[0], nodes);
             
             real q_01_new, q_01_old, q_12_new, q_12_old, q_20_new, q_20_old;
@@ -1873,7 +1873,7 @@ namespace DSC {
          * Check if the sequence of vertices in polygon is consistent with positive orientation of tetrahedra in the mesh
          * with respect to the ordered pair of vertices in vv. If not, reverse the order of vertices in polygon.
          */
-        void check_consistency(const std::vector<vec3> & vv, std::vector<node_key> & polygon)
+        void check_consistency(const std::vector<vec3> & vv, is_mesh::SimplexSet<node_key> & polygon)
         {
             unsigned int n = static_cast<unsigned int>(polygon.size());
             std::vector<vec3> vp(n);
