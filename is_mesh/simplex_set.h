@@ -33,6 +33,21 @@ namespace is_mesh
             return std::find(this->begin(), this->end(), k) != this->end();
         }
         
+        void push_front(const key_type& k)
+        {
+            this->insert(this->begin(), k);
+        }
+        
+        void push_back(const key_type& k)
+        {
+            this->insert(this->end(), k);
+        }
+        
+        void swap(int i = 0, int j = 1)
+        {
+            std::swap((*this)[i], (*this)[j]);
+        }
+        
         SimplexSet<key_type>& operator+=(const SimplexSet<key_type>& set)
         {
             for (auto &k : set) {

@@ -419,7 +419,7 @@ namespace DSC {
                 next_nid = get_next(polygon.back(), eids);
                 if(next_nid.is_valid() && !polygon.contains(next_nid))
                 {
-                    polygon.insert(polygon.end(), next_nid);
+                    polygon.push_back(next_nid);
                 }
             } while(next_nid.is_valid());
             
@@ -427,7 +427,7 @@ namespace DSC {
                 next_nid = get_next(polygon.front(), eids);
                 if(next_nid.is_valid() && !polygon.contains(next_nid))
                 {
-                    polygon.insert(polygon.begin(), next_nid);
+                    polygon.push_front(next_nid);
                 }
             } while(next_nid.is_valid());
             return polygon;
@@ -1893,9 +1893,7 @@ namespace DSC {
             {
                 for (unsigned int i = 0; i < n/2; ++i)
                 {
-                    node_key temp = polygon[i];
-                    polygon[i] = polygon[n-1-i];
-                    polygon[n-1-i] = temp;
+                    polygon.swap(i, n-1-i);
                 }
             }
         }

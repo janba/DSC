@@ -658,7 +658,7 @@ namespace is_mesh {
         {
             if(is_clockwise_order(nid, nids))
             {
-                std::swap(nids[0], nids[2]);
+                nids.swap();
             }
         }
         
