@@ -268,6 +268,15 @@ namespace DSC {
             return get(nid).get_pos();
         }
         
+        std::vector<vec3> get_dest(const is_mesh::SimplexSet<node_key>& nids)
+        {
+            std::vector<vec3> verts;
+            for (auto n : nids) {
+                verts.push_back(get_dest(n));
+            }
+            return verts;
+        }
+        
         /// Returns the destinations of the nodes of edge e.
         std::vector<vec3> get_dest(const edge_key & e)
         {

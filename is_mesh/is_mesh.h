@@ -375,48 +375,19 @@ namespace is_mesh {
         }
         
         // Getters for getting the boundary of a boundary etc.
-        SimplexSet<NodeKey> get_sorted_nodes(const FaceKey& fid)
-        {
-            SimplexSet<NodeKey> nids;
-            orient_nodes(fid);
-            for (auto e : get_edges(fid)) {
-                nids += get_nodes(e)[0];
-            }
-            return nids;
-        }
-        
         SimplexSet<NodeKey> get_sorted_nodes(const TetrahedronKey& tid)
         {
-            const SimplexSet<FaceKey>& fids = get_faces(tid);
-            orient_edges(tid, fids[0]);
-            SimplexSet<NodeKey> nids = get_sorted_nodes(fids[0]);
-            nids += get_nodes(fids[1]);
-            assert(nids.size() == 4);
-            return nids;
-        }
-        
-        SimplexSet<EdgeKey> get_sorted_edges(const TetrahedronKey& tid)
-        {
-            SimplexSet<EdgeKey> eids;
-            for(auto f : get_faces(tid))
-            {
-                orient(tid, f);
-                SimplexSet<EdgeKey> f_eids = get_edges(f);
-                if(eids.size() == 0)
-                {
-                    eids += f_eids;
-                }
-                else {
-                    for(int i = 0; i < 3; i++)
-                    {
-                        if(eids.contains(f_eids[i]))
-                        {
-                            eids += f_eids[(i+1)%3];
-                        }
-                    }
-                }
+            SimplexSet<NodeKey> nids;
+            SimplexSet<FaceKey> fids = get_faces(tid);
+            FaceKey fid = fids[0];
+            SimplexSet<NodeKey> f_nids = get_nodes(fid);
+            fids -= fid;
+            for (int i = 0; i < 3; i++) {
+                EdgeKey eid = get_edge(fids[i], fids[(i+1)%3]);
+                nids += get_nodes(eid) & f_nids;
             }
-            return eids;
+            nids += get_nodes(tid) - f_nids;
+            return nids;
         }
         
         SimplexSet<NodeKey> get_nodes(const FaceKey& fid)
