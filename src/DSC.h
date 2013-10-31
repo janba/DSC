@@ -2039,32 +2039,12 @@ namespace DSC {
          */
         real cos_dihedral_angle(const face_key& f1, const face_key& f2)
         {
-            auto nodes = ISMesh::get_nodes(f1);
-            auto temp = ISMesh::get_nodes(f2);
-            nodes.insert(nodes.end(), temp.begin(), temp.end());
+            auto nids1 = ISMesh::get_nodes(f1);
+            auto nids2 = ISMesh::get_nodes(f2);
+            is_mesh::SimplexSet<node_key> nids = nids1 & nids2;
+            is_mesh::SimplexSet<node_key> apices = (nids1 + nids2) - nids;
             
-            std::vector<vec3> verts, apices;
-            for(int i = 0; i < nodes.size(); i++)
-            {
-                bool found = false;
-                for (int j = 0; j < nodes.size(); j++)
-                {
-                    if(i != j && nodes[i] == nodes[j])
-                    {
-                        if(i < j)
-                        {
-                            verts.push_back(ISMesh::get_pos(nodes[i]));
-                        }
-                        found = true;
-                    }
-                }
-                if(!found)
-                {
-                    apices.push_back(ISMesh::get_pos(nodes[i]));
-                }
-            }
-            
-            return Util::cos_dihedral_angle<real>(verts[0], verts[1], apices[0], apices[1]);
+            return Util::cos_dihedral_angle<real>(get_pos(nids[0]), get_pos(nids[1]), get_pos(apices[0]), get_pos(apices[1]));
         }
         
         /**
