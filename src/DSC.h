@@ -259,6 +259,7 @@ namespace DSC {
         }
         
     public:
+        /// Returns the destination of the node with id nid.
         vec3 get_dest(const node_key& nid)
         {
             if(is_movable(nid))
@@ -268,47 +269,12 @@ namespace DSC {
             return get(nid).get_pos();
         }
         
+        /// Returns the destinations of the nodes in the simplex set.
         std::vector<vec3> get_dest(const is_mesh::SimplexSet<node_key>& nids)
         {
             std::vector<vec3> verts;
             for (auto n : nids) {
                 verts.push_back(get_dest(n));
-            }
-            return verts;
-        }
-        
-        /// Returns the destinations of the nodes of edge e.
-        std::vector<vec3> get_dest(const edge_key & e)
-        {
-            std::vector<vec3> verts(2);
-            auto nodes = ISMesh::get_nodes(e);
-            for (int k = 0; k < 2; ++k)
-            {
-                verts[k] = get_dest(nodes[k]);
-            }
-            return verts;
-        }
-        
-        /// Returns the destinations of the nodes of face f.
-        std::vector<vec3> get_dest(const face_key & f)
-        {
-            std::vector<vec3> verts(3);
-            auto nodes = ISMesh::get_nodes(f);
-            for (int k = 0; k < 3; ++k)
-            {
-                verts[k] = get_dest(nodes[k]);
-            }
-            return verts;
-        }
-        
-        /// Returns the destinations of the nodes of tetrahedron t.
-        std::vector<vec3> get_dest(const tet_key& t)
-        {
-            std::vector<vec3> verts(4);
-            auto nodes = ISMesh::get_nodes(t);
-            for (int k = 0; k < 4; ++k)
-            {
-                verts[k] = get_dest(nodes[k]);
             }
             return verts;
         }
@@ -1542,7 +1508,7 @@ namespace DSC {
             vec3 destination = pos;
             if(get(eid).is_interface())
             {
-                auto dests = get_dest(eid);
+                auto dests = get_dest(get_nodes(eid));
                 destination = Util::barycenter(dests[0], dests[1]);
             }
             
@@ -1753,7 +1719,7 @@ namespace DSC {
         
         real area_destination(const face_key& fid)
         {
-            auto dests = get_dest(fid);
+            auto dests = get_dest(get_nodes(fid));
             return Util::area<real>(dests[0], dests[1], dests[2]);
         }
         
@@ -1765,7 +1731,7 @@ namespace DSC {
         
         real volume_destination(const tet_key& tid)
         {
-            auto dests = get_dest(tid);
+            auto dests = get_dest(get_nodes(tid));
             return Util::volume<real>(dests[0], dests[1], dests[2], dests[3]);
         }
         
