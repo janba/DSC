@@ -390,6 +390,39 @@ namespace is_mesh {
             return nids;
         }
         
+        SimplexSet<NodeKey> get_sorted_nodes(const FaceKey& fid, const TetrahedronKey& tid)
+        {
+            SimplexSet<NodeKey> nids = get_nodes(fid);
+            NodeKey apex = (get_nodes(tid) - nids).front();
+            orient_cc(apex, nids);
+            return nids;
+        }
+        
+        SimplexSet<NodeKey> get_sorted_nodes(const FaceKey& fid)
+        {
+            if (get(fid).is_interface())
+            {
+                int label = -100;
+                TetrahedronKey tid;
+                for (auto t : get_tets(fid))
+                {
+                    int tl = get_label(t);
+                    if (tl > label)
+                    {
+                        label = tl;
+                        tid = t;
+                    }
+                }
+                return get_sorted_nodes(fid, tid);
+            }
+            else if (get(fid).is_boundary())
+            {
+                TetrahedronKey tid = get_tets(fid).front();
+                return get_sorted_nodes(fid, tid);
+            }
+            return get_nodes(fid);
+        }
+        
         SimplexSet<NodeKey> get_nodes(const FaceKey& fid)
         {
             return get_nodes(get_edges(fid));
@@ -616,97 +649,6 @@ namespace is_mesh {
             assert(val != 0.);
 #endif
             return val > 0.;
-        }
-        
-        void orient_nodes(const FaceKey& fid)
-        {
-            SimplexSet<EdgeKey> eids = get_edges(fid);
-            
-            for(int i = 0; i < eids.size(); i++)
-            {
-                EdgeKey eid = eids[i];
-                NodeKey nid = get_node(eid, eids[(i+1)%eids.size()]);
-                if(get_nodes(eid)[1] != nid)
-                {
-                    get(eid).invert_boundary_orientation();
-                }
-            }
-        }
-        
-        template<typename key_type>
-        bool is_same_orientation(const SimplexSet<key_type>& keys1, const SimplexSet<key_type>& keys2)
-        {
-            for (int i = 0; i < keys2.size(); i++) {
-                if(keys2[i] == keys1[0])
-                {
-                    return keys2[(i+1)%keys2.size()] == keys1[1];
-                }
-            }
-            assert(false);
-            return false;
-        }
-        
-        /**
-         * Ensures a counter clockwise orientation of the edges of the face fid seen from the tetrahedron tid.
-         */
-        void orient_edges(const TetrahedronKey& tid, const FaceKey& fid)
-        {
-            SimplexSet<EdgeKey> eids = get_edges(fid);
-            SimplexSet<EdgeKey> new_eids;
-            
-            int f_index, i = 0;
-            for(auto f : get_faces(tid))
-            {
-                if(f != fid)
-                {
-                    new_eids += get_edge(f, fid);
-                }
-                else {
-                    f_index = i;
-                }
-                i++;
-            }
-            bool same_orientation = is_same_orientation(eids, new_eids);
-            if ((same_orientation && f_index%2 == 1) || (!same_orientation && f_index%2 == 0))
-            {
-                get(fid).invert_boundary_orientation();
-            }
-        }
-        
-        /**
-         * Ensures a counter clockwise orientation of the edges and nodes of the face fid seen from the tetrahedron tid.
-         */
-        void orient_nodes(const TetrahedronKey& tid, const FaceKey& fid)
-        {
-            orient_edges(tid, fid);
-            orient_nodes(fid);
-        }
-        
-    public:
-        /**
-         * Ensures consistent orientation of the nodes of face fid if fid is an interface or boundary face.
-         */
-        void orient_face(const FaceKey& fid)
-        {
-            if (get(fid).is_interface())
-            {
-                int label = -100;
-                TetrahedronKey tid;
-                for (auto t : get_tets(fid))
-                {
-                    int tl = get_label(t);
-                    if (tl > label)
-                    {
-                        label = tl;
-                        tid = t;
-                    }
-                }
-                orient_nodes(tid, fid);
-            }
-            else if (get(fid).is_boundary())
-            {
-                orient_nodes(get_tets(fid).front(), fid);
-            }
         }
         
         /*

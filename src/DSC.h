@@ -1638,8 +1638,7 @@ namespace DSC {
          */
         vec3 get_normal(const face_key& fid)
         {
-            ISMesh::orient_face(fid);
-            auto pos = ISMesh::get_pos(ISMesh::get_nodes(fid));
+            auto pos = ISMesh::get_pos(ISMesh::get_sorted_nodes(fid));
             return Util::normal_direction(pos[0], pos[1], pos[2]);
         }
         
@@ -1999,8 +1998,7 @@ namespace DSC {
             {
                 if (fit->is_interface())
                 {
-                    ISMesh::orient_face(fit.key());
-                    auto nodes = ISMesh::get_nodes(fit.key());
+                    auto nodes = get_sorted_nodes(fit.key());
                     
                     indices.push_back(vert_index[nodes[0]]);
                     indices.push_back(vert_index[nodes[1]]);
