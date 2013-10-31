@@ -29,26 +29,36 @@ namespace is_mesh
     template<typename boundary_key_type, typename co_boundary_key_type>
     class Simplex
     {
-        SimplexSet<boundary_key_type>* m_boundary = new SimplexSet<boundary_key_type>();
-        SimplexSet<co_boundary_key_type>* m_co_boundary = new SimplexSet<co_boundary_key_type>();
+        SimplexSet<boundary_key_type>* m_boundary = nullptr;
+        SimplexSet<co_boundary_key_type>* m_co_boundary = nullptr;
+        
+        Simplex(const Simplex& s);
     public:
         
         Simplex()
         {
-            
+            m_boundary = new SimplexSet<boundary_key_type>();
+            m_co_boundary = new SimplexSet<co_boundary_key_type>();
+        }
+        
+        Simplex(Simplex&& s)
+        {
+            m_boundary = s.m_boundary;
+            m_co_boundary = s.m_co_boundary;
+            s.m_boundary = nullptr;
+            s.m_co_boundary = nullptr;
         }
         
         ~Simplex()
         {
-            delete m_boundary;
-            delete m_co_boundary;
-        }
-        
-        //copy constructor - needed because simplices are stored in STL-like containers, ie. the kernel.
-        Simplex(const Simplex& s) : Simplex()
-        {
-            std::copy(s.m_boundary->begin(), s.m_boundary->end(), m_boundary->begin());
-            std::copy(s.m_co_boundary->begin(), s.m_co_boundary->end(), m_co_boundary->begin());
+            if(m_boundary)
+            {
+                delete m_boundary;
+            }
+            if(m_co_boundary)
+            {
+                delete m_co_boundary;
+            }
         }
         
     public:
@@ -74,21 +84,17 @@ namespace is_mesh
         
         void remove_co_face(const co_boundary_key_type& key)
         {
-            auto iter = std::find(m_co_boundary->begin(), m_co_boundary->end(), key);
-            assert(iter != m_co_boundary->end());
-            m_co_boundary->erase(iter);
+            *m_co_boundary -= key;
         }
         
         void remove_face(const boundary_key_type& key)
         {
-            auto iter = std::find(m_boundary->begin(), m_boundary->end(), key);
-            assert(iter != m_boundary->end());
-            m_boundary->erase(iter);
+            *m_boundary -= key;
         }
         
         void invert_boundary_orientation()
         {
-            std::swap((*m_boundary)[0], (*m_boundary)[1]);
+            m_boundary->swap();
         }
     };
     
