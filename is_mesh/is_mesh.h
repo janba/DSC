@@ -590,10 +590,10 @@ namespace is_mesh {
          */
         std::vector<typename node_traits::vec3> get_pos(const SimplexSet<NodeKey>& nids)
         {
-            std::vector<typename node_traits::vec3> verts;
-            for (auto n : nids)
+            std::vector<typename node_traits::vec3> verts(nids.size());
+            for (int i = 0; i < nids.size(); i++)
             {
-                verts.push_back(get_pos(n));
+                verts[i] = get_pos(nids[i]);
             }
             return verts;
         }
@@ -670,13 +670,9 @@ namespace is_mesh {
          */
         bool is_inverted(const TetrahedronKey& tid)
         {
-            auto nodes = get_sorted_nodes(tid);
-            std::vector<typename node_traits::vec3> verts;
-            for(auto &n : nodes)
-            {
-                verts.push_back(get(n).get_pos());
-            }
-            return dot(verts[0]-verts[3], cross(verts[1]-verts[3], verts[2]-verts[3])) < 0.;
+            auto nids = get_sorted_nodes(tid);
+            auto p = get_pos(nids[3]);
+            return dot(get_pos(nids[0]) - p, cross(get_pos(nids[1]) - p, get_pos(nids[2]) - p)) < 0.;
         }
         
         ////////////////////

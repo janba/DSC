@@ -1737,62 +1737,62 @@ namespace DSC {
         
         real length(const edge_key& eid)
         {
-            auto verts = ISMesh::get_pos(ISMesh::get_nodes(eid));
-            return Util::length(verts[0] - verts[1]);
+            is_mesh::SimplexSet<node_key> nids = get_nodes(eid);
+            return Util::length(get_pos(nids[0]) - get_pos(nids[1]));
         }
         
         real length_destination(const edge_key& eid)
         {
-            auto dests = get_dest(eid);
-            return Util::length(dests[0] - dests[1]);
+            is_mesh::SimplexSet<node_key> nids = get_nodes(eid);
+            return Util::length(get_dest(nids[0]) - get_dest(nids[1]));
         }
         
         real area(const face_key& fid)
         {
-            auto verts = ISMesh::get_pos(get_nodes(fid));
-            return Util::area<real>(verts[0], verts[1], verts[2]);
+            is_mesh::SimplexSet<node_key> nids = get_nodes(fid);
+            return Util::area<real>(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]));
         }
         
         real area_destination(const face_key& fid)
         {
-            auto dests = get_dest(get_nodes(fid));
-            return Util::area<real>(dests[0], dests[1], dests[2]);
+            is_mesh::SimplexSet<node_key> nids = get_nodes(fid);
+            return Util::area<real>(get_dest(nids[0]), get_dest(nids[1]), get_dest(nids[2]));
         }
         
         real volume(const tet_key& tid)
         {
-            auto verts = ISMesh::get_pos(get_nodes(tid));
-            return Util::volume<real>(verts[0], verts[1], verts[2], verts[3]);
+            is_mesh::SimplexSet<node_key> nids = get_nodes(tid);
+            return Util::volume<real>(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]), get_pos(nids[3]));
         }
         
         real volume_destination(const tet_key& tid)
         {
-            auto dests = get_dest(get_nodes(tid));
-            return Util::volume<real>(dests[0], dests[1], dests[2], dests[3]);
+            is_mesh::SimplexSet<node_key> nids = get_nodes(tid);
+            return Util::volume<real>(get_dest(nids[0]), get_dest(nids[1]), get_dest(nids[2]), get_dest(nids[3]));
         }
         
         real quality(const tet_key& tid)
         {
-            auto verts = get_pos(get_nodes(tid));
-            return std::abs(Util::quality<real>(verts[0], verts[1], verts[2], verts[3]));
+            is_mesh::SimplexSet<node_key> nids = get_nodes(tid);
+            return std::abs(Util::quality<real>(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]), get_pos(nids[3])));
         }
         
-        real min_angle(const face_key& f)
+        real min_angle(const face_key& fid)
         {
-            auto verts = get_pos(get_nodes(f));
-            return Util::min_angle<real>(verts[0], verts[1], verts[2]);
+            is_mesh::SimplexSet<node_key> nids = get_nodes(fid);
+            return Util::min_angle<real>(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]));
         }
         
-        real max_angle(const face_key& f)
+        real max_angle(const face_key& fid)
         {
-            auto verts = get_pos(get_nodes(f));
-            return Util::max_angle<real>(verts[0], verts[1], verts[2]);
+            is_mesh::SimplexSet<node_key> nids = get_nodes(fid);
+            return Util::max_angle<real>(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]));
         }
         
         real quality(const face_key& fid)
         {
-            auto verts = get_pos(get_nodes(fid));
-            auto angles = Util::cos_angles<real>(verts[0], verts[1], verts[2]);
+            is_mesh::SimplexSet<node_key> nids = get_nodes(fid);
+            auto angles = Util::cos_angles<real>(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]));
             real worst_a;
             for(auto a : angles)
             {
