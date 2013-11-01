@@ -377,15 +377,12 @@ namespace is_mesh {
         // Getters for getting the boundary of a boundary etc.
         SimplexSet<NodeKey> get_sorted_nodes(const TetrahedronKey& tid)
         {
-            SimplexSet<NodeKey> nids;
-            SimplexSet<FaceKey> fids = get_faces(tid);
+            const SimplexSet<FaceKey>& fids = get_faces(tid);
             EdgeKey eid1 = get_edge(fids[0], fids[1]);
             EdgeKey eid2 = get_edge(fids[0], fids[2]);
             EdgeKey eid3 = get_edge(fids[0], fids[3]);
             
-            nids += get_node(eid1, eid2);
-            nids += get_node(eid2, eid3);
-            nids += get_node(eid3, eid1);
+            SimplexSet<NodeKey> nids = {get_node(eid1, eid2), get_node(eid2, eid3), get_node(eid3, eid1)};
             nids += get_nodes(fids[1]);
             return nids;
         }
@@ -425,12 +422,18 @@ namespace is_mesh {
         
         SimplexSet<NodeKey> get_nodes(const FaceKey& fid)
         {
-            return get_nodes(get_edges(fid));
+            const SimplexSet<EdgeKey>& eids = get_edges(fid);
+            SimplexSet<NodeKey> nids = get_nodes(eids[0]);
+            nids += get_nodes(eids[1]);
+            return nids;
         }
         
         SimplexSet<NodeKey> get_nodes(const TetrahedronKey& tid)
         {
-            return get_nodes(get_edges(get_faces(tid)));
+            const SimplexSet<FaceKey>& fids = get_faces(tid);
+            SimplexSet<NodeKey> nids = get_nodes(fids[0]);
+            nids += get_nodes(fids[1]);
+            return nids;
         }
         
         SimplexSet<EdgeKey> get_edges(const TetrahedronKey& tid)
