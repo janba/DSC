@@ -91,10 +91,6 @@ namespace is_mesh
         
         const key_type& operator[](int i) const
         {
-#ifdef DEBUG
-            assert(set);
-            assert(size() > i);
-#endif
             return set->at(i);
         }
         
@@ -110,7 +106,12 @@ namespace is_mesh
         
         void push_back(const key_type& k)
         {
-            set->insert(end(), k);
+            set->push_back(k);
+        }
+        
+        void push_back(key_type&& k)
+        {
+            set->push_back(std::move(k));
         }
         
         void swap(int i = 0, int j = 1)
@@ -118,10 +119,18 @@ namespace is_mesh
             std::swap((*set)[i], (*set)[j]);
         }
         
-        SimplexSet<key_type>& operator+=(const SimplexSet<key_type>& set)
+        SimplexSet<key_type>& operator+=(const SimplexSet<key_type>& ss)
         {
-            for (auto &k : set) {
+            for (const key_type& k : ss) {
                 *this += k;
+            }
+            return *this;
+        }
+        
+        SimplexSet<key_type>& operator+=(SimplexSet<key_type>&& ss)
+        {
+            for (key_type& k : *ss.set) {
+                *this += std::move(k);
             }
             return *this;
         }

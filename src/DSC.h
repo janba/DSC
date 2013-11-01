@@ -455,10 +455,10 @@ namespace DSC {
             }
             
             std::vector<is_mesh::SimplexSet<node_key>> polygons;
-            is_mesh::SimplexSet<edge_key> m_eids = ISMesh::get_edges(ISMesh::get_faces(eid));
+            is_mesh::SimplexSet<edge_key> m_eids = get_edges(get_faces(eid));
             for(auto& tids : tid_groups)
             {
-                is_mesh::SimplexSet<edge_key> eids = ISMesh::get_edges(tids) - m_eids;
+                is_mesh::SimplexSet<edge_key> eids = get_edges(tids) - m_eids;
                 is_mesh::SimplexSet<node_key> polygon = get_polygon(eids);
                 check_consistency(ISMesh::get_pos(get_nodes(eid)), polygon);
                 polygons.push_back(polygon);
