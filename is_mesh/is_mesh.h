@@ -379,14 +379,14 @@ namespace is_mesh {
         {
             SimplexSet<NodeKey> nids;
             SimplexSet<FaceKey> fids = get_faces(tid);
-            FaceKey fid = fids[0];
-            SimplexSet<NodeKey> f_nids = get_nodes(fid);
-            fids -= fid;
-            for (int i = 0; i < 3; i++) {
-                EdgeKey eid = get_edge(fids[i], fids[(i+1)%3]);
-                nids += get_nodes(eid) & f_nids;
-            }
-            nids += get_nodes(tid) - f_nids;
+            EdgeKey eid1 = get_edge(fids[0], fids[1]);
+            EdgeKey eid2 = get_edge(fids[0], fids[2]);
+            EdgeKey eid3 = get_edge(fids[0], fids[3]);
+            
+            nids += get_node(eid1, eid2);
+            nids += get_node(eid2, eid3);
+            nids += get_node(eid3, eid1);
+            nids += get_nodes(fids[1]);
             return nids;
         }
         
