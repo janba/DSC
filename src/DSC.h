@@ -105,7 +105,7 @@ namespace DSC {
             
             real vol_avg = AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*sqrt(2.)/12.;
             MIN_VOLUME = 0.5*vol_avg;
-            MAX_VOLUME = 10.*vol_avg;
+            MAX_VOLUME = INFINITY;
             
             //        fix_complex();
             //        resize_complex();
@@ -1299,19 +1299,15 @@ namespace DSC {
         
         void fix_complex()
         {
-            std::cout << "Smooth." << std::endl;
             smooth();
             
-            std::cout << "Topological removals." << std::endl;
             topological_edge_removal();
             topological_face_removal();
             
-//            std::cout << "Low quality removal." << std::endl;
 //            remove_tets();
 //            remove_faces();
 //            remove_edges();
             
-            std::cout << "Degeneracy removal." << std::endl;
             remove_degenerate_tets();
             remove_degenerate_faces();
             remove_degenerate_edges();
@@ -1319,17 +1315,13 @@ namespace DSC {
         
         void resize_complex()
         {
-            std::cout << "Thickening interface pass." << std::endl;
             thickening_interface();
             
-//            std::cout << "Thinning interface pass." << std::endl;
 //            thinning_interface();
             
-//            std::cout << "Thickening pass." << std::endl;
-//            thickening();
+            thickening();
             
-//            std::cout << "Thinning pass." << std::endl;
-//            thinning();
+            thinning();
             
             fix_complex();
         }
