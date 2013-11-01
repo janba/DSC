@@ -784,6 +784,11 @@ namespace DSC {
          */
         void thickening_interface()
         {
+            if(MAX_LENGTH == INFINITY)
+            {
+                return;
+            }
+            
             std::vector<edge_key> edges;
             for (auto eit = ISMesh::edges_begin(); eit != ISMesh::edges_end(); eit++)
             {
@@ -813,6 +818,11 @@ namespace DSC {
          */
         void thickening()
         {
+            if(MAX_VOLUME == INFINITY)
+            {
+                return;
+            }
+            
             std::vector<tet_key> tetrahedra;
             for (auto tit = ISMesh::tetrahedra_begin(); tit != ISMesh::tetrahedra_end(); tit++)
             {
@@ -839,11 +849,48 @@ namespace DSC {
         //////////////
         // THINNING //
         //////////////
+        
+        void thinning_interface()
+        {
+            if(MIN_LENGTH < 0.)
+            {
+                return;
+            }
+            
+            std::vector<edge_key> edges;
+            for (auto eit = ISMesh::edges_begin(); eit != ISMesh::edges_end(); eit++)
+            {
+                if (is_unsafe_editable(eit.key()) && eit->is_interface() && length(eit.key()) < MIN_LENGTH)
+                {
+                    edges.push_back(eit.key());
+                }
+            }
+            int i = 0, j = 0;
+            for(auto &e : edges)
+            {
+                if (is_unsafe_editable(e) && get(e).is_interface() && length(e) < MIN_LENGTH)
+                {
+                    node_key nid = collapse(e, false);
+                    if(nid.is_valid())
+                    {
+                        i++;
+                    }
+                    j++;
+                }
+            }
+            std::cout << "Thinning interface splits: " << i << "/" << j << std::endl;
+        }
+        
         /**
          * Collapses all edges which is shorter than MIN_EDGE_LENGTH. However, the collapse is only performed if it does not alter the interface and it improves the minimum quality of the tetrahedra in the star of the edge.
          */
         void thinning()
         {
+            if(MIN_VOLUME < 0.)
+            {
+                return;
+            }
+            
             std::vector<tet_key> tetrahedra;
             for (auto tit = ISMesh::tetrahedra_begin(); tit != ISMesh::tetrahedra_end(); tit++)
             {
@@ -1317,7 +1364,7 @@ namespace DSC {
         {
             thickening_interface();
             
-//            thinning_interface();
+            thinning_interface();
             
             thickening();
             
