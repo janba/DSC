@@ -1176,7 +1176,7 @@ namespace is_mesh {
                 
         void validity_check()
         {
-            std::cout << "Testing validity of simplicial complex: ";
+            std::cout << "Testing connectivity of simplicial complex: ";
             for(auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
                 assert(exists(tit.key()));
@@ -1220,7 +1220,33 @@ namespace is_mesh {
                 assert(get_edges(tit.key()).size() == 6);
                 assert(get_nodes(tit.key()).size() == 4);
             }
+            std::cout << "PASSED" << std::endl;
             
+            std::cout << "Testing for inverted tetrahedra: ";
+            for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
+            {
+                assert(!is_inverted(tit.key()));
+            }
+            std::cout << "PASSED" << std::endl;
+            
+            std::cout << "Testing for corrupted interface or boundary: ";
+            for (auto eit = edges_begin(); eit != edges_end(); eit++)
+            {
+                int boundary = 0;
+                int interface = 0;
+                for (auto f : get_faces(eit.key())) {
+                    if(get(f).is_boundary())
+                    {
+                        boundary++;
+                    }
+                    if(get(f).is_interface())
+                    {
+                        interface++;
+                    }
+                }
+                assert((eit->is_interface() && interface >= 2) || (!eit->is_interface() && interface == 0)); // Check that the interface is not corrupted
+                assert((eit->is_boundary() && boundary == 2) || (!eit->is_boundary() && boundary == 0)); // Check that the boundary is not corrupted
+            }
             std::cout << "PASSED" << std::endl;
         }
     };

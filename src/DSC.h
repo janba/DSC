@@ -1314,8 +1314,6 @@ namespace DSC {
             remove_degenerate_tets();
             remove_degenerate_faces();
             remove_degenerate_edges();
-            
-            validity_check();
         }
         
         void resize_complex()
@@ -1332,7 +1330,6 @@ namespace DSC {
 //            std::cout << "Thinning pass." << std::endl;
 //            thinning();
             
-            validity_check();
             fix_complex();
         }
         
@@ -1367,7 +1364,6 @@ namespace DSC {
                     }
                 }
                 std::cout << "Vertices missing to be moved: " << missing <<"/" << movable << std::endl;
-                validity_check();
                 
                 fix_complex();
                 
@@ -1378,6 +1374,7 @@ namespace DSC {
             
             ISMesh::garbage_collect();
             update_attributes();
+            ISMesh::validity_check();
         }
         
     private:
@@ -1898,19 +1895,6 @@ namespace DSC {
             }
         }
         
-        /// Check whether they are any inverted tetrahedra in the simplicial complex.
-        bool simplicial_complex_criterion_check()
-        {
-            for (auto tit = ISMesh::tetrahedra_begin(); tit != ISMesh::tetrahedra_end(); tit++)
-            {
-                if (ISMesh::is_inverted(tit.key()))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-        
         /**
          * Returns whether any of the tetrahedra in the simplex set is inverted.
          */
@@ -1924,52 +1908,6 @@ namespace DSC {
                 }
             }
             return false;
-        }
-        
-        void validity_check()
-        {
-            bool valid = simplicial_complex_criterion_check();
-            assert(valid);
-            for (auto tit = ISMesh::tetrahedra_begin(); tit != ISMesh::tetrahedra_end(); tit++)
-            {
-                valid = valid & ISMesh::exists(tit.key());
-            }
-            assert(valid);
-            
-            for (auto fit = ISMesh::faces_begin(); fit != ISMesh::faces_end(); fit++)
-            {
-                valid = valid & ISMesh::exists(fit.key());
-            }
-            assert(valid);
-            
-            for (auto nit = ISMesh::nodes_begin(); nit != ISMesh::nodes_end(); nit++)
-            {
-                valid = valid & ISMesh::exists(nit.key());
-                valid = valid & !(nit->is_interface() && nit->is_boundary()); // Check that the interface has not reached the boundary
-            }
-            assert(valid);
-            
-            for (auto eit = ISMesh::edges_begin(); eit != ISMesh::edges_end(); eit++)
-            {
-                valid = valid & ISMesh::exists(eit.key());
-                int boundary = 0;
-                int interface = 0;
-                for (auto f : ISMesh::get_faces(eit.key())) {
-                    if(get(f).is_boundary())
-                    {
-                        boundary++;
-                    }
-                    if(get(f).is_interface())
-                    {
-                        interface++;
-                    }
-                }
-                valid = valid & ((eit->is_interface() && interface >= 2) || (!eit->is_interface() && interface == 0)); // Check that the interface is not corrupted
-                assert(valid);
-                valid = valid & ((eit->is_boundary() && boundary == 2) || (!eit->is_boundary() && boundary == 0)); // Check that the boundary is not corrupted
-                assert(valid);
-            }
-            assert(valid);
         }
         
         ////////////////////////
@@ -2270,7 +2208,6 @@ namespace DSC {
             std::cout << " DONE" << std::endl;
             ISMesh::garbage_collect();
             ISMesh::validity_check();
-            validity_check();
         }
         
         void test_flip23_flip32()
@@ -2330,7 +2267,6 @@ namespace DSC {
             std::cout << " DONE" << std::endl;
             ISMesh::garbage_collect();
             ISMesh::validity_check();
-            validity_check();
         }
         
         void test_flip44()
@@ -2390,7 +2326,6 @@ namespace DSC {
             std::cout << " DONE" << std::endl;
             ISMesh::garbage_collect();
             ISMesh::validity_check();
-            validity_check();
         }
         
         void test_flip22()
@@ -2442,7 +2377,6 @@ namespace DSC {
             std::cout << " DONE" << std::endl;
             ISMesh::garbage_collect();
             ISMesh::validity_check();
-            validity_check();
         }
         
     };
