@@ -826,7 +826,7 @@ namespace DSC {
             {
                 if (ISMesh::exists(t) && volume(t) > MAX_VOLUME)
                 {
-                    if(split(t) != ISMesh::NULL_NODE)
+                    if(split(t).is_valid())
                     {
                         i++;
                     }
@@ -984,7 +984,7 @@ namespace DSC {
             {
                 if(ISMesh::exists(e) && quality(e) < MIN_EDGE_QUALITY)
                 {
-                    if(collapse(e) != ISMesh::NULL_NODE)
+                    if(collapse(e).is_valid())
                     {
                         i++;
                     }
@@ -1006,15 +1006,15 @@ namespace DSC {
             // Find apex
             node_key apex = (ISMesh::get_nodes(fid) - ISMesh::get_nodes(eid)).front();
             // Find the projected position of the apex
-            auto verts = ISMesh::get_pos(eid);
-            vec3 p = Util::project(ISMesh::get_pos(apex), verts[0], verts[1]);
+            auto verts = get_pos(get_nodes(eid));
+            vec3 p = Util::project(get_pos(apex), verts[0], verts[1]);
             
             // Split longest edge
             node_key n = ISMesh::split(eid, p, p);
             
             // Collapse new edge
             edge_key e_rem = ISMesh::get_edge(apex, n);
-            return collapse(e_rem) != ISMesh::NULL_NODE;
+            return collapse(e_rem).is_valid();
         }
         
         /**
@@ -1026,7 +1026,7 @@ namespace DSC {
             edge_key e = shortest_edge(ISMesh::get_edges(fid));
             
             // Remove edge
-            return collapse(e) != ISMesh::NULL_NODE;
+            return collapse(e).is_valid();
         }
         
         /**
@@ -1078,7 +1078,7 @@ namespace DSC {
          */
         bool remove_sliver(const tet_key& tid)
         {
-            is_mesh::SimplexSet<edge_key> eids = ISMesh::get_edges(tid);
+            is_mesh::SimplexSet<edge_key> eids = get_edges(tid);
             edge_key e1 = longest_edge(eids);
             eids -= e1;
             edge_key e2 = longest_edge(eids);
@@ -1087,7 +1087,7 @@ namespace DSC {
             node_key n2 = split(e2);
             
             edge_key e = ISMesh::get_edge(n1, n2);
-            return collapse(e) != ISMesh::NULL_NODE;
+            return collapse(e).is_valid();
         }
         
         /**
@@ -1100,11 +1100,11 @@ namespace DSC {
             face_key fid = largest_face(ISMesh::get_faces(tid));
             
             // Find the apex
-            node_key apex = ISMesh::get_nodes(tid) - ISMesh::get_nodes(fid);
+            node_key apex = (get_nodes(tid) - get_nodes(fid)).front();
             
             // Project the apex
-            auto verts = ISMesh::get_pos(fid);
-            vec3 p = Util::project(ISMesh::get_pos(apex), verts);
+            auto verts = ISMesh::get_pos(get_nodes(fid));
+            vec3 p = Util::project(ISMesh::get_pos(apex), verts[0], verts[1], verts[2]);
             
             // Split the face
             node_key n = ISMesh::split(fid, p, p);
@@ -1124,7 +1124,7 @@ namespace DSC {
             while(eids.size() > 2)
             {
                 edge_key e = shortest_edge(eids);
-                if(collapse(e) != ISMesh::NULL_NODE)
+                if(collapse(e).is_valid())
                 {
                     return true;
                 }
@@ -1155,7 +1155,7 @@ namespace DSC {
             while(eids.size() > 1)
             {
                 edge_key e = shortest_edge(eids);
-                if(collapse(e) != ISMesh::NULL_NODE)
+                if(collapse(e).is_valid())
                 {
                     return true;
                 }
@@ -1174,15 +1174,16 @@ namespace DSC {
         bool remove_tet(const tet_key& tid)
         {
             // Find the largest face
-            is_mesh::SimplexSet<edge_key> fids = ISMesh::get_faces(tid);
+            is_mesh::SimplexSet<face_key> fids = get_faces(tid);
             face_key fid = largest_face(fids);
+            is_mesh::SimplexSet<node_key> nids = get_nodes(fid);
             
             // Find the apex
-            node_key apex = ISMesh::get_nodes(tid) - ISMesh::get_nodes(fid);
+            node_key apex = (get_nodes(tid) - nids).front();
             
             // Project the apex
-            auto verts = ISMesh::get_pos(fid);
-            vec3 proj_apex = Util::project(ISMesh::get_pos(apex), verts);
+            auto verts = ISMesh::get_pos(nids);
+            vec3 proj_apex = Util::project(ISMesh::get_pos(apex), verts[0], verts[1], verts[2]);
             
             // Find barycentric coordinates
             std::vector<real> barycentric_coords = Util::barycentric_coords<real>(proj_apex, verts[0], verts[1], verts[2]);
@@ -1709,7 +1710,7 @@ namespace DSC {
         
         real area(const face_key& fid)
         {
-            auto verts = ISMesh::get_pos(fid);
+            auto verts = ISMesh::get_pos(get_nodes(fid));
             return Util::area<real>(verts[0], verts[1], verts[2]);
         }
         
@@ -1721,7 +1722,7 @@ namespace DSC {
         
         real volume(const tet_key& tid)
         {
-            auto verts = ISMesh::get_pos(tid);
+            auto verts = ISMesh::get_pos(get_nodes(tid));
             return Util::volume<real>(verts[0], verts[1], verts[2], verts[3]);
         }
         
