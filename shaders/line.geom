@@ -16,7 +16,7 @@ void main()
     vec3 E = normalize(-p);
     vec3 V = normalize(v[0]);
     vec3 T = normalize(cross(E, V));
-    vec3 D = E;
+    vec3 D = 0.1*E;
     
     float w = 0.1;
     

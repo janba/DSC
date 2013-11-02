@@ -856,7 +856,7 @@ namespace DSC {
         
         void thinning_interface()
         {
-            if(MIN_LENGTH < 0.)
+            if(MIN_LENGTH <= 0.)
             {
                 return;
             }
@@ -890,7 +890,7 @@ namespace DSC {
          */
         void thinning()
         {
-            if(MIN_VOLUME < 0.)
+            if(MIN_VOLUME <= 0.)
             {
                 return;
             }
@@ -1386,10 +1386,11 @@ namespace DSC {
          */
         void deform(int num_steps = 10)
         {
+            std::cout << std::endl << "********************************" << std::endl;
             int missing;
             int step = 0;
             do {
-                std::cout << "Move vertices step " << step << std::endl;
+                std::cout << "\nMove vertices step " << step << std::endl;
                 missing = 0;
                 int movable = 0;
                 for (auto nit = ISMesh::nodes_begin(); nit != ISMesh::nodes_end(); nit++)
