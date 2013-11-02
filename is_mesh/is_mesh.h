@@ -1096,8 +1096,7 @@ namespace is_mesh {
             connect(new_e_nids[1], eid);
             
             // Reconnect faces
-            SimplexSet<EdgeKey> swap_eids = (get_edges(e_nids[0]) & get_edges(new_e_nids[0])) + (get_edges(e_nids[1]) & get_edges(new_e_nids[1]));
-            assert(swap_eids.size() == 2);
+            SimplexSet<EdgeKey> swap_eids = {get_edge(e_nids[0], new_e_nids[0]), get_edge(e_nids[1], new_e_nids[1])};
             swap(swap_eids[0], fids[0], swap_eids[1], fids[1]);
             
             assert((e_fids - fids).size() <= 2);
@@ -1107,8 +1106,8 @@ namespace is_mesh {
                 assert(rm_eids.size() == 2);
                 SimplexSet<NodeKey> apex = get_nodes(f) - (new_e_nids + e_nids);
                 assert(apex.size() == 1);
-                SimplexSet<EdgeKey> add_eids = get_edges(apex) & get_edges(new_e_nids);
-                assert(add_eids.size() == 2);
+                
+                SimplexSet<EdgeKey> add_eids = {get_edge(apex[0], new_e_nids[0]), get_edge(apex[0], new_e_nids[1])};
                 
                 disconnect(rm_eids[0], f);
                 disconnect(rm_eids[1], f);
