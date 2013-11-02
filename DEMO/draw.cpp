@@ -200,6 +200,7 @@ Painter::Painter(const DSC::vec3& light_pos)
     domain = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.1, 0.1, 0.3, 1.}, {0.2, 0.2, 0.3, 1.}, {0., 0., 0., 1.}));
     low_quality = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.3, 0.1, 0.1, 0.1}, {0.6, 0.4, 0.4, 0.2}, {0., 0., 0., 0.}));
     edges = std::unique_ptr<GLObject>(new GLObject(line_shader, {0.7, 0.2, 0.2, 1.}, {0., 0., 0., 0.}, {0., 0., 0., 0.}));
+    unmoved = std::unique_ptr<GLObject>(new GLObject(line_shader, {0.2, 0.2, 0.7, 1.}, {0., 0., 0., 0.}, {0., 0., 0., 0.}));
     
     // Enable states
     glEnable(GL_DEPTH_TEST);
@@ -327,6 +328,7 @@ void Painter::draw()
     
     glDisable(GL_CULL_FACE);
     edges->draw(GL_POINTS);
+    unmoved->draw(GL_POINTS);
     low_quality->draw();
     glEnable(GL_CULL_FACE);
     
@@ -336,7 +338,7 @@ void Painter::draw()
 void Painter::update(DSC::DeformableSimplicialComplex<>& dsc)
 {
     update_interface(dsc);
-//    update_edges(dsc);
+    update_edges(dsc);
 //    update_domain(dsc);
     update_low_quality(dsc);
 }
@@ -366,12 +368,14 @@ void Painter::update_edges(DSC::DeformableSimplicialComplex<>& dsc)
     std::vector<DSC::vec3> data;
     for (auto eit = dsc.edges_begin(); eit != dsc.edges_end(); eit++)
     {
-        auto verts = dsc.get_pos(dsc.get_nodes(eit.key()));
-        DSC::vec3 vector = verts[1] - verts[0];
-        
-        data.push_back(verts[0]);
-        data.push_back(vector);
-
+        auto nids = dsc.get_nodes(eit.key());
+        if(eit->is_interface())
+        {
+            DSC::vec3 vector = dsc.get_pos(nids[1]) - dsc.get_pos(nids[0]);
+            
+            data.push_back(dsc.get_pos(nids[0]));
+            data.push_back(vector);
+        }
     }
     edges->add_data(data);
 }
@@ -464,5 +468,20 @@ void Painter::update_low_quality(DSC::DeformableSimplicialComplex<>& dsc)
         }
     }
     low_quality->add_data(data);
+}
+
+void Painter::update_unmoved(DSC::DeformableSimplicialComplex<>& dsc)
+{
+    std::vector<DSC::vec3> data;
+    for (auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
+    {
+        DSC::vec3 vector = nit->get_destination() - nit->get_pos();
+        if(vector.length() > DSC::EPSILON)
+        {
+            data.push_back(nit->get_pos());
+            data.push_back(vector);
+        }
+    }
+    unmoved->add_data(data);
 }
 
