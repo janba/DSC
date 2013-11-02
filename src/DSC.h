@@ -636,7 +636,7 @@ namespace DSC {
         std::vector<edge_key> test_neighbour(const face_key& f, const node_key& a, const node_key& b, const node_key& u, const node_key& w, real& q_old, real& q_new)
         {
             edge_key e = ISMesh::get_edge(u,w);
-            is_mesh::SimplexSet<face_key> g_set = ISMesh::get_faces(e) - ISMesh::get_faces(ISMesh::get_tets(f));
+            is_mesh::SimplexSet<face_key> g_set = get_faces(e) - get_faces(get_tets(f));
             real q = Util::quality<real>(ISMesh::get_pos(a), ISMesh::get_pos(b), ISMesh::get_pos(w), ISMesh::get_pos(u));
             
             if(g_set.size() == 1 && is_safe_editable(e))

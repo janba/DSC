@@ -41,6 +41,7 @@ namespace is_mesh
             m_co_boundary = new SimplexSet<co_boundary_key_type>();
         }
         
+
         Simplex(Simplex&& s)
         {
             m_boundary = s.m_boundary;
@@ -72,12 +73,12 @@ namespace is_mesh
             return *m_boundary;
         }
         
-        void add_co_face(co_boundary_key_type key)
+        void add_co_face(const co_boundary_key_type& key)
         {
             *m_co_boundary += key;
         }
         
-        void add_face(boundary_key_type key)
+        void add_face(const boundary_key_type& key)
         {
             *m_boundary += key;
         }

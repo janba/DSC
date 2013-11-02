@@ -44,6 +44,7 @@ namespace is_mesh
         SimplexSet(const SimplexSet& ss)
         {
             set = std::unique_ptr<std::vector<key_type>>(new std::vector<key_type>(*ss.set));
+is;
         }
         
         SimplexSet(SimplexSet&& ss)
@@ -91,6 +92,8 @@ namespace is_mesh
         
         const key_type& operator[](int i) const
         {
+            assert(set);
+            assert(size() > i);
             return set->at(i);
         }
         
@@ -116,6 +119,9 @@ namespace is_mesh
         
         void swap(int i = 0, int j = 1)
         {
+            assert(set);
+            assert(size() > i);
+            assert(size() > j);
             std::swap((*set)[i], (*set)[j]);
         }
         

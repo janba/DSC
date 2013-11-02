@@ -258,9 +258,10 @@ namespace is_mesh {
             
             for(auto f : get_faces(tid))
             {
-                if(!get(f).is_boundary())
+                const SimplexSet<TetrahedronKey>& f_tids = get_tets(f);
+                if(f_tids.size() == 2)
                 {
-                    TetrahedronKey tid2 = (get_tets(f) - tid).front();
+                    TetrahedronKey tid2 = (f_tids - tid).front();
                     if(tids.contains(tid2) && label == get_label(tid2))
                     {
                         connected_component(tids, tid2);
@@ -648,9 +649,6 @@ namespace is_mesh {
             auto z = get(nids[2]).get_pos() - get(nids[0]).get_pos();
             auto val = dot(x, cross(y,z));
             
-#ifdef DEBUG
-            assert(val != 0.);
-#endif
             return val > 0.;
         }
         
