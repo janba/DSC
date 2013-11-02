@@ -27,8 +27,6 @@ namespace is_mesh
     {
         std::unique_ptr<std::vector<key_type>> set = nullptr;
         
-//        SimplexSet(const SimplexSet& ss); // prevent copy constructor (no implementation)
-        SimplexSet operator=(const SimplexSet& ss); // prevent copy assignment operator (no implementation)
     public:
         
         SimplexSet()
@@ -44,7 +42,12 @@ namespace is_mesh
         SimplexSet(const SimplexSet& ss)
         {
             set = std::unique_ptr<std::vector<key_type>>(new std::vector<key_type>(*ss.set));
-is;
+        }
+        
+        SimplexSet& operator=(const SimplexSet& ss)
+        {
+            set = std::unique_ptr<std::vector<key_type>>(new std::vector<key_type>(*ss.set));
+            return *this;
         }
         
         SimplexSet(SimplexSet&& ss)

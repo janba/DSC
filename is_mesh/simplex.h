@@ -32,7 +32,6 @@ namespace is_mesh
         SimplexSet<boundary_key_type>* m_boundary = nullptr;
         SimplexSet<co_boundary_key_type>* m_co_boundary = nullptr;
         
-        Simplex(const Simplex& s);
     public:
         
         Simplex()
@@ -41,7 +40,12 @@ namespace is_mesh
             m_co_boundary = new SimplexSet<co_boundary_key_type>();
         }
         
-
+        Simplex(const Simplex& s)
+        {
+            m_boundary = new SimplexSet<boundary_key_type>(*s.m_boundary);
+            m_co_boundary = new SimplexSet<co_boundary_key_type>(*s.m_co_boundary);
+        }
+        
         Simplex(Simplex&& s)
         {
             m_boundary = s.m_boundary;
