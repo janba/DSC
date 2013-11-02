@@ -253,9 +253,13 @@ namespace DSC {
         /**
          * Sets the position of node n.
          */
-        void set_pos(const node_key& n, const vec3& p)
+        void set_pos(const node_key& nid, const vec3& p)
         {
-            ISMesh::get(n).set_pos(p);
+            ISMesh::get(nid).set_pos(p);
+            if(!is_movable(nid))
+            {
+                ISMesh::get(nid).set_destination(p);
+            }
         }
         
     public:
@@ -1158,7 +1162,7 @@ namespace DSC {
             
             // Collapse edge
             edge_key e = ISMesh::get_edge(n, apex);
-            return collapse(e) != ISMesh::NULL_NODE;
+            return collapse(e).is_valid();
         }
         
         /**
@@ -1394,10 +1398,6 @@ namespace DSC {
                     {
                         if(!move_vertex(nit.key()))
                         {
-                            if(step == 9)
-                            {
-                                print(nit.key());
-                            }
                             missing++;
                         }
                         movable++;
