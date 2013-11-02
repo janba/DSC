@@ -265,19 +265,12 @@ void Painter::reshape(int width, int height)
 
 void Painter::set_view_position(DSC::vec3 pos)
 {
-    CGLA::Vec3f eye_pos = CGLA::Vec3f(pos);
-    viewMatrix = CGLA::lookAt_Mat4x4f(eye_pos, center, CGLA::Vec3f(0., 1., 0.));
+    viewMatrix = CGLA::lookAt_Mat4x4f(CGLA::Vec3f(pos), center, CGLA::Vec3f(0., 1., 0.));
     CGLA::Mat4x4f modelViewMatrix = viewMatrix * modelMatrix;
     CGLA::Mat4x4f normalMatrix = CGLA::invert_ortho(modelViewMatrix);
     CGLA::Mat4x4f modelViewProjectionMatrix = projectionMatrix * modelViewMatrix;
     
     glUseProgram(gouraud_shader);
-    GLuint eyePosUniform = glGetUniformLocation(gouraud_shader, "eyePos");
-    if (eyePosUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'eyePos' uniform."<<std::endl;
-    }
-    glUniform3fv(eyePosUniform, 1, &eye_pos[0]);
-    
     GLuint MVMatrixUniform = glGetUniformLocation(gouraud_shader, "MVMatrix");
     if (MVMatrixUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
@@ -297,12 +290,6 @@ void Painter::set_view_position(DSC::vec3 pos)
     glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
     
     glUseProgram(line_shader);
-    eyePosUniform = glGetUniformLocation(line_shader, "eyePos");
-    if (eyePosUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'eyePos' uniform."<<std::endl;
-    }
-    glUniform3fv(eyePosUniform, 1, &eye_pos[0]);
-    
     MVMatrixUniform = glGetUniformLocation(line_shader, "MVMatrix");
     if (MVMatrixUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
@@ -338,9 +325,10 @@ void Painter::draw()
 void Painter::update(DSC::DeformableSimplicialComplex<>& dsc)
 {
     update_interface(dsc);
+//    update_unmoved(dsc);
     update_edges(dsc);
 //    update_domain(dsc);
-    update_low_quality(dsc);
+//    update_low_quality(dsc);
 }
 
 void Painter::update_interface(DSC::DeformableSimplicialComplex<>& dsc)

@@ -7,17 +7,16 @@ uniform mat4 PMatrix;
 
 in vec3 v[1];
 in vec4 vertexColour[1];
-in vec3 eye_v[1];
 
 out vec4 colour;
 
 void main()
 {
     vec3 p = gl_in[0].gl_Position.xyz;
-    vec3 E = normalize(eye_v[0]);
+    vec3 E = normalize(-p);
     vec3 V = normalize(v[0]);
     vec3 T = normalize(cross(E, V));
-    vec3 D = 0.001*E;
+    vec3 D = E;
     
     float w = 0.1;
     

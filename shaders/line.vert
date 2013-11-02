@@ -2,7 +2,6 @@
 
 uniform mat4 MVMatrix;
 uniform mat4 NormalMatrix;
-uniform vec3 eyePos;
 
 uniform vec4 ambientMat;
 uniform vec4 diffuseMat;
@@ -13,15 +12,11 @@ in vec3 vector;
 
 out vec3 v;
 out vec4 vertexColour;
-out vec3 eye_v;
 
 void main()
 {
     // Compute vector
     v = mat3(NormalMatrix) * vector;
-    
-    // Compute eye position
-    eye_v = mat3(NormalMatrix) * (eyePos - position.xyz);
     
     // Calculate colour
     vertexColour = ambientMat + diffuseMat + specMat;
