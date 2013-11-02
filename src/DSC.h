@@ -83,7 +83,7 @@ namespace DSC {
             ISMesh(points, tets), design_domain(domain)
         {
             AVG_EDGE_LENGTH = _AVG_EDGE_LENGTH;
-            MIN_DEFORMATION = 0.25 * AVG_EDGE_LENGTH;
+            MIN_DEFORMATION = 0.05 * AVG_EDGE_LENGTH;
             
             DEG_EDGE_QUALITY = 0.1;
             MIN_EDGE_QUALITY = 0.5;
@@ -91,12 +91,12 @@ namespace DSC {
             DEG_FACE_QUALITY = 1. - cos(5.*M_PI/180.);
             MIN_FACE_QUALITY = 1. - cos(10.*M_PI/180.);
             
-            DEG_TET_QUALITY = 0.01;
+            DEG_TET_QUALITY = 0.02;
             MIN_TET_QUALITY = 0.3;
             
             FLIP_EDGE_INTERFACE_FLATNESS = 0.995;
             
-            MIN_LENGTH = 0.5 * AVG_EDGE_LENGTH;
+            MIN_LENGTH = 0.;
             MAX_LENGTH = 2. * AVG_EDGE_LENGTH;
             
             real area_avg = AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*0.5;
@@ -104,7 +104,7 @@ namespace DSC {
             MAX_AREA = 5.*area_avg;
             
             real vol_avg = AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*sqrt(2.)/12.;
-            MIN_VOLUME = 0.5*vol_avg;
+            MIN_VOLUME = 0.2*vol_avg;
             MAX_VOLUME = INFINITY;
             
             //        fix_complex();
