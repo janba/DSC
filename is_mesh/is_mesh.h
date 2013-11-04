@@ -670,6 +670,30 @@ namespace is_mesh {
             return dot(get_pos(nids[0]) - p, cross(get_pos(nids[1]) - p, get_pos(nids[2]) - p)) < 0.;
         }
         
+        /**
+         * Returns whether the tetrahedron with ID tid is inverted.
+         */
+        bool is_inverted_new(const TetrahedronKey& tid)
+        {
+            for(const FaceKey& f : get_faces(tid))
+            {
+                const SimplexSet<TetrahedronKey>& tids = get_tets(f);
+                if(tids.size() == 2) // Check that f is not a boundary face.
+                {
+                    SimplexSet<NodeKey> nids = get_nodes(f);
+                    SimplexSet<NodeKey> apices = get_nodes(tids) - nids;
+                    auto normal = cross(get_pos(nids[0]) - get_pos(nids[2]), get_pos(nids[1]) - get_pos(nids[2]));
+                    auto d1 = dot(get_pos(apices[0]) - get_pos(nids[2]), normal);
+                    auto d2 = dot(get_pos(apices[1]) - get_pos(nids[2]), normal);
+                    if((d1 < 0. && d2 < 0) || (d1 > 0. && d2 > 0.))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        
         ////////////////////
         // MESH FUNCTIONS //
         ////////////////////
@@ -1215,7 +1239,7 @@ namespace is_mesh {
             std::cout << "Testing for inverted tetrahedra: ";
             for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
-                assert(!is_inverted(tit.key()));
+                assert(!is_inverted_new(tit.key()));
             }
             std::cout << "PASSED" << std::endl;
             
