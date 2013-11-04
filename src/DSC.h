@@ -358,7 +358,7 @@ namespace DSC {
          */
         real build_table(const edge_key& e, const is_mesh::SimplexSet<node_key>& polygon, std::vector<std::vector<int>>& K)
         {
-            auto verts = ISMesh::get_pos(ISMesh::get_nodes(e));
+            is_mesh::SimplexSet<node_key> nids = get_nodes(e);
             
             const int m = (int) polygon.size();
             
@@ -376,8 +376,8 @@ namespace DSC {
                 {
                     for (int k = i+1; k < j; k++)
                     {
-                        real q2 = Util::quality<real>(ISMesh::get_pos(polygon[i]), ISMesh::get_pos(polygon[k]), verts[0], ISMesh::get_pos(polygon[j]));
-                        real q1 = Util::quality<real>(ISMesh::get_pos(polygon[k]), ISMesh::get_pos(polygon[i]), verts[1], ISMesh::get_pos(polygon[j]));
+                        real q2 = Util::quality<real>(get_pos(polygon[i]), get_pos(polygon[k]), get_pos(nids[0]), get_pos(polygon[j]));
+                        real q1 = Util::quality<real>(get_pos(polygon[k]), get_pos(polygon[i]), get_pos(nids[1]), get_pos(polygon[j]));
                         real q = Util::min(q1, q2);
                         if (k < j-1)
                         {
@@ -405,7 +405,7 @@ namespace DSC {
         {
             for (auto e : eids)
             {
-                auto n = ISMesh::get_nodes(e) - nid;
+                auto n = get_nodes(e) - nid;
                 if(n.size() == 1)
                 {
                     eids -= e;
@@ -417,7 +417,7 @@ namespace DSC {
         
         is_mesh::SimplexSet<node_key> get_polygon(is_mesh::SimplexSet<edge_key>& eids)
         {
-            is_mesh::SimplexSet<node_key> polygon = {ISMesh::get_nodes(eids[0]).front()};
+            is_mesh::SimplexSet<node_key> polygon = {get_nodes(eids[0]).front()};
             node_key next_nid;
             do {
                 next_nid = get_next(polygon.back(), eids);
@@ -440,7 +440,7 @@ namespace DSC {
         std::vector<is_mesh::SimplexSet<node_key>> get_polygons(const edge_key& eid)
         {
             std::vector<is_mesh::SimplexSet<tet_key>> tid_groups;
-            for (auto t : ISMesh::get_tets(eid))
+            for (auto t : get_tets(eid))
             {
                 bool found = false;
                 for(auto& tids : tid_groups)
@@ -464,7 +464,7 @@ namespace DSC {
             {
                 is_mesh::SimplexSet<edge_key> eids = get_edges(tids) - m_eids;
                 is_mesh::SimplexSet<node_key> polygon = get_polygon(eids);
-                check_consistency(ISMesh::get_pos(get_nodes(eid)), polygon);
+                check_consistency(get_nodes(eid), polygon);
                 polygons.push_back(polygon);
             }
             
@@ -533,11 +533,9 @@ namespace DSC {
                 // Find the faces to flip about.
                 face_key f1 = ISMesh::get_face(nids[0], nids[1], polygon1.front());
                 face_key f2 = ISMesh::get_face(nids[0], nids[1], polygon1.back());
+                assert(get(f1).is_boundary() && get(f2).is_boundary());
                 
-                if(get(f1).is_boundary() && get(f2).is_boundary())
-                {
-                    ISMesh::flip_22(f1, f2);
-                }
+                ISMesh::flip_22(f1, f2);
             }
             else {
                 k = K2[0][m2-1];
@@ -613,7 +611,7 @@ namespace DSC {
                                     i++;
                                 }
                             }
-                            else if(is_flippable(e))
+                            else if((get(e).is_interface() || get(e).is_boundary()) && is_flippable(e))
                             {
                                 if(topological_boundary_edge_removal(e))
                                 {
@@ -1439,7 +1437,7 @@ namespace DSC {
             l = Util::max(Util::min(l*t - l*MIN_DEFORMATION, l), 0.);
             set_pos(n, pos + l*Util::normalize(destination - pos));
             
-            if (Util::length(destination - get_pos(n)) < EPSILON)
+            if (Util::length(destination - get_pos(n)) < 1e-4*AVG_EDGE_LENGTH)
             {
                 return true;
             }
@@ -1482,34 +1480,42 @@ namespace DSC {
          * Returns whether it is possible to flip the edge e or not, i.e. whether the edge is a feature edge
          * (it is not a feature edge if its neighborhood is sufficiently flat).
          */
-        bool is_flippable(const edge_key & e)
+        bool is_flippable(const edge_key & eid)
         {
-            if(!get(e).is_interface() && !get(e).is_boundary())
-            {
-                return false;
-            }
-            std::vector<face_key> faces;
-            for(auto f : ISMesh::get_faces(e))
+            is_mesh::SimplexSet<face_key> fids;
+            for(auto f : get_faces(eid))
             {
                 if (get(f).is_interface() || get(f).is_boundary())
                 {
-                    faces.push_back(f);
+                    fids += f;
                 }
             }
-            if(faces.size() > 2)
+            if(fids.size() != 2)
             {
                 return false;
             }
-#ifdef DEBUG
-            assert(faces.size() == 2);
-#endif
             
-            real angle = cos_dihedral_angle(faces[0], faces[1]);
-            if(angle > FLIP_EDGE_INTERFACE_FLATNESS)
+            is_mesh::SimplexSet<node_key> e_nids = get_nodes(eid);
+            is_mesh::SimplexSet<node_key> new_e_nids = (get_nodes(fids[0]) + get_nodes(fids[1])) - e_nids;
+            assert(new_e_nids.size() == 2);
+            
+            // Check that there does not already exist an edge.
+            if(ISMesh::get_edge(new_e_nids[0], new_e_nids[1]).is_valid())
             {
-                return true;
+                return false;
             }
-            return false;
+            
+            // Check that the edge is not a feature edge if it is a part of the interface.
+            if(get(eid).is_interface())
+            {
+                real angle = cos_dihedral_angle(fids[0], fids[1]);
+                if(angle < FLIP_EDGE_INTERFACE_FLATNESS)
+                {
+                    return false;
+                }
+            }
+            
+            return true;
         }
         
         ////////////
@@ -1911,20 +1917,14 @@ namespace DSC {
          * Check if the sequence of vertices in polygon is consistent with positive orientation of tetrahedra in the mesh
          * with respect to the ordered pair of vertices in vv. If not, reverse the order of vertices in polygon.
          */
-        void check_consistency(const std::vector<vec3> & vv, is_mesh::SimplexSet<node_key> & polygon)
+        void check_consistency(const is_mesh::SimplexSet<node_key>& nids, is_mesh::SimplexSet<node_key>& polygon)
         {
             unsigned int n = static_cast<unsigned int>(polygon.size());
-            std::vector<vec3> vp(n);
-            
-            for (unsigned int i = 0; i < n; ++i)
-            {
-                vp[i] = ISMesh::get_pos(polygon[i]);
-            }
             
             real sum = 0;
             for (unsigned int i = 0; i < n; ++i)
             {
-                sum += Util::signed_volume<real>(vv[0], vv[1], vp[i], vp[(i+1)%n]);
+                sum += Util::signed_volume<real>(get_pos(nids[0]), get_pos(nids[1]), get_pos(polygon[i]), get_pos(polygon[(i+1)%n]));
             }
             
             if (sum < 0.)
