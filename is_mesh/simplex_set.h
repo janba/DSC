@@ -102,12 +102,12 @@ namespace is_mesh
         
         bool contains(const key_type& k) const
         {
-            return std::find(begin(), end(), k) != end();
+            return std::find(set->begin(), set->end(), k) != end();
         }
         
         void push_front(const key_type& k)
         {
-            set->insert(begin(), k);
+            set->insert(set->begin(), k);
         }
         
         void push_back(const key_type& k)
@@ -148,7 +148,7 @@ namespace is_mesh
         {
             if(!contains(key))
             {
-                push_back(key);
+                set->push_back(key);
             }
             return *this;
         }
@@ -157,7 +157,7 @@ namespace is_mesh
         {
             if(!contains(key))
             {
-                push_back(std::move(key));
+                set->push_back(std::move(key));
             }
             return *this;
         }
