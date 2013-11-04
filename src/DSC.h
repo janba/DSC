@@ -2300,7 +2300,7 @@ namespace DSC {
             is_mesh::SimplexSet<edge_key> eids;
             for (auto eit = ISMesh::edges_begin(); eit != ISMesh::edges_end(); eit++)
             {
-                if(is_safe_editable(eit.key()) && get_faces(eit.key()).size() == 4)
+                if(is_unsafe_editable(eit.key()) && eit->is_interface() && get_faces(eit.key()).size() == 4)
                 {
                     auto neighbours = get_edges(get_tets(eit.key()));
                     bool ok = true;
@@ -2311,7 +2311,7 @@ namespace DSC {
                             ok = false;
                         }
                     }
-                    if (ok)
+                    if (ok && is_flippable(eit.key()))
                     {
                         eids += eit.key();
                     }
@@ -2319,19 +2319,21 @@ namespace DSC {
             }
             
             std::cout << "Flip 4-4 test # = " << eids.size();
-            is_mesh::SimplexSet<face_key> flip_fids;
             int i = 0;
             for (auto e : eids) {
-                assert(ISMesh::exists(e));
-                auto fids = get_faces(e);
-                assert(fids.size() == 4);
-                auto fid = fids - get_faces(get_tets(fids[0]));
-                assert(fid.size() == 1);
-                flip_fids += fid;
-                flip_fids += fids[0];
-                ISMesh::flip_44(fids[0], fid[0]);
+                is_mesh::SimplexSet<face_key> flip_fids;
+                for(auto f : get_faces(e))
+                {
+                    if(get(f).is_interface())
+                    {
+                        flip_fids += f;
+                    }
+                }
+                assert(flip_fids.size() == 2);
+                assert(get_faces(e).size() == 4);
+                ISMesh::flip_44(flip_fids[0], flip_fids[1]);
                 i++;
-                if(i%1000 == 0)
+                if(i%100 == 0)
                 {
                     std::cout << ".";
                 }
@@ -2340,11 +2342,21 @@ namespace DSC {
             
             i=0;
             std::cout << "Flip 4-4 test # = " << eids.size();
-            for (int j = 0; j < flip_fids.size(); j+=2)
+            for (auto e : eids)
             {
-                ISMesh::flip_44(flip_fids[j], flip_fids[j+1]);
+                is_mesh::SimplexSet<face_key> flip_fids;
+                for(auto f : get_faces(e))
+                {
+                    if(get(f).is_interface())
+                    {
+                        flip_fids += f;
+                    }
+                }
+                assert(flip_fids.size() == 2);
+                assert(get_faces(e).size() == 4);
+                ISMesh::flip_44(flip_fids[0], flip_fids[1]);
                 i++;
-                if(i%1000 == 0)
+                if(i%100 == 0)
                 {
                     std::cout << ".";
                 }
@@ -2370,7 +2382,7 @@ namespace DSC {
                             ok = false;
                         }
                     }
-                    if (ok)
+                    if (ok && is_flippable(eit.key()))
                     {
                         eids += eit.key();
                     }
@@ -2395,7 +2407,7 @@ namespace DSC {
                 assert(flip_fids.size() == 2);
                 ISMesh::flip_22(flip_fids[0], flip_fids[1]);
                 i++;
-                if(i%1000 == 0)
+                if(i%100 == 0)
                 {
                     std::cout << ".";
                 }
