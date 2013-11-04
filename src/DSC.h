@@ -506,7 +506,7 @@ namespace DSC {
         bool topological_edge_removal(const edge_key& eid)
         {
             std::vector<is_mesh::SimplexSet<node_key>> polygon = get_polygons(eid);
-            assert(polygon.size() == 1);
+            assert(polygon.size() == 1 && polygon.front().size() > 2);
             
             std::vector<std::vector<int>> K;
             real q_new = build_table(eid, polygon.front(), K);
@@ -1934,21 +1934,6 @@ namespace DSC {
                     polygon.swap(i, n-1-i);
                 }
             }
-        }
-        
-        /**
-         * Returns whether any of the tetrahedra in the simplex set is inverted.
-         */
-        bool is_inverted(const is_mesh::SimplexSet<tet_key>& tids)
-        {
-            for (auto t : tids)
-            {
-                if (ISMesh::is_inverted(t))
-                {
-                    return true;
-                }
-            }
-            return false;
         }
         
         ////////////////////////

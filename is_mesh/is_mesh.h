@@ -516,7 +516,6 @@ namespace is_mesh {
                     return n;
                 }
             }
-            assert(false);
             return NodeKey();
         }
         
@@ -532,7 +531,6 @@ namespace is_mesh {
                     return e;
                 }
             }
-            assert(false);
             return EdgeKey();
         }
         
@@ -548,7 +546,6 @@ namespace is_mesh {
                     return e;
                 }
             }
-            assert(false);
             return EdgeKey();
         }
         
@@ -1026,9 +1023,9 @@ namespace is_mesh {
         
         EdgeKey flip_23(const FaceKey& fid)
         {
-            const SimplexSet<TetrahedronKey>& f_tids = get_tets(fid);
+            SimplexSet<TetrahedronKey> f_tids = get_tets(fid);
             assert(f_tids.size() == 2);
-            const SimplexSet<EdgeKey>& f_eids = get_edges(fid);
+            SimplexSet<EdgeKey> f_eids = get_edges(fid);
             assert(f_eids.size() == 3);
             SimplexSet<NodeKey> f_nids = get_nodes(f_eids);
             int label = get_label(f_tids[0]);
@@ -1053,8 +1050,8 @@ namespace is_mesh {
             remove(fid);
             
             // Create tetrahedra
-            const SimplexSet<FaceKey>& new_ts_fids1 = get_faces(f_tids);
-            const SimplexSet<FaceKey>& new_ts_fids2 = get_faces(new_eid);
+            SimplexSet<FaceKey> new_ts_fids1 = get_faces(f_tids);
+            SimplexSet<FaceKey> new_ts_fids2 = get_faces(new_eid);
             assert(new_ts_fids1.size() == 6);
             assert(new_ts_fids2.size() == 3);
             for (const EdgeKey& e : f_eids)
@@ -1095,10 +1092,10 @@ namespace is_mesh {
             
             // Reconnect faces
             SimplexSet<EdgeKey> swap_eids = {get_edge(e_nids[0], new_e_nids[0]), get_edge(e_nids[1], new_e_nids[1])};
-            swap(swap_eids[0], fids[0], swap_eids[1], fids[1]);
+            swap(swap_eids[0], fid1, swap_eids[1], fid2);
             
             assert((e_fids - fids).size() <= 2);
-            for(auto f : (e_fids - fids))
+            for(FaceKey f : (e_fids - fids))
             {
                 SimplexSet<EdgeKey> rm_eids = get_edges(f) - eid;
                 assert(rm_eids.size() == 2);
@@ -1116,7 +1113,7 @@ namespace is_mesh {
                 SimplexSet<TetrahedronKey> tids = get_tets(f);
                 assert(tids.size() == 2);
                 SimplexSet<FaceKey> swap_fids = (get_faces(tids) - e_fids) & get_faces(swap_eids);
-                assert(swap_eids.size() == 2);
+                assert(swap_fids.size() == 2);
                 swap(swap_fids[0], tids[0], swap_fids[1], tids[1]);
             }
             
