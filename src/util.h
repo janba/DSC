@@ -375,6 +375,22 @@ namespace DSC {
         }
         
         /**
+         * Returns whether points p1 and p2 lies on the same side of the plane spanned by points a, b and c. If p1 or p2 lies on the plane, the method returns false.
+         */
+        template<typename real, typename vec3>
+        inline bool is_on_same_side(const vec3& p1, const vec3& p2, const vec3& a, const vec3& b, const vec3& c)
+        {
+            auto normal = normal_direction(a, b, c);
+            auto d1 = dot(p1 - a, normal);
+            auto d2 = dot(p2 - a, normal);
+            if(std::abs(d1) > EPSILON && std::abs(d2) > EPSILON && sign(d1) == sign(d2))
+            {
+                return true;
+            }
+            return false;
+        }
+        
+        /**
          * Returns the shortest distance from the point p to the plane defined by the point a and the normal.
          */
         template<typename real, typename vec3>
