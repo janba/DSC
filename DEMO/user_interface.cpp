@@ -366,14 +366,15 @@ void UI::start()
 void UI::one_cell()
 {
     stop();
-    real cell_size = 30.;
+    real cell_size = 20.;
     // Build the Simplicial Complex
     std::vector<real> points;
     std::vector<int>  tets;
-    Tetralizer::tetralize(vec3(2.*cell_size), cell_size, points, tets);
+    Tetralizer::tetralize(vec3(3.*cell_size), cell_size, points, tets);
     
     dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(cell_size, points, tets));
     
+    dsc->set_label(67, 1);
     start();
 }
 
