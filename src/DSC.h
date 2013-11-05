@@ -546,7 +546,10 @@ namespace DSC {
                 face_key f1 = ISMesh::get_face(nids[0], nids[1], polygon1.front());
                 face_key f2 = ISMesh::get_face(nids[0], nids[1], polygon1.back());
                 
-                ISMesh::flip_44(f1, f2);
+                if(precond_flip_edge(ISMesh::get_edge(f1, f2), f1, f2))
+                {
+                    ISMesh::flip_44(f1, f2);
+                }
             }
         }
         
@@ -1518,6 +1521,41 @@ namespace DSC {
             return true;
         }
         
+        bool precond_flip_edge(const edge_key& eid, const face_key& f1, const face_key& f2)
+        {
+            is_mesh::SimplexSet<node_key> e_nids = get_nodes(eid);
+            is_mesh::SimplexSet<node_key> new_e_nids = (get_nodes(f1) + get_nodes(f2)) - e_nids;
+            is_mesh::SimplexSet<node_key> apices = (get_nodes(get_faces(eid)) - e_nids) - new_e_nids;
+            assert(e_nids.size() == 2);
+            assert(new_e_nids.size() == 2);
+            
+            // Check that there does not already exist an edge.
+            if(ISMesh::get_edge(new_e_nids[0], new_e_nids[1]).is_valid())
+            {
+                return false;
+            }
+            
+            vec3 p = get_pos(new_e_nids[0]);
+            vec3 r = get_pos(new_e_nids[1]) - p;
+            vec3 a = get_pos(e_nids[0]);
+            vec3 b = get_pos(e_nids[1]);
+            
+            for (node_key n : apices) {
+                vec3 c = get_pos(n);
+                real t = Util::intersection_ray_plane<real>(p, r, a, b, c);
+                if(t > 0. && t < 1.)
+                {
+                    std::vector<real> coords = Util::barycentric_coords<real>(p + t*r, c, a, b);
+                    if(coords[0] > EPSILON && coords[1] > EPSILON && coords[2] >= 0.)
+                    {
+                        return true;
+                    }
+                }
+            }
+            
+            return false;
+        }
+        
         ////////////
         // SPLITS //
         ////////////
@@ -2311,7 +2349,17 @@ namespace DSC {
                             ok = false;
                         }
                     }
-                    if (ok && is_flippable(eit.key()))
+                    is_mesh::SimplexSet<face_key> flip_fids;
+                    for(auto f : get_faces(eit.key()))
+                    {
+                        if(get(f).is_interface())
+                        {
+                            flip_fids += f;
+                        }
+                    }
+                    assert(flip_fids.size() == 2);
+                    
+                    if (ok && precond_flip_edge(eit.key(), flip_fids[0], flip_fids[1]))
                     {
                         eids += eit.key();
                     }
@@ -2382,7 +2430,17 @@ namespace DSC {
                             ok = false;
                         }
                     }
-                    if (ok && is_flippable(eit.key()))
+                    is_mesh::SimplexSet<face_key> flip_fids;
+                    for(auto f : get_faces(eit.key()))
+                    {
+                        if(get(f).is_boundary())
+                        {
+                            flip_fids += f;
+                        }
+                    }
+                    assert(flip_fids.size() == 2);
+                    
+                    if (ok && precond_flip_edge(eit.key(), flip_fids[0], flip_fids[1]))
                     {
                         eids += eit.key();
                     }
