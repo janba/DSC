@@ -535,7 +535,10 @@ namespace DSC {
                 face_key f2 = ISMesh::get_face(nids[0], nids[1], polygon1.back());
                 assert(get(f1).is_boundary() && get(f2).is_boundary());
                 
-                ISMesh::flip_22(f1, f2);
+                if(precond_flip_edge(ISMesh::get_edge(f1, f2), f1, f2))
+                {
+                    ISMesh::flip_22(f1, f2);
+                }
             }
             else {
                 k = K2[0][m2-1];
