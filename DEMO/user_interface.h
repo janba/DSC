@@ -138,6 +138,8 @@ private:
     
     void expand_armadillo();
     
+    void rotate_armadillo();
+    
     /**
      Updates the window title.
      */

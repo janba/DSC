@@ -209,6 +209,9 @@ void UI::keyboard(unsigned char key, int x, int y) {
         case '5':
             rotate_blob();
             break;
+        case '6':
+            rotate_armadillo();
+            break;
         case '9':
             one_cell();
             break;
@@ -463,6 +466,24 @@ void UI::expand_armadillo()
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(60.));
     dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain));
     vel_fun = std::unique_ptr<VelocityFunc<>>(new NormalFunc(VELOCITY, ACCURACY));
+    
+    ObjectGenerator::create(*dsc, tet_labels);
+    
+    start();
+}
+
+void UI::rotate_armadillo()
+{
+    stop();
+    // Build the Simplicial Complex
+    std::vector<real> points;
+    std::vector<int>  tets;
+    std::vector<int>  tet_labels;
+    import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
+    
+    DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(70.));
+    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain));
+    vel_fun = std::unique_ptr<VelocityFunc<>>(new RotateFunc(VELOCITY, ACCURACY));
     
     ObjectGenerator::create(*dsc, tet_labels);
     
