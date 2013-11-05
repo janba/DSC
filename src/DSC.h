@@ -88,7 +88,7 @@ namespace DSC {
             DEG_EDGE_QUALITY = 0.1;
             MIN_EDGE_QUALITY = 0.5;
             
-            DEG_FACE_QUALITY = 1. - cos(5.*M_PI/180.);
+            DEG_FACE_QUALITY = 1. - cos(2.*M_PI/180.);
             MIN_FACE_QUALITY = 1. - cos(10.*M_PI/180.);
             
             DEG_TET_QUALITY = 0.02;

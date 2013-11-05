@@ -28,7 +28,7 @@ public:
     /**
      Creates a velocity function which moves the interface vertices in the normal direction.
      */
-    NormalFunc(DSC::real velocity, DSC::real accuracy, int max_time_steps = 500):
+    NormalFunc(DSC::real velocity, DSC::real accuracy, int max_time_steps = 100):
         VelocityFunc<>(velocity/10., accuracy, max_time_steps)
     {
         

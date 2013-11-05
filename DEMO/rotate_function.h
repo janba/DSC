@@ -30,7 +30,7 @@ public:
     /**
      Creates a rotating velocity function.
      */
-    RotateFunc(DSC::real velocity, DSC::real accuracy, int max_time_steps = 500):
+    RotateFunc(DSC::real velocity, DSC::real accuracy, int max_time_steps = 100):
         VelocityFunc<>(M_PI*velocity/(5.*180.), accuracy, max_time_steps)
     {
         
