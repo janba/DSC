@@ -83,7 +83,7 @@ namespace DSC {
             ISMesh(points, tets), design_domain(domain)
         {
             AVG_EDGE_LENGTH = _AVG_EDGE_LENGTH;
-            MIN_DEFORMATION = 0.05 * AVG_EDGE_LENGTH;
+            MIN_DEFORMATION = 0.0001 * AVG_EDGE_LENGTH;
             
             DEG_EDGE_QUALITY = 0.1;
             MIN_EDGE_QUALITY = 0.5;
@@ -1435,9 +1435,8 @@ namespace DSC {
                 return true;
             }
             
-            real t = intersection_with_link(n, destination);
-            
-            l = Util::max(Util::min(l*t - l*MIN_DEFORMATION, l), 0.);
+            real max_l = l*intersection_with_link(n, destination) - MIN_DEFORMATION;
+            l = Util::max(Util::min(0.5*max_l, l), 0.);
             set_pos(n, pos + l*Util::normalize(destination - pos));
             
             if (Util::length(destination - get_pos(n)) < 1e-4*AVG_EDGE_LENGTH)
