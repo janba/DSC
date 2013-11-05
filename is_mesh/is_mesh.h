@@ -258,10 +258,9 @@ namespace is_mesh {
             
             for(auto f : get_faces(tid))
             {
-                const SimplexSet<TetrahedronKey>& f_tids = get_tets(f);
-                if(f_tids.size() == 2)
+                if(get_tets(f).size() == 2)
                 {
-                    TetrahedronKey tid2 = (f_tids - tid).front();
+                    TetrahedronKey tid2 = get_tet(tid, f);
                     if(tids.contains(tid2) && label == get_label(tid2))
                     {
                         connected_component(tids, tid2);
@@ -573,6 +572,21 @@ namespace is_mesh {
             }
             assert(false);
             return FaceKey();
+        }
+        
+        /**
+         *  Returns the tetrahedron which shares the face fid with tid, i.e. the neighbour to tid.
+         */
+        TetrahedronKey get_tet(const TetrahedronKey& tid, const FaceKey& fid)
+        {
+            for(TetrahedronKey t : get_tets(fid))
+            {
+                if(t != tid)
+                {
+                    return t;
+                }
+            }
+            return TetrahedronKey();
         }
         
         /**
