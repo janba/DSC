@@ -511,7 +511,7 @@ namespace DSC {
             std::vector<std::vector<int>> K;
             real q_new = build_table(eid, polygon.front(), K);
             
-            if (q_new > min_quality(eid))
+            if (q_new > min_quality(get_tets(eid)))
             {
                 const is_mesh::SimplexSet<node_key>& nodes = get_nodes(eid);
                 topological_edge_removal(polygon.front(), nodes[0], nodes[1], K);
@@ -577,7 +577,7 @@ namespace DSC {
                 polygons.push_back({polygons[0].front(), polygons[0].back()});
             }
             
-            if (q_new > min_quality(eid))
+            if (q_new > min_quality(get_tets(eid)))
             {
                 topological_boundary_edge_removal(polygons[0], polygons[1], eid, K1, K2);
                 return true;
@@ -691,7 +691,7 @@ namespace DSC {
             auto e12 = test_neighbour(f, apices[0], apices[1], nodes[1], nodes[2], q_12_old, q_12_new);
             auto e20 = test_neighbour(f, apices[0], apices[1], nodes[2], nodes[0], q_20_old, q_20_new);
             
-            real q_old = Util::min(Util::min(Util::min(min_quality(f), q_01_old), q_12_old), q_20_old);
+            real q_old = Util::min(Util::min(Util::min(min_quality(get_tets(f)), q_01_old), q_12_old), q_20_old);
             real q_new = Util::min(Util::min(q_01_new, q_12_new), q_20_new);
             
             if(q_new > q_old)
@@ -1925,30 +1925,6 @@ namespace DSC {
                 q_min = Util::min(quality(t), q_min);
             }
             return q_min;
-        }
-        
-        /**
-         * Returns the minimum quality among tetrahedra in the star of the node nid.
-         */
-        real min_quality(const node_key& nid)
-        {
-            return min_quality(get_tets(nid));
-        }
-        
-        /**
-         * Returns the minimum quality among tetrahedra in the star of the edge eid.
-         */
-        real min_quality(const edge_key& eid)
-        {
-            return min_quality(get_tets(eid));
-        }
-        
-        /**
-         * Returns minimum quality among the tetrahedra adjacent to face fid.
-         */
-        real min_quality(const face_key& fid)
-        {
-            return min_quality(get_tets(fid));
         }
         
     private:
