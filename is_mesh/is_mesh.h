@@ -671,6 +671,21 @@ namespace is_mesh {
         }
         
         /**
+         * Returns whether any of the tetrahedra in the set tids are inverted.
+         */
+        bool is_inverted(const SimplexSet<TetrahedronKey>& tids)
+        {
+            for (auto t : tids)
+            {
+                if(is_inverted(t))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        /**
          * Returns whether the tetrahedron with ID tid is inverted.
          */
         bool is_inverted_new(const TetrahedronKey& tid)
