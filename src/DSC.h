@@ -1316,14 +1316,14 @@ namespace DSC {
          */
         bool smart_laplacian(const node_key& nid, real alpha = 1.)
         {
-            is_mesh::SimplexSet<tet_key> tids = ISMesh::get_tets(nid);
+            is_mesh::SimplexSet<tet_key> tids = get_tets(nid);
             real q_old = min_quality(tids);
 
-            vec3 old_pos = ISMesh::get_pos(nid);
+            vec3 old_pos = get_pos(nid);
             vec3 avg_pos = get_barycenter(nid);
             set_pos(nid, old_pos + alpha * (avg_pos - old_pos));
             
-            if (min_quality(tids) < q_old)
+            if (ISMesh::is_inverted(tids) || min_quality(tids) < q_old)
             {
                 set_pos(nid, old_pos);
                 return false;
@@ -1617,7 +1617,15 @@ namespace DSC {
             set_pos(nids[0], pos);
             set_pos(nids[1], pos);
             
-            real q_min = min_quality(tids);
+            
+            real q_min;
+            if(ISMesh::is_inverted(tids))
+            {
+                q_min = -1.;
+            }
+            else {
+                q_min = min_quality(tids);
+            }
             
             set_pos(nids[0], p0);
             set_pos(nids[1], p1);
@@ -1678,8 +1686,8 @@ namespace DSC {
                     q_max = q;
                 }
             }
-            real q = min_quality(ISMesh::get_tets(nodes));
-            if((!safe && q_max > EPSILON) || q_max > Util::min(q, MIN_TET_QUALITY))
+            real q_old = min_quality(get_tets(nodes));
+            if((!safe && q_max > EPSILON) || q_max > Util::min(q_old, MIN_TET_QUALITY))
             {
                 return ISMesh::collapse(e, pos_opt, destination_opt);
             }
@@ -1918,10 +1926,6 @@ namespace DSC {
             real q_min = INFINITY;
             for (auto t : tids)
             {
-                if(ISMesh::is_inverted(t))
-                {
-                    return -1.;
-                }
                 q_min = Util::min(quality(t), q_min);
             }
             return q_min;
