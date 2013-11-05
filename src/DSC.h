@@ -1548,7 +1548,7 @@ namespace DSC {
                 if(t > 0. && t < 1.)
                 {
                     std::vector<real> coords = Util::barycentric_coords<real>(p + t*r, c, a, b);
-                    if(coords[0] > EPSILON && coords[1] > EPSILON && coords[2] >= 0.)
+                    if(coords[0] > MIN_DEFORMATION && coords[1] > MIN_DEFORMATION && coords[2] >= 0.)
                     {
                         return true;
                     }
