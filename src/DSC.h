@@ -2252,12 +2252,14 @@ namespace DSC {
                 assert(old_nid.size() == 1);
                 verts.push_back(ISMesh::get_pos(old_nid[0]));
                 j++;
-                if(j%100 == 0)
+                if(j%1000 == 0)
                 {
                     std::cout << ".";
                 }
             }
             std::cout << " DONE" << std::endl;
+            ISMesh::garbage_collect();
+            ISMesh::validity_check();
             
             std::cout << "Collapse test # = " << new_eids.size();
             j = 0;
@@ -2266,7 +2268,7 @@ namespace DSC {
                 auto nid = ISMesh::collapse(new_eids[i], verts[i], verts[i]);
                 assert(nid.is_valid());
                 j++;
-                if(j%100 == 0)
+                if(j%1000 == 0)
                 {
                     std::cout << ".";
                 }
@@ -2318,6 +2320,8 @@ namespace DSC {
                 }
             }
             std::cout << " DONE" << std::endl;
+            ISMesh::garbage_collect();
+            ISMesh::validity_check();
             
             i=0;
             std::cout << "Flip 3-2 test # = " << new_eids.size();
@@ -2368,52 +2372,32 @@ namespace DSC {
                 }
             }
             
-            std::cout << "Flip 4-4 test # = " << eids.size();
-            int i = 0;
-            for (auto e : eids) {
-                is_mesh::SimplexSet<face_key> flip_fids;
-                for(auto f : get_faces(e))
-                {
-                    if(get(f).is_interface())
-                    {
-                        flip_fids += f;
-                    }
-                }
-                assert(flip_fids.size() == 2);
-                assert(get_faces(e).size() == 4);
-                ISMesh::flip_44(flip_fids[0], flip_fids[1]);
-                i++;
-                if(i%100 == 0)
-                {
-                    std::cout << ".";
-                }
-            }
-            std::cout << " DONE" << std::endl;
-            
-            i=0;
-            std::cout << "Flip 4-4 test # = " << eids.size();
-            for (auto e : eids)
+            for(int t = 0; t < 2; t++)
             {
-                is_mesh::SimplexSet<face_key> flip_fids;
-                for(auto f : get_faces(e))
-                {
-                    if(get(f).is_interface())
+                std::cout << "Flip 4-4 test # = " << eids.size();
+                int i = 0;
+                for (auto e : eids) {
+                    is_mesh::SimplexSet<face_key> flip_fids;
+                    for(auto f : get_faces(e))
                     {
-                        flip_fids += f;
+                        if(get(f).is_interface())
+                        {
+                            flip_fids += f;
+                        }
+                    }
+                    assert(flip_fids.size() == 2);
+                    assert(get_faces(e).size() == 4);
+                    ISMesh::flip_44(flip_fids[0], flip_fids[1]);
+                    i++;
+                    if(i%100 == 0)
+                    {
+                        std::cout << ".";
                     }
                 }
-                assert(flip_fids.size() == 2);
-                assert(get_faces(e).size() == 4);
-                ISMesh::flip_44(flip_fids[0], flip_fids[1]);
-                i++;
-                if(i%100 == 0)
-                {
-                    std::cout << ".";
-                }
+                std::cout << " DONE" << std::endl;
+                ISMesh::garbage_collect();
+                ISMesh::validity_check();
             }
-            std::cout << " DONE" << std::endl;
-            ISMesh::garbage_collect();
-            ISMesh::validity_check();
         }
         
         void test_flip22()
@@ -2449,32 +2433,35 @@ namespace DSC {
                 }
             }
             
-            std::cout << "Flip 2-2 test # = " << eids.size();
-            int i = 0;
-            for (auto e : eids) {
-                assert(ISMesh::exists(e));
-                auto fids = get_faces(e);
-                assert(fids.size() == 3);
-                is_mesh::SimplexSet<face_key> flip_fids;
-                for(auto f : fids)
-                {
-                    if(get(f).is_boundary())
+            for(int t = 0; t < 2; t++)
+            {
+                std::cout << "Flip 2-2 test # = " << eids.size();
+                int i = 0;
+                for (auto e : eids) {
+                    assert(ISMesh::exists(e));
+                    auto fids = get_faces(e);
+                    assert(fids.size() == 3);
+                    is_mesh::SimplexSet<face_key> flip_fids;
+                    for(auto f : fids)
                     {
-                        flip_fids += f;
+                        if(get(f).is_boundary())
+                        {
+                            flip_fids += f;
+                        }
+                    }
+                    
+                    assert(flip_fids.size() == 2);
+                    ISMesh::flip_22(flip_fids[0], flip_fids[1]);
+                    i++;
+                    if(i%10 == 0)
+                    {
+                        std::cout << ".";
                     }
                 }
-                
-                assert(flip_fids.size() == 2);
-                ISMesh::flip_22(flip_fids[0], flip_fids[1]);
-                i++;
-                if(i%100 == 0)
-                {
-                    std::cout << ".";
-                }
+                std::cout << " DONE" << std::endl;
+                ISMesh::garbage_collect();
+                ISMesh::validity_check();
             }
-            std::cout << " DONE" << std::endl;
-            ISMesh::garbage_collect();
-            ISMesh::validity_check();
         }
         
     };
