@@ -96,11 +96,6 @@ namespace is_mesh
         {
             *m_boundary -= key;
         }
-        
-        void invert_boundary_orientation()
-        {
-            m_boundary->swap();
-        }
     };
     
     ///////////////////////////////////////////////////////////////////////////////

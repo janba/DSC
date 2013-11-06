@@ -375,17 +375,6 @@ namespace is_mesh {
         }
         
         // Getters for getting the boundary of a boundary etc.
-        SimplexSet<NodeKey> get_sorted_nodes(const TetrahedronKey& tid)
-        {
-            const SimplexSet<FaceKey>& fids = get_faces(tid);
-            EdgeKey eid1 = get_edge(fids[0], fids[1]);
-            EdgeKey eid2 = get_edge(fids[0], fids[2]);
-            EdgeKey eid3 = get_edge(fids[0], fids[3]);
-            
-            SimplexSet<NodeKey> nids = {get_node(eid1, eid2), get_node(eid2, eid3), get_node(eid3, eid1)};
-            nids += get_nodes(fids[1]);
-            return nids;
-        }
         
         SimplexSet<NodeKey> get_sorted_nodes(const FaceKey& fid, const TetrahedronKey& tid)
         {
@@ -679,31 +668,6 @@ namespace is_mesh {
          */
         bool is_inverted(const TetrahedronKey& tid)
         {
-            auto nids = get_sorted_nodes(tid);
-            auto p = get_pos(nids[3]);
-            return dot(get_pos(nids[0]) - p, cross(get_pos(nids[1]) - p, get_pos(nids[2]) - p)) < 0.;
-        }
-        
-        /**
-         * Returns whether any of the tetrahedra in the set tids are inverted.
-         */
-        bool is_inverted(const SimplexSet<TetrahedronKey>& tids)
-        {
-            for (auto t : tids)
-            {
-                if(is_inverted(t))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        
-        /**
-         * Returns whether the tetrahedron with ID tid is inverted.
-         */
-        bool is_inverted_new(const TetrahedronKey& tid)
-        {
             for(const FaceKey& f : get_faces(tid))
             {
                 const SimplexSet<TetrahedronKey>& tids = get_tets(f);
@@ -786,11 +750,6 @@ namespace is_mesh {
             tetrahedron->add_face(face2);
             tetrahedron->add_face(face3);
             tetrahedron->add_face(face4);
-            
-            if(is_inverted(tetrahedron.key()))
-            {
-                tetrahedron->invert_boundary_orientation();
-            }
             
             return tetrahedron.key();
         }
@@ -971,14 +930,6 @@ namespace is_mesh {
                 set_label(new_tids[i], get_label(tids[i]));
             }
             
-            for(auto t : tids)
-            {
-                if(is_inverted(t))
-                {
-                    get(t).invert_boundary_orientation();
-                }
-            }
-            
             return new_nid;
         }
         
@@ -1014,15 +965,7 @@ namespace is_mesh {
             }
             
             // Update flags and ensure no inverted tetrahedra.
-            SimplexSet<TetrahedronKey> changed_tids = get_tets(nid);
-            for(auto t : changed_tids)
-            {
-                if(is_inverted(t))
-                {
-                    get(t).invert_boundary_orientation();
-                }
-            }
-            update(changed_tids);
+            update(get_tets(nid));
             return nid;
         }
         
@@ -1170,15 +1113,6 @@ namespace is_mesh {
                 swap(swap_fids[0], tids[0], swap_fids[1], tids[1]);
             }
             
-            // Ensure correct orientation
-            for(auto t : e_tids)
-            {
-                if(is_inverted(t))
-                {
-                    get(t).invert_boundary_orientation();
-                }
-            }
-            
             // Update flags
             update(e_tids);
         }
@@ -1268,7 +1202,7 @@ namespace is_mesh {
             std::cout << "Testing for inverted tetrahedra: ";
             for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
-                assert(!is_inverted_new(tit.key()));
+                assert(!is_inverted(tit.key()));
             }
             std::cout << "PASSED" << std::endl;
             
