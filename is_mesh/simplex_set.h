@@ -25,7 +25,7 @@ namespace is_mesh
     template<typename key_type>
     class SimplexSet
     {
-        std::unique_ptr<std::vector<key_type>> set = nullptr;
+        std::unique_ptr<std::vector<key_type>> set;
         
     public:
         
@@ -53,13 +53,11 @@ namespace is_mesh
         SimplexSet(SimplexSet&& ss)
         {
             set = std::move(ss.set);
-            ss.set = nullptr;
         }
         
         SimplexSet& operator=(SimplexSet&& ss)
         {
             set = std::move(ss.set);
-            ss.set = nullptr;
             return *this;
         }
         
