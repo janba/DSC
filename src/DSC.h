@@ -1623,7 +1623,7 @@ namespace DSC {
             vec3 pos_opt, destination_opt;
             real q_max = -INFINITY;
             
-            if (!get(nids[0]).is_boundary() && !get(nids[1]).is_boundary() && (!safe || (!get(nids[0]).is_interface() && !get(nids[1]).is_interface())))
+            if ((safe && is_safe_editable(nids[0]) && is_safe_editable(nids[1])) || (!safe && is_unsafe_editable(nids[0]) && is_unsafe_editable(nids[1])))
             {
                 vec3 p = Util::barycenter(get_pos(nids[0]), get_pos(nids[1]));
                 real q = Util::min(min_quality(fids0, get_pos(nids[0]), p), min_quality(fids1, get_pos(nids[1]), p));
@@ -1636,7 +1636,7 @@ namespace DSC {
                 }
             }
             
-            if (!get(nids[0]).is_boundary() && (!safe || !get(nids[0]).is_interface()))
+            if ((safe && is_safe_editable(nids[0])) || (!safe && is_unsafe_editable(nids[0])))
             {
                 vec3 p = get_pos(nids[1]);
                 real q = Util::min(min_quality(fids0, get_pos(nids[0]), p), min_quality(fids1, get_pos(nids[1]), p));//min_quality(fids0, get_pos(nids[0]), p);
@@ -1649,7 +1649,7 @@ namespace DSC {
                 }
             }
             
-            if (!get(nids[1]).is_boundary() && (!safe || !get(nids[1]).is_interface()))
+            if ((safe && is_safe_editable(nids[1])) || (!safe && is_unsafe_editable(nids[1])))
             {
                 vec3 p = ISMesh::get_pos(nids[0]);
                 real q = Util::min(min_quality(fids0, get_pos(nids[0]), p), min_quality(fids1, get_pos(nids[1]), p));//min_quality(fids1, get_pos(nids[1]), p);
