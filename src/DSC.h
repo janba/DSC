@@ -1664,8 +1664,13 @@ namespace DSC {
                     q_max = q;
                 }
             }
+            
+            if(!safe && q_max > EPSILON)
+            {
+                return ISMesh::collapse(eid, pos_opt, destination_opt);
+            }
             real q_old = Util::min(Util::min(min_quality(e_tids), q1), q0);
-            if((!safe && q_max > EPSILON) || q_max > Util::min(q_old, MIN_TET_QUALITY) + EPSILON)
+            if(q_max > Util::min(q_old, MIN_TET_QUALITY) + EPSILON)
             {
                 return ISMesh::collapse(eid, pos_opt, destination_opt);
             }
