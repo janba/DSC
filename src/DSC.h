@@ -879,8 +879,7 @@ namespace DSC {
             {
                 if (is_unsafe_editable(e) && get(e).is_interface() && length(e) < MIN_LENGTH)
                 {
-                    node_key nid = collapse(e, false);
-                    if(nid.is_valid())
+                    if(collapse(e, false))
                     {
                         i++;
                     }
@@ -977,8 +976,7 @@ namespace DSC {
                         i++;
                     }
                     else {
-                        edge_key e = longest_edge(ISMesh::get_edges(f));
-                        split(e);
+                        split(longest_edge(get_edges(f)));
                     }
                     j++;
                 }
@@ -1008,8 +1006,7 @@ namespace DSC {
                         i++;
                     }
                     else {
-                        edge_key e = longest_edge(ISMesh::get_edges(t));
-                        split(e);
+                        split(longest_edge(get_edges(t)));
                     }
                     j++;
                 }
@@ -1040,7 +1037,7 @@ namespace DSC {
             {
                 if(ISMesh::exists(e) && quality(e) < MIN_EDGE_QUALITY)
                 {
-                    if(collapse(e).is_valid())
+                    if(collapse(e))
                     {
                         i++;
                     }
@@ -1070,7 +1067,7 @@ namespace DSC {
             
             // Collapse new edge
             edge_key e_rem = ISMesh::get_edge(apex, n);
-            return collapse(e_rem).is_valid();
+            return collapse(e_rem);
         }
         
         /**
@@ -1082,7 +1079,7 @@ namespace DSC {
             edge_key e = shortest_edge(ISMesh::get_edges(fid));
             
             // Remove edge
-            return collapse(e).is_valid();
+            return collapse(e);
         }
         
         /**
@@ -1143,7 +1140,7 @@ namespace DSC {
             node_key n2 = split(e2);
             
             edge_key e = ISMesh::get_edge(n1, n2);
-            return collapse(e).is_valid();
+            return collapse(e);
         }
         
         /**
@@ -1167,7 +1164,7 @@ namespace DSC {
             
             // Collapse edge
             edge_key e = ISMesh::get_edge(n, apex);
-            return collapse(e).is_valid();
+            return collapse(e);
         }
         
         /**
@@ -1180,7 +1177,7 @@ namespace DSC {
             while(eids.size() > 2)
             {
                 edge_key e = shortest_edge(eids);
-                if(collapse(e).is_valid())
+                if(collapse(e))
                 {
                     return true;
                 }
@@ -1198,7 +1195,7 @@ namespace DSC {
             //        node_key n2 = split(e2);
             //
             //        edge_key e = ISMesh::get_edge(n1, n2);
-            //        return collapse(e) != ISMesh::NULL_NODE;
+            //        return collapse(e);
         }
         
         /**
@@ -1211,7 +1208,7 @@ namespace DSC {
             while(eids.size() > 1)
             {
                 edge_key e = shortest_edge(eids);
-                if(collapse(e).is_valid())
+                if(collapse(e))
                 {
                     return true;
                 }
@@ -1607,9 +1604,9 @@ namespace DSC {
         /**
          * Collapses the edge e and places the new node at the most optimal position of the position of either end node or their barycenter.
          * If the parameter safe is true, the method if the nodes of edge e are editable, i.e. not a part of the interface, and will therefore not change the interface.
-         * If non of the nodes are editable or precond_collapse returns false, the method returns NULL_NODE.
+         * Returns whether the collapse was successful.
          */
-        node_key collapse(edge_key& eid, bool safe = true)
+        bool collapse(edge_key& eid, bool safe = true)
         {
             if (!ISMesh::exists(eid) || !eid.is_valid())
             {
@@ -1667,14 +1664,16 @@ namespace DSC {
             
             if(!safe && q_max > EPSILON)
             {
-                return ISMesh::collapse(eid, pos_opt, destination_opt);
+                ISMesh::collapse(eid, pos_opt, destination_opt);
+                return true;
             }
             real q_old = Util::min(Util::min(min_quality(e_tids), q1), q0);
             if(q_max > Util::min(q_old, MIN_TET_QUALITY) + EPSILON)
             {
-                return ISMesh::collapse(eid, pos_opt, destination_opt);
+                ISMesh::collapse(eid, pos_opt, destination_opt);
+                return true;
             }
-            return node_key();
+            return false;
         }
         
         bool collapse(is_mesh::SimplexSet<edge_key>& eids, bool safe)
@@ -1682,8 +1681,7 @@ namespace DSC {
             while(eids.size() > 0)
             {
                 edge_key e = shortest_edge(eids);
-                node_key nid = collapse(e, safe);
-                if(nid.is_valid())
+                if(collapse(e, safe))
                 {
                     return true;
                 }
@@ -1694,13 +1692,13 @@ namespace DSC {
         
         bool collapse(const face_key& fid, bool safe = true)
         {
-            is_mesh::SimplexSet<edge_key> eids = ISMesh::get_edges(fid);
+            is_mesh::SimplexSet<edge_key> eids = get_edges(fid);
             return collapse(eids, safe);
         }
         
         bool collapse(const tet_key& tid, bool safe = true)
         {
-            is_mesh::SimplexSet<edge_key> eids = ISMesh::get_edges(tid);
+            is_mesh::SimplexSet<edge_key> eids = get_edges(tid);
             return collapse(eids, safe);
         }
         
