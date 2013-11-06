@@ -637,44 +637,44 @@ namespace DSC {
         // TOPOLOGICAL FACE REMOVAL //
         //////////////////////////////
         
-        std::vector<edge_key> test_neighbour(const face_key& f, const node_key& a, const node_key& b, const node_key& u, const node_key& w, real& q_old, real& q_new)
+        is_mesh::SimplexSet<edge_key> test_neighbour(const face_key& f, const node_key& a, const node_key& b, const node_key& u, const node_key& w, real& q_old, real& q_new)
         {
             edge_key e = ISMesh::get_edge(u,w);
             is_mesh::SimplexSet<face_key> g_set = get_faces(e) - get_faces(get_tets(f));
-            real q = Util::quality<real>(ISMesh::get_pos(a), ISMesh::get_pos(b), ISMesh::get_pos(w), ISMesh::get_pos(u));
+            real q = Util::quality<real>(get_pos(a), get_pos(b), get_pos(w), get_pos(u));
             
             if(g_set.size() == 1 && is_safe_editable(e))
             {
                 face_key g = g_set.front();
-                node_key v = (ISMesh::get_nodes(g) - ISMesh::get_nodes(e)).front();
-                real V_uv = Util::signed_volume<real>(ISMesh::get_pos(a), ISMesh::get_pos(b), ISMesh::get_pos(v), ISMesh::get_pos(u));
-                real V_vw = Util::signed_volume<real>(ISMesh::get_pos(a), ISMesh::get_pos(b), ISMesh::get_pos(w), ISMesh::get_pos(v));
-                real V_wu = Util::signed_volume<real>(ISMesh::get_pos(a), ISMesh::get_pos(b), ISMesh::get_pos(u), ISMesh::get_pos(w));
+                node_key v = (get_nodes(g) - get_nodes(e)).front();
+                real V_uv = Util::signed_volume<real>(get_pos(a), get_pos(b), get_pos(v), get_pos(u));
+                real V_vw = Util::signed_volume<real>(get_pos(a), get_pos(b), get_pos(w), get_pos(v));
+                real V_wu = Util::signed_volume<real>(get_pos(a), get_pos(b), get_pos(u), get_pos(w));
                 
                 if((V_uv > 0. && V_vw > 0.) || (V_vw > 0. && V_wu > 0.) || (V_wu > 0. && V_uv > 0.))
                 {
-                    q_old = Util::min(Util::quality<real>(ISMesh::get_pos(a), ISMesh::get_pos(u), ISMesh::get_pos(w), ISMesh::get_pos(v)),
-                                     Util::quality<real>(ISMesh::get_pos(u), ISMesh::get_pos(v), ISMesh::get_pos(b), ISMesh::get_pos(w)));
+                    q_old = Util::min(Util::quality<real>(get_pos(a), get_pos(u), get_pos(w), get_pos(v)),
+                                     Util::quality<real>(get_pos(u), get_pos(v), get_pos(b), get_pos(w)));
                     
                     real q_uv_old, q_uv_new, q_vw_old, q_vw_new;
-                    auto uv_edges = test_neighbour(g, a, b, u, v, q_uv_old, q_uv_new);
-                    auto vw_edges = test_neighbour(g, a, b, v, w, q_vw_old, q_vw_new);
+                    is_mesh::SimplexSet<edge_key> uv_edges = test_neighbour(g, a, b, u, v, q_uv_old, q_uv_new);
+                    is_mesh::SimplexSet<edge_key> vw_edges = test_neighbour(g, a, b, v, w, q_vw_old, q_vw_new);
                     
                     q_old = Util::min(Util::min(q_old, q_uv_old), q_vw_old);
                     q_new = Util::min(q_uv_new, q_vw_new);
                     
                     if(q_new > q_old || q_new > q)
                     {
-                        std::vector<edge_key> edges = {ISMesh::get_edge(f, g)};
-                        edges.insert(edges.end(), uv_edges.begin(), uv_edges.end());
-                        edges.insert(edges.end(), vw_edges.begin(), vw_edges.end());
+                        is_mesh::SimplexSet<edge_key> edges = {ISMesh::get_edge(f, g)};
+                        edges += uv_edges;
+                        edges += vw_edges;
                         return edges;
                     }
                 }
             }
             q_old = INFINITY;
             q_new = q;
-            return std::vector<edge_key>();
+            return {};
         }
         
         /**
@@ -682,14 +682,14 @@ namespace DSC {
          */
         bool topological_face_removal(const face_key& f)
         {
-            is_mesh::SimplexSet<node_key> apices = get_nodes(get_tets(f)) - get_nodes(f);
-            is_mesh::SimplexSet<node_key> nodes = get_nodes(f);
-            this->orient_cc(apices[0], nodes);
+            is_mesh::SimplexSet<node_key> nids = get_nodes(f);
+            is_mesh::SimplexSet<node_key> apices = get_nodes(get_tets(f)) - nids;
+            ISMesh::orient_cc(apices[0], nids);
             
             real q_01_new, q_01_old, q_12_new, q_12_old, q_20_new, q_20_old;
-            auto e01 = test_neighbour(f, apices[0], apices[1], nodes[0], nodes[1], q_01_old, q_01_new);
-            auto e12 = test_neighbour(f, apices[0], apices[1], nodes[1], nodes[2], q_12_old, q_12_new);
-            auto e20 = test_neighbour(f, apices[0], apices[1], nodes[2], nodes[0], q_20_old, q_20_new);
+            is_mesh::SimplexSet<edge_key> e01 = test_neighbour(f, apices[0], apices[1], nids[0], nids[1], q_01_old, q_01_new);
+            is_mesh::SimplexSet<edge_key> e12 = test_neighbour(f, apices[0], apices[1], nids[1], nids[2], q_12_old, q_12_new);
+            is_mesh::SimplexSet<edge_key> e20 = test_neighbour(f, apices[0], apices[1], nids[2], nids[0], q_20_old, q_20_new);
             
             real q_old = Util::min(Util::min(Util::min(min_quality(get_tets(f)), q_01_old), q_12_old), q_20_old);
             real q_new = Util::min(Util::min(q_01_new, q_12_new), q_20_new);
@@ -720,7 +720,7 @@ namespace DSC {
          */
         bool topological_face_removal(const node_key& apex1, const node_key& apex2)
         {
-            is_mesh::SimplexSet<face_key> fids = ISMesh::get_faces(ISMesh::get_tets(apex1)) & ISMesh::get_faces(ISMesh::get_tets(apex2));
+            is_mesh::SimplexSet<face_key> fids = get_faces(get_tets(apex1)) & get_faces(get_tets(apex2));
             for(auto f : fids)
             {
                 if(is_safe_editable(f))
