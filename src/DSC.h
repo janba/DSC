@@ -1620,6 +1620,9 @@ namespace DSC {
             is_mesh::SimplexSet<face_key> fids0 = get_faces(get_tets(nids[0]) - e_tids) - get_faces(nids[0]);
             is_mesh::SimplexSet<face_key> fids1 = get_faces(get_tets(nids[1]) - e_tids) - get_faces(nids[1]);
             
+            real q0 = min_quality(fids0, get_pos(nids[0]));
+            real q1 = min_quality(fids1, get_pos(nids[1]));
+            
             vec3 pos_opt, destination_opt;
             real q_max = -INFINITY;
             
@@ -1639,7 +1642,7 @@ namespace DSC {
             if ((safe && is_safe_editable(nids[0])) || (!safe && is_unsafe_editable(nids[0])))
             {
                 vec3 p = get_pos(nids[1]);
-                real q = Util::min(min_quality(fids0, get_pos(nids[0]), p), min_quality(fids1, get_pos(nids[1]), p));//min_quality(fids0, get_pos(nids[0]), p);
+                real q = Util::min(min_quality(fids0, get_pos(nids[0]), p), q1);
                 
                 if (q > q_max)
                 {
@@ -1652,7 +1655,7 @@ namespace DSC {
             if ((safe && is_safe_editable(nids[1])) || (!safe && is_unsafe_editable(nids[1])))
             {
                 vec3 p = ISMesh::get_pos(nids[0]);
-                real q = Util::min(min_quality(fids0, get_pos(nids[0]), p), min_quality(fids1, get_pos(nids[1]), p));//min_quality(fids1, get_pos(nids[1]), p);
+                real q = Util::min(q0, min_quality(fids1, get_pos(nids[1]), p));
                 
                 if (q > q_max)
                 {
@@ -1661,7 +1664,7 @@ namespace DSC {
                     q_max = q;
                 }
             }
-            real q_old = min_quality(get_tets(nids));
+            real q_old = Util::min(Util::min(min_quality(e_tids), q1), q0);
             if((!safe && q_max > EPSILON) || q_max > Util::min(q_old, MIN_TET_QUALITY) + EPSILON)
             {
                 return ISMesh::collapse(eid, pos_opt, destination_opt);
@@ -1918,7 +1921,7 @@ namespace DSC {
         /**
          * Returns the minimum tetrahedral quality of a node with position pos. The faces in the link of the node should be passed in fids.
          */
-        real min_quality(const is_mesh::SimplexSet<face_key>& fids, const node_key& pos)
+        real min_quality(const is_mesh::SimplexSet<face_key>& fids, const vec3& pos)
         {
             real min_q = INFINITY;
             for (auto f : fids)
