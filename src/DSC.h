@@ -941,7 +941,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto e : edges)
             {
-                if(ISMesh::exists(e) && quality(e) < DEG_EDGE_QUALITY)
+                if(ISMesh::exists(e) && quality(e) < DEG_EDGE_QUALITY && !collapse(e))
                 {
                     if(collapse(e, false))
                     {
@@ -969,7 +969,7 @@ namespace DSC {
             int i = 0, j = 0;
             for (auto &f : faces)
             {
-                if (ISMesh::exists(f) && quality(f) < DEG_FACE_QUALITY)
+                if (ISMesh::exists(f) && quality(f) < DEG_FACE_QUALITY && !collapse(f))
                 {
                     if(collapse(f, false))
                     {
@@ -999,7 +999,7 @@ namespace DSC {
             int i = 0, j = 0;
             for (auto &t : tets)
             {
-                if (ISMesh::exists(t) && quality(t) < DEG_TET_QUALITY)
+                if (ISMesh::exists(t) && quality(t) < DEG_TET_QUALITY && !collapse(t))
                 {
                     if(collapse(t, false))
                     {
