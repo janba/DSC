@@ -1312,24 +1312,42 @@ namespace DSC {
         // SMOOTHING //
         ///////////////
     private:
+        bool precond_smooth(const is_mesh::SimplexSet<face_key>& fids, const vec3& old_pos, const vec3& new_pos)
+        {
+            real min_q_old = INFINITY;
+            real min_q_new = INFINITY;
+            for (auto f : fids)
+            {
+                is_mesh::SimplexSet<node_key> nids = get_nodes(f);
+                if(Util::sign(Util::signed_volume<real>(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]), old_pos)) !=
+                   Util::sign(Util::signed_volume<real>(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]), new_pos)))
+                {
+                    return false;
+                }
+                min_q_old = Util::min(min_q_old, std::abs(Util::quality<real>(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]), old_pos)));
+                min_q_new = Util::min(min_q_new, std::abs(Util::quality<real>(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]), new_pos)));
+            }
+            return min_q_old < min_q_new;
+        }
+        
         /**
          * Performs Laplacian smoothing if it improves the minimum tetrahedron quality locally.
          */
         bool smart_laplacian(const node_key& nid, real alpha = 1.)
         {
             is_mesh::SimplexSet<tet_key> tids = get_tets(nid);
-            real q_old = min_quality(tids);
-
-            vec3 old_pos = get_pos(nid);
-            vec3 avg_pos = get_barycenter(nid);
-            set_pos(nid, old_pos + alpha * (avg_pos - old_pos));
+            is_mesh::SimplexSet<face_key> fids = get_faces(tids) - get_faces(nid);
             
-            if (ISMesh::is_inverted(tids) || min_quality(tids) < q_old)
+            vec3 old_pos = get_pos(nid);
+            vec3 avg_pos = get_barycenter(get_nodes(fids));
+            vec3 new_pos = old_pos + alpha * (avg_pos - old_pos);
+            
+            if(precond_smooth(fids, old_pos, new_pos))
             {
-                set_pos(nid, old_pos);
-                return false;
+                set_pos(nid, new_pos);
+                return true;
             }
-            return true;
+            return false;
         }
         
         void smooth()
