@@ -1758,24 +1758,18 @@ namespace DSC {
         }
         
         /**
-         * Calculates the average position of the neighbouring nodes to node n.
-         * If interface is true, the average position is only calculated among the neighbouring nodes which are interface.
+         * Calculates the average position of the nodes in the simplex set nids.
+         * If interface is true, the average position is only calculated among the nodes which are interface.
          */
-        vec3 get_barycenter(const node_key& nid, bool interface = false)
+        vec3 get_barycenter(const is_mesh::SimplexSet<node_key>& nids, bool interface = false)
         {
-            if(interface && !get(nid).is_interface())
-            {
-                return ISMesh::get_pos(nid);
-            }
-            
-            is_mesh::SimplexSet<node_key> nids = ISMesh::get_nodes(ISMesh::get_tets(nid)) - nid;
             vec3 avg_pos(0.);
             int i = 0;
             for (auto n : nids)
             {
                 if (!interface || get(n).is_interface())
                 {
-                    avg_pos += ISMesh::get_pos(n);
+                    avg_pos += get_pos(n);
                     i++;
                 }
             }
@@ -1783,6 +1777,21 @@ namespace DSC {
             assert(i != 0);
 #endif
             return avg_pos / static_cast<real>(i);
+        }
+        
+        /**
+         * Calculates the average position of the neighbouring nodes to node n.
+         * If interface is true, the average position is only calculated among the neighbouring nodes which are interface.
+         */
+        vec3 get_barycenter(const node_key& nid, bool interface = false)
+        {
+            if(interface && !get(nid).is_interface())
+            {
+                return get_pos(nid);
+            }
+            
+            is_mesh::SimplexSet<node_key> nids = get_nodes(get_tets(nid)) - nid;
+            return get_barycenter(nids);
         }
         
         ///////////////////////
