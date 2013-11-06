@@ -1773,7 +1773,7 @@ namespace DSC {
             }
             
             is_mesh::SimplexSet<node_key> nids = get_nodes(get_tets(nid)) - nid;
-            return get_barycenter(nids);
+            return get_barycenter(nids, interface);
         }
         
         ///////////////////////
