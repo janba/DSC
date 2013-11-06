@@ -721,15 +721,16 @@ namespace DSC {
         bool topological_face_removal(const node_key& apex1, const node_key& apex2)
         {
             is_mesh::SimplexSet<face_key> fids = get_faces(get_tets(apex1)) & get_faces(get_tets(apex2));
+            vec3 p = get_pos(apex1);
+            vec3 ray = get_pos(apex2) - p;
             for(auto f : fids)
             {
                 if(is_safe_editable(f))
                 {
-                    auto nodes = ISMesh::get_nodes(f);
-                    this->orient_cc(apex2, nodes);
+                    auto nids = get_nodes(f);
+                    this->orient_cc(apex2, nids);
                     
-                    vec3 ray = ISMesh::get_pos(apex2) - ISMesh::get_pos(apex1);
-                    real t = Util::intersection_ray_triangle<real>(ISMesh::get_pos(apex1), ray, ISMesh::get_pos(nodes[0]), ISMesh::get_pos(nodes[1]), ISMesh::get_pos(nodes[2]));
+                    real t = Util::intersection_ray_triangle<real>(p, ray, get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]));
                     if(0. < t && t < 1.)
                     {
                         if(topological_face_removal(f))
