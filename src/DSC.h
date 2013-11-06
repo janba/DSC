@@ -1603,94 +1603,68 @@ namespace DSC {
         ///////////////
         // COLLAPSES //
         ///////////////
-    private:        
-        
-        /**
-         * Returns the minimum quality of neighbouring tetrahedra if the edge e is collapsed and the resulting node is moved to pos.
-         */
-        real min_quality(const edge_key& eid, const vec3& pos)
-        {
-            is_mesh::SimplexSet<node_key> nids = ISMesh::get_nodes(eid);
-            is_mesh::SimplexSet<tet_key> tids = ISMesh::get_tets(nids) - ISMesh::get_tets(eid);
-            
-            vec3 p0 = ISMesh::get_pos(nids[0]);
-            vec3 p1 = ISMesh::get_pos(nids[1]);
-            set_pos(nids[0], pos);
-            set_pos(nids[1], pos);
-            
-            
-            real q_min;
-            if(ISMesh::is_inverted(tids))
-            {
-                q_min = -1.;
-            }
-            else {
-                q_min = min_quality(tids);
-            }
-            
-            set_pos(nids[0], p0);
-            set_pos(nids[1], p1);
-            
-            return q_min;
-        }
-        
+    private:
         /**
          * Collapses the edge e and places the new node at the most optimal position of the position of either end node or their barycenter.
          * If the parameter safe is true, the method if the nodes of edge e are editable, i.e. not a part of the interface, and will therefore not change the interface.
          * If non of the nodes are editable or precond_collapse returns false, the method returns NULL_NODE.
          */
-        node_key collapse(edge_key& e, bool safe = true)
+        node_key collapse(edge_key& eid, bool safe = true)
         {
-            if (!ISMesh::exists(e) || !e.is_valid())
+            if (!ISMesh::exists(eid) || !eid.is_valid())
             {
                 return node_key();
             }
-            auto nodes = ISMesh::get_nodes(e);
+            is_mesh::SimplexSet<node_key> nids = get_nodes(eid);
+            is_mesh::SimplexSet<tet_key> e_tids = get_tets(eid);
+            is_mesh::SimplexSet<face_key> fids0 = get_faces(get_tets(nids[0]) - e_tids) - get_faces(nids[0]);
+            is_mesh::SimplexSet<face_key> fids1 = get_faces(get_tets(nids[1]) - e_tids) - get_faces(nids[1]);
             
             vec3 pos_opt, destination_opt;
-            real q_max = 0.;
+            real q_max = -INFINITY;
             
-            if (!get(nodes[0]).is_boundary() && !get(nodes[1]).is_boundary() && (!safe || (!get(nodes[0]).is_interface() && !get(nodes[1]).is_interface())))
+            if (!get(nids[0]).is_boundary() && !get(nids[1]).is_boundary() && (!safe || (!get(nids[0]).is_interface() && !get(nids[1]).is_interface())))
             {
-                vec3 p = Util::barycenter(ISMesh::get_pos(nodes[0]), ISMesh::get_pos(nodes[1]));
-                real q = min_quality(e, p);
-                if (q > q_max)
-                {
-                    destination_opt = Util::barycenter(get_dest(nodes[0]), get_dest(nodes[1]));
-                    pos_opt = p;
-                    q_max = q;
-                }
-            }
-            
-            if (!get(nodes[0]).is_boundary() && (!safe || !get(nodes[0]).is_interface()))
-            {
-                vec3 p = ISMesh::get_pos(nodes[1]);
-                real q = min_quality(e, p);
+                vec3 p = Util::barycenter(get_pos(nids[0]), get_pos(nids[1]));
+                real q = Util::min(min_quality(fids0, get_pos(nids[0]), p), min_quality(fids1, get_pos(nids[1]), p));
                 
                 if (q > q_max)
                 {
-                    destination_opt = get_dest(nodes[1]);
+                    destination_opt = Util::barycenter(get_dest(nids[0]), get_dest(nids[1]));
                     pos_opt = p;
                     q_max = q;
                 }
             }
             
-            if (!get(nodes[1]).is_boundary() && (!safe || !get(nodes[1]).is_interface()))
+            if (!get(nids[0]).is_boundary() && (!safe || !get(nids[0]).is_interface()))
             {
-                vec3 p = ISMesh::get_pos(nodes[0]);
-                real q = min_quality(e, p);
+                vec3 p = get_pos(nids[1]);
+                real q = Util::min(min_quality(fids0, get_pos(nids[0]), p), min_quality(fids1, get_pos(nids[1]), p));//min_quality(fids0, get_pos(nids[0]), p);
                 
                 if (q > q_max)
                 {
-                    destination_opt = get_dest(nodes[0]);
+                    destination_opt = get_dest(nids[1]);
                     pos_opt = p;
                     q_max = q;
                 }
             }
-            real q_old = min_quality(get_tets(nodes));
-            if((!safe && q_max > EPSILON) || q_max > Util::min(q_old, MIN_TET_QUALITY))
+            
+            if (!get(nids[1]).is_boundary() && (!safe || !get(nids[1]).is_interface()))
             {
-                return ISMesh::collapse(e, pos_opt, destination_opt);
+                vec3 p = ISMesh::get_pos(nids[0]);
+                real q = Util::min(min_quality(fids0, get_pos(nids[0]), p), min_quality(fids1, get_pos(nids[1]), p));//min_quality(fids1, get_pos(nids[1]), p);
+                
+                if (q > q_max)
+                {
+                    destination_opt = get_dest(nids[0]);
+                    pos_opt = p;
+                    q_max = q;
+                }
+            }
+            real q_old = min_quality(get_tets(nids));
+            if((!safe && q_max > EPSILON) || q_max > Util::min(q_old, MIN_TET_QUALITY) + EPSILON)
+            {
+                return ISMesh::collapse(eid, pos_opt, destination_opt);
             }
             return node_key();
         }
