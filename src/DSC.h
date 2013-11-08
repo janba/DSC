@@ -1628,7 +1628,7 @@ namespace DSC {
                 vec3 p = Util::barycenter(get_pos(nids[0]), get_pos(nids[1]));
                 real q = Util::min(min_quality(fids0, get_pos(nids[0]), p), min_quality(fids1, get_pos(nids[1]), p));
                 
-                if (q > q_max)
+                if (q > q_max && ((!get(nids[0]).is_interface() && !get(nids[1]).is_interface()) || design_domain->is_inside(p)))
                 {
                     destination_opt = Util::barycenter(get_dest(nids[0]), get_dest(nids[1]));
                     pos_opt = p;
@@ -1641,7 +1641,7 @@ namespace DSC {
                 vec3 p = get_pos(nids[1]);
                 real q = Util::min(min_quality(fids0, get_pos(nids[0]), p), q1);
                 
-                if (q > q_max)
+                if (q > q_max && (!get(nids[0]).is_interface() || design_domain->is_inside(p)))
                 {
                     destination_opt = get_dest(nids[1]);
                     pos_opt = p;
@@ -1654,7 +1654,7 @@ namespace DSC {
                 vec3 p = ISMesh::get_pos(nids[0]);
                 real q = Util::min(q0, min_quality(fids1, get_pos(nids[1]), p));
                 
-                if (q > q_max)
+                if (q > q_max && (!get(nids[1]).is_interface() || design_domain->is_inside(p)))
                 {
                     destination_opt = get_dest(nids[0]);
                     pos_opt = p;
