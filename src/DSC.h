@@ -1662,16 +1662,19 @@ namespace DSC {
                 }
             }
             
-            if(!safe && q_max > EPSILON)
+            if(q_max > EPSILON)
             {
-                ISMesh::collapse(eid, pos_opt, destination_opt);
-                return true;
-            }
-            real q_old = Util::min(Util::min(min_quality(e_tids), q1), q0);
-            if(q_max > Util::min(q_old, MIN_TET_QUALITY) + EPSILON)
-            {
-                ISMesh::collapse(eid, pos_opt, destination_opt);
-                return true;
+                if(!safe)
+                {
+                    ISMesh::collapse(eid, pos_opt, destination_opt);
+                    return true;
+                }
+                real q_old = Util::min(Util::min(min_quality(e_tids), q1), q0);
+                if(q_max > Util::min(q_old, MIN_TET_QUALITY) + EPSILON)
+                {
+                    ISMesh::collapse(eid, pos_opt, destination_opt);
+                    return true;
+                }
             }
             return false;
         }
