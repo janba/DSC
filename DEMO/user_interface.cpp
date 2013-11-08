@@ -274,6 +274,14 @@ void UI::keyboard(unsigned char key, int x, int y) {
                 export_tet_mesh(*dsc, filepath);
             }
             break;
+        case 'i':
+            if(dsc)
+            {
+                std::cout << "EXPORTING SURFACE MESH" << std::endl;
+                std::string filepath("data/mesh.obj");
+                export_surface_mesh(*dsc, filepath);
+            }
+            break;
         case '+':
             if(!vel_fun)
             {

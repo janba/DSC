@@ -2009,8 +2009,10 @@ namespace DSC {
         ////////////////////////
     public:
         ///
-        void extract_interface(std::vector<vec3>& verts, std::vector<int>& indices)
+        void extract_surface_mesh(std::vector<vec3>& verts, std::vector<int>& indices)
         {
+            ISMesh::garbage_collect();
+            
             std::map<node_key, int> vert_index;
             
             // Extract vertices
@@ -2018,7 +2020,7 @@ namespace DSC {
             {
                 if (nit->is_interface())
                 {
-                    verts.push_back(ISMesh::get_pos(nit.key()));
+                    verts.push_back(get_pos(nit.key()));
                     vert_index[nit.key()] = static_cast<int>(verts.size());
                 }
             }
@@ -2028,7 +2030,7 @@ namespace DSC {
             {
                 if (fit->is_interface())
                 {
-                    auto nodes = get_sorted_nodes(fit.key());
+                    is_mesh::SimplexSet<node_key> nodes = ISMesh::get_sorted_nodes(fit.key());
                     
                     indices.push_back(vert_index[nodes[0]]);
                     indices.push_back(vert_index[nodes[1]]);

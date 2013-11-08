@@ -101,11 +101,11 @@ namespace DSC {
     }
     
     template <typename DeformableSimplicialComplex>
-    inline void save_interface(DeformableSimplicialComplex& dsc, std::string & filename)
+    inline void export_surface_mesh(DeformableSimplicialComplex& dsc, std::string & filename)
     {
         std::vector<vec3> verts;
         std::vector<int> indices;
-        dsc.extract_interface(verts, indices);
+        dsc.extract_surface_mesh(verts, indices);
         
         std::ofstream obj_file;
         obj_file.open(filename.data());
@@ -117,10 +117,18 @@ namespace DSC {
         
         for (unsigned int i = 0; i < indices.size(); ++i)
         {
-            if (i%3 == 0) obj_file << "f ";
+            if (i%3 == 0)
+            {
+                obj_file << "f ";
+            }
             obj_file << indices[i];
-            if (i%3 == 2) obj_file << std::endl;
-            else obj_file << " ";
+            if (i%3 == 2)
+            {
+                obj_file << std::endl;
+            }
+            else {
+                obj_file << " ";
+            }
         }
         
         obj_file.close();
