@@ -25,34 +25,34 @@ namespace is_mesh
     template<typename key_type>
     class SimplexSet
     {
-        std::unique_ptr<std::vector<key_type>> set;
+        std::vector<key_type> set;
         
     public:
         
-        SimplexSet()
+        SimplexSet() : set()
         {
-            set = std::unique_ptr<std::vector<key_type>>(new std::vector<key_type>());
+            
         }
         
-        SimplexSet(std::initializer_list<key_type> il)
+        SimplexSet(std::initializer_list<key_type> il) : set(il)
         {
-            set = std::unique_ptr<std::vector<key_type>>(new std::vector<key_type>(il));
+            
         }
         
-        SimplexSet(const SimplexSet& ss)
+        SimplexSet(const SimplexSet& ss) : set(ss.set)
         {
-            set = std::unique_ptr<std::vector<key_type>>(new std::vector<key_type>(*ss.set));
+            
         }
         
         SimplexSet& operator=(const SimplexSet& ss)
         {
-            set = std::unique_ptr<std::vector<key_type>>(new std::vector<key_type>(*ss.set));
+            set = std::vector<key_type>(ss.set);
             return *this;
         }
         
-        SimplexSet(SimplexSet&& ss)
+        SimplexSet(SimplexSet&& ss) : set(std::move(ss.set))
         {
-            set = std::move(ss.set);
+            
         }
         
         SimplexSet& operator=(SimplexSet&& ss)
@@ -68,62 +68,62 @@ namespace is_mesh
 
         typename std::vector<key_type>::const_iterator begin() const
         {
-            return set->begin();
+            return set.begin();
         }
         
         typename std::vector<key_type>::const_iterator end() const
         {
-            return set->end();
+            return set.end();
         }
         
         unsigned int size() const
         {
-            return static_cast<unsigned int>(set->size());
+            return static_cast<unsigned int>(set.size());
         }
         
         const key_type& front() const
         {
-            return set->front();
+            assert(set.size() > 0);
+            return set.front();
         }
         
         const key_type& back() const
         {
-            return set->back();
+            assert(set.size() > 0);
+            return set.back();
         }
         
         const key_type& operator[](int i) const
         {
-            assert(set);
             assert(size() > i);
-            return set->at(i);
+            return set.at(i);
         }
         
         bool contains(const key_type& k) const
         {
-            return std::find(set->begin(), set->end(), k) != end();
+            return std::find(set.begin(), set.end(), k) != end();
         }
         
         void push_front(const key_type& k)
         {
-            set->insert(set->begin(), k);
+            set.insert(set.begin(), k);
         }
         
         void push_back(const key_type& k)
         {
-            set->push_back(k);
+            set.push_back(k);
         }
         
         void push_back(key_type&& k)
         {
-            set->push_back(std::move(k));
+            set.push_back(std::move(k));
         }
         
         void swap(int i = 0, int j = 1)
         {
-            assert(set);
             assert(size() > i);
             assert(size() > j);
-            std::swap((*set)[i], (*set)[j]);
+            std::swap(set[i], set[j]);
         }
         
         SimplexSet<key_type>& operator+=(const SimplexSet<key_type>& ss)
@@ -136,7 +136,7 @@ namespace is_mesh
         
         SimplexSet<key_type>& operator+=(SimplexSet<key_type>&& ss)
         {
-            for (key_type& k : *ss.set) {
+            for (key_type& k : ss.set) {
                 *this += std::move(k);
             }
             return *this;
@@ -146,7 +146,7 @@ namespace is_mesh
         {
             if(!contains(key))
             {
-                set->push_back(key);
+                set.push_back(key);
             }
             return *this;
         }
@@ -155,7 +155,7 @@ namespace is_mesh
         {
             if(!contains(key))
             {
-                set->push_back(std::move(key));
+                set.push_back(std::move(key));
             }
             return *this;
         }
@@ -173,7 +173,7 @@ namespace is_mesh
             auto iter = std::find(begin(), end(), key);
             if(iter != end())
             {
-                set->erase(iter);
+                set.erase(iter);
             }
             return *this;
         }
