@@ -196,10 +196,10 @@ Painter::Painter(const DSC::vec3& light_pos)
     glUniform3fv(lightPosUniform, 1, &lp[0]);
     check_gl_error();
     
-    interface = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.1, 0.3, 0.1, 1.}, {0.5, 0.5, 0.5, 1.}, {0.3, 0.3, 0.3, 1.}));
+    interface = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.15,0.4,0.5, 1.}, {0.2, 0.3, 0.4, 1.}, {0.2, 0.3, 0.4, 1.}));
     domain = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.1, 0.1, 0.3, 1.}, {0.2, 0.2, 0.3, 1.}, {0., 0., 0., 1.}));
     low_quality = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.3, 0.1, 0.1, 0.1}, {0.6, 0.4, 0.4, 0.2}, {0., 0., 0., 0.}));
-    edges = std::unique_ptr<GLObject>(new GLObject(line_shader, {0.7, 0.2, 0.2, 1.}, {0., 0., 0., 0.}, {0., 0., 0., 0.}));
+    edges = std::unique_ptr<GLObject>(new GLObject(line_shader, {0.14,0.16,0.88, 1.}, {0., 0., 0., 0.}, {0., 0., 0., 0.}));
     unmoved = std::unique_ptr<GLObject>(new GLObject(line_shader, {0.2, 0.2, 0.7, 1.}, {0., 0., 0., 0.}, {0., 0., 0., 0.}));
     
     // Enable states
