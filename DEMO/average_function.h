@@ -50,7 +50,7 @@ public:
         DSC::vec3 new_pos, p;
         for(auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
         {
-            if(nit->is_interface() && !nit->is_crossing())
+            if(dsc.is_movable(nit.key()))
             {
                 p = nit->get_pos();
                 new_pos = p + VELOCITY * (dsc.get_barycenter(nit.key(), true) - p);

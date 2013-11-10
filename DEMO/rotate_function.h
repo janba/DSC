@@ -56,7 +56,7 @@ public:
         DSC::vec3 new_pos;
         for(auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
         {
-            if(nit->is_interface() && !nit->is_crossing())
+            if(dsc.is_movable(nit.key()))
             {
                 DSC::vec3 new_pos = center + mrot * (dsc.get_pos(nit.key()) - center);
                 dsc.set_destination(nit.key(), new_pos);
