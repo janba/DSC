@@ -129,6 +129,9 @@
 /* Begin PBXFileReference section */
 		7A0AB5A517D906AD0058910E /* libSOIL.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSOIL.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A0AB5C017D9082A0058910E /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		7A0B96D4182F29750004CAF3 /* wire.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = wire.frag; sourceTree = "<group>"; };
+		7A0B96D5182F29750004CAF3 /* wire.geom */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = wire.geom; sourceTree = "<group>"; };
+		7A0B96D6182F29750004CAF3 /* wire.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = wire.vert; sourceTree = "<group>"; };
 		7A30ED1917D951EB0051E6C0 /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = ../../../../../usr/local/lib/libGLEW.a; sourceTree = "<group>"; };
 		7A38E82A17E3B35A0075DC24 /* gouraud.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = gouraud.frag; sourceTree = "<group>"; };
 		7A38E82B17E3B35A0075DC24 /* gouraud.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = gouraud.vert; sourceTree = "<group>"; };
@@ -299,6 +302,9 @@
 		7A38E82917E3B35A0075DC24 /* shaders */ = {
 			isa = PBXGroup;
 			children = (
+				7A0B96D4182F29750004CAF3 /* wire.frag */,
+				7A0B96D5182F29750004CAF3 /* wire.geom */,
+				7A0B96D6182F29750004CAF3 /* wire.vert */,
 				7A8967BA1808F3FA00A55FB6 /* line.frag */,
 				7A8967BB1808F3FA00A55FB6 /* line.geom */,
 				7A8967BC1808F3FA00A55FB6 /* line.vert */,

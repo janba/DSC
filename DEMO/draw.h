@@ -78,9 +78,9 @@ class Painter {
     };
     
     int WIDTH, HEIGHT;
-    GLuint gouraud_shader, line_shader;
+    GLuint gouraud_shader, line_shader, wire_shader;
     
-    std::unique_ptr<GLObject> interface, domain, low_quality, edges, unmoved;
+    std::unique_ptr<GLObject> interface, wire_frame, domain, low_quality, edges, unmoved;
     
     // Uniform variables
     CGLA::Mat4x4f projectionMatrix, viewMatrix, modelMatrix = CGLA::rotation_Mat4x4f(CGLA::YAXIS, M_PI);
@@ -125,6 +125,8 @@ private:
      Updates the drawn interface.
      */
     void update_interface(DSC::DeformableSimplicialComplex<>& dsc);
+    
+    void update_wire_frame(DSC::DeformableSimplicialComplex<>& dsc);
     
     /**
      Updates the drawn edges.

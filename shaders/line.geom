@@ -1,7 +1,7 @@
 #version 150
 
 layout (points) in;
-layout (triangle_strip, max_vertices = 9) out;
+layout (triangle_strip, max_vertices = 6) out;
 
 uniform mat4 PMatrix;
 
