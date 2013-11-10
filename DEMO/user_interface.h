@@ -42,6 +42,7 @@ class UI
     bool CONTINUOUS;
     bool RECORD;
     bool QUIT_ON_COMPLETION;
+    bool WIREFRAME = false;
     
     DSC::real VELOCITY;
     DSC::real DISCRETIZATION;

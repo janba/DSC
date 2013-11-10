@@ -362,10 +362,17 @@ void Painter::draw()
     check_gl_error();
 }
 
-void Painter::update(DSC::DeformableSimplicialComplex<>& dsc)
+void Painter::update(DSC::DeformableSimplicialComplex<>& dsc, bool do_wire_frame)
 {
-//    update_interface(dsc);
-    update_wire_frame(dsc);
+    if(!do_wire_frame)
+    {
+        wire_frame->clear_data();
+        update_interface(dsc);
+    }
+    else {
+        interface->clear_data();
+        update_wire_frame(dsc);
+    }
 //    update_unmoved(dsc);
 //    update_edges(dsc);
 //    update_domain(dsc);

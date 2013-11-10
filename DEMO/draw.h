@@ -73,6 +73,11 @@ class Painter {
         
         void add_data(std::vector<DSC::vec3> _data);
         
+        void clear_data()
+        {
+            data.clear();
+        }
+        
         void draw(GLenum mode = GL_TRIANGLES);
         
     };
@@ -113,7 +118,7 @@ public:
     /**
      Updates what to draw.
      */
-    void update(DSC::DeformableSimplicialComplex<>& dsc);
+    void update(DSC::DeformableSimplicialComplex<>& dsc, bool do_wire_frame);
     
     /**
      Saves the current painting to the selected folder.

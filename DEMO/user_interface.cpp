@@ -166,7 +166,7 @@ void UI::animate()
     if(vel_fun && CONTINUOUS)
     {
         vel_fun->take_time_step(*dsc);
-        painter->update(*dsc);
+        painter->update(*dsc, WIREFRAME);
         if(RECORD)
         {
             painter->set_view_position(camera_pos);
@@ -237,19 +237,30 @@ void UI::keyboard(unsigned char key, int x, int y) {
             {
                 std::cout << "TEST DSC" << std::endl;
                 dsc->test_flip23_flip32();
-                painter->update(*dsc);
+                painter->update(*dsc, WIREFRAME);
                 dsc->test_split_collapse();
-                painter->update(*dsc);
+                painter->update(*dsc, WIREFRAME);
                 dsc->test_flip44();
-                painter->update(*dsc);
+                painter->update(*dsc, WIREFRAME);
                 dsc->test_flip22();
-                painter->update(*dsc);
+                painter->update(*dsc, WIREFRAME);
             }
             if(vel_fun)
             {
                 std::cout << "TEST VELOCITY FUNCTION" << std::endl;
                 vel_fun->test(*dsc);
-                painter->update(*dsc);
+                painter->update(*dsc, WIREFRAME);
+            }
+            break;
+        case 'w':
+            if(dsc)
+            {
+                if(!WIREFRAME)
+                {
+                    std::cout << "DISPLAYING WIREFRAME" << std::endl;
+                }
+                WIREFRAME = !WIREFRAME;
+                painter->update(*dsc, WIREFRAME);
             }
             break;
         case '\t':
@@ -355,7 +366,7 @@ void UI::stop()
 void UI::start()
 {
     basic_log = std::unique_ptr<Log>(new Log(create_log_path()));
-    painter->update(*dsc);
+    painter->update(*dsc, WIREFRAME);
     if(RECORD && vel_fun)
     {
         painter->set_view_position(camera_pos);
