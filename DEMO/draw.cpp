@@ -285,6 +285,12 @@ void Painter::reshape(int width, int height)
         std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
     }
     glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
+    
+    GLuint scaleUniform = glGetUniformLocation(wire_shader, "WScale");
+    if (scaleUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'WScale' uniform."<<std::endl;
+    }
+    glUniform2f(scaleUniform, width, height);
     check_gl_error();
 }
 

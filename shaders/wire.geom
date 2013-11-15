@@ -3,18 +3,21 @@
 layout (triangles) in;
 layout (triangle_strip, max_vertices = 3) out;
 
+uniform vec2 WScale;
+
 in vec4 colourV[3];
 
 out vec4 colour;
 out vec3 dist;
 
-const int wscale = 512;
-
 void main()
 {
-    vec4 p0 = wscale * gl_in[0].gl_Position/gl_in[0].gl_Position.w;
-    vec4 p1 = wscale * gl_in[1].gl_Position/gl_in[1].gl_Position.w;
-    vec4 p2 = wscale * gl_in[2].gl_Position/gl_in[2].gl_Position.w;
+    vec4 p0 = gl_in[0].gl_Position/gl_in[0].gl_Position.w;
+    vec4 p1 = gl_in[1].gl_Position/gl_in[1].gl_Position.w;
+    vec4 p2 = gl_in[2].gl_Position/gl_in[2].gl_Position.w;
+    p0.xy *= WScale;
+    p1.xy *= WScale;
+    p2.xy *= WScale;
     
 	vec2 v0 = p2.xy - p1.xy;
 	vec2 v1 = p2.xy - p0.xy;
