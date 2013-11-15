@@ -5,6 +5,7 @@ uniform vec4 diffuseMat;
 uniform vec4 specMat;
 
 uniform mat4 MVMatrix;
+uniform mat4 MVPMatrix;
 uniform mat4 NormalMatrix;
 
 uniform vec3 lightPos;
@@ -32,5 +33,5 @@ void main()
     vec4 spec = clamp ( specMat * pow(max(dot(R,E),0.0), 0.3*specPow) , 0.0, 1.0 );
     colourV = ambient + diffuse + spec;
     
-	gl_Position =  MVMatrix * vec4(position.xyz, 1.);
+	gl_Position =  MVPMatrix * vec4(position.xyz, 1.);
 }

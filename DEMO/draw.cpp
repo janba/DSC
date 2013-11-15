@@ -280,11 +280,11 @@ void Painter::reshape(int width, int height)
     glUniformMatrix4fv(PMatrixUniform, 1, GL_TRUE, &projectionMatrix[0][0]);
     
     glUseProgram(wire_shader);
-    PMatrixUniform = glGetUniformLocation(wire_shader, "PMatrix");
-    if (PMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'PMatrix' uniform."<<std::endl;
+    MVPMatrixUniform = glGetUniformLocation(wire_shader, "MVPMatrix");
+    if (MVPMatrixUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
     }
-    glUniformMatrix4fv(PMatrixUniform, 1, GL_TRUE, &projectionMatrix[0][0]);
+    glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
     check_gl_error();
 }
 
@@ -328,11 +328,11 @@ void Painter::set_view_position(DSC::vec3 pos)
     glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, &normalMatrix[0][0]);
     
     glUseProgram(wire_shader);
-    MVMatrixUniform = glGetUniformLocation(wire_shader, "MVMatrix");
-    if (MVMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
+    MVPMatrixUniform = glGetUniformLocation(wire_shader, "MVPMatrix");
+    if (MVPMatrixUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
     }
-    glUniformMatrix4fv(MVMatrixUniform, 1, GL_TRUE, &modelViewMatrix[0][0]);
+    glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
     
     NormalMatrixUniform = glGetUniformLocation(wire_shader, "NormalMatrix");
     if (NormalMatrixUniform == NULL_LOCATION) {
