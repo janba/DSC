@@ -301,6 +301,9 @@ namespace DSC {
                     get(nid).set_destination(dest);
                 }
             }
+            else {
+                get(nid).set_destination(get(nid).get_pos());
+            }
         }
         
         /////////////

@@ -365,7 +365,7 @@ namespace DSC {
             while(corners.size() > 2)
             {
                 auto bc = barycentric_coords<real>(p, corners[0], corners[1], corners[2]);
-                if(bc[0] >= 0. && bc[1] >= 0. && bc[2] >= 0.)
+                if(bc[0] > -EPSILON && bc[1] > -EPSILON && bc[2] > -EPSILON)
                 {
                     return true;
                 }
