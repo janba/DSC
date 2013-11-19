@@ -901,6 +901,11 @@ namespace is_mesh {
         
     protected:
         
+        virtual void split(const NodeKey& nid_new, const NodeKey& nid1, const NodeKey& nid2)
+        {
+            
+        }
+        
         NodeKey split(const EdgeKey& eid, const typename node_traits::vec3& pos, const typename node_traits::vec3& destination)
         {
             auto nids = get_nodes(eid);
@@ -953,9 +958,15 @@ namespace is_mesh {
                 set_label(new_tids[i], get_label(tids[i]));
             }
             
+            split(new_nid, nids[0], nids[1]);
+            
             return new_nid;
         }
         
+        virtual void collapse(const NodeKey& nid_new)
+        {
+            
+        }
         
         NodeKey collapse(const EdgeKey& eid, const typename node_traits::vec3& pos, const typename node_traits::vec3& destination)
         {
@@ -987,8 +998,11 @@ namespace is_mesh {
                 merge(fids[0], fids[1]);
             }
             
-            // Update flags and ensure no inverted tetrahedra.
+            // Update flags.
             update(get_tets(nid));
+            
+            collapse(nid);
+            
             return nid;
         }
         

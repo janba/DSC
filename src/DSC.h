@@ -889,7 +889,7 @@ namespace DSC {
                     j++;
                 }
             }
-            std::cout << "Thinning interface splits: " << i << "/" << j << std::endl;
+            std::cout << "Thinning interface collapses: " << i << "/" << j << std::endl;
         }
         
         /**
