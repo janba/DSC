@@ -380,7 +380,7 @@ namespace is_mesh
          *
          * @return      An iterator pointing to the element.
          */
-        const_iterator create()
+        const_iterator create(const type_traits& attributes)
         {
             key_type key = get_next_free_cell();
             kernel_element& cur = lookup(key);
@@ -393,7 +393,7 @@ namespace is_mesh
              } else */ {
                  //only setting value if mem was empty (or unused)
                  //we copy the memory instead of assinging, as assigning would create a temp object.
-                 value_allocator(m_alloc).construct( &cur.value , value_type(type_traits()) );
+                 value_allocator(m_alloc).construct( &cur.value , value_type(attributes) );
              }
             if (cur.state == kernel_element::EMPTY)
             {

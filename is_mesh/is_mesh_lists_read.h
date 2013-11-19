@@ -17,6 +17,7 @@
 #pragma once
 
 #include <map>
+#include "util.h"
 
 namespace is_mesh
 {
@@ -78,8 +79,8 @@ namespace is_mesh
         
     }
     
-    template<typename mesh_type, typename vec3>
-    bool vectors_read(std::vector<vec3> & points, std::vector<int>& tets, mesh_type & mesh)
+    template<typename mesh_type, typename real>
+    bool vectors_read(std::vector<real> & points, std::vector<int>& tets, mesh_type & mesh)
     {
         std::map<util::edge_key, int> edge_map;
         std::map<util::face_key, int> face_map;
@@ -87,13 +88,12 @@ namespace is_mesh
         int cnt_nodes = 0;
         for (unsigned int i = 0; i < points.size()/3; ++i)
         {
-            float x, y, z;
+            real x, y, z;
             x = points[3*i];
             y = points[3*i+1];
             z = points[3*i+2];
-            mesh.insert_node();
-            mesh.get(NodeKey(cnt_nodes)).set_pos(x,y,z);
-            mesh.get(NodeKey(cnt_nodes)).set_destination(x,y,z);
+            mesh.insert_node(DSC::vec3(x,y,z));
+            mesh.get(NodeKey(cnt_nodes)).set_destination(DSC::vec3(x,y,z));
             ++cnt_nodes;
         }
         

@@ -29,7 +29,10 @@ namespace DSC {
         
     public:
         
-        NodeAttributes() : p(0.,0.,0.), p_new(0.,0.,0.) {}
+        NodeAttributes(vec3 _p) : p(_p), p_new(_p)
+        {
+            
+        }
         
         /**
          * Returns the position of the node.
@@ -47,19 +50,9 @@ namespace DSC {
             return p_new;
         }
         
-        void set_pos(real x, real y, real z)
-        {
-            p = vec3(x,y,z);
-        }
-        
         void set_pos(const vec3& p_)
         {
             p = p_;
-        }
-        
-        void set_destination(real x, real y, real z)
-        {
-            p_new = vec3(x,y,z);
         }
         
         void set_destination(const vec3& p_)

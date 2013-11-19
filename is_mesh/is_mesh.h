@@ -718,9 +718,10 @@ namespace is_mesh {
         /**
          * Inserts a node into the mesh. Trivial.
          */
-        NodeKey insert_node()
+        template<typename vec3>
+        NodeKey insert_node(const vec3& p)
         {
-            auto node = m_node_kernel->create();
+            auto node = m_node_kernel->create(node_traits(p));
             return node.key();
         }
         
@@ -730,7 +731,7 @@ namespace is_mesh {
          */
         EdgeKey insert_edge(NodeKey node1, NodeKey node2)
         {
-            auto edge = m_edge_kernel->create();
+            auto edge = m_edge_kernel->create(edge_traits());
             //add the new simplex to the co-boundary relation of the boundary simplices
             get(node1).add_co_face(edge.key());
             get(node2).add_co_face(edge.key());
@@ -746,7 +747,7 @@ namespace is_mesh {
          */
         FaceKey insert_face(EdgeKey edge1, EdgeKey edge2, EdgeKey edge3)
         {
-            auto face = m_face_kernel->create();
+            auto face = m_face_kernel->create(face_traits());
             //update relations
             get(edge1).add_co_face(face.key());
             get(edge2).add_co_face(face.key());
@@ -763,7 +764,7 @@ namespace is_mesh {
          */
         TetrahedronKey insert_tetrahedron(FaceKey face1, FaceKey face2, FaceKey face3, FaceKey face4)
         {
-            auto tetrahedron = m_tetrahedron_kernel->create();
+            auto tetrahedron = m_tetrahedron_kernel->create(tet_traits());
             //update relations
             get(face1).add_co_face(tetrahedron.key());
             get(face2).add_co_face(tetrahedron.key());
@@ -907,8 +908,7 @@ namespace is_mesh {
             auto tids = get_tets(eid);
             
             // Split edge
-            auto new_nid = insert_node();
-            get(new_nid).set_pos(pos);
+            auto new_nid = insert_node(pos);
             get(new_nid).set_destination(destination);
             
             disconnect(nids[1], eid);
