@@ -17,7 +17,6 @@
 #pragma once
 
 #include "util.h"
-#include "DSC.h"
 
 namespace DSC {
     
@@ -43,7 +42,6 @@ namespace DSC {
             {
                 dsc.set_label(tit.key(), tet_labels[tit.key()]);
             }
-            dsc.update_attributes();
         }
 
         template <typename DeformableSimplicialComplex>
@@ -66,7 +64,6 @@ namespace DSC {
                     dsc.set_label(tit.key(), label);
                 }
             }
-            dsc.update_attributes();
         }
         
         template <typename DeformableSimplicialComplex>
@@ -93,7 +90,6 @@ namespace DSC {
                     dsc.set_label(tit.key(), label);
                 }
             }
-            dsc.update_attributes();
         }
     };
     

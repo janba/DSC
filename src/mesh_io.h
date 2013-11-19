@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "DSC.h"
+#include "util.h"
 
 #include <fstream>
 #include <string>

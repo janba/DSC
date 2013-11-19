@@ -1187,6 +1187,63 @@ namespace is_mesh {
             m_face_kernel->garbage_collect();
             m_tetrahedron_kernel->garbage_collect();
         }
+        
+        void extract_surface_mesh(std::vector<typename node_traits::vec3>& verts, std::vector<int>& indices)
+        {
+            garbage_collect();
+            
+            std::map<NodeKey, int> vert_index;
+            
+            // Extract vertices
+            for (auto nit = nodes_begin(); nit != nodes_end(); nit++)
+            {
+                if (nit->is_interface())
+                {
+                    verts.push_back(get_pos(nit.key()));
+                    vert_index[nit.key()] = static_cast<int>(verts.size());
+                }
+            }
+            
+            // Extract faces
+            for (auto fit = faces_begin(); fit != faces_end(); fit++)
+            {
+                if (fit->is_interface())
+                {
+                    SimplexSet<NodeKey> nodes = get_sorted_nodes(fit.key());
+                    
+                    indices.push_back(vert_index[nodes[0]]);
+                    indices.push_back(vert_index[nodes[1]]);
+                    indices.push_back(vert_index[nodes[2]]);
+                }
+            }
+        }
+        
+        void extract_tet_mesh(std::vector<typename node_traits::vec3>& points, std::vector< std::vector<int> >& tets)
+        {
+            garbage_collect();
+            
+            std::map<NodeKey, int> indices;
+            int counter = 0;
+            for (auto nit = nodes_begin(); nit != nodes_end(); nit++)
+            {
+                indices[nit.key()] = counter;
+                points.push_back(nit->get_pos());
+                ++counter;
+            }
+            
+            for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
+            {
+                std::vector<int> tet;
+                auto nodes = get_nodes(tit.key());
+                
+                for (auto &n : nodes)
+                {
+                    tet.push_back(indices[n]);
+                }
+                tet.push_back(get_label(tit.key()));
+                tets.push_back(tet);
+            }
+        }
                 
         void validity_check()
         {

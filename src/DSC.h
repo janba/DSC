@@ -190,11 +190,6 @@ namespace DSC {
         /////////////////////////
         // ATTRIBUTE FUNCTIONS //
         /////////////////////////
-    public:
-        virtual void update_attributes()
-        {
-            
-        }
         
     protected:
         
@@ -1419,7 +1414,6 @@ namespace DSC {
             resize_complex();
             
             ISMesh::garbage_collect();
-            update_attributes();
             ISMesh::validity_check();
         }
         
@@ -2011,63 +2005,6 @@ namespace DSC {
         // DOCUMENT FUNCTIONS //
         ////////////////////////
     public:
-        ///
-        void extract_surface_mesh(std::vector<vec3>& verts, std::vector<int>& indices)
-        {
-            ISMesh::garbage_collect();
-            
-            std::map<node_key, int> vert_index;
-            
-            // Extract vertices
-            for (auto nit = ISMesh::nodes_begin(); nit != ISMesh::nodes_end(); nit++)
-            {
-                if (nit->is_interface())
-                {
-                    verts.push_back(get_pos(nit.key()));
-                    vert_index[nit.key()] = static_cast<int>(verts.size());
-                }
-            }
-            
-            // Extract faces
-            for (auto fit = ISMesh::faces_begin(); fit != ISMesh::faces_end(); fit++)
-            {
-                if (fit->is_interface())
-                {
-                    is_mesh::SimplexSet<node_key> nodes = ISMesh::get_sorted_nodes(fit.key());
-                    
-                    indices.push_back(vert_index[nodes[0]]);
-                    indices.push_back(vert_index[nodes[1]]);
-                    indices.push_back(vert_index[nodes[2]]);
-                }
-            }
-        }
-        
-        void extract_tet_mesh(std::vector<vec3>& points, std::vector< std::vector<int> >& tets)
-        {
-            ISMesh::garbage_collect();
-            
-            std::map<node_key, int> indices;
-            int counter = 0;
-            for (auto nit = ISMesh::nodes_begin(); nit != ISMesh::nodes_end(); nit++)
-            {
-                indices[nit.key()] = counter;
-                points.push_back(nit->get_pos());
-                ++counter;
-            }
-            
-            for (auto tit = ISMesh::tetrahedra_begin(); tit != ISMesh::tetrahedra_end(); tit++)
-            {
-                std::vector<int> tet;
-                auto nodes = get_nodes(tit.key());
-                
-                for (auto &n : nodes)
-                {
-                    tet.push_back(indices[n]);
-                }
-                tet.push_back(get_label(tit.key()));
-                tets.push_back(tet);
-            }
-        }
         
         /**
          * Returns the cosine to the dihedral angle between face f1 and face f2.
