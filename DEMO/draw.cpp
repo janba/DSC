@@ -184,7 +184,7 @@ GLuint Painter::init_shader(const char* vShaderFile, const char* fShaderFile, co
 Painter::Painter(const DSC::vec3& light_pos)
 {    
     // Initialize shader
-    wire_shader = init_shader("shaders/wire.vert", "shaders/wire.frag", "fragColour", "shaders/wire.geom");
+    wire_shader = init_shader("shaders/gouraud.vert", "shaders/wire.frag", "fragColour", "shaders/wire.geom");
     line_shader = init_shader("shaders/line.vert", "shaders/line.frag", "fragColour", "shaders/line.geom");
     gouraud_shader = init_shader("shaders/gouraud.vert",  "shaders/gouraud.frag", "fragColour");
     
@@ -334,6 +334,12 @@ void Painter::set_view_position(DSC::vec3 pos)
     glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, &normalMatrix[0][0]);
     
     glUseProgram(wire_shader);
+    MVMatrixUniform = glGetUniformLocation(wire_shader, "MVMatrix");
+    if (MVMatrixUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
+    }
+    glUniformMatrix4fv(MVMatrixUniform, 1, GL_TRUE, &modelViewMatrix[0][0]);
+    
     MVPMatrixUniform = glGetUniformLocation(wire_shader, "MVPMatrix");
     if (MVPMatrixUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
