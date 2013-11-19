@@ -1,5 +1,3 @@
-t4mesh/.DS_Store
-
 .DS_Store
 
 DSC.xcodeproj/project.xcworkspace/xcuserdata/asny.xcuserdatad/UserInterfaceState.xcuserstate
@@ -17,16 +15,6 @@ DSC.xcodeproj/xcuserdata/asny.xcuserdatad/xcschemes/DSC_DEBUG.xcscheme
 DSC.xcodeproj/xcuserdata/asny.xcuserdatad/xcschemes/Tetgen.xcscheme
 
 DSC.xcodeproj/xcuserdata/asny.xcuserdatad/xcschemes/xcschememanagement.plist
-
-Tetgen/predicates.cxx
-
-Tetgen/tetgen.cxx
-
-Tetgen/tetgen.h
-
-TinyXML/tinystr.h
-
-TinyXML/tinyxml.h
 
 DSC.xcodeproj/xcuserdata/asny.xcuserdatad/xcschemes/SOIL.xcscheme
 
