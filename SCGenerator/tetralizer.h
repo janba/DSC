@@ -38,7 +38,7 @@ class Tetralizer
     
 public:
     
-    static void tetralize(const std::vector<vec3>& points_interface, const std::vector<int>& faces_interface, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
+    static void tetralize(const vec3& size, const std::vector<vec3>& points_interface, const std::vector<int>& faces_interface, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
     {
         std::vector<real> points_interface_real;
         for (vec3 p : points_interface) {
@@ -47,7 +47,6 @@ public:
             points_interface_real.push_back(p[2]);
         }
         
-        vec3 size(4.);
         vec3 inside_point(0.);
         
         std::vector<real>    points_boundary;
