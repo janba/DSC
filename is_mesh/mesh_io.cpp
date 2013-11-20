@@ -54,32 +54,33 @@ namespace is_mesh {
             }
             c = '\n';
         }
-        
         file.close();
     }
     
     void import_surface_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& faces)
     {
-        std::ifstream ifs(filename.data());
+        std::ifstream file(filename.data());
         
-        if(ifs)
+        if(file)
         {
-            while(ifs.good() && !ifs.eof())
+            while(!file.eof())
             {
                 std::string tok;
-                ifs >> tok;
+                file >> tok;
                 if(tok == "v")
                 {
-                    float x,y,z;
-                    ifs >> x >> y >> z;
+                    real x,y,z;
+                    file >> x;
+                    file >> y;
+                    file >> z;
                     points.push_back(vec3(x,y,z));
                     char line[1000];
-                    ifs.getline(line, 998);
+                    file.getline(line, 998);
                 }
                 else if(tok == "f")
                 {
                     char line[1000];
-                    ifs.getline(line, 998);
+                    file.getline(line, 998);
                     char* pch = strtok(line, " \t");
                     int ctr = 0;
                     while(pch != 0)
@@ -94,9 +95,10 @@ namespace is_mesh {
                 else
                 {
                     char line[1000];
-                    ifs.getline(line, 998);
+                    file.getline(line, 998);
                 }
             }
+            file.close();
         }
     }
     
