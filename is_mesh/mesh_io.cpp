@@ -59,51 +59,48 @@ namespace is_mesh {
         file.close();
     }
     
-//    bool import_surface_mesh(const std::string& filename, std::vector<double>& vertices, std::vector<int>& faces)
-//    {
-//        std::ifstream ifs(filename.data());
-//        
-//        if(ifs)
-//        {
-//            while(ifs.good() && !ifs.eof())
-//            {
-//                std::string tok;
-//                ifs >> tok;
-//                if(tok == "v")
-//                {
-//                    float x,y,z;
-//                    ifs >> x >> y >> z;
-//                    vertices.push_back(x);
-//                    vertices.push_back(y);
-//                    vertices.push_back(z);
-//                    char line[1000];
-//                    ifs.getline(line, 998);
-//                }
-//                else if(tok == "f")
-//                {
-//                    char line[1000];
-//                    ifs.getline(line, 998);
-//                    char* pch = strtok(line, " \t");
-//                    int ctr = 0;
-//                    while(pch != 0)
-//                    {
-//                        int v;
-//                        sscanf(pch, "%d", &v);
-//                        faces.push_back(v-1);
-//                        pch = strtok(0, " \t");
-//                        ++ctr;
-//                    }
-//                }
-//                else
-//                {
-//                    char line[1000];
-//                    ifs.getline(line, 998);
-//                }
-//            }
-//            
-//            return true;
-//        }
-//        return false;
-//    }
+    void import_surface_mesh(const std::string& filename, std::vector<real>& points, std::vector<int>& faces)
+    {
+        std::ifstream ifs(filename.data());
+        
+        if(ifs)
+        {
+            while(ifs.good() && !ifs.eof())
+            {
+                std::string tok;
+                ifs >> tok;
+                if(tok == "v")
+                {
+                    float x,y,z;
+                    ifs >> x >> y >> z;
+                    points.push_back(x);
+                    points.push_back(y);
+                    points.push_back(z);
+                    char line[1000];
+                    ifs.getline(line, 998);
+                }
+                else if(tok == "f")
+                {
+                    char line[1000];
+                    ifs.getline(line, 998);
+                    char* pch = strtok(line, " \t");
+                    int ctr = 0;
+                    while(pch != 0)
+                    {
+                        int v;
+                        sscanf(pch, "%d", &v);
+                        faces.push_back(v-1);
+                        pch = strtok(0, " \t");
+                        ++ctr;
+                    }
+                }
+                else
+                {
+                    char line[1000];
+                    ifs.getline(line, 998);
+                }
+            }
+        }
+    }
     
 }

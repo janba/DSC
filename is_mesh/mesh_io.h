@@ -126,6 +126,16 @@ namespace is_mesh {
     }
     
     /**
+     * Imports a mesh from a .dsc file.
+     */
+    void import_tet_mesh(const std::string & filename, std::vector<real>& points, std::vector<int>&  tets, std::vector<int>& tet_labels);
+    
+    /**
+     * Imports a surface mesh from an .obj file.
+     */
+    void import_surface_mesh(const std::string& filename, std::vector<real>& points, std::vector<int>& faces);
+    
+    /**
      * Exports the mesh as a .dsc file.
      */
     template<typename ISMesh>
@@ -156,57 +166,8 @@ namespace is_mesh {
     }
     
     /**
-     * Imports a mesh from a .dsc file.
+     * Exports the surface mesh to an .obj file.
      */
-    void import_tet_mesh(const std::string & filename, std::vector<real>& points, std::vector<int>&  tets, std::vector<int>& labels);
-    
-    inline bool import_surface_mesh(const std::string& filename, std::vector<double>& vertices, std::vector<int>& faces)
-    {
-        std::ifstream ifs(filename.data());
-        
-        if(ifs)
-        {
-            while(ifs.good() && !ifs.eof())
-            {
-                std::string tok;
-                ifs >> tok;
-                if(tok == "v")
-                {
-                    float x,y,z;
-                    ifs >> x >> y >> z;
-                    vertices.push_back(x);
-                    vertices.push_back(y);
-                    vertices.push_back(z);
-                    char line[1000];
-                    ifs.getline(line, 998);
-                }
-                else if(tok == "f")
-                {
-                    char line[1000];
-                    ifs.getline(line, 998);
-                    char* pch = strtok(line, " \t");
-                    int ctr = 0;
-                    while(pch != 0)
-                    {
-                        int v;
-                        sscanf(pch, "%d", &v);
-                        faces.push_back(v-1);
-                        pch = strtok(0, " \t");
-                        ++ctr;
-                    }
-                }
-                else
-                {
-                    char line[1000];
-                    ifs.getline(line, 998);
-                }
-            }
-            
-            return true;
-        }
-        return false;
-    }
-    
     template <typename ISMesh>
     inline void export_surface_mesh(const std::string& filename, ISMesh& dsc)
     {
