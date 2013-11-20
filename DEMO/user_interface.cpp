@@ -412,7 +412,7 @@ void UI::rotate_cube()
     std::vector<vec3> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
-    is_mesh::import_tet_mesh(get_data_file_path("cube_new.dsc").data(), points, tets, tet_labels);
+    is_mesh::import_tet_mesh(get_data_file_path("cube.dsc").data(), points, tets, tet_labels);
     
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(50.));
     

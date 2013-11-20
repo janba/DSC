@@ -60,11 +60,11 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "eight"
+            argument = "test"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "eight.obj"
+            argument = "blob.obj"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
