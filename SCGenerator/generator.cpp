@@ -16,6 +16,7 @@
 
 #include "mesh_io.h"
 #include "tetralizer.h"
+#include "object_generator.h"
 
 using namespace std;
 
@@ -44,6 +45,28 @@ void generate_empty(const string& output_file_name)
     vector<int>  tet_labels;
     
     Tetralizer::tetralize(vec3(3.), 0.1, points, tets, tet_labels);
+    is_mesh::export_tet_mesh(file_path + output_file_name + extension, points, tets, tet_labels);
+}
+
+void generate_cube(const string& output_file_name)
+{
+    vector<vec3> points;
+    vector<int>  tets;
+    vector<int>  tet_labels;
+    
+    Tetralizer::tetralize(vec3(3.), 0.1, points, tets, tet_labels);
+    ObjectGenerator::create_cube(points, tets, vec3(-1.), vec3(2.), 1, tet_labels);
+    is_mesh::export_tet_mesh(file_path + output_file_name + extension, points, tets, tet_labels);
+}
+
+void generate_sphere(const string& output_file_name)
+{
+    vector<vec3> points;
+    vector<int>  tets;
+    vector<int>  tet_labels;
+    
+    Tetralizer::tetralize(vec3(3.), 0.1, points, tets, tet_labels);
+    ObjectGenerator::create_sphere(points, tets, vec3(0.), 1., 1, tet_labels);
     is_mesh::export_tet_mesh(file_path + output_file_name + extension, points, tets, tet_labels);
 }
 

@@ -18,63 +18,11 @@
 
 #include "util.h"
 
-class ObjectGenerator {
-    
-    // TODO:
-    template <typename DeformableSimplicialComplex>
-    static void fit_mesh_to_object(DeformableSimplicialComplex& dsc)
-    {
-        
-    }
-    
+class ObjectGenerator {    
     
 public:
     
-    template <typename DeformableSimplicialComplex>
-    static void create_sphere(DeformableSimplicialComplex& dsc, const vec3& center, const real& radius, int label)
-    {
-        for (auto tit = dsc.tetrahedra_begin(); tit != dsc.tetrahedra_end(); tit++)
-        {
-            bool inside = true;
-            auto verts = dsc.get_pos(dsc.get_nodes(tit.key()));
-            for (auto &v : verts)
-            {
-                if((center - v).length() > radius)
-                {
-                    inside = false;
-                    break;
-                }
-            }
-            if(inside)
-            {
-                dsc.set_label(tit.key(), label);
-            }
-        }
-    }
+    static void create_sphere(const std::vector<vec3>& points, const std::vector<int>& tets, const vec3& center, const real& radius, int label, std::vector<int>& tet_labels);
     
-    template <typename DeformableSimplicialComplex>
-    static void create_cube(DeformableSimplicialComplex& dsc, const vec3& origin, const vec3& size, int label)
-    {
-        vec3 max_pos = origin + size;
-        for (auto tit = dsc.tetrahedra_begin(); tit != dsc.tetrahedra_end(); tit++)
-        {
-            bool inside = true;
-            auto verts = dsc.get_pos(dsc.get_nodes(tit.key()));
-            for (auto &v : verts)
-            {
-                for(int i = 0; i < 3; i++)
-                {
-                    if(v[i] < origin[i] || v[i] > max_pos[i])
-                    {
-                        inside = false;
-                        break;
-                    }
-                }
-            }
-            if(inside)
-            {
-                dsc.set_label(tit.key(), label);
-            }
-        }
-    }
+    static void create_cube(const std::vector<vec3>& points, const std::vector<int>& tets, const vec3& origin, const vec3& size, int label, std::vector<int>& tet_labels);
 };

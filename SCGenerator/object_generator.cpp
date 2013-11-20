@@ -16,3 +16,51 @@
 
 #include "object_generator.h"
 
+void ObjectGenerator::create_sphere(const std::vector<vec3>& points, const std::vector<int>& tets, const vec3& center, const real& radius, int label, std::vector<int>& tet_labels)
+{
+    for (int k = 0; k < tets.size()/4; k++)
+    {
+        bool inside = true;
+        for (int j = 0; j < 4; j++)
+        {
+            vec3 v = points[tets[4*k + j]];
+            for(int i = 0; i < 3; i++)
+            {
+                if((center - v).length() > radius)
+                {
+                    inside = false;
+                    break;
+                }
+            }
+        }
+        if(inside)
+        {
+            tet_labels[k] = label;
+        }
+    }
+}
+
+void ObjectGenerator::create_cube(const std::vector<vec3>& points, const std::vector<int>& tets, const vec3& origin, const vec3& size, int label, std::vector<int>& tet_labels)
+{
+    vec3 max_pos = origin + size;
+    for (int k = 0; k < tets.size()/4; k++)
+    {
+        bool inside = true;
+        for (int j = 0; j < 4; j++)
+        {
+            vec3 v = points[tets[4*k + j]];
+            for(int i = 0; i < 3; i++)
+            {
+                if(v[i] < origin[i] || v[i] > max_pos[i])
+                {
+                    inside = false;
+                    break;
+                }
+            }
+        }
+        if(inside)
+        {
+            tet_labels[k] = label;
+        }
+    }
+}
