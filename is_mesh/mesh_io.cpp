@@ -18,7 +18,7 @@
 
 namespace is_mesh {
     
-    void import_tet_mesh(const std::string & filename, std::vector<real>& points, std::vector<int>&  tets, std::vector<int>& labels)
+    void import_tet_mesh(const std::string & filename, std::vector<real>& points, std::vector<int>&  tets, std::vector<int>& tet_labels)
     {
         std::ifstream file(filename.data());
         
@@ -51,7 +51,7 @@ namespace is_mesh {
                 tets.push_back(v3);
                 tets.push_back(v4);
                 
-                labels.push_back(label);
+                tet_labels.push_back(label);
             }
             c = '\n';
         }
@@ -101,6 +101,56 @@ namespace is_mesh {
                 }
             }
         }
+    }
+    
+    void export_tet_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<std::vector<int>>& tets)
+    {
+        std::ofstream file(filename.data());
+        
+        for (auto &p : points)
+        {
+            file << "v " << p[0] << " " << p[1] << " " << p[2] << std::endl;
+        }
+        
+        for (std::vector<int> tet : tets)
+        {
+            file << "t ";
+            for (int i = 0; i < tet.size() - 1; i++)
+            {
+                file << tet[i];
+                file << " ";
+            }
+            file << tet[tet.size()-1] << std::endl;
+        }
+    }
+    
+    void export_surface_mesh(const std::string& filename, const std::vector<vec3>& points, const std::vector<int>& faces)
+    {
+        std::ofstream obj_file;
+        obj_file.open(filename.data());
+        
+        for (unsigned int i = 0; i < points.size(); ++i)
+        {
+            obj_file << "v "  <<   points[i][0] << " " <<   points[i][1] << " " <<   points[i][2] << std::endl;
+        }
+        
+        for (unsigned int i = 0; i < faces.size(); ++i)
+        {
+            if (i%3 == 0)
+            {
+                obj_file << "f ";
+            }
+            obj_file << faces[i];
+            if (i%3 == 2)
+            {
+                obj_file << std::endl;
+            }
+            else {
+                obj_file << " ";
+            }
+        }
+        
+        obj_file.close();
     }
     
 }

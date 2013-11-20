@@ -135,6 +135,12 @@ namespace is_mesh {
      */
     void import_surface_mesh(const std::string& filename, std::vector<real>& points, std::vector<int>& faces);
     
+    
+    /**
+     * Exports the mesh as a .dsc file.
+     */
+    void export_tet_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<std::vector<int>>& tets);
+    
     /**
      * Exports the mesh as a .dsc file.
      */
@@ -142,28 +148,15 @@ namespace is_mesh {
     inline void export_tet_mesh(const std::string & filename, ISMesh& mesh)
     {
         std::vector<vec3> points;
-        std::vector< std::vector<int> > tets;
+        std::vector< std::vector<int>> tets;
         mesh.extract_tet_mesh(points, tets);
-        
-        std::ofstream file(filename.data());
-        
-        for (auto &p : points)
-        {
-            file << "v " << p[0] << " " << p[1] << " " << p[2] << std::endl;
-        }
-        
-        for (std::vector<int> tet : tets)
-        {
-            file << "t ";
-            for (int i = 0; i < tet.size() - 1; i++)
-            {
-                file << tet[i];
-                file << " ";
-            }
-            file << tet[tet.size()-1] << std::endl;
-        }
-        
+        export_tet_mesh(filename, points, tets);
     }
+    
+    /**
+     * Exports the surface mesh to an .obj file.
+     */
+    void export_surface_mesh(const std::string& filename, const std::vector<vec3>& points, const std::vector<int>& faces);
     
     /**
      * Exports the surface mesh to an .obj file.
@@ -171,35 +164,10 @@ namespace is_mesh {
     template <typename ISMesh>
     inline void export_surface_mesh(const std::string& filename, ISMesh& dsc)
     {
-        std::vector<vec3> verts;
-        std::vector<int> indices;
-        dsc.extract_surface_mesh(verts, indices);
-        
-        std::ofstream obj_file;
-        obj_file.open(filename.data());
-        
-        for (unsigned int i = 0; i < verts.size(); ++i)
-        {
-            obj_file << "v "  <<   verts[i][0] << " " <<   verts[i][1] << " " <<   verts[i][2] << std::endl;
-        }
-        
-        for (unsigned int i = 0; i < indices.size(); ++i)
-        {
-            if (i%3 == 0)
-            {
-                obj_file << "f ";
-            }
-            obj_file << indices[i];
-            if (i%3 == 2)
-            {
-                obj_file << std::endl;
-            }
-            else {
-                obj_file << " ";
-            }
-        }
-        
-        obj_file.close();
+        std::vector<vec3> points;
+        std::vector<int> faces;
+        dsc.extract_surface_mesh(points, faces);
+        export_surface_mesh(filename, points, faces);
     }
     
 }
