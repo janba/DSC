@@ -28,7 +28,7 @@ public:
     /**
      Creates a velocity function which moves the interface vertices in the normal direction.
      */
-    NormalFunc(DSC::real velocity, DSC::real accuracy, int max_time_steps = 100):
+    NormalFunc(real velocity, real accuracy, int max_time_steps = 100):
         VelocityFunc<>(velocity/10., accuracy, max_time_steps)
     {
         
@@ -48,7 +48,7 @@ public:
     virtual void deform(DSC::DeformableSimplicialComplex<>& dsc)
     {
         auto init_time = std::chrono::system_clock::now();
-        DSC::vec3 new_pos;
+        vec3 new_pos;
         for(auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
         {
             if(dsc.is_movable(nit.key()))

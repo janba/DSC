@@ -54,22 +54,22 @@ private:
     /**
      Write a variable with name and value to the log.
      */
-    void write_variable(const std::string& name, DSC::real value);
+    void write_variable(const std::string& name, real value);
     
     /**
      Write a variable with name, value and change in value to the log.
      */
-    void write_variable(const std::string& name, DSC::real value, DSC::real change);
+    void write_variable(const std::string& name, real value, real change);
     
     /**
      Write a variable with name, value and unit of the value to the log.
      */
-    void write_variable(const std::string& name, DSC::real value, const std::string& unit);
+    void write_variable(const std::string& name, real value, const std::string& unit);
     
     /**
      Write a variable with name and values to the log.
      */
-    void write_variable(const std::string& name, const std::vector<DSC::real>& values);
+    void write_variable(const std::string& name, const std::vector<real>& values);
     
     void write_variable(const std::string& name, const std::vector<int>& values);
     

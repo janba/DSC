@@ -17,18 +17,19 @@
 #pragma once
 
 #include "util.h"
+#include "is_mesh.h"
 
 #include <fstream>
 #include <string>
 #include <vector>
 
-namespace DSC {
+namespace is_mesh {
     
     /**
      * Exports the mesh as a .dsc file.
      */
-    template <typename DeformableSimplicialComplex>
-    inline void export_tet_mesh(DeformableSimplicialComplex& dsc, const std::string & filename)
+    template<typename ISMesh>
+    inline void export_tet_mesh(ISMesh& dsc, const std::string & filename)
     {
         std::vector<vec3> points;
         std::vector< std::vector<int> > tets;

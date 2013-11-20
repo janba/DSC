@@ -40,11 +40,11 @@ Painter::GLObject::GLObject(GLuint _shader, const CGLA::Vec4f& ambient_mat_, con
     check_gl_error();
 }
 
-void Painter::GLObject::add_data(std::vector<DSC::vec3> _data)
+void Painter::GLObject::add_data(std::vector<vec3> _data)
 {
-    data = std::vector<DSC::vec3>(_data);
+    data = std::vector<vec3>(_data);
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(DSC::vec3)*data.size(), &data[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vec3)*data.size(), &data[0], GL_STATIC_DRAW);
 }
 
 void Painter::GLObject::draw(GLenum mode)
@@ -73,8 +73,8 @@ void Painter::GLObject::draw(GLenum mode)
         glUseProgram(shader);
         glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
         
-        glVertexAttribPointer(position_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)0);
-        glVertexAttribPointer(vector_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(DSC::vec3), (const GLvoid *)sizeof(DSC::vec3));
+        glVertexAttribPointer(position_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(vec3), (const GLvoid *)0);
+        glVertexAttribPointer(vector_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(vec3), (const GLvoid *)sizeof(vec3));
         
         glDrawArrays(mode, 0, static_cast<int>(data.size())/2);
         check_gl_error();
@@ -181,7 +181,7 @@ GLuint Painter::init_shader(const char* vShaderFile, const char* fShaderFile, co
     return program;
 }
 
-Painter::Painter(const DSC::vec3& light_pos)
+Painter::Painter(const vec3& light_pos)
 {    
     // Initialize shader
     wire_shader = init_shader("shaders/gouraud.vert", "shaders/wire.frag", "fragColour", "shaders/wire.geom");
@@ -246,7 +246,7 @@ void Painter::save_painting(std::string folder, int time_step)
     
     if (time_step >= 0)
     {
-        s << std::string(DSC::Util::concat4digits("_", time_step));
+        s << std::string(Util::concat4digits("_", time_step));
     }
     s << ".png";
     int success = SOIL_save_screenshot(s.str().c_str(), SOIL_SAVE_TYPE_PNG, 0, 0, WIDTH, HEIGHT);
@@ -294,7 +294,7 @@ void Painter::reshape(int width, int height)
     check_gl_error();
 }
 
-void Painter::set_view_position(DSC::vec3 pos)
+void Painter::set_view_position(vec3 pos)
 {
     viewMatrix = CGLA::lookAt_Mat4x4f(CGLA::Vec3f(pos), center, CGLA::Vec3f(0., 1., 0.));
     CGLA::Mat4x4f modelViewMatrix = viewMatrix * modelMatrix;
@@ -393,13 +393,13 @@ void Painter::update(DSC::DeformableSimplicialComplex<>& dsc, bool do_wire_frame
 
 void Painter::update_interface(DSC::DeformableSimplicialComplex<>& dsc)
 {
-    std::vector<DSC::vec3> data;
+    std::vector<vec3> data;
     for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
     {
         if (fit->is_interface())
         {
             auto verts = dsc.get_pos(dsc.get_sorted_nodes(fit.key()));
-            DSC::vec3 normal = DSC::Util::normal_direction(verts[0], verts[1], verts[2]);
+            vec3 normal = Util::normal_direction(verts[0], verts[1], verts[2]);
             
             for(auto &p : verts)
             {
@@ -413,13 +413,13 @@ void Painter::update_interface(DSC::DeformableSimplicialComplex<>& dsc)
 
 void Painter::update_wire_frame(DSC::DeformableSimplicialComplex<>& dsc)
 {
-    std::vector<DSC::vec3> data;
+    std::vector<vec3> data;
     for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
     {
         if (fit->is_interface())
         {
             auto verts = dsc.get_pos(dsc.get_sorted_nodes(fit.key()));
-            DSC::vec3 normal = DSC::Util::normal_direction(verts[0], verts[1], verts[2]);
+            vec3 normal = Util::normal_direction(verts[0], verts[1], verts[2]);
             
             for(auto &p : verts)
             {
@@ -433,13 +433,13 @@ void Painter::update_wire_frame(DSC::DeformableSimplicialComplex<>& dsc)
 
 void Painter::update_edges(DSC::DeformableSimplicialComplex<>& dsc)
 {
-    std::vector<DSC::vec3> data;
+    std::vector<vec3> data;
     for (auto eit = dsc.edges_begin(); eit != dsc.edges_end(); eit++)
     {
         auto nids = dsc.get_nodes(eit.key());
         if(!eit->is_interface())
         {
-            DSC::vec3 vector = dsc.get_pos(nids[1]) - dsc.get_pos(nids[0]);
+            vec3 vector = dsc.get_pos(nids[1]) - dsc.get_pos(nids[0]);
             
             data.push_back(dsc.get_pos(nids[0]));
             data.push_back(vector);
@@ -448,7 +448,7 @@ void Painter::update_edges(DSC::DeformableSimplicialComplex<>& dsc)
     edges->add_data(data);
 }
 
-bool is_boundary(DSC::DeformableSimplicialComplex<>& dsc, const DSC::DeformableSimplicialComplex<>::face_key& fid, std::vector<DSC::vec3>& verts)
+bool is_boundary(DSC::DeformableSimplicialComplex<>& dsc, const DSC::DeformableSimplicialComplex<>::face_key& fid, std::vector<vec3>& verts)
 {
     if(dsc.get(fid).is_boundary())
     {
@@ -461,7 +461,7 @@ bool is_boundary(DSC::DeformableSimplicialComplex<>& dsc, const DSC::DeformableS
         for (auto &plane : design_domain->get_planes()) {
             bool boundary = true;
             for (auto &p : verts) {
-                if (DSC::Util::is_inside(p, plane.p, plane.n)) {
+                if (Util::is_inside(p, plane.p, plane.n)) {
                     boundary = false;
                     break;
                 }
@@ -469,7 +469,7 @@ bool is_boundary(DSC::DeformableSimplicialComplex<>& dsc, const DSC::DeformableS
             if(boundary)
             {
                 auto apices = dsc.get_nodes(dsc.get_tets(fid)) - dsc.get_nodes(fid);
-                if(DSC::Util::is_inside(dsc.get_pos(apices[0]), plane.p, plane.n) != DSC::Util::is_inside(dsc.get_pos(apices[1]), plane.p, plane.n))
+                if(Util::is_inside(dsc.get_pos(apices[0]), plane.p, plane.n) != Util::is_inside(dsc.get_pos(apices[1]), plane.p, plane.n))
                 {
                     if(dot(dsc.get_normal(fid), plane.n) > 0.)
                     {
@@ -485,13 +485,13 @@ bool is_boundary(DSC::DeformableSimplicialComplex<>& dsc, const DSC::DeformableS
 
 void Painter::update_domain(DSC::DeformableSimplicialComplex<>& dsc)
 {
-    std::vector<DSC::vec3> data;
+    std::vector<vec3> data;
     for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
     {
         auto verts = dsc.get_pos(dsc.get_sorted_nodes(fit.key()));
         if(is_boundary(dsc, fit.key(), verts))
         {
-            DSC::vec3 normal = DSC::Util::normal_direction(verts[0], verts[1], verts[2]);
+            vec3 normal = Util::normal_direction(verts[0], verts[1], verts[2]);
             for (auto &p : verts) {
                 data.push_back(p);
                 data.push_back(normal);
@@ -503,7 +503,7 @@ void Painter::update_domain(DSC::DeformableSimplicialComplex<>& dsc)
 
 void Painter::update_low_quality(DSC::DeformableSimplicialComplex<>& dsc)
 {
-    std::vector<DSC::vec3> data;
+    std::vector<vec3> data;
     for (auto tit = dsc.tetrahedra_begin(); tit != dsc.tetrahedra_end(); tit++)
     {
         if(dsc.quality(tit.key()) < dsc.get_min_tet_quality())
@@ -511,7 +511,7 @@ void Painter::update_low_quality(DSC::DeformableSimplicialComplex<>& dsc)
             for (auto f : dsc.get_faces(tit.key()))
             {
                 auto nodes = dsc.get_sorted_nodes(f, tit.key());
-                DSC::vec3 normal = -dsc.get_normal(f);
+                vec3 normal = -dsc.get_normal(f);
                 
                 for(auto &n : nodes)
                 {
@@ -526,7 +526,7 @@ void Painter::update_low_quality(DSC::DeformableSimplicialComplex<>& dsc)
         if(dsc.quality(fit.key()) < dsc.get_min_face_quality())
         {
             auto nodes = dsc.get_nodes(fit.key());
-            DSC::vec3 normal = dsc.get_normal(fit.key());
+            vec3 normal = dsc.get_normal(fit.key());
             
             for(auto &n : nodes)
             {
@@ -540,11 +540,11 @@ void Painter::update_low_quality(DSC::DeformableSimplicialComplex<>& dsc)
 
 void Painter::update_unmoved(DSC::DeformableSimplicialComplex<>& dsc)
 {
-    std::vector<DSC::vec3> data;
+    std::vector<vec3> data;
     for (auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
     {
-        DSC::vec3 vector = nit->get_destination() - nit->get_pos();
-        if(vector.length() > DSC::EPSILON)
+        vec3 vector = nit->get_destination() - nit->get_pos();
+        if(vector.length() > EPSILON)
         {
             data.push_back(nit->get_pos());
             data.push_back(vector);

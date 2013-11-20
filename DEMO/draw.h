@@ -60,7 +60,7 @@ class Painter {
         
         GLuint shader;
         
-        std::vector<DSC::vec3> data;
+        std::vector<vec3> data;
         
         GLuint array_id, buffer_id;
         GLuint position_att, vector_att;
@@ -71,7 +71,7 @@ class Painter {
         
         GLObject(GLuint _shader, const CGLA::Vec4f& ambient_mat = CGLA::Vec4f(1.f), const CGLA::Vec4f& diffuse_mat = CGLA::Vec4f(0.f), const CGLA::Vec4f& specular_mat = CGLA::Vec4f(0.f));
         
-        void add_data(std::vector<DSC::vec3> _data);
+        void add_data(std::vector<vec3> _data);
         
         void clear_data()
         {
@@ -93,7 +93,7 @@ class Painter {
     
 public:
     
-    Painter(const DSC::vec3& light_pos);
+    Painter(const vec3& light_pos);
     
 private:
     // Create a GLSL program object from vertex and fragment shader files
@@ -108,7 +108,7 @@ public:
     /**
      Set the position of the camera/eye.
      */
-    void set_view_position(DSC::vec3 pos);
+    void set_view_position(vec3 pos);
     
     /**
      Draws the simplicial complex.

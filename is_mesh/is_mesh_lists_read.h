@@ -92,8 +92,8 @@ namespace is_mesh
             x = points[3*i];
             y = points[3*i+1];
             z = points[3*i+2];
-            mesh.insert_node(DSC::vec3(x,y,z));
-            mesh.get(NodeKey(cnt_nodes)).set_destination(DSC::vec3(x,y,z));
+            mesh.insert_node(vec3(x,y,z));
+            mesh.get(NodeKey(cnt_nodes)).set_destination(vec3(x,y,z));
             ++cnt_nodes;
         }
         

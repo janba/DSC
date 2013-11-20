@@ -30,7 +30,7 @@ public:
     /**
      Creates a rotating velocity function.
      */
-    RotateFunc(DSC::real velocity, DSC::real accuracy, int max_time_steps = 100):
+    RotateFunc(real velocity, real accuracy, int max_time_steps = 100):
         VelocityFunc<>(M_PI*velocity/(5.*180.), accuracy, max_time_steps)
     {
         
@@ -51,14 +51,14 @@ public:
     {
         auto init_time = std::chrono::system_clock::now();
         
-        DSC::vec3 center = dsc.get_center();
-        DSC::mat3 mrot = rotation_Mat3x3d(CGLA::Axis::ZAXIS, VELOCITY);
-        DSC::vec3 new_pos;
+        vec3 center = dsc.get_center();
+        mat3 mrot = rotation_Mat3x3d(CGLA::Axis::ZAXIS, VELOCITY);
+        vec3 new_pos;
         for(auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
         {
             if(dsc.is_movable(nit.key()))
             {
-                DSC::vec3 new_pos = center + mrot * (dsc.get_pos(nit.key()) - center);
+                vec3 new_pos = center + mrot * (dsc.get_pos(nit.key()) - center);
                 dsc.set_destination(nit.key(), new_pos);
             }
         }

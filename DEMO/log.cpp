@@ -31,7 +31,7 @@ Log::Log(const std::string& path_)
     int error;
     int i = 0;
     do {
-        temp = DSC::Util::concat4digits(path_ + "_test",i);
+        temp = Util::concat4digits(path_ + "_test",i);
 #ifdef WIN32
         error = _mkdir(temp.c_str());
 #else

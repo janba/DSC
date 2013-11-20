@@ -32,9 +32,9 @@ class UI
     std::unique_ptr<Log> basic_log;
     
     std::unique_ptr<Painter> painter;
-    DSC::vec3 eye_pos = {70., 30., 70.};
-    DSC::vec3 camera_pos = {30., 30., 70.};
-    DSC::vec3 light_pos = {0., 0., 70.};
+    vec3 eye_pos = {70., 30., 70.};
+    vec3 camera_pos = {30., 30., 70.};
+    vec3 light_pos = {0., 0., 70.};
     
     int WIN_SIZE_X = 700.;
     int WIN_SIZE_Y = 700;
@@ -44,9 +44,9 @@ class UI
     bool QUIT_ON_COMPLETION;
     bool WIREFRAME = false;
     
-    DSC::real VELOCITY;
-    DSC::real DISCRETIZATION;
-    DSC::real ACCURACY;
+    real VELOCITY;
+    real DISCRETIZATION;
+    real ACCURACY;
     static UI* instance;
     
 #ifdef WIN32

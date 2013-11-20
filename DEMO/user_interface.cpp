@@ -144,7 +144,7 @@ void UI::display()
         return;
     }
     GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.0002;
-    DSC::vec3 ep = DSC::vec3( eye_pos[0] * sinf(timeValue), eye_pos[1] * cosf(timeValue) , eye_pos[2] * cosf(timeValue));
+    vec3 ep = vec3( eye_pos[0] * sinf(timeValue), eye_pos[1] * cosf(timeValue) , eye_pos[2] * cosf(timeValue));
     painter->set_view_position(ep);
     painter->draw();
     glutSwapBuffers();
@@ -391,7 +391,7 @@ void UI::one_cell()
     std::vector<real> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
-    import_tet_mesh(get_data_file_path("one_cell.dsc").data(), points, tets, tet_labels);
+    is_mesh::import_tet_mesh(get_data_file_path("one_cell.dsc").data(), points, tets, tet_labels);
     
     dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(cell_size, points, tets, tet_labels));
     
@@ -405,7 +405,7 @@ void UI::rotate_cube()
     std::vector<real> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
-    import_tet_mesh(get_data_file_path("cube.dsc").data(), points, tets, tet_labels);
+    is_mesh::import_tet_mesh(get_data_file_path("cube.dsc").data(), points, tets, tet_labels);
     
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(40.));
     
@@ -422,7 +422,7 @@ void UI::rotate_blob()
     std::vector<real> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
-    import_tet_mesh(get_data_file_path("blob.dsc").data(), points, tets, tet_labels);
+    is_mesh::import_tet_mesh(get_data_file_path("blob.dsc").data(), points, tets, tet_labels);
     
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(60.));
     dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels, domain));
@@ -438,7 +438,7 @@ void UI::smooth_armadillo()
     std::vector<real> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
-    import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
+    is_mesh::import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
     
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(60.));
     dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels, domain));
@@ -454,7 +454,7 @@ void UI::expand_blob()
     std::vector<real> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
-    import_tet_mesh(get_data_file_path("blob.dsc").data(), points, tets, tet_labels);
+    is_mesh::import_tet_mesh(get_data_file_path("blob.dsc").data(), points, tets, tet_labels);
     
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(40.));
     
@@ -471,7 +471,7 @@ void UI::expand_armadillo()
     std::vector<real> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
-    import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
+    is_mesh::import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
     
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(60.));
     dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels, domain));
@@ -487,7 +487,7 @@ void UI::rotate_armadillo()
     std::vector<real> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
-    import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
+    is_mesh::import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
     
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(70.));
     dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels, domain));

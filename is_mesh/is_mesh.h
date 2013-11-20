@@ -612,7 +612,7 @@ namespace is_mesh {
         /**
          * Returns the position of node nid.
          */
-        typename node_traits::vec3 get_pos(const NodeKey& nid)
+        vec3 get_pos(const NodeKey& nid)
         {
             return get(nid).get_pos();
         }
@@ -620,9 +620,9 @@ namespace is_mesh {
         /**
          * Returns the positions of nodes nids.
          */
-        std::vector<typename node_traits::vec3> get_pos(const SimplexSet<NodeKey>& nids)
+        std::vector<vec3> get_pos(const SimplexSet<NodeKey>& nids)
         {
-            std::vector<typename node_traits::vec3> verts(nids.size());
+            std::vector<vec3> verts(nids.size());
             for (int i = 0; i < nids.size(); i++)
             {
                 verts[i] = get_pos(nids[i]);
@@ -914,7 +914,7 @@ namespace is_mesh {
             
         }
         
-        NodeKey split(const EdgeKey& eid, const typename node_traits::vec3& pos, const typename node_traits::vec3& destination)
+        NodeKey split(const EdgeKey& eid, const vec3& pos, const vec3& destination)
         {
             auto nids = get_nodes(eid);
             auto fids = get_faces(eid);
@@ -976,7 +976,7 @@ namespace is_mesh {
             
         }
         
-        NodeKey collapse(const EdgeKey& eid, const typename node_traits::vec3& pos, const typename node_traits::vec3& destination)
+        NodeKey collapse(const EdgeKey& eid, const vec3& pos, const vec3& destination)
         {
             auto nids = get_nodes(eid);
             auto fids = get_faces(eid);
@@ -1196,7 +1196,7 @@ namespace is_mesh {
             m_tetrahedron_kernel->garbage_collect();
         }
         
-        void extract_surface_mesh(std::vector<typename node_traits::vec3>& verts, std::vector<int>& indices)
+        void extract_surface_mesh(std::vector<vec3>& verts, std::vector<int>& indices)
         {
             garbage_collect();
             
@@ -1226,7 +1226,7 @@ namespace is_mesh {
             }
         }
         
-        void extract_tet_mesh(std::vector<typename node_traits::vec3>& points, std::vector< std::vector<int> >& tets)
+        void extract_tet_mesh(std::vector<vec3>& points, std::vector< std::vector<int> >& tets)
         {
             garbage_collect();
             
