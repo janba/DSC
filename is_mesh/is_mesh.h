@@ -45,7 +45,7 @@ namespace is_mesh {
             m_face_kernel = new kernel<face_type, FaceKey>();
             m_tetrahedron_kernel = new kernel<tetrahedron_type, TetrahedronKey>();
             
-            create(points, tets, *this);
+            create(points, tets);
             init_flags(tet_labels);
             validity_check();
             simplex_set_test();
@@ -141,6 +141,106 @@ namespace is_mesh {
         }
         
     private:
+
+        struct edge_key {
+            int k1, k2;
+            edge_key(int i, int j) : k1(i), k2(j) {}
+            bool operator<(const edge_key& k) const
+            {
+                return k1 < k.k1 || (k1 == k.k1 && k2 < k.k2);
+            }
+        };
+        struct face_key
+        {
+            int k1, k2, k3;
+            face_key(int i, int j, int k) : k1(i), k2(j), k3(k){}
+            bool operator<(const face_key& k) const
+            {
+                //        return k1 < k.k1 || (k1 == k.k1 && k2 < k.k2 || (k2 == k.k2 && k3 < k.k3)) ;
+                if (k1 < k.k1) return true;
+                if (k1 == k.k1 && k2 < k.k2) return true;
+                if (k1 == k.k1 && k2 == k.k2 && k3 < k.k3) return true;
+                return false;
+            }
+        };
+        struct tetrahedron_key { int k1, k2, k3, k4; };
+        
+        template<typename map_type, typename mesh_type>
+        inline int create_edge(int i, int j, map_type& edge_map, mesh_type& mesh)
+        {
+            int a,b;
+            if (i <= j) { a = i; b = j; }
+            else { a = j; b = i; }
+            edge_key key(a, b);
+            typename map_type::iterator it = edge_map.find(key);
+            if (it == edge_map.end())
+            {
+                int n = mesh.insert_edge(i, j); //non-sorted
+                it = edge_map.insert(std::pair<edge_key,int>(key, n)).first;
+            }
+            return it->second;
+        }
+        
+        template<typename map_type, typename mesh_type>
+        inline int create_face(int i, int j, int k, map_type& face_map, mesh_type& mesh)
+        {
+            int a[3] = {i, j, k};
+            std::sort(a, a+3);
+            face_key key(a[0], a[1], a[2]);
+            typename map_type::iterator it = face_map.find(key); //lookup in sorted order
+            if (it == face_map.end())
+            {
+                int a = mesh.insert_face(i, j, k); //create in supplied order
+                it = face_map.insert(std::pair<face_key,int>(key, a)).first;
+            }
+            return it->second;
+        }
+        
+        bool create(const std::vector<real>& points, const std::vector<int>& tets)
+        {
+            std::map<edge_key, int> edge_map;
+            std::map<face_key, int> face_map;
+            
+            int cnt_nodes = 0;
+            for (unsigned int i = 0; i < points.size()/3; ++i)
+            {
+                real x, y, z;
+                x = points[3*i];
+                y = points[3*i+1];
+                z = points[3*i+2];
+                insert_node(vec3(x,y,z));
+                get(is_mesh::NodeKey(cnt_nodes)).set_destination(vec3(x,y,z));
+                ++cnt_nodes;
+            }
+            
+            for (unsigned int j = 0; j < tets.size()/4; ++j)
+            {
+                int idx[4];
+                idx[0] = tets[4*j];
+                idx[1] = tets[4*j+1];
+                idx[2] = tets[4*j+2];
+                idx[3] = tets[4*j+3];
+                
+                int edges[6];
+                edges[0] = create_edge(idx[0], idx[1], edge_map, *this); //edge 01
+                edges[1] = create_edge(idx[0], idx[2], edge_map, *this); //edge 02
+                edges[2] = create_edge(idx[0], idx[3], edge_map, *this); //edge 03
+                edges[3] = create_edge(idx[1], idx[2], edge_map, *this); //edge 12
+                edges[4] = create_edge(idx[1], idx[3], edge_map, *this); //edge 13
+                edges[5] = create_edge(idx[2], idx[3], edge_map, *this); //edge 23
+                
+                int faces[4];
+                faces[0] = create_face(edges[3], edges[5], edges[4], face_map, *this); //12-23-31
+                faces[1] = create_face(edges[1], edges[5], edges[2], face_map, *this); //02-23-30
+                faces[2] = create_face(edges[0], edges[4], edges[2], face_map, *this); //01-13-30
+                faces[3] = create_face(edges[0], edges[3], edges[1], face_map, *this); //01-12-20
+                
+                insert_tetrahedron( faces[0], faces[1], faces[2], faces[3] );
+            }
+            
+            return true;
+        }
+        
         /**
          * Perform an initial update of flags for all nodes, edges and faces.
          */

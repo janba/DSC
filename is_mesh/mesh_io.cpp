@@ -59,70 +59,70 @@ namespace is_mesh {
         file.close();
     }
     
-//    void import_surface_mesh(const std::string& filename, std::vector<real>& points, std::vector<int>& faces)
-//    {
-//        std::ifstream ifs(filename.data());
-//        
-//        if(ifs)
-//        {
-//            while(ifs.good() && !ifs.eof())
-//            {
-//                std::string tok;
-//                ifs >> tok;
-//                if(tok == "v")
-//                {
-//                    float x,y,z;
-//                    ifs >> x >> y >> z;
-//                    points.push_back(x);
-//                    points.push_back(y);
-//                    points.push_back(z);
-//                    char line[1000];
-//                    ifs.getline(line, 998);
-//                }
-//                else if(tok == "f")
-//                {
-//                    char line[1000];
-//                    ifs.getline(line, 998);
-//                    char* pch = strtok(line, " \t");
-//                    int ctr = 0;
-//                    while(pch != 0)
-//                    {
-//                        int v;
-//                        sscanf(pch, "%d", &v);
-//                        faces.push_back(v-1);
-//                        pch = strtok(0, " \t");
-//                        ++ctr;
-//                    }
-//                }
-//                else
-//                {
-//                    char line[1000];
-//                    ifs.getline(line, 998);
-//                }
-//            }
-//        }
-//    }
+    void import_surface_mesh(const std::string& filename, std::vector<real>& points, std::vector<int>& faces)
+    {
+        std::ifstream ifs(filename.data());
+        
+        if(ifs)
+        {
+            while(ifs.good() && !ifs.eof())
+            {
+                std::string tok;
+                ifs >> tok;
+                if(tok == "v")
+                {
+                    float x,y,z;
+                    ifs >> x >> y >> z;
+                    points.push_back(x);
+                    points.push_back(y);
+                    points.push_back(z);
+                    char line[1000];
+                    ifs.getline(line, 998);
+                }
+                else if(tok == "f")
+                {
+                    char line[1000];
+                    ifs.getline(line, 998);
+                    char* pch = strtok(line, " \t");
+                    int ctr = 0;
+                    while(pch != 0)
+                    {
+                        int v;
+                        sscanf(pch, "%d", &v);
+                        faces.push_back(v-1);
+                        pch = strtok(0, " \t");
+                        ++ctr;
+                    }
+                }
+                else
+                {
+                    char line[1000];
+                    ifs.getline(line, 998);
+                }
+            }
+        }
+    }
     
-//    void export_tet_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<std::vector<int>>& tets)
-//    {
-//        std::ofstream file(filename.data());
-//        
-//        for (auto &p : points)
-//        {
-//            file << "v " << p[0] << " " << p[1] << " " << p[2] << std::endl;
-//        }
-//        
-//        for (std::vector<int> tet : tets)
-//        {
-//            file << "t ";
-//            for (int i = 0; i < tet.size() - 1; i++)
-//            {
-//                file << tet[i];
-//                file << " ";
-//            }
-//            file << tet[tet.size()-1] << std::endl;
-//        }
-//    }
+    void export_tet_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<std::vector<int>>& tets)
+    {
+        std::ofstream file(filename.data());
+        
+        for (auto &p : points)
+        {
+            file << "v " << p[0] << " " << p[1] << " " << p[2] << std::endl;
+        }
+        
+        for (std::vector<int> tet : tets)
+        {
+            file << "t ";
+            for (int i = 0; i < tet.size() - 1; i++)
+            {
+                file << tet[i];
+                file << " ";
+            }
+            file << tet[tet.size()-1] << std::endl;
+        }
+    }
     
     void export_surface_mesh(const std::string& filename, const std::vector<vec3>& points, const std::vector<int>& faces)
     {
