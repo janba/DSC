@@ -295,7 +295,6 @@ void UI::keyboard(unsigned char key, int x, int y) {
                 std::vector<vec3> points;
                 std::vector<int> faces;
                 dsc->extract_surface_mesh(points, faces);
-                is_mesh::scale(points);
                 is_mesh::export_surface_mesh(filename, points, faces);
             }
             break;

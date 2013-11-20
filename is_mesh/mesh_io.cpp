@@ -19,6 +19,22 @@
 
 namespace is_mesh {
     
+    void scale(std::vector<vec3>& points, real size)
+    {
+        real p_min = INFINITY, p_max = -INFINITY;
+        for (vec3 p : points) {
+            for (int i = 0; i < 3; i++) {
+                p_min = Util::min(p[i], p_min);
+                p_max = Util::max(p[i], p_max);
+            }
+        }
+        
+        real scale = (p_max - p_min);
+        for (vec3& p : points) {
+            p = size*(p - vec3(p_min))/scale - vec3(0.5*size);
+        }
+    }
+    
     void import_tet_mesh(const std::string & filename, std::vector<vec3>& points, std::vector<int>&  tets, std::vector<int>& tet_labels)
     {
         std::ifstream file(filename.data());
@@ -55,6 +71,7 @@ namespace is_mesh {
             c = '\n';
         }
         file.close();
+        scale(points, 3.);
     }
     
     void import_surface_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& faces)
@@ -100,10 +117,12 @@ namespace is_mesh {
             }
             file.close();
         }
+        scale(points, 2.);
     }
     
-    void export_tet_mesh(const std::string& filename, const std::vector<vec3>& points, const std::vector<int>& tets, const std::vector<int>& tet_labels)
+    void export_tet_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
     {
+        scale(points, 3.);
         std::ofstream file(filename.data());
         
         for (auto &p : points)
@@ -119,8 +138,9 @@ namespace is_mesh {
         }
     }
     
-    void export_surface_mesh(const std::string& filename, const std::vector<vec3>& points, const std::vector<int>& faces)
+    void export_surface_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& faces)
     {
+        scale(points, 2.);
         std::ofstream obj_file;
         obj_file.open(filename.data());
         
@@ -146,21 +166,5 @@ namespace is_mesh {
         }
         
         obj_file.close();
-    }
-    
-    void scale(std::vector<vec3>& points)
-    {
-        real p_min = INFINITY, p_max = -INFINITY;
-        for (vec3 p : points) {
-            for (int i = 0; i < 3; i++) {
-                p_min = Util::min(p[i], p_min);
-                p_max = Util::max(p[i], p_max);
-            }
-        }
-        
-        real scale = 0.5*(p_max - p_min);
-        for (vec3& p : points) {
-            p = (p - vec3(p_min))/scale - vec3(1.);
-        }
     }
 }

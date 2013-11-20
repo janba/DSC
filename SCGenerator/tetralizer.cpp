@@ -141,7 +141,7 @@ void Tetralizer::build_boundary_mesh(std::vector<real>& points_boundary, std::ve
     }
     
     real x,y,z,
-    d = 4.0/static_cast<real>(n);
+    d = (size[0] + size[1] + size[2])/(3*static_cast<real>(n));
     int counter = 0;
     
     x = -0.5*size[0];

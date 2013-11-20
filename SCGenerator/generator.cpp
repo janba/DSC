@@ -31,7 +31,6 @@ void generate_from_obj(const string& input_file_name, const string& output_file_
     std::vector<vec3> points_interface;
     std::vector<int> faces_interface;
     is_mesh::import_surface_mesh(file_path + input_file_name, points_interface, faces_interface);
-    is_mesh::scale(points_interface);
     
     Tetralizer::tetralize(vec3(3.), points_interface, faces_interface, points, tets, tet_labels);
     

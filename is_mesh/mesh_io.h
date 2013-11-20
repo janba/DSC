@@ -33,12 +33,10 @@ namespace is_mesh {
     /**
      * Exports the mesh as a .dsc file.
      */
-    void export_tet_mesh(const std::string& filename, const std::vector<vec3>& points, const std::vector<int>& tets, const std::vector<int>& tet_labels);
+    void export_tet_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels);
     
     /**
      * Exports the surface mesh to an .obj file.
      */
-    void export_surface_mesh(const std::string& filename, const std::vector<vec3>& points, const std::vector<int>& faces);
-    
-    void scale(std::vector<vec3>& points);
+    void export_surface_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& faces);
 }
