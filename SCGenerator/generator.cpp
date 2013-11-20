@@ -49,15 +49,21 @@ void generate_empty(const string& output_file_name)
 
 int main(int argc, const char * argv[])
 {
-//    string input_file_name = string("data/") + string(argv[0]);
-//    string output_file_name = string("data/") + string(argv[1]);
-    
-    string input_file_name = string("eight.obj");
-    string output_file_name = string("test");
-    
-    generate_from_obj(input_file_name, output_file_name);
-//    generate_empty(output_file_name);
-    std::cout << "Generated " << output_file_name + extension << std::endl;
+    if(argc > 1)
+    {
+        string output_file_name = string(argv[1]);
+        
+        if(argc == 2) {
+            generate_empty(output_file_name);
+        }
+        else if(argc == 3)
+        {
+            string input_file_name = string(argv[2]);
+            generate_from_obj(input_file_name, output_file_name);
+        }
+        
+        std::cout << "Generated " << output_file_name + extension << std::endl;
+    }
     
     return 0;
 }
