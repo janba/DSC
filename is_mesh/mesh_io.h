@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "is_mesh.h"
+#include "util.h"
 #include <fstream>
 
 namespace is_mesh {
@@ -34,7 +34,7 @@ namespace is_mesh {
     /**
      * Exports the mesh as a .dsc file.
      */
-    void export_tet_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<std::vector<int>>& tets);
+    void export_tet_mesh(const std::string& filename, const std::vector<vec3>& points, const std::vector<int>& tets, const std::vector<int>& tet_labels);
     
     /**
      * Exports the surface mesh to an .obj file.

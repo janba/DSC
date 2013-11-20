@@ -281,9 +281,10 @@ void UI::keyboard(unsigned char key, int x, int y) {
                 std::cout << "EXPORTING MESH" << std::endl;
                 std::string filename("data/mesh.dsc");
                 std::vector<vec3> points;
-                std::vector< std::vector<int>> tets;
-                dsc->extract_tet_mesh(points, tets);
-                is_mesh::export_tet_mesh(filename, points, tets);
+                std::vector<int> tets;
+                std::vector<int> tet_labels;
+                dsc->extract_tet_mesh(points, tets, tet_labels);
+                is_mesh::export_tet_mesh(filename, points, tets, tet_labels);
             }
             break;
         case 'i':

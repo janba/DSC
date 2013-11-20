@@ -103,7 +103,7 @@ namespace is_mesh {
         }
     }
     
-    void export_tet_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<std::vector<int>>& tets)
+    void export_tet_mesh(const std::string& filename, const std::vector<vec3>& points, const std::vector<int>& tets, const std::vector<int>& tet_labels)
     {
         std::ofstream file(filename.data());
         
@@ -112,15 +112,11 @@ namespace is_mesh {
             file << "v " << p[0] << " " << p[1] << " " << p[2] << std::endl;
         }
         
-        for (std::vector<int> tet : tets)
+        for (unsigned int i = 0; i < tet_labels.size(); i++)
         {
             file << "t ";
-            for (int i = 0; i < tet.size() - 1; i++)
-            {
-                file << tet[i];
-                file << " ";
-            }
-            file << tet[tet.size()-1] << std::endl;
+            file << tets[4*i] << " " << tets[4*i+1] << " " << tets[4*i+2] << " " << tets[4*i+3] << " ";
+            file << tet_labels[i] << std::endl;
         }
     }
     

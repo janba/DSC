@@ -18,6 +18,7 @@
 #include "attributes.h"
 #include "object_generator.h"
 #include "tetralizer.h"
+#include "is_mesh.h"
 
 using namespace std;
 

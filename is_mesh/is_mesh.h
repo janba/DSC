@@ -1296,19 +1296,18 @@ namespace is_mesh {
             m_tetrahedron_kernel->garbage_collect();
         }
         
-        void extract_surface_mesh(std::vector<vec3>& verts, std::vector<int>& indices)
+        void extract_surface_mesh(std::vector<vec3>& points, std::vector<int>& faces)
         {
             garbage_collect();
             
-            std::map<NodeKey, int> vert_index;
-            
+            std::map<NodeKey, int> indices;
             // Extract vertices
             for (auto nit = nodes_begin(); nit != nodes_end(); nit++)
             {
                 if (nit->is_interface())
                 {
-                    verts.push_back(get_pos(nit.key()));
-                    vert_index[nit.key()] = static_cast<int>(verts.size());
+                    points.push_back(nit->get_pos());
+                    indices[nit.key()] = static_cast<int>(points.size());
                 }
             }
             
@@ -1317,39 +1316,33 @@ namespace is_mesh {
             {
                 if (fit->is_interface())
                 {
-                    SimplexSet<NodeKey> nodes = get_sorted_nodes(fit.key());
-                    
-                    indices.push_back(vert_index[nodes[0]]);
-                    indices.push_back(vert_index[nodes[1]]);
-                    indices.push_back(vert_index[nodes[2]]);
+                    for (auto &n : get_sorted_nodes(fit.key()))
+                    {
+                        faces.push_back(indices[n]);
+                    }
                 }
             }
         }
         
-        void extract_tet_mesh(std::vector<vec3>& points, std::vector< std::vector<int> >& tets)
+        void extract_tet_mesh(std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
         {
             garbage_collect();
             
             std::map<NodeKey, int> indices;
-            int counter = 0;
+            // Extract vertices
             for (auto nit = nodes_begin(); nit != nodes_end(); nit++)
             {
-                indices[nit.key()] = counter;
+                indices[nit.key()] = static_cast<int>(points.size());
                 points.push_back(nit->get_pos());
-                ++counter;
             }
             
             for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
-                std::vector<int> tet;
-                auto nodes = get_nodes(tit.key());
-                
-                for (auto &n : nodes)
+                for (auto n : get_nodes(tit.key()))
                 {
-                    tet.push_back(indices[n]);
+                    tets.push_back(indices[n]);
                 }
-                tet.push_back(get_label(tit.key()));
-                tets.push_back(tet);
+                tet_labels.push_back(get_label(tit.key()));
             }
         }
                 
