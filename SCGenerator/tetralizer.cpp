@@ -120,9 +120,9 @@ void Tetralizer::create_points(const vec3& size, real avg_edge_length, int Ni, i
     }
 }
 
-void Tetralizer::build_boundary_mesh(std::vector<real>& points_boundary, std::vector<int>& faces_boundary, const vec3& size)
+void Tetralizer::build_boundary_mesh(std::vector<real>& points_boundary, real d, std::vector<int>& faces_boundary, const vec3& size)
 {
-    int n = 3;
+    int n = size[0]/d;
     std::vector<std::vector<int> > face_xp_points(n+1),
     face_xm_points(n+1),
     face_yp_points(n+1),
@@ -140,8 +140,7 @@ void Tetralizer::build_boundary_mesh(std::vector<real>& points_boundary, std::ve
         face_zm_points[i].resize(n+1);
     }
     
-    real x,y,z,
-    d = (size[0] + size[1] + size[2])/(3*static_cast<real>(n));
+    real x,y,z;
     int counter = 0;
     
     x = -0.5*size[0];

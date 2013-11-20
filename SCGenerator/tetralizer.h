@@ -28,7 +28,7 @@ class Tetralizer
     
     static void create_points(const vec3& size, real avg_edge_length, int Ni, int Nj, int Nk, std::vector<vec3>& points);
     
-    static void build_boundary_mesh(std::vector<real>& points_boundary, std::vector<int>& faces_boundary, const vec3& size);
+    static void build_boundary_mesh(std::vector<real>& points_boundary, real avg_edge_length, std::vector<int>& faces_boundary, const vec3& size);
     
     static void tetrahedralize_inside(const std::vector<real>& points_interface, const std::vector<int>& faces_interface, std::vector<real>& points_inside, std::vector<int>& tets_inside);
     
@@ -38,7 +38,7 @@ class Tetralizer
     
 public:
     
-    static void tetralize(const vec3& size, const std::vector<vec3>& points_interface, const std::vector<int>& faces_interface, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
+    static void tetralize(const vec3& size, real avg_edge_length, const std::vector<vec3>& points_interface, const std::vector<int>& faces_interface, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
     {
         std::vector<real> points_interface_real;
         for (vec3 p : points_interface) {
@@ -51,7 +51,7 @@ public:
         
         std::vector<real>    points_boundary;
         std::vector<int>  faces_boundary;
-        build_boundary_mesh(points_boundary, faces_boundary, size);
+        build_boundary_mesh(points_boundary, avg_edge_length, faces_boundary, size);
         
         std::vector<real> points_inside;
         std::vector<int> tets_inside;
