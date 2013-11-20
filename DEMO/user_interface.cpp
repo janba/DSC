@@ -412,11 +412,12 @@ void UI::rotate_cube()
     std::vector<vec3> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
-    is_mesh::import_tet_mesh(get_data_file_path("cube.dsc").data(), points, tets, tet_labels);
+    is_mesh::import_tet_mesh(get_data_file_path("cube_new.dsc").data(), points, tets, tet_labels);
     
-    DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(40.));
+    DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(50.));
     
     dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels, domain));
+    dsc->scale(vec3(20.));
     vel_fun = std::unique_ptr<VelocityFunc<>>(new RotateFunc(VELOCITY, ACCURACY));
     
     start();
@@ -431,8 +432,9 @@ void UI::rotate_blob()
     std::vector<int>  tet_labels;
     is_mesh::import_tet_mesh(get_data_file_path("blob.dsc").data(), points, tets, tet_labels);
     
-    DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(60.));
+    DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(50.));
     dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels, domain));
+    dsc->scale(vec3(20.));
     vel_fun = std::unique_ptr<VelocityFunc<>>(new RotateFunc(VELOCITY, ACCURACY));
     
     start();
@@ -445,10 +447,11 @@ void UI::smooth_armadillo()
     std::vector<vec3> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
-    is_mesh::import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
+    is_mesh::import_tet_mesh(get_data_file_path("armadillo_simple.dsc").data(), points, tets, tet_labels);
     
-    DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(60.));
+    DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(50.));
     dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels, domain));
+    dsc->scale(vec3(20.));
     vel_fun = std::unique_ptr<VelocityFunc<>>(new AverageFunc(VELOCITY, ACCURACY));
     
     start();
@@ -463,9 +466,10 @@ void UI::expand_blob()
     std::vector<int>  tet_labels;
     is_mesh::import_tet_mesh(get_data_file_path("blob.dsc").data(), points, tets, tet_labels);
     
-    DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(40.));
+    DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(50.));
     
     dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels, domain));
+    dsc->scale(vec3(20.));
     vel_fun = std::unique_ptr<VelocityFunc<>>(new NormalFunc(VELOCITY, ACCURACY));
     
     start();
@@ -478,10 +482,11 @@ void UI::expand_armadillo()
     std::vector<vec3> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
-    is_mesh::import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
+    is_mesh::import_tet_mesh(get_data_file_path("armadillo_simple.dsc").data(), points, tets, tet_labels);
     
-    DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(60.));
+    DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(50.));
     dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels, domain));
+    dsc->scale(vec3(20.));
     vel_fun = std::unique_ptr<VelocityFunc<>>(new NormalFunc(VELOCITY, ACCURACY));
     
     start();
@@ -494,10 +499,11 @@ void UI::rotate_armadillo()
     std::vector<vec3> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
-    is_mesh::import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
+    is_mesh::import_tet_mesh(get_data_file_path("armadillo_simple.dsc").data(), points, tets, tet_labels);
     
-    DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(70.));
+    DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(50.));
     dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels, domain));
+    dsc->scale(vec3(20.));
     vel_fun = std::unique_ptr<VelocityFunc<>>(new RotateFunc(VELOCITY, ACCURACY));
     
     start();

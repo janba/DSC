@@ -1288,6 +1288,14 @@ namespace is_mesh {
             m_tetrahedron_kernel->garbage_collect();
         }
         
+        virtual void scale(const vec3& s)
+        {
+            for (auto nit = nodes_begin(); nit != nodes_end(); nit++) {
+                nit->set_pos(s*nit->get_pos());
+                nit->set_destination(s*nit->get_destination());
+            }
+        }
+        
         void extract_surface_mesh(std::vector<vec3>& points, std::vector<int>& faces)
         {
             garbage_collect();
