@@ -38,7 +38,7 @@ namespace is_mesh {
         
     public:
         template<typename real>
-        ISMesh(std::vector<real> & points, std::vector<int> & tets, const std::vector<int>& tet_labels = std::vector<int>())
+        ISMesh(std::vector<real> & points, std::vector<int> & tets, const std::vector<int>& tet_labels)
         {
             m_node_kernel = new kernel<node_type, NodeKey>();
             m_edge_kernel = new kernel<edge_type, EdgeKey>();

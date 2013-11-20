@@ -23,6 +23,7 @@
 #include "obj_load.h"
 
 using namespace std;
+using namespace is_mesh;
 
 const string file_path = string("data/");
 const string extension = string(".dsc");
@@ -37,11 +38,11 @@ void generate_from_obj(const string& input_file_name, const string& output_file_
     std::vector<int> faces_interface;
     obj_load(file_path + input_file_name, points_interface, faces_interface);
     
-    DSC::Tetralizer::tetralize(points_interface, faces_interface, points, tets, tet_labels);
+    Tetralizer::tetralize(points_interface, faces_interface, points, tets, tet_labels);
     
-    is_mesh::ISMesh<DSC::NodeAttributes, DSC::EdgeAttributes, DSC::FaceAttributes, DSC::TetAttributes> mesh(points, tets, tet_labels);
+    ISMesh<NodeAttributes, EdgeAttributes, FaceAttributes, TetAttributes> mesh(points, tets, tet_labels);
     
-    DSC::export_tet_mesh(mesh, file_path + output_file_name + extension);
+    export_tet_mesh(mesh, file_path + output_file_name + extension);
 }
 
 void generate_cube()
@@ -50,14 +51,14 @@ void generate_cube()
     vector<int>  tets;
     vector<int>  tet_labels;
     
-    DSC::Tetralizer::tetralize(DSC::vec3(1.), 0.05, points, tets);
+    Tetralizer::tetralize(vec3(1.), 0.05, points, tets);
     
-    is_mesh::ISMesh<DSC::NodeAttributes, DSC::EdgeAttributes, DSC::FaceAttributes, DSC::TetAttributes> mesh(points, tets);
+    ISMesh<NodeAttributes, EdgeAttributes, FaceAttributes, TetAttributes> mesh(points, tets, tet_labels);
     
     double size = 0.75;
-    DSC::ObjectGenerator::create_cube(mesh, DSC::vec3(-size/2.), DSC::vec3(size), 1);
+    ObjectGenerator::create_cube(mesh, vec3(-size/2.), vec3(size), 1);
     
-    DSC::export_tet_mesh(mesh, file_path + string("cube") + extension);
+    export_tet_mesh(mesh, file_path + string("cube") + extension);
 }
 
 void generate_one_cell()
@@ -66,13 +67,13 @@ void generate_one_cell()
     vector<int>  tets;
     vector<int>  tet_labels;
     
-    DSC::Tetralizer::tetralize(DSC::vec3(1.), 1./3., points, tets);
+    Tetralizer::tetralize(vec3(1.), 1./3., points, tets);
     
-    is_mesh::ISMesh<DSC::NodeAttributes, DSC::EdgeAttributes, DSC::FaceAttributes, DSC::TetAttributes> mesh(points, tets);
+    ISMesh<NodeAttributes, EdgeAttributes, FaceAttributes, TetAttributes> mesh(points, tets, tet_labels);
     
-    DSC::ObjectGenerator::create_cube(mesh, DSC::vec3(-1./6.), DSC::vec3(1./3.), 1);
+    ObjectGenerator::create_cube(mesh, vec3(-1./6.), vec3(1./3.), 1);
     
-    DSC::export_tet_mesh(mesh, file_path + string("one_cell") + extension);
+    export_tet_mesh(mesh, file_path + string("one_cell") + extension);
 }
 
 int main(int argc, const char * argv[])

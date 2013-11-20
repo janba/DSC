@@ -16,7 +16,3 @@
 
 #include "object_generator.h"
 
-namespace DSC {
-    
-    
-}

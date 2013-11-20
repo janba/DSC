@@ -18,68 +18,63 @@
 
 #include "util.h"
 
-namespace DSC {
+class ObjectGenerator {
     
-    class ObjectGenerator {
+    // TODO:
+    template <typename DeformableSimplicialComplex>
+    static void fit_mesh_to_object(DeformableSimplicialComplex& dsc)
+    {
         
-        // TODO:
-        template <typename DeformableSimplicialComplex>
-        static void fit_mesh_to_object(DeformableSimplicialComplex& dsc)
+    }
+    
+    
+public:
+    
+    template <typename DeformableSimplicialComplex>
+    static void create_sphere(DeformableSimplicialComplex& dsc, const vec3& center, const real& radius, int label)
+    {
+        for (auto tit = dsc.tetrahedra_begin(); tit != dsc.tetrahedra_end(); tit++)
         {
-            
-        }
-        
-                
-    public:
-
-        template <typename DeformableSimplicialComplex>
-        static void create_sphere(DeformableSimplicialComplex& dsc, const vec3& center, const real& radius, int label)
-        {
-            for (auto tit = dsc.tetrahedra_begin(); tit != dsc.tetrahedra_end(); tit++)
+            bool inside = true;
+            auto verts = dsc.get_pos(dsc.get_nodes(tit.key()));
+            for (auto &v : verts)
             {
-                bool inside = true;
-                auto verts = dsc.get_pos(dsc.get_nodes(tit.key()));
-                for (auto &v : verts)
+                if((center - v).length() > radius)
                 {
-                    if((center - v).length() > radius)
+                    inside = false;
+                    break;
+                }
+            }
+            if(inside)
+            {
+                dsc.set_label(tit.key(), label);
+            }
+        }
+    }
+    
+    template <typename DeformableSimplicialComplex>
+    static void create_cube(DeformableSimplicialComplex& dsc, const vec3& origin, const vec3& size, int label)
+    {
+        vec3 max_pos = origin + size;
+        for (auto tit = dsc.tetrahedra_begin(); tit != dsc.tetrahedra_end(); tit++)
+        {
+            bool inside = true;
+            auto verts = dsc.get_pos(dsc.get_nodes(tit.key()));
+            for (auto &v : verts)
+            {
+                for(int i = 0; i < 3; i++)
+                {
+                    if(v[i] < origin[i] || v[i] > max_pos[i])
                     {
                         inside = false;
                         break;
                     }
                 }
-                if(inside)
-                {
-                    dsc.set_label(tit.key(), label);
-                }
             }
-        }
-        
-        template <typename DeformableSimplicialComplex>
-        static void create_cube(DeformableSimplicialComplex& dsc, const vec3& origin, const vec3& size, int label)
-        {
-            vec3 max_pos = origin + size;
-            for (auto tit = dsc.tetrahedra_begin(); tit != dsc.tetrahedra_end(); tit++)
+            if(inside)
             {
-                bool inside = true;
-                auto verts = dsc.get_pos(dsc.get_nodes(tit.key()));
-                for (auto &v : verts)
-                {
-                    for(int i = 0; i < 3; i++)
-                    {
-                        if(v[i] < origin[i] || v[i] > max_pos[i])
-                        {
-                            inside = false;
-                            break;
-                        }
-                    }
-                }
-                if(inside)
-                {
-                    dsc.set_label(tit.key(), label);
-                }
+                dsc.set_label(tit.key(), label);
             }
         }
-    };
-    
-    
-}
+    }
+};
