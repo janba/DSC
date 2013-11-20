@@ -95,7 +95,6 @@
 		7A9C20D817DFB51C0064171E /* libCGLA.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A9C205917DFB4CB0064171E /* libCGLA.a */; };
 		7A9F2A9217E7548900259577 /* design_domain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A9F2A8E17E7548900259577 /* design_domain.cpp */; };
 		7A9F2A9317E7548900259577 /* design_domain.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9F2A8F17E7548900259577 /* design_domain.h */; };
-		7AB27FB417FD0A1D00BFC866 /* is_mesh_lists_read.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AB27FB317FCEC0C00BFC866 /* is_mesh_lists_read.h */; };
 		7ACA21D917DE37C5005E9309 /* stb_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ACA21D717DE37C5005E9309 /* stb_image.c */; };
 		7ACA21DA17DE37C5005E9309 /* stb_image.h in Headers */ = {isa = PBXBuildFile; fileRef = 7ACA21D817DE37C5005E9309 /* stb_image.h */; };
 		7AE27AF817675B04000F8238 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE817675B04000F8238 /* util.h */; };
@@ -216,7 +215,6 @@
 		7A9C209A17DFB4D40064171E /* Vec4uc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec4uc.h; sourceTree = "<group>"; };
 		7A9F2A8E17E7548900259577 /* design_domain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = design_domain.cpp; path = src/design_domain.cpp; sourceTree = SOURCE_ROOT; };
 		7A9F2A8F17E7548900259577 /* design_domain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = design_domain.h; path = src/design_domain.h; sourceTree = SOURCE_ROOT; };
-		7AB27FB317FCEC0C00BFC866 /* is_mesh_lists_read.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = is_mesh_lists_read.h; path = is_mesh/is_mesh_lists_read.h; sourceTree = "<group>"; };
 		7ACA21D717DE37C5005E9309 /* stb_image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image.c; sourceTree = "<group>"; };
 		7ACA21D817DE37C5005E9309 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
 		7AE27AD617675AE8000F8238 /* libDSC.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDSC.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -286,7 +284,6 @@
 				7A45DB95176E122100B9B388 /* simplex_set.h */,
 				7A45DB93176E122100B9B388 /* kernel_iterator.h */,
 				7A45DB94176E122100B9B388 /* kernel.h */,
-				7AB27FB317FCEC0C00BFC866 /* is_mesh_lists_read.h */,
 				7AF7E9C0176B524700F43714 /* is_mesh.h */,
 			);
 			name = ISMesh;
@@ -527,7 +524,6 @@
 				7AE27AF817675B04000F8238 /* util.h in Headers */,
 				7AE27AF917675B04000F8238 /* velocity_function.h in Headers */,
 				7AF7E9BF176B4FE400F43714 /* DSC.h in Headers */,
-				7AB27FB417FD0A1D00BFC866 /* is_mesh_lists_read.h in Headers */,
 				7AF7E9C1176B524700F43714 /* is_mesh.h in Headers */,
 				7A3438C1183C6D2700829EEB /* attributes.h in Headers */,
 				7A45DB9C176E122100B9B388 /* key.h in Headers */,

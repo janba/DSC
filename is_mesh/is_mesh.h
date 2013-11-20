@@ -16,10 +16,10 @@
 
 #pragma once
 
-#include <is_mesh/kernel.h>
-#include <is_mesh/simplex.h>
-#include <is_mesh/simplex_set.h>
-#include <is_mesh/is_mesh_lists_read.h>
+#include "kernel.h"
+#include "simplex.h"
+#include "simplex_set.h"
+#include "mesh_io.h"
 
 namespace is_mesh {
     
@@ -45,7 +45,7 @@ namespace is_mesh {
             m_face_kernel = new kernel<face_type, FaceKey>();
             m_tetrahedron_kernel = new kernel<tetrahedron_type, TetrahedronKey>();
             
-            vectors_read(points, tets, *this);
+            create(points, tets, *this);
             init_flags(tet_labels);
             validity_check();
             simplex_set_test();
