@@ -20,7 +20,6 @@
 #include "tetralizer.h"
 
 using namespace std;
-using namespace is_mesh;
 
 const string file_path = string("data/");
 const string extension = string(".dsc");
@@ -33,13 +32,18 @@ void generate_from_obj(const string& input_file_name, const string& output_file_
     
     std::vector<double> points_interface;
     std::vector<int> faces_interface;
-    import_surface_mesh(file_path + input_file_name, points_interface, faces_interface);
+    is_mesh::import_surface_mesh(file_path + input_file_name, points_interface, faces_interface);
     
     Tetralizer::tetralize(points_interface, faces_interface, points, tets, tet_labels);
     
-    ISMesh<NodeAttributes, EdgeAttributes, FaceAttributes, TetAttributes> mesh(points, tets, tet_labels);
+    is_mesh::ISMesh<is_mesh::NodeAttributes, is_mesh::EdgeAttributes, is_mesh::FaceAttributes, is_mesh::TetAttributes> mesh(points, tets, tet_labels);
     
-    export_tet_mesh(file_path + output_file_name + extension, mesh);
+    {
+        std::vector<vec3> points;
+        std::vector< std::vector<int>> tets;
+        mesh.extract_tet_mesh(points, tets);
+        is_mesh::export_tet_mesh(file_path + output_file_name + extension, points, tets);
+    }
 }
 
 void generate_cube()
@@ -50,12 +54,17 @@ void generate_cube()
     
     Tetralizer::tetralize(vec3(1.), 0.05, points, tets);
     
-    ISMesh<NodeAttributes, EdgeAttributes, FaceAttributes, TetAttributes> mesh(points, tets, tet_labels);
+    is_mesh::ISMesh<is_mesh::NodeAttributes, is_mesh::EdgeAttributes, is_mesh::FaceAttributes, is_mesh::TetAttributes> mesh(points, tets, tet_labels);
     
     double size = 0.75;
     ObjectGenerator::create_cube(mesh, vec3(-size/2.), vec3(size), 1);
     
-    export_tet_mesh(file_path + string("cube") + extension, mesh);
+    {
+        std::vector<vec3> points;
+        std::vector< std::vector<int>> tets;
+        mesh.extract_tet_mesh(points, tets);
+        is_mesh::export_tet_mesh(file_path + string("cube") + extension, points, tets);
+    }
 }
 
 void generate_one_cell()
@@ -66,11 +75,16 @@ void generate_one_cell()
     
     Tetralizer::tetralize(vec3(1.), 1./3., points, tets);
     
-    ISMesh<NodeAttributes, EdgeAttributes, FaceAttributes, TetAttributes> mesh(points, tets, tet_labels);
+    is_mesh::ISMesh<is_mesh::NodeAttributes, is_mesh::EdgeAttributes, is_mesh::FaceAttributes, is_mesh::TetAttributes> mesh(points, tets, tet_labels);
     
     ObjectGenerator::create_cube(mesh, vec3(-1./6.), vec3(1./3.), 1);
     
-    export_tet_mesh(file_path + string("one_cell") + extension, mesh);
+    {
+        std::vector<vec3> points;
+        std::vector< std::vector<int>> tets;
+        mesh.extract_tet_mesh(points, tets);
+        is_mesh::export_tet_mesh(file_path + string("one_cell") + extension, points, tets);
+    }
 }
 
 int main(int argc, const char * argv[])

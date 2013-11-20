@@ -133,41 +133,78 @@ namespace is_mesh {
     /**
      * Imports a surface mesh from an .obj file.
      */
-    void import_surface_mesh(const std::string& filename, std::vector<real>& points, std::vector<int>& faces);
-    
-    
-    /**
-     * Exports the mesh as a .dsc file.
-     */
-    void export_tet_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<std::vector<int>>& tets);
-    
-    /**
-     * Exports the mesh as a .dsc file.
-     */
-    template<typename ISMesh>
-    inline void export_tet_mesh(const std::string & filename, ISMesh& mesh)
+    void import_surface_mesh(const std::string& filename, std::vector<real>& points, std::vector<int>& faces)
     {
-        std::vector<vec3> points;
-        std::vector< std::vector<int>> tets;
-        mesh.extract_tet_mesh(points, tets);
-        export_tet_mesh(filename, points, tets);
+        std::ifstream ifs(filename.data());
+        
+        if(ifs)
+        {
+            while(ifs.good() && !ifs.eof())
+            {
+                std::string tok;
+                ifs >> tok;
+                if(tok == "v")
+                {
+                    float x,y,z;
+                    ifs >> x >> y >> z;
+                    points.push_back(x);
+                    points.push_back(y);
+                    points.push_back(z);
+                    char line[1000];
+                    ifs.getline(line, 998);
+                }
+                else if(tok == "f")
+                {
+                    char line[1000];
+                    ifs.getline(line, 998);
+                    char* pch = strtok(line, " \t");
+                    int ctr = 0;
+                    while(pch != 0)
+                    {
+                        int v;
+                        sscanf(pch, "%d", &v);
+                        faces.push_back(v-1);
+                        pch = strtok(0, " \t");
+                        ++ctr;
+                    }
+                }
+                else
+                {
+                    char line[1000];
+                    ifs.getline(line, 998);
+                }
+            }
+        }
     }
+    
+    /**
+     * Exports the mesh as a .dsc file.
+     */
+    void export_tet_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<std::vector<int>>& tets)
+    {
+        std::ofstream file(filename.data());
+        
+        for (auto &p : points)
+        {
+            file << "v " << p[0] << " " << p[1] << " " << p[2] << std::endl;
+        }
+        
+        for (std::vector<int> tet : tets)
+        {
+            file << "t ";
+            for (int i = 0; i < tet.size() - 1; i++)
+            {
+                file << tet[i];
+                file << " ";
+            }
+            file << tet[tet.size()-1] << std::endl;
+        }
+    }
+    
     
     /**
      * Exports the surface mesh to an .obj file.
      */
     void export_surface_mesh(const std::string& filename, const std::vector<vec3>& points, const std::vector<int>& faces);
-    
-    /**
-     * Exports the surface mesh to an .obj file.
-     */
-    template <typename ISMesh>
-    inline void export_surface_mesh(const std::string& filename, ISMesh& dsc)
-    {
-        std::vector<vec3> points;
-        std::vector<int> faces;
-        dsc.extract_surface_mesh(points, faces);
-        export_surface_mesh(filename, points, faces);
-    }
     
 }

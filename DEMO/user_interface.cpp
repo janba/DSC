@@ -279,16 +279,22 @@ void UI::keyboard(unsigned char key, int x, int y) {
             if(dsc)
             {
                 std::cout << "EXPORTING MESH" << std::endl;
-                std::string filepath("data/mesh.dsc");
-                export_tet_mesh(filepath, *dsc);
+                std::string filename("data/mesh.dsc");
+                std::vector<vec3> points;
+                std::vector< std::vector<int>> tets;
+                dsc->extract_tet_mesh(points, tets);
+                is_mesh::export_tet_mesh(filename, points, tets);
             }
             break;
         case 'i':
             if(dsc)
             {
                 std::cout << "EXPORTING SURFACE MESH" << std::endl;
-                std::string filepath("data/mesh.obj");
-                export_surface_mesh(filepath, *dsc);
+                std::string filename("data/mesh.obj");
+                std::vector<vec3> points;
+                std::vector<int> faces;
+                dsc->extract_surface_mesh(points, faces);
+                is_mesh::export_surface_mesh(filename, points, faces);
             }
             break;
         case '+':
