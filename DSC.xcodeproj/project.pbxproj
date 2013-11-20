@@ -12,6 +12,13 @@
 		7A3438C1183C6D2700829EEB /* attributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A3438BF183C6D2700829EEB /* attributes.h */; };
 		7A3438C2183C6D2700829EEB /* mesh_io.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A3438C0183C6D2700829EEB /* mesh_io.h */; };
 		7A3438C4183C75B100829EEB /* mesh_io.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3438C3183C75B100829EEB /* mesh_io.cpp */; };
+		7A3438D3183C7A9600829EEB /* predicates.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 7A3438CF183C7A9600829EEB /* predicates.cxx */; };
+		7A3438D4183C7A9600829EEB /* tetgen.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 7A3438D1183C7A9600829EEB /* tetgen.cxx */; };
+		7A3438D5183C7A9600829EEB /* tetgen.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A3438D2183C7A9600829EEB /* tetgen.h */; };
+		7A3438E8183C7B7800829EEB /* generator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3438E3183C7B7800829EEB /* generator.cpp */; };
+		7A3438E9183C7B7800829EEB /* object_generator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3438E4183C7B7800829EEB /* object_generator.cpp */; };
+		7A3438EA183C7B7800829EEB /* tetralizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3438E6183C7B7800829EEB /* tetralizer.cpp */; };
+		7A3438EB183C7BA700829EEB /* libTetGen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A3438C9183C7A8700829EEB /* libTetGen.a */; };
 		7A45DB9C176E122100B9B388 /* key.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8F176E122100B9B388 /* key.h */; };
 		7A45DB9D176E122100B9B388 /* simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB90176E122100B9B388 /* simplex.h */; };
 		7A45DBA0176E122100B9B388 /* kernel_iterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB93176E122100B9B388 /* kernel_iterator.h */; };
@@ -111,6 +118,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		7A3438D8183C7B2E00829EEB /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 		7AE27B0317675CDA000F8238 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -131,6 +147,16 @@
 		7A3438BF183C6D2700829EEB /* attributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = attributes.h; path = is_mesh/attributes.h; sourceTree = "<group>"; };
 		7A3438C0183C6D2700829EEB /* mesh_io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mesh_io.h; path = is_mesh/mesh_io.h; sourceTree = "<group>"; };
 		7A3438C3183C75B100829EEB /* mesh_io.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mesh_io.cpp; path = is_mesh/mesh_io.cpp; sourceTree = "<group>"; };
+		7A3438C9183C7A8700829EEB /* libTetGen.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTetGen.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A3438CF183C7A9600829EEB /* predicates.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = predicates.cxx; sourceTree = "<group>"; };
+		7A3438D1183C7A9600829EEB /* tetgen.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tetgen.cxx; sourceTree = "<group>"; };
+		7A3438D2183C7A9600829EEB /* tetgen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tetgen.h; sourceTree = "<group>"; };
+		7A3438DA183C7B2E00829EEB /* SCGenerator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SCGenerator; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A3438E3183C7B7800829EEB /* generator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generator.cpp; sourceTree = "<group>"; };
+		7A3438E4183C7B7800829EEB /* object_generator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = object_generator.cpp; sourceTree = "<group>"; };
+		7A3438E5183C7B7800829EEB /* object_generator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = object_generator.h; sourceTree = "<group>"; };
+		7A3438E6183C7B7800829EEB /* tetralizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tetralizer.cpp; sourceTree = "<group>"; };
+		7A3438E7183C7B7800829EEB /* tetralizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tetralizer.h; sourceTree = "<group>"; };
 		7A38E82A17E3B35A0075DC24 /* gouraud.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = gouraud.frag; sourceTree = "<group>"; };
 		7A38E82B17E3B35A0075DC24 /* gouraud.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = gouraud.vert; sourceTree = "<group>"; };
 		7A45DB8F176E122100B9B388 /* key.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = key.h; path = is_mesh/key.h; sourceTree = "<group>"; };
@@ -245,6 +271,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7A3438C6183C7A8700829EEB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A3438D7183C7B2E00829EEB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A3438EB183C7BA700829EEB /* libTetGen.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7A9C205617DFB4CB0064171E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -290,6 +331,28 @@
 				7AF7E9C0176B524700F43714 /* is_mesh.h */,
 			);
 			name = ISMesh;
+			sourceTree = "<group>";
+		};
+		7A3438CD183C7A9600829EEB /* TetGen */ = {
+			isa = PBXGroup;
+			children = (
+				7A3438CF183C7A9600829EEB /* predicates.cxx */,
+				7A3438D1183C7A9600829EEB /* tetgen.cxx */,
+				7A3438D2183C7A9600829EEB /* tetgen.h */,
+			);
+			path = TetGen;
+			sourceTree = "<group>";
+		};
+		7A3438DB183C7B2E00829EEB /* SCGenerator */ = {
+			isa = PBXGroup;
+			children = (
+				7A3438E3183C7B7800829EEB /* generator.cpp */,
+				7A3438E4183C7B7800829EEB /* object_generator.cpp */,
+				7A3438E5183C7B7800829EEB /* object_generator.h */,
+				7A3438E6183C7B7800829EEB /* tetralizer.cpp */,
+				7A3438E7183C7B7800829EEB /* tetralizer.h */,
+			);
+			path = SCGenerator;
 			sourceTree = "<group>";
 		};
 		7A38E82917E3B35A0075DC24 /* shaders */ = {
@@ -400,12 +463,14 @@
 				7A0AB5C017D9082A0058910E /* CoreFoundation.framework */,
 				7AE27AFD17675B78000F8238 /* GLUT.framework */,
 				7AE27AFB17675B70000F8238 /* OpenGL.framework */,
+				7A3438CD183C7A9600829EEB /* TetGen */,
 				7A9C205D17DFB4D40064171E /* CGLA */,
 				7A553EC117DA724800125178 /* SOIL */,
 				7A07B9B1176B23A8006589A4 /* ISMesh */,
 				7AE27AB917675A1E000F8238 /* DSC */,
 				7A38E82917E3B35A0075DC24 /* shaders */,
 				7AE27B0E17675CEA000F8238 /* DEMO */,
+				7A3438DB183C7B2E00829EEB /* SCGenerator */,
 				7AE27AB817675A1E000F8238 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -417,6 +482,8 @@
 				7AE27B0517675CDA000F8238 /* DEMO */,
 				7A0AB5A517D906AD0058910E /* libSOIL.a */,
 				7A9C205917DFB4CB0064171E /* libCGLA.a */,
+				7A3438C9183C7A8700829EEB /* libTetGen.a */,
+				7A3438DA183C7B2E00829EEB /* SCGenerator */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -464,6 +531,14 @@
 				7A553ED417DA724800125178 /* stbi_DDS_aug.h in Headers */,
 				7A553ED517DA724800125178 /* stbi_DDS_aug_c.h in Headers */,
 				7ACA21DA17DE37C5005E9309 /* stb_image.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A3438C7183C7A8700829EEB /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A3438D5183C7A9600829EEB /* tetgen.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -559,6 +634,40 @@
 			productReference = 7A0AB5A517D906AD0058910E /* libSOIL.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		7A3438C8183C7A8700829EEB /* TetGen */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A3438CA183C7A8700829EEB /* Build configuration list for PBXNativeTarget "TetGen" */;
+			buildPhases = (
+				7A3438C5183C7A8700829EEB /* Sources */,
+				7A3438C6183C7A8700829EEB /* Frameworks */,
+				7A3438C7183C7A8700829EEB /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TetGen;
+			productName = TetGen;
+			productReference = 7A3438C9183C7A8700829EEB /* libTetGen.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		7A3438D9183C7B2E00829EEB /* SCGenerator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A3438E0183C7B2E00829EEB /* Build configuration list for PBXNativeTarget "SCGenerator" */;
+			buildPhases = (
+				7A3438D6183C7B2E00829EEB /* Sources */,
+				7A3438D7183C7B2E00829EEB /* Frameworks */,
+				7A3438D8183C7B2E00829EEB /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SCGenerator;
+			productName = SCGenerator;
+			productReference = 7A3438DA183C7B2E00829EEB /* SCGenerator */;
+			productType = "com.apple.product-type.tool";
+		};
 		7A9C205817DFB4CB0064171E /* CGLA */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7A9C205A17DFB4CB0064171E /* Build configuration list for PBXNativeTarget "CGLA" */;
@@ -635,6 +744,8 @@
 				7AE27AD517675AE8000F8238 /* DSC */,
 				7A0AB5A417D906AD0058910E /* SOIL */,
 				7AE27B0417675CDA000F8238 /* DEMO */,
+				7A3438C8183C7A8700829EEB /* TetGen */,
+				7A3438D9183C7B2E00829EEB /* SCGenerator */,
 			);
 		};
 /* End PBXProject section */
@@ -649,6 +760,25 @@
 				7A553ED017DA724800125178 /* SOIL.c in Sources */,
 				7A553ED217DA724800125178 /* stb_image_write.c in Sources */,
 				7ACA21D917DE37C5005E9309 /* stb_image.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A3438C5183C7A8700829EEB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A3438D4183C7A9600829EEB /* tetgen.cxx in Sources */,
+				7A3438D3183C7A9600829EEB /* predicates.cxx in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A3438D6183C7B2E00829EEB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A3438E9183C7B7800829EEB /* object_generator.cpp in Sources */,
+				7A3438E8183C7B7800829EEB /* generator.cpp in Sources */,
+				7A3438EA183C7B7800829EEB /* tetralizer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -714,6 +844,82 @@
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
 				FRAMEWORK_SEARCH_PATHS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		7A3438CB183C7A8700829EEB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		7A3438CC183C7A8700829EEB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				ENABLE_NS_ASSERTIONS = NO;
+				EXECUTABLE_PREFIX = lib;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		7A3438E1183C7B2E00829EEB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					.,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		7A3438E2183C7B2E00829EEB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					.,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -860,6 +1066,22 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		7A3438CA183C7A8700829EEB /* Build configuration list for PBXNativeTarget "TetGen" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A3438CB183C7A8700829EEB /* Debug */,
+				7A3438CC183C7A8700829EEB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		7A3438E0183C7B2E00829EEB /* Build configuration list for PBXNativeTarget "SCGenerator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A3438E1183C7B2E00829EEB /* Debug */,
+				7A3438E2183C7B2E00829EEB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		7A9C205A17DFB4CB0064171E /* Build configuration list for PBXNativeTarget "CGLA" */ = {
 			isa = XCConfigurationList;
