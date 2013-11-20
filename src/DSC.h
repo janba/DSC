@@ -78,7 +78,7 @@ namespace DSC {
     public:
         
         /// SimplicialComplex constructor.
-        DeformableSimplicialComplex(real _AVG_EDGE_LENGTH, std::vector<real> & points, std::vector<int> & tets, const std::vector<int>& tet_labels, DesignDomain *domain = nullptr):
+        DeformableSimplicialComplex(real _AVG_EDGE_LENGTH, std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels, DesignDomain *domain = nullptr):
             ISMesh(points, tets, tet_labels), design_domain(domain)
         {
             AVG_EDGE_LENGTH = _AVG_EDGE_LENGTH;

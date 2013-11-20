@@ -18,7 +18,7 @@
 
 namespace is_mesh {
     
-    void import_tet_mesh(const std::string & filename, std::vector<real>& points, std::vector<int>&  tets, std::vector<int>& tet_labels)
+    void import_tet_mesh(const std::string & filename, std::vector<vec3>& points, std::vector<int>&  tets, std::vector<int>& tet_labels)
     {
         std::ifstream file(filename.data());
         
@@ -32,9 +32,7 @@ namespace is_mesh {
                 file >> x;
                 file >> y;
                 file >> z;
-                points.push_back(x);
-                points.push_back(y);
-                points.push_back(z);
+                points.push_back(vec3(x,y,z));
             }
             else if (c == 't')
             {
@@ -59,7 +57,7 @@ namespace is_mesh {
         file.close();
     }
     
-    void import_surface_mesh(const std::string& filename, std::vector<real>& points, std::vector<int>& faces)
+    void import_surface_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& faces)
     {
         std::ifstream ifs(filename.data());
         
@@ -73,9 +71,7 @@ namespace is_mesh {
                 {
                     float x,y,z;
                     ifs >> x >> y >> z;
-                    points.push_back(x);
-                    points.push_back(y);
-                    points.push_back(z);
+                    points.push_back(vec3(x,y,z));
                     char line[1000];
                     ifs.getline(line, 998);
                 }

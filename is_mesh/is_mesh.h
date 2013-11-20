@@ -37,8 +37,7 @@ namespace is_mesh {
         kernel<tetrahedron_type, TetrahedronKey>*           m_tetrahedron_kernel;
         
     public:
-        template<typename real>
-        ISMesh(std::vector<real> & points, std::vector<int> & tets, const std::vector<int>& tet_labels)
+        ISMesh(std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels)
         {
             m_node_kernel = new kernel<node_type, NodeKey>();
             m_edge_kernel = new kernel<edge_type, EdgeKey>();
@@ -196,21 +195,14 @@ namespace is_mesh {
             return it->second;
         }
         
-        bool create(const std::vector<real>& points, const std::vector<int>& tets)
+        bool create(const std::vector<vec3>& points, const std::vector<int>& tets)
         {
             std::map<edge_key, int> edge_map;
             std::map<face_key, int> face_map;
             
-            int cnt_nodes = 0;
-            for (unsigned int i = 0; i < points.size()/3; ++i)
+            for (vec3 p : points)
             {
-                real x, y, z;
-                x = points[3*i];
-                y = points[3*i+1];
-                z = points[3*i+2];
-                insert_node(vec3(x,y,z));
-                get(is_mesh::NodeKey(cnt_nodes)).set_destination(vec3(x,y,z));
-                ++cnt_nodes;
+                insert_node(p);
             }
             
             for (unsigned int j = 0; j < tets.size()/4; ++j)

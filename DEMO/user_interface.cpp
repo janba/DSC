@@ -395,7 +395,7 @@ void UI::one_cell()
     stop();
     real cell_size = 20.;
     // Build the Simplicial Complex
-    std::vector<real> points;
+    std::vector<vec3> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
     is_mesh::import_tet_mesh(get_data_file_path("one_cell.dsc").data(), points, tets, tet_labels);
@@ -409,7 +409,7 @@ void UI::rotate_cube()
 {
     stop();
     // Build the Simplicial Complex
-    std::vector<real> points;
+    std::vector<vec3> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
     is_mesh::import_tet_mesh(get_data_file_path("cube.dsc").data(), points, tets, tet_labels);
@@ -426,7 +426,7 @@ void UI::rotate_blob()
 {
     stop();
     // Build the Simplicial Complex
-    std::vector<real> points;
+    std::vector<vec3> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
     is_mesh::import_tet_mesh(get_data_file_path("blob.dsc").data(), points, tets, tet_labels);
@@ -442,7 +442,7 @@ void UI::smooth_armadillo()
 {
     stop();
     // Build the Simplicial Complex
-    std::vector<real> points;
+    std::vector<vec3> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
     is_mesh::import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
@@ -458,7 +458,7 @@ void UI::expand_blob()
 {
     stop();
     // Build the Simplicial Complex
-    std::vector<real> points;
+    std::vector<vec3> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
     is_mesh::import_tet_mesh(get_data_file_path("blob.dsc").data(), points, tets, tet_labels);
@@ -475,7 +475,7 @@ void UI::expand_armadillo()
 {
     stop();
     // Build the Simplicial Complex
-    std::vector<real> points;
+    std::vector<vec3> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
     is_mesh::import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
@@ -491,7 +491,7 @@ void UI::rotate_armadillo()
 {
     stop();
     // Build the Simplicial Complex
-    std::vector<real> points;
+    std::vector<vec3> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
     is_mesh::import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);

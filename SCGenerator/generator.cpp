@@ -27,29 +27,22 @@ const string extension = string(".dsc");
 
 void generate_from_obj(const string& input_file_name, const string& output_file_name)
 {
-    vector<double> points;
+    vector<vec3> points;
     vector<int> tets;
     vector<int> tet_labels;
     
-    std::vector<double> points_interface;
+    std::vector<vec3> points_interface;
     std::vector<int> faces_interface;
     is_mesh::import_surface_mesh(file_path + input_file_name, points_interface, faces_interface);
     
     Tetralizer::tetralize(points_interface, faces_interface, points, tets, tet_labels);
     
-    is_mesh::ISMesh<is_mesh::NodeAttributes, is_mesh::EdgeAttributes, is_mesh::FaceAttributes, is_mesh::TetAttributes> mesh(points, tets, tet_labels);
-    
-    {
-        std::vector<vec3> points;
-        std::vector< std::vector<int>> tets;
-        mesh.extract_tet_mesh(points, tets);
-        is_mesh::export_tet_mesh(file_path + output_file_name + extension, points, tets);
-    }
+    is_mesh::export_tet_mesh(file_path + output_file_name + extension, points, tets, tet_labels);
 }
 
 void generate_cube()
 {
-    vector<double> points;
+    vector<vec3> points;
     vector<int>  tets;
     vector<int>  tet_labels;
     
@@ -62,15 +55,15 @@ void generate_cube()
     
     {
         std::vector<vec3> points;
-        std::vector< std::vector<int>> tets;
-        mesh.extract_tet_mesh(points, tets);
-        is_mesh::export_tet_mesh(file_path + string("cube") + extension, points, tets);
+        std::vector<int> tets;
+        mesh.extract_tet_mesh(points, tets, tet_labels);
+        is_mesh::export_tet_mesh(file_path + string("cube") + extension, points, tets, tet_labels);
     }
 }
 
 void generate_one_cell()
 {
-    vector<double> points;
+    vector<vec3> points;
     vector<int>  tets;
     vector<int>  tet_labels;
     
@@ -80,12 +73,11 @@ void generate_one_cell()
     
     ObjectGenerator::create_cube(mesh, vec3(-1./6.), vec3(1./3.), 1);
     
-    {
-        std::vector<vec3> points;
-        std::vector< std::vector<int>> tets;
-        mesh.extract_tet_mesh(points, tets);
-        is_mesh::export_tet_mesh(file_path + string("one_cell") + extension, points, tets);
-    }
+    points.clear();
+    tets.clear();
+    tet_labels.clear();
+    mesh.extract_tet_mesh(points, tets, tet_labels);
+    is_mesh::export_tet_mesh(file_path + string("one_cell") + extension, points, tets, tet_labels);
 }
 
 int main(int argc, const char * argv[])

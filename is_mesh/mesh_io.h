@@ -24,12 +24,12 @@ namespace is_mesh {
     /**
      * Imports a mesh from a .dsc file.
      */
-    void import_tet_mesh(const std::string & filename, std::vector<real>& points, std::vector<int>&  tets, std::vector<int>& tet_labels);
+    void import_tet_mesh(const std::string & filename, std::vector<vec3>& points, std::vector<int>&  tets, std::vector<int>& tet_labels);
     
     /**
      * Imports a surface mesh from an .obj file.
      */
-    void import_surface_mesh(const std::string& filename, std::vector<real>& points, std::vector<int>& faces);
+    void import_surface_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& faces);
     
     /**
      * Exports the mesh as a .dsc file.
