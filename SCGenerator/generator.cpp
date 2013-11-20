@@ -22,32 +22,6 @@ using namespace std;
 const string file_path = string("data/");
 const string extension = string(".dsc");
 
-void scale(vector<vec3>& points)
-{
-    real p_min = INFINITY, p_max = -INFINITY;
-    for (vec3 p : points) {
-        for (int i = 0; i < 3; i++) {
-            p_min = Util::min(p[i], p_min);
-            p_max = Util::max(p[i], p_max);
-        }
-    }
-    std::cout << p_min << " to " << p_max << std::endl;
-    
-    real scale = 0.5*(p_max - p_min);
-    for (vec3& p : points) {
-        p = (p - vec3(p_min))/scale - vec3(1.);
-    }
-    
-    p_min = INFINITY, p_max = -INFINITY;
-    for (vec3 p : points) {
-        for (int i = 0; i < 3; i++) {
-            p_min = Util::min(p[i], p_min);
-            p_max = Util::max(p[i], p_max);
-        }
-    }
-    std::cout << p_min << " to " << p_max << std::endl;
-}
-
 void generate_from_obj(const string& input_file_name, const string& output_file_name)
 {
     vector<vec3> points;
@@ -57,7 +31,7 @@ void generate_from_obj(const string& input_file_name, const string& output_file_
     std::vector<vec3> points_interface;
     std::vector<int> faces_interface;
     is_mesh::import_surface_mesh(file_path + input_file_name, points_interface, faces_interface);
-    scale(points_interface);
+    is_mesh::scale(points_interface);
     
     Tetralizer::tetralize(vec3(3.), points_interface, faces_interface, points, tets, tet_labels);
     

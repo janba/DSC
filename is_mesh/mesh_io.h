@@ -40,4 +40,5 @@ namespace is_mesh {
      */
     void export_surface_mesh(const std::string& filename, const std::vector<vec3>& points, const std::vector<int>& faces);
     
+    void scale(std::vector<vec3>& points);
 }

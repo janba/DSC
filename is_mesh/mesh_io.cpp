@@ -148,4 +148,19 @@ namespace is_mesh {
         obj_file.close();
     }
     
+    void scale(std::vector<vec3>& points)
+    {
+        real p_min = INFINITY, p_max = -INFINITY;
+        for (vec3 p : points) {
+            for (int i = 0; i < 3; i++) {
+                p_min = Util::min(p[i], p_min);
+                p_max = Util::max(p[i], p_max);
+            }
+        }
+        
+        real scale = 0.5*(p_max - p_min);
+        for (vec3& p : points) {
+            p = (p - vec3(p_min))/scale - vec3(1.);
+        }
+    }
 }
