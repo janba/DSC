@@ -80,8 +80,8 @@ namespace is_mesh {
         
     }
     
-    template<typename mesh_type, typename real>
-    bool create(std::vector<real> & points, std::vector<int>& tets, mesh_type & mesh)
+    template<typename ISMesh>
+    bool create(const std::vector<real>& points, const std::vector<int>& tets, ISMesh & mesh)
     {
         std::map<util::edge_key, int> edge_map;
         std::map<util::face_key, int> face_map;
@@ -130,7 +130,7 @@ namespace is_mesh {
      * Exports the mesh as a .dsc file.
      */
     template<typename ISMesh>
-    inline void export_tet_mesh(ISMesh& mesh, const std::string & filename)
+    inline void export_tet_mesh(const std::string & filename, ISMesh& mesh)
     {
         std::vector<vec3> points;
         std::vector< std::vector<int> > tets;
@@ -159,10 +159,8 @@ namespace is_mesh {
     /**
      * Imports a mesh from a .dsc file.
      */
-    template <typename real>
-    inline void import_tet_mesh(const std::string & filename, std::vector<real>& points, std::vector<int>&  tets, std::vector<int>&  labels)
+    inline void import_tet_mesh(const std::string & filename, std::vector<real>& points, std::vector<int>&  tets, std::vector<int>& labels)
     {
-        
         std::ifstream file(filename.data());
         
         while (!file.eof())
@@ -202,8 +200,8 @@ namespace is_mesh {
         file.close();
     }
     
-    template <typename DeformableSimplicialComplex>
-    inline void export_surface_mesh(DeformableSimplicialComplex& dsc, std::string & filename)
+    template <typename ISMesh>
+    inline void export_surface_mesh(const std::string& filename, ISMesh& dsc)
     {
         std::vector<vec3> verts;
         std::vector<int> indices;

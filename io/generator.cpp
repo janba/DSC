@@ -15,7 +15,7 @@
 //  See licence.txt for a copy of the GNU General Public License.
 
 
-#include "is_mesh/is_mesh.h"
+#include "is_mesh.h"
 #include "mesh_io.h"
 #include "attributes.h"
 #include "object_generator.h"

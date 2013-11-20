@@ -280,7 +280,7 @@ void UI::keyboard(unsigned char key, int x, int y) {
             {
                 std::cout << "EXPORTING MESH" << std::endl;
                 std::string filepath("data/mesh.dsc");
-                export_tet_mesh(*dsc, filepath);
+                export_tet_mesh(filepath, *dsc);
             }
             break;
         case 'i':
@@ -288,7 +288,7 @@ void UI::keyboard(unsigned char key, int x, int y) {
             {
                 std::cout << "EXPORTING SURFACE MESH" << std::endl;
                 std::string filepath("data/mesh.obj");
-                export_surface_mesh(*dsc, filepath);
+                export_surface_mesh(filepath, *dsc);
             }
             break;
         case '+':
