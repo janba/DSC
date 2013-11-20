@@ -31,18 +31,6 @@ namespace DSC {
         
                 
     public:
-        /**
-         * Label all tetrahedra according to tet_labels and perform an initial update
-         * of flags and attributes of all simplices.
-         */
-        template <typename DeformableSimplicialComplex>
-        static void create(DeformableSimplicialComplex& dsc, const std::vector<int>& tet_labels)
-        {
-            for (auto tit = dsc.tetrahedra_begin(); tit != dsc.tetrahedra_end(); tit++)
-            {
-                dsc.set_label(tit.key(), tet_labels[tit.key()]);
-            }
-        }
 
         template <typename DeformableSimplicialComplex>
         static void create_sphere(DeformableSimplicialComplex& dsc, const vec3& center, const real& radius, int label)

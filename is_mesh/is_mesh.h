@@ -38,7 +38,7 @@ namespace is_mesh {
         
     public:
         template<typename real>
-        ISMesh(std::vector<real> & points, std::vector<int> & tets)
+        ISMesh(std::vector<real> & points, std::vector<int> & tets, const std::vector<int>& tet_labels = std::vector<int>())
         {
             m_node_kernel = new kernel<node_type, NodeKey>();
             m_edge_kernel = new kernel<edge_type, EdgeKey>();
@@ -46,7 +46,7 @@ namespace is_mesh {
             m_tetrahedron_kernel = new kernel<tetrahedron_type, TetrahedronKey>();
             
             vectors_read(points, tets, *this);
-            init();
+            init_flags(tet_labels);
             validity_check();
             simplex_set_test();
         }
@@ -144,8 +144,16 @@ namespace is_mesh {
         /**
          * Perform an initial update of flags for all nodes, edges and faces.
          */
-        void init()
+        void init_flags(const std::vector<int>& tet_labels)
         {
+            if(tet_labels.size() > 0)
+            {
+                for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
+                {
+                    tit->label(tet_labels[tit.key()]);
+                }
+            }
+            
             for (auto fit = faces_begin(); fit != faces_end(); fit++)
             {
                 update_flag(fit.key());

@@ -20,8 +20,6 @@
 #include "normal_function.h"
 
 #include "mesh_io.h"
-#include "tetralizer.h"
-#include "object_generator.h"
 
 using namespace DSC;
 
@@ -201,7 +199,7 @@ void UI::keyboard(unsigned char key, int x, int y) {
             smooth_armadillo();
             break;
         case '3':
-            expand_sphere();
+            expand_blob();
             break;
         case '4':
             expand_armadillo();
@@ -392,11 +390,11 @@ void UI::one_cell()
     // Build the Simplicial Complex
     std::vector<real> points;
     std::vector<int>  tets;
-    Tetralizer::tetralize(vec3(3.*cell_size), cell_size, points, tets);
+    std::vector<int>  tet_labels;
+    import_tet_mesh(get_data_file_path("one_cell.dsc").data(), points, tets, tet_labels);
     
-    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(cell_size, points, tets));
+    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(cell_size, points, tets, tet_labels));
     
-    dsc->set_label(67, 1);
     start();
 }
 
@@ -406,15 +404,13 @@ void UI::rotate_cube()
     // Build the Simplicial Complex
     std::vector<real> points;
     std::vector<int>  tets;
-    Tetralizer::tetralize(vec3(50.), DISCRETIZATION, points, tets);
+    std::vector<int>  tet_labels;
+    import_tet_mesh(get_data_file_path("cube.dsc").data(), points, tets, tet_labels);
     
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(40.));
     
-    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain));
+    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels, domain));
     vel_fun = std::unique_ptr<VelocityFunc<>>(new RotateFunc(VELOCITY, ACCURACY));
-    
-    double size = 35.;
-    ObjectGenerator::create_cube(*dsc, vec3(-size/2.), vec3(size), 1);
     
     start();
 }
@@ -429,10 +425,8 @@ void UI::rotate_blob()
     import_tet_mesh(get_data_file_path("blob.dsc").data(), points, tets, tet_labels);
     
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(60.));
-    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain));
+    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels, domain));
     vel_fun = std::unique_ptr<VelocityFunc<>>(new RotateFunc(VELOCITY, ACCURACY));
-    
-    ObjectGenerator::create(*dsc, tet_labels);
     
     start();
 }
@@ -447,28 +441,25 @@ void UI::smooth_armadillo()
     import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
     
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(60.));
-    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain));
+    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels, domain));
     vel_fun = std::unique_ptr<VelocityFunc<>>(new AverageFunc(VELOCITY, ACCURACY));
-    
-    ObjectGenerator::create(*dsc, tet_labels);
     
     start();
 }
 
-void UI::expand_sphere()
+void UI::expand_blob()
 {
     stop();
     // Build the Simplicial Complex
     std::vector<real> points;
     std::vector<int>  tets;
-    Tetralizer::tetralize(vec3(50.), DISCRETIZATION, points, tets);
+    std::vector<int>  tet_labels;
+    import_tet_mesh(get_data_file_path("blob.dsc").data(), points, tets, tet_labels);
     
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(40.));
     
-    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain));
+    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels, domain));
     vel_fun = std::unique_ptr<VelocityFunc<>>(new NormalFunc(VELOCITY, ACCURACY));
-    
-    ObjectGenerator::create_sphere(*dsc, vec3(0.), 20., 1);
     
     start();
 }
@@ -483,10 +474,8 @@ void UI::expand_armadillo()
     import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
     
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(60.));
-    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain));
+    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels, domain));
     vel_fun = std::unique_ptr<VelocityFunc<>>(new NormalFunc(VELOCITY, ACCURACY));
-    
-    ObjectGenerator::create(*dsc, tet_labels);
     
     start();
 }
@@ -501,10 +490,8 @@ void UI::rotate_armadillo()
     import_tet_mesh(get_data_file_path("armadillo.dsc").data(), points, tets, tet_labels);
     
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(70.));
-    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, domain));
+    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels, domain));
     vel_fun = std::unique_ptr<VelocityFunc<>>(new RotateFunc(VELOCITY, ACCURACY));
-    
-    ObjectGenerator::create(*dsc, tet_labels);
     
     start();
 }

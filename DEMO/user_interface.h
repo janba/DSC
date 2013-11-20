@@ -135,7 +135,7 @@ private:
     
     void smooth_armadillo();
     
-    void expand_sphere();
+    void expand_blob();
     
     void expand_armadillo();
     

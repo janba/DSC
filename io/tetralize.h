@@ -202,7 +202,7 @@ namespace is_mesh {
     }
     
     template<typename real>
-    inline void tetrahedralize_inside(std::vector<real>& points_interface, std::vector<int>& faces_interface, std::vector<real>& points_inside, std::vector<int>& tets_inside)
+    inline void tetrahedralize_inside(const std::vector<real>& points_interface, const std::vector<int>& faces_interface, std::vector<real>& points_inside, std::vector<int>& tets_inside)
     {
         tetgenio in, out;
         
@@ -256,7 +256,7 @@ namespace is_mesh {
     }
     
     template <typename real, typename vec3>
-    inline void tetrahedralize_outside(std::vector<real>& points_interface, std::vector<int>&  faces_interface, std::vector<real>& points_boundary, std::vector<int>&  faces_boundary, std::vector<real>& points_outside, std::vector<int>& tets_outside, const std::vector<vec3>& inside_pts)
+    inline void tetrahedralize_outside(const std::vector<real>& points_interface, const std::vector<int>&  faces_interface, std::vector<real>& points_boundary, std::vector<int>&  faces_boundary, std::vector<real>& points_outside, std::vector<int>& tets_outside, const vec3& inside_pts)
     {
         tetgenio in, out;
         
@@ -293,14 +293,11 @@ namespace is_mesh {
             }
         }
         
-        in.numberofholes = inside_pts.size();
+        in.numberofholes = 1;
         in.holelist = new real[3*in.numberofholes];
-        for (int i = 0; i < in.numberofholes; ++i)
-        {
-            in.holelist[3*i  ] = inside_pts[i][0];
-            in.holelist[3*i+1] = inside_pts[i][1];
-            in.holelist[3*i+2] = inside_pts[i][2];
-        }
+        in.holelist[0] = inside_pts[0];
+        in.holelist[1] = inside_pts[1];
+        in.holelist[2] = inside_pts[2];
         
         //tetgenbehavior tetbeh = tetgenbehavior();
         //tetrahedralize(&tetbeh, &in, &out);
@@ -318,7 +315,7 @@ namespace is_mesh {
     }
     
     template<typename real>
-    inline void merge_inside_outside(std::vector<real>& points_interface, std::vector<int>&  faces_interface, std::vector<real>& points_inside, std::vector<int>&  tets_inside, std::vector<real>& points_outside, std::vector<int>&  tets_outside, std::vector<real>& output_points, std::vector<int>&  output_tets, std::vector<int>&  output_tet_flags)
+    inline void merge_inside_outside(const std::vector<real>& points_interface, const std::vector<int>&  faces_interface, std::vector<real>& points_inside, std::vector<int>&  tets_inside, std::vector<real>& points_outside, std::vector<int>&  tets_outside, std::vector<real>& output_points, std::vector<int>&  output_tets, std::vector<int>&  output_tet_flags)
     {
         int no_interface_points = points_interface.size()/3;
         int no_outside_points = points_outside.size()/3;
@@ -349,14 +346,11 @@ namespace is_mesh {
         }
     }
     
-    template <typename real, typename vec3>
-    inline void build_tetrahedralization(const std::string& filename, const vec3& size, std::vector<real>& points, std::vector<int>&  tets, std::vector<int>&  tet_labels, std::vector<vec3>& inside_pts)
+    template <typename real>
+    inline void build_tetrahedralization(const std::vector<real>& points_interface, const std::vector<int>& faces_interface, std::vector<real>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
     {
-        std::vector<double> points_interface;
-        std::vector<int> faces_interface;
-        std::vector<int> indices_interface;
-        
-        obj_load(filename, points_interface, faces_interface);
+        DSC::vec3 size(4.);
+        DSC::vec3 inside_point(0.);
         
         std::vector<double>    points_boundary;
         std::vector<int>  faces_boundary;
@@ -368,7 +362,7 @@ namespace is_mesh {
         
         std::vector<double> points_outside;
         std::vector<int> tets_outside;
-        tetrahedralize_outside(points_interface, faces_interface, points_boundary, faces_boundary, points_outside, tets_outside, inside_pts);
+        tetrahedralize_outside(points_interface, faces_interface, points_boundary, faces_boundary, points_outside, tets_outside, inside_point);
         
         merge_inside_outside(points_interface, faces_interface, points_inside, tets_inside, points_outside, tets_outside, points, tets, tet_labels);
     }
