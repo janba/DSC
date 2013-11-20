@@ -17,7 +17,6 @@
 #pragma once
 
 #include "util.h"
-#include <fstream>
 
 namespace is_mesh {
     

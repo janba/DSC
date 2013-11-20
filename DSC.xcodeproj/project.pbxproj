@@ -103,6 +103,7 @@
 		7A9C20D817DFB51C0064171E /* libCGLA.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A9C205917DFB4CB0064171E /* libCGLA.a */; };
 		7A9F2A9217E7548900259577 /* design_domain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A9F2A8E17E7548900259577 /* design_domain.cpp */; };
 		7A9F2A9317E7548900259577 /* design_domain.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9F2A8F17E7548900259577 /* design_domain.h */; };
+		7AB585A1183D2D6F009A25F1 /* libDSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AD617675AE8000F8238 /* libDSC.a */; };
 		7ACA21D917DE37C5005E9309 /* stb_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ACA21D717DE37C5005E9309 /* stb_image.c */; };
 		7ACA21DA17DE37C5005E9309 /* stb_image.h in Headers */ = {isa = PBXBuildFile; fileRef = 7ACA21D817DE37C5005E9309 /* stb_image.h */; };
 		7AE27AF817675B04000F8238 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE817675B04000F8238 /* util.h */; };
@@ -283,6 +284,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A3438EB183C7BA700829EEB /* libTetGen.a in Frameworks */,
+				7AB585A1183D2D6F009A25F1 /* libDSC.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1074,6 +1076,7 @@
 				7A3438CC183C7A8700829EEB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7A3438E0183C7B2E00829EEB /* Build configuration list for PBXNativeTarget "SCGenerator" */ = {
 			isa = XCConfigurationList;
@@ -1082,6 +1085,7 @@
 				7A3438E2183C7B2E00829EEB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7A9C205A17DFB4CB0064171E /* Build configuration list for PBXNativeTarget "CGLA" */ = {
 			isa = XCConfigurationList;

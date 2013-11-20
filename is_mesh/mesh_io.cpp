@@ -15,6 +15,7 @@
 //  See licence.txt for a copy of the GNU General Public License.
 
 #include "mesh_io.h"
+#include <fstream>
 
 namespace is_mesh {
     

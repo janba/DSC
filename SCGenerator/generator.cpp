@@ -15,10 +15,7 @@
 //  See licence.txt for a copy of the GNU General Public License.
 
 #include "mesh_io.h"
-#include "attributes.h"
-#include "object_generator.h"
 #include "tetralizer.h"
-#include "is_mesh.h"
 
 using namespace std;
 
@@ -40,44 +37,14 @@ void generate_from_obj(const string& input_file_name, const string& output_file_
     is_mesh::export_tet_mesh(file_path + output_file_name + extension, points, tets, tet_labels);
 }
 
-void generate_cube()
+void generate_empty(const string& output_file_name)
 {
     vector<vec3> points;
     vector<int>  tets;
     vector<int>  tet_labels;
     
-    Tetralizer::tetralize(vec3(1.), 0.05, points, tets);
-    
-    is_mesh::ISMesh<is_mesh::NodeAttributes, is_mesh::EdgeAttributes, is_mesh::FaceAttributes, is_mesh::TetAttributes> mesh(points, tets, tet_labels);
-    
-    double size = 0.75;
-    ObjectGenerator::create_cube(mesh, vec3(-size/2.), vec3(size), 1);
-    
-    {
-        std::vector<vec3> points;
-        std::vector<int> tets;
-        mesh.extract_tet_mesh(points, tets, tet_labels);
-        is_mesh::export_tet_mesh(file_path + string("cube") + extension, points, tets, tet_labels);
-    }
-}
-
-void generate_one_cell()
-{
-    vector<vec3> points;
-    vector<int>  tets;
-    vector<int>  tet_labels;
-    
-    Tetralizer::tetralize(vec3(1.), 1./3., points, tets);
-    
-    is_mesh::ISMesh<is_mesh::NodeAttributes, is_mesh::EdgeAttributes, is_mesh::FaceAttributes, is_mesh::TetAttributes> mesh(points, tets, tet_labels);
-    
-    ObjectGenerator::create_cube(mesh, vec3(-1./6.), vec3(1./3.), 1);
-    
-    points.clear();
-    tets.clear();
-    tet_labels.clear();
-    mesh.extract_tet_mesh(points, tets, tet_labels);
-    is_mesh::export_tet_mesh(file_path + string("one_cell") + extension, points, tets, tet_labels);
+    Tetralizer::tetralize(vec3(50.), 10., points, tets, tet_labels);
+    is_mesh::export_tet_mesh(file_path + output_file_name + extension, points, tets, tet_labels);
 }
 
 int main(int argc, const char * argv[])
@@ -89,6 +56,8 @@ int main(int argc, const char * argv[])
     string output_file_name = string("test");
     
     generate_from_obj(input_file_name, output_file_name);
+//    generate_empty(output_file_name);
+    std::cout << "Generated " << output_file_name + extension << std::endl;
     
     return 0;
 }
