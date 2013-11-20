@@ -37,7 +37,6 @@
 		7AF9EBB2183C250200451E73 /* generator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generator.cpp; sourceTree = "<group>"; };
 		7AF9EBB3183C250200451E73 /* obj_load.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = obj_load.cpp; sourceTree = "<group>"; };
 		7AF9EBB4183C250200451E73 /* obj_load.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = obj_load.h; sourceTree = "<group>"; };
-		7AF9EBB5183C250200451E73 /* tetralize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tetralize.h; sourceTree = "<group>"; };
 		7AF9EBBC183C256C00451E73 /* libTetGen.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTetGen.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AF9EBC4183C2A2A00451E73 /* object_generator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = object_generator.cpp; sourceTree = "<group>"; };
 		7AF9EBC5183C2A2A00451E73 /* object_generator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = object_generator.h; sourceTree = "<group>"; };
@@ -101,7 +100,6 @@
 				7AF9EBC7183C2A2A00451E73 /* tetralizer.h */,
 				7AF9EBB3183C250200451E73 /* obj_load.cpp */,
 				7AF9EBB4183C250200451E73 /* obj_load.h */,
-				7AF9EBB5183C250200451E73 /* tetralize.h */,
 				7AF9EBB2183C250200451E73 /* generator.cpp */,
 			);
 			path = io;
@@ -350,6 +348,7 @@
 				7AF9EBBF183C256C00451E73 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

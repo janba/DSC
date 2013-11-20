@@ -19,8 +19,8 @@
 #include "mesh_io.h"
 #include "attributes.h"
 #include "object_generator.h"
-#include "tetralize.h"
 #include "tetralizer.h"
+#include "obj_load.h"
 
 using namespace std;
 
@@ -37,7 +37,7 @@ void generate_from_obj(const string& input_file_name, const string& output_file_
     std::vector<int> faces_interface;
     obj_load(file_path + input_file_name, points_interface, faces_interface);
     
-    is_mesh::build_tetrahedralization(points_interface, faces_interface, points, tets, tet_labels);
+    DSC::Tetralizer::tetralize(points_interface, faces_interface, points, tets, tet_labels);
     
     is_mesh::ISMesh<DSC::NodeAttributes, DSC::EdgeAttributes, DSC::FaceAttributes, DSC::TetAttributes> mesh(points, tets, tet_labels);
     
