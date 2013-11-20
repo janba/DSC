@@ -16,9 +16,8 @@
 
 #pragma once
 
-#include "util.h"
+#include "is_mesh.h"
 #include <fstream>
-#include <map>
 
 namespace is_mesh {
     
@@ -94,7 +93,7 @@ namespace is_mesh {
             y = points[3*i+1];
             z = points[3*i+2];
             mesh.insert_node(vec3(x,y,z));
-            mesh.get(NodeKey(cnt_nodes)).set_destination(vec3(x,y,z));
+            mesh.get(is_mesh::NodeKey(cnt_nodes)).set_destination(vec3(x,y,z));
             ++cnt_nodes;
         }
         
@@ -159,45 +158,53 @@ namespace is_mesh {
     /**
      * Imports a mesh from a .dsc file.
      */
-    inline void import_tet_mesh(const std::string & filename, std::vector<real>& points, std::vector<int>&  tets, std::vector<int>& labels)
+    void import_tet_mesh(const std::string & filename, std::vector<real>& points, std::vector<int>&  tets, std::vector<int>& labels);
+    
+    inline bool import_surface_mesh(const std::string& filename, std::vector<double>& vertices, std::vector<int>& faces)
     {
-        std::ifstream file(filename.data());
+        std::ifstream ifs(filename.data());
         
-        while (!file.eof())
+        if(ifs)
         {
-            char c;
-            file >> c;
-            if (c == 'v')
+            while(ifs.good() && !ifs.eof())
             {
-                real x,y,z; // The (x,y,z) coordinates of a vertex.
-                file >> x;
-                file >> y;
-                file >> z;
-                points.push_back(x);
-                points.push_back(y);
-                points.push_back(z);
+                std::string tok;
+                ifs >> tok;
+                if(tok == "v")
+                {
+                    float x,y,z;
+                    ifs >> x >> y >> z;
+                    vertices.push_back(x);
+                    vertices.push_back(y);
+                    vertices.push_back(z);
+                    char line[1000];
+                    ifs.getline(line, 998);
+                }
+                else if(tok == "f")
+                {
+                    char line[1000];
+                    ifs.getline(line, 998);
+                    char* pch = strtok(line, " \t");
+                    int ctr = 0;
+                    while(pch != 0)
+                    {
+                        int v;
+                        sscanf(pch, "%d", &v);
+                        faces.push_back(v-1);
+                        pch = strtok(0, " \t");
+                        ++ctr;
+                    }
+                }
+                else
+                {
+                    char line[1000];
+                    ifs.getline(line, 998);
+                }
             }
-            else if (c == 't')
-            {
-                int v1, v2, v3, v4; // The indeces of the four vertices of a tetrahedron.
-                int label; // The label of a tetrahedron.
-                file >> v1;
-                file >> v2;
-                file >> v3;
-                file >> v4;
-                file >> label;
-                
-                tets.push_back(v1);
-                tets.push_back(v2);
-                tets.push_back(v3);
-                tets.push_back(v4);
-                
-                labels.push_back(label);
-            }
-            c = '\n';
+            
+            return true;
         }
-        
-        file.close();
+        return false;
     }
     
     template <typename ISMesh>

@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		7AF9EBB6183C250200451E73 /* generator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9EBB2183C250200451E73 /* generator.cpp */; };
-		7AF9EBB7183C250200451E73 /* obj_load.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9EBB3183C250200451E73 /* obj_load.cpp */; };
 		7AF9EBC0183C258400451E73 /* predicates.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9EBAD183C24D900451E73 /* predicates.cxx */; };
 		7AF9EBC1183C258400451E73 /* tetgen.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9EBAF183C24D900451E73 /* tetgen.cxx */; };
 		7AF9EBC2183C258400451E73 /* tetgen.h in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9EBB0183C24D900451E73 /* tetgen.h */; };
@@ -35,8 +34,6 @@
 		7AF9EBAF183C24D900451E73 /* tetgen.cxx */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tetgen.cxx; sourceTree = "<group>"; };
 		7AF9EBB0183C24D900451E73 /* tetgen.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tetgen.h; sourceTree = "<group>"; };
 		7AF9EBB2183C250200451E73 /* generator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generator.cpp; sourceTree = "<group>"; };
-		7AF9EBB3183C250200451E73 /* obj_load.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = obj_load.cpp; sourceTree = "<group>"; };
-		7AF9EBB4183C250200451E73 /* obj_load.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = obj_load.h; sourceTree = "<group>"; };
 		7AF9EBBC183C256C00451E73 /* libTetGen.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTetGen.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AF9EBC4183C2A2A00451E73 /* object_generator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = object_generator.cpp; sourceTree = "<group>"; };
 		7AF9EBC5183C2A2A00451E73 /* object_generator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = object_generator.h; sourceTree = "<group>"; };
@@ -98,8 +95,6 @@
 				7AF9EBC5183C2A2A00451E73 /* object_generator.h */,
 				7AF9EBC6183C2A2A00451E73 /* tetralizer.cpp */,
 				7AF9EBC7183C2A2A00451E73 /* tetralizer.h */,
-				7AF9EBB3183C250200451E73 /* obj_load.cpp */,
-				7AF9EBB4183C250200451E73 /* obj_load.h */,
 				7AF9EBB2183C250200451E73 /* generator.cpp */,
 			);
 			path = io;
@@ -186,7 +181,6 @@
 			files = (
 				7AF9EBB6183C250200451E73 /* generator.cpp in Sources */,
 				7AF9EBC9183C2A2A00451E73 /* tetralizer.cpp in Sources */,
-				7AF9EBB7183C250200451E73 /* obj_load.cpp in Sources */,
 				7AF9EBC8183C2A2A00451E73 /* object_generator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

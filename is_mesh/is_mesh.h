@@ -16,10 +16,10 @@
 
 #pragma once
 
+#include "util.h"
 #include "kernel.h"
 #include "simplex.h"
 #include "simplex_set.h"
-#include "mesh_io.h"
 
 namespace is_mesh {
     

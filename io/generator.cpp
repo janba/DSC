@@ -14,13 +14,10 @@
 //
 //  See licence.txt for a copy of the GNU General Public License.
 
-
-#include "is_mesh.h"
 #include "mesh_io.h"
 #include "attributes.h"
 #include "object_generator.h"
 #include "tetralizer.h"
-#include "obj_load.h"
 
 using namespace std;
 using namespace is_mesh;
@@ -36,13 +33,13 @@ void generate_from_obj(const string& input_file_name, const string& output_file_
     
     std::vector<double> points_interface;
     std::vector<int> faces_interface;
-    obj_load(file_path + input_file_name, points_interface, faces_interface);
+    import_surface_mesh(file_path + input_file_name, points_interface, faces_interface);
     
     Tetralizer::tetralize(points_interface, faces_interface, points, tets, tet_labels);
     
     ISMesh<NodeAttributes, EdgeAttributes, FaceAttributes, TetAttributes> mesh(points, tets, tet_labels);
     
-    export_tet_mesh(mesh, file_path + output_file_name + extension);
+    export_tet_mesh(file_path + output_file_name + extension, mesh);
 }
 
 void generate_cube()
@@ -58,7 +55,7 @@ void generate_cube()
     double size = 0.75;
     ObjectGenerator::create_cube(mesh, vec3(-size/2.), vec3(size), 1);
     
-    export_tet_mesh(mesh, file_path + string("cube") + extension);
+    export_tet_mesh(file_path + string("cube") + extension, mesh);
 }
 
 void generate_one_cell()
@@ -73,7 +70,7 @@ void generate_one_cell()
     
     ObjectGenerator::create_cube(mesh, vec3(-1./6.), vec3(1./3.), 1);
     
-    export_tet_mesh(mesh, file_path + string("one_cell") + extension);
+    export_tet_mesh(file_path + string("one_cell") + extension, mesh);
 }
 
 int main(int argc, const char * argv[])

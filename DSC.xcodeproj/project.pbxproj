@@ -11,6 +11,7 @@
 		7A30ED1A17D951EB0051E6C0 /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A30ED1917D951EB0051E6C0 /* libGLEW.a */; };
 		7A3438C1183C6D2700829EEB /* attributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A3438BF183C6D2700829EEB /* attributes.h */; };
 		7A3438C2183C6D2700829EEB /* mesh_io.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A3438C0183C6D2700829EEB /* mesh_io.h */; };
+		7A3438C4183C75B100829EEB /* mesh_io.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3438C3183C75B100829EEB /* mesh_io.cpp */; };
 		7A45DB9C176E122100B9B388 /* key.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8F176E122100B9B388 /* key.h */; };
 		7A45DB9D176E122100B9B388 /* simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB90176E122100B9B388 /* simplex.h */; };
 		7A45DBA0176E122100B9B388 /* kernel_iterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB93176E122100B9B388 /* kernel_iterator.h */; };
@@ -129,6 +130,7 @@
 		7A30ED1917D951EB0051E6C0 /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = ../../../../../usr/local/lib/libGLEW.a; sourceTree = "<group>"; };
 		7A3438BF183C6D2700829EEB /* attributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = attributes.h; path = is_mesh/attributes.h; sourceTree = "<group>"; };
 		7A3438C0183C6D2700829EEB /* mesh_io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mesh_io.h; path = is_mesh/mesh_io.h; sourceTree = "<group>"; };
+		7A3438C3183C75B100829EEB /* mesh_io.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mesh_io.cpp; path = is_mesh/mesh_io.cpp; sourceTree = "<group>"; };
 		7A38E82A17E3B35A0075DC24 /* gouraud.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = gouraud.frag; sourceTree = "<group>"; };
 		7A38E82B17E3B35A0075DC24 /* gouraud.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = gouraud.vert; sourceTree = "<group>"; };
 		7A45DB8F176E122100B9B388 /* key.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = key.h; path = is_mesh/key.h; sourceTree = "<group>"; };
@@ -277,8 +279,9 @@
 		7A07B9B1176B23A8006589A4 /* ISMesh */ = {
 			isa = PBXGroup;
 			children = (
-				7A3438BF183C6D2700829EEB /* attributes.h */,
+				7A3438C3183C75B100829EEB /* mesh_io.cpp */,
 				7A3438C0183C6D2700829EEB /* mesh_io.h */,
+				7A3438BF183C6D2700829EEB /* attributes.h */,
 				7A45DB8F176E122100B9B388 /* key.h */,
 				7A45DB90176E122100B9B388 /* simplex.h */,
 				7A45DB95176E122100B9B388 /* simplex_set.h */,
@@ -678,6 +681,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A3438C4183C75B100829EEB /* mesh_io.cpp in Sources */,
 				7A9F2A9217E7548900259577 /* design_domain.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

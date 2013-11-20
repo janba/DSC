@@ -18,6 +18,7 @@
 
 #include <vector>
 #include <list>
+#include <map>
 #include <sstream>
 #include <cmath>
 #include <cassert>
