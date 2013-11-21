@@ -68,7 +68,7 @@ UI::UI(int &argc, char** argv)
     check_gl_error(); // Catches a GL_INVALID_ENUM error. See http://www.opengl.org/wiki/OpenGL_Loading_Library
     
     // Read input
-    std::string motion = "-1";
+    std::string motion = "";
     
     if(argc > 1)
     {
