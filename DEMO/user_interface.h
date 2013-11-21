@@ -28,10 +28,11 @@ class UI
 {
     std::unique_ptr<DSC::VelocityFunc<>> vel_fun;
     std::unique_ptr<DSC::DeformableSimplicialComplex<>> dsc;
-    
     std::unique_ptr<Log> basic_log;
-    
     std::unique_ptr<Painter> painter;
+    
+    std::string model_file_name = "cube.dsc";
+    
     vec3 eye_pos = {70., 30., 70.};
     vec3 camera_pos = {30., 30., 70.};
     vec3 light_pos = {0., 0., 70.};
@@ -39,14 +40,14 @@ class UI
     int WIN_SIZE_X = 700.;
     int WIN_SIZE_Y = 700;
     
-    bool CONTINUOUS;
-    bool RECORD;
-    bool QUIT_ON_COMPLETION;
+    bool CONTINUOUS = false;
+    bool RECORD = true;
+    bool QUIT_ON_COMPLETION = true;
     bool WIREFRAME = false;
     
-    real VELOCITY;
-    real DISCRETIZATION;
-    real ACCURACY;
+    real VELOCITY = 5.;
+    real DISCRETIZATION = 2.5;
+    real ACCURACY = 1.;
     static UI* instance;
     
 #ifdef WIN32
@@ -127,19 +128,8 @@ public:
     void keyboard(unsigned char key, int x, int y);
     
 private:
-    void one_cell();
     
-    void rotate_cube();
-    
-    void rotate_blob();
-    
-    void smooth_armadillo();
-    
-    void expand_blob();
-    
-    void expand_armadillo();
-    
-    void rotate_armadillo();
+    void load_model();
     
     /**
      Updates the window title.
