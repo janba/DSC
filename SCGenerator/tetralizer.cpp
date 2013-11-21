@@ -305,11 +305,7 @@ void Tetralizer::tetrahedralize_inside(const std::vector<real>& points_interface
     in.firstnumber = 0;
     in.mesh_dim = 3;
     
-    
     in.numberofpoints = (int)(points_interface.size()/3);
-    //std::vector<T> points;
-    //points.resize(points_interface.size() );
-    //in.pointlist = &points[0];
     in.pointlist = new real[points_interface.size()];
     
     for (unsigned int i = 0; i < points_interface.size(); ++i)
@@ -393,9 +389,6 @@ void Tetralizer::tetrahedralize_outside(const std::vector<real>& points_interfac
     in.holelist[0] = inside_pts[0];
     in.holelist[1] = inside_pts[1];
     in.holelist[2] = inside_pts[2];
-    
-    //tetgenbehavior tetbeh = tetgenbehavior();
-    //tetrahedralize(&tetbeh, &in, &out);
     
     char * tetgen_flags = "pq1.8a0.005YY";
     tetrahedralize(tetgen_flags, &in, &out);

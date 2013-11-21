@@ -21,17 +21,22 @@ namespace is_mesh {
     
     void scale(std::vector<vec3>& points, real size)
     {
-        real p_min = INFINITY, p_max = -INFINITY;
+        vec3 p_min(INFINITY), p_max(-INFINITY);
         for (vec3 p : points) {
             for (int i = 0; i < 3; i++) {
-                p_min = Util::min(p[i], p_min);
-                p_max = Util::max(p[i], p_max);
+                p_min[i] = Util::min(p[i], p_min[i]);
+                p_max[i] = Util::max(p[i], p_max[i]);
             }
         }
         
-        real scale = (p_max - p_min);
+        vec3 center = 0.5*(p_max + p_min);
+        real scale = -INFINITY;
+        for (int i = 0; i < 3; i++) {
+            scale = Util::max(p_max[i] - p_min[i], scale);
+        }
+        
         for (vec3& p : points) {
-            p = size*(p - vec3(p_min))/scale - vec3(0.5*size);
+            p = size*(p - center)/scale;
         }
     }
     
