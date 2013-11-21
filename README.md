@@ -47,6 +47,8 @@ The DSC source code includes the external library CGLA which is a part of the [G
 
 The DSC source code also includes the [SOIL libary](http://www.lonesock.net/soil.html) by Jonathan Dummer which is under the MIT license. It is therefore acceptable to include the SOIL package as long as the copyright notice is retained.
 
+Finally, the [TetGen library](http://wias-berlin.de/software/tetgen/) is used for generating the initial simplicial complexes from .obj files. The TetGen library is under the GNU Affero General Public License (a copy of this license is found in the TetGen folder) and is therefore free to distribute.
+
 ---
 ### Contact information
 
