@@ -81,33 +81,7 @@ namespace DSC {
         DeformableSimplicialComplex(real _AVG_EDGE_LENGTH, std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels, DesignDomain *domain = nullptr):
             ISMesh(points, tets, tet_labels), design_domain(domain)
         {
-            AVG_EDGE_LENGTH = _AVG_EDGE_LENGTH;
-            MIN_DEFORMATION = 0.0001 * AVG_EDGE_LENGTH;
-            
-            DEG_EDGE_QUALITY = 0.1;
-            MIN_EDGE_QUALITY = 0.5;
-            
-            DEG_FACE_QUALITY = 1. - cos(2.*M_PI/180.);
-            MIN_FACE_QUALITY = 1. - cos(10.*M_PI/180.);
-            
-            DEG_TET_QUALITY = 0.02;
-            MIN_TET_QUALITY = 0.3;
-            
-            FLIP_EDGE_INTERFACE_FLATNESS = 0.995;
-            
-            MIN_LENGTH = 0.;
-            MAX_LENGTH = 2. * AVG_EDGE_LENGTH;
-            
-            real area_avg = AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*0.5;
-            MIN_AREA = 0.2*area_avg;
-            MAX_AREA = 5.*area_avg;
-            
-            real vol_avg = AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*AVG_EDGE_LENGTH*sqrt(2.)/12.;
-            MIN_VOLUME = 0.2*vol_avg;
-            MAX_VOLUME = INFINITY;
-            
-            //        fix_complex();
-            //        resize_complex();
+            set_discretization(_AVG_EDGE_LENGTH);
         }
         
         DeformableSimplicialComplex()
@@ -123,6 +97,35 @@ namespace DSC {
         using ISMesh::get_tets;
         
         using ISMesh::get_pos;
+        
+        virtual void set_discretization(real discretization)
+        {
+            AVG_EDGE_LENGTH = discretization;
+            MIN_DEFORMATION = 0.0001 * discretization;
+            
+            DEG_EDGE_QUALITY = 0.1;
+            MIN_EDGE_QUALITY = 0.5;
+            
+            DEG_FACE_QUALITY = 1. - cos(2.*M_PI/180.);
+            MIN_FACE_QUALITY = 1. - cos(10.*M_PI/180.);
+            
+            DEG_TET_QUALITY = 0.02;
+            MIN_TET_QUALITY = 0.3;
+            
+            FLIP_EDGE_INTERFACE_FLATNESS = 0.995;
+            
+            MIN_LENGTH = 0.;
+            MAX_LENGTH = 2. * discretization;
+            
+            real area_avg = discretization*discretization*0.5;
+            MIN_AREA = 0.2*area_avg;
+            MAX_AREA = 5.*area_avg;
+            
+            real vol_avg = discretization*discretization*discretization*sqrt(2.)/12.;
+            MIN_VOLUME = 0.2*vol_avg;
+            MAX_VOLUME = INFINITY;
+        }
+        
     private:
         
         // For debugging!

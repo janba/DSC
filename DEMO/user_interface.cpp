@@ -302,16 +302,18 @@ void UI::keyboard(unsigned char key, int x, int y) {
             }
             break;
         case '.':
-            if(!vel_fun)
+            if(dsc)
             {
                 DISCRETIZATION = std::min(DISCRETIZATION + 0.5, 100.);
+                dsc->set_discretization(DISCRETIZATION);
                 update_title();
             }
             break;
         case ',':
-            if(!vel_fun)
+            if(dsc)
             {
                 DISCRETIZATION = std::max(DISCRETIZATION - 0.5, 1.);
+                dsc->set_discretization(DISCRETIZATION);
                 update_title();
             }
             break;
