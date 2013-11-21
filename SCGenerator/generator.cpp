@@ -20,8 +20,12 @@
 
 using namespace std;
 
-const string file_path = string("data/");
-const string extension = string(".dsc");
+#ifdef WIN32
+const std::string file_path = "@PROJECT_SOURCE_DIR@/data/";
+#else
+const std::string file_path = "./data/";
+#endif
+const string extension = ".dsc";
 
 void generate_from_obj(const string& input_file_name, const string& output_file_name)
 {

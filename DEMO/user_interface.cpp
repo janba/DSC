@@ -112,7 +112,7 @@ void UI::load_model()
     std::vector<vec3> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
-    is_mesh::import_tet_mesh(get_data_file_path(model_file_name), points, tets, tet_labels);
+    is_mesh::import_tet_mesh(get_data_file_path(model_file_name + extension), points, tets, tet_labels);
     
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(50.));
     dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels, domain));

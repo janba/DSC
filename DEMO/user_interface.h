@@ -31,7 +31,7 @@ class UI
     std::unique_ptr<Log> basic_log;
     std::unique_ptr<Painter> painter;
     
-    std::string model_file_name = "armadillo.dsc";
+    std::string model_file_name = "armadillo";
     
     vec3 eye_pos = {70., 30., 70.};
     vec3 camera_pos = {30., 30., 70.};
@@ -54,6 +54,7 @@ class UI
 #else
     const std::string obj_path = "./data/";
 #endif
+    const std::string extension = ".dsc";
     
 public:
     
