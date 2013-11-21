@@ -54,6 +54,10 @@ inline void _check_gl_error(const char *file, int line)
  A painter handles all draw functionality using OpenGL.
  */
 class Painter {
+    enum DISPLAY_TYPE {INTERFACE = 0, WIRE_FRAME = 1, BOUNDARY = 2, EDGES = 3, LOW_QUALITY = 4, UNMOVED = 5, DISPLAY_TYPE_END = 6};
+    
+    DISPLAY_TYPE display_type = INTERFACE;
+    
     const static unsigned int NULL_LOCATION = -1;
     
     class GLObject {
@@ -116,9 +120,14 @@ public:
     void draw();
     
     /**
+     Switches between different types of display.
+     */
+    void switch_display_type();
+    
+    /**
      Updates what to draw.
      */
-    void update(DSC::DeformableSimplicialComplex<>& dsc, bool do_wire_frame);
+    void update(DSC::DeformableSimplicialComplex<>& dsc);
     
     /**
      Saves the current painting to the selected folder.
@@ -137,11 +146,6 @@ private:
      Updates the drawn edges.
      */
     void update_edges(DSC::DeformableSimplicialComplex<>& dsc);
-    
-    /**
-     Updates the drawn boundary.
-     */
-    void update_boundary(DSC::DeformableSimplicialComplex<>& dsc);
     
     /**
      Updates the drawn domain.

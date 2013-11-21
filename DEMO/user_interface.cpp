@@ -117,7 +117,7 @@ void UI::load_model()
     DesignDomain *domain = new DesignDomain(DesignDomain::CUBE, vec3(50.));
     dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels, domain));
     dsc->scale(vec3(20.));
-    painter->update(*dsc, WIREFRAME);
+    painter->update(*dsc);
 }
 
 void UI::update_title()
@@ -160,7 +160,7 @@ void UI::animate()
     if(vel_fun && CONTINUOUS)
     {
         vel_fun->take_time_step(*dsc);
-        painter->update(*dsc, WIREFRAME);
+        painter->update(*dsc);
         if(RECORD)
         {
             painter->set_view_position(camera_pos);
@@ -232,36 +232,26 @@ void UI::keyboard(unsigned char key, int x, int y) {
             {
                 std::cout << "TEST DSC" << std::endl;
                 dsc->test_flip23_flip32();
-                painter->update(*dsc, WIREFRAME);
+                painter->update(*dsc);
                 dsc->test_split_collapse();
-                painter->update(*dsc, WIREFRAME);
+                painter->update(*dsc);
                 dsc->test_flip44();
-                painter->update(*dsc, WIREFRAME);
+                painter->update(*dsc);
                 dsc->test_flip22();
-                painter->update(*dsc, WIREFRAME);
+                painter->update(*dsc);
             }
             if(vel_fun)
             {
                 std::cout << "TEST VELOCITY FUNCTION" << std::endl;
                 vel_fun->test(*dsc);
-                painter->update(*dsc, WIREFRAME);
-            }
-            break;
-        case 'w':
-            if(dsc)
-            {
-                if(!WIREFRAME)
-                {
-                    std::cout << "DISPLAYING WIREFRAME" << std::endl;
-                }
-                WIREFRAME = !WIREFRAME;
-                painter->update(*dsc, WIREFRAME);
+                painter->update(*dsc);
             }
             break;
         case '\t':
             if(dsc)
             {
-                switch_display_type();
+                painter->switch_display_type();
+                painter->update(*dsc);
             }
             break;
         case 's':

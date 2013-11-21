@@ -43,7 +43,6 @@ class UI
     bool CONTINUOUS = false;
     bool RECORD = true;
     bool QUIT_ON_COMPLETION = true;
-    bool WIREFRAME = false;
     
     real VELOCITY = 5.;
     real DISCRETIZATION = 2.5;
@@ -135,14 +134,6 @@ private:
      Updates the window title.
      */
     void update_title();
-    
-    /**
-     Switches between different types of display if implemented.
-     */
-    void switch_display_type()
-    {
-        
-    }
     
     /**
      Starts the motion.

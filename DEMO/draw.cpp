@@ -374,21 +374,47 @@ void Painter::draw()
     check_gl_error();
 }
 
-void Painter::update(DSC::DeformableSimplicialComplex<>& dsc, bool do_wire_frame)
+void Painter::switch_display_type()
 {
-    if(!do_wire_frame)
-    {
-        wire_frame->clear_data();
-        update_interface(dsc);
+    display_type = static_cast<DISPLAY_TYPE>((display_type+1)%DISPLAY_TYPE_END);
+}
+
+void Painter::update(DSC::DeformableSimplicialComplex<>& dsc)
+{
+    interface->clear_data();
+    wire_frame->clear_data();
+    edges->clear_data();
+    domain->clear_data();
+    low_quality->clear_data();
+    unmoved->clear_data();
+    switch (display_type) {
+        case INTERFACE:
+            update_interface(dsc);
+            break;
+        case WIRE_FRAME:
+            update_wire_frame(dsc);
+            break;
+        case BOUNDARY:
+            update_interface(dsc);
+            update_domain(dsc);
+            break;
+        case EDGES:
+            update_interface(dsc);
+            update_edges(dsc);
+            break;
+        case LOW_QUALITY:
+            update_interface(dsc);
+            update_low_quality(dsc);
+            break;
+        case UNMOVED:
+            update_interface(dsc);
+            update_unmoved(dsc);
+            break;
+            
+        default:
+            break;
     }
-    else {
-        interface->clear_data();
-        update_wire_frame(dsc);
-    }
-//    update_unmoved(dsc);
-//    update_edges(dsc);
-//    update_domain(dsc);
-//    update_low_quality(dsc);
+    
 }
 
 void Painter::update_interface(DSC::DeformableSimplicialComplex<>& dsc)
