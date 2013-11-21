@@ -29,11 +29,17 @@ public:
      Creates a velocity function which moves the interface vertices in the normal direction.
      */
     NormalFunc(real velocity, real accuracy, int max_time_steps = 100):
-        VelocityFunc<>(velocity/10., accuracy, max_time_steps)
+        VelocityFunc<>(velocity, accuracy, max_time_steps)
     {
-        
+        set_velocity(velocity);
     }
     
+    
+    virtual void set_velocity(real vel) override
+    {
+        VELOCITY = vel/10.;
+    }
+
     /**
      Returns the name of the velocity function.
      */

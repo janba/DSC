@@ -28,9 +28,20 @@ public:
      Creates a velocity function which smooths the interface.
      */
     AverageFunc(real velocity, real accuracy, int max_time_steps = 100):
-        VelocityFunc<>(velocity/10., accuracy/100., max_time_steps)
+        VelocityFunc<>(velocity, accuracy, max_time_steps)
     {
-        
+        set_velocity(velocity);
+        set_accuracy(accuracy);
+    }
+    
+    virtual void set_velocity(real vel) override
+    {
+        VELOCITY = vel/10.;
+    }
+    
+    virtual void set_accuracy(real acc) override
+    {
+        ACCURACY = acc/100.;
     }
     
     /**

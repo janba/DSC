@@ -31,11 +31,16 @@ public:
      Creates a rotating velocity function.
      */
     RotateFunc(real velocity, real accuracy, int max_time_steps = 100):
-        VelocityFunc<>(M_PI*velocity/(5.*180.), accuracy, max_time_steps)
+        VelocityFunc<>(velocity, accuracy, max_time_steps)
     {
-        
+        set_velocity(velocity);
     }
     
+    virtual void set_velocity(real vel) override
+    {
+        VELOCITY = M_PI*vel/(5.*180.);
+    }
+
     /**
      Returns the name of the velocity function.
      */

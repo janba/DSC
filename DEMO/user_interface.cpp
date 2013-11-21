@@ -288,16 +288,24 @@ void UI::keyboard(unsigned char key, int x, int y) {
             }
             break;
         case '+':
-            if(!vel_fun)
+            if(dsc)
             {
                 VELOCITY = std::min(VELOCITY + 1., 100.);
+                if(vel_fun)
+                {
+                    vel_fun->set_velocity(VELOCITY);
+                }
                 update_title();
             }
             break;
         case '-':
-            if(!vel_fun)
+            if(dsc)
             {
                 VELOCITY = std::max(VELOCITY - 1., 0.);
+                if(vel_fun)
+                {
+                    vel_fun->set_velocity(VELOCITY);
+                }
                 update_title();
             }
             break;
@@ -318,16 +326,24 @@ void UI::keyboard(unsigned char key, int x, int y) {
             }
             break;
         case '<':
-            if(!vel_fun)
+            if(dsc)
             {
                 ACCURACY = std::min(ACCURACY + 1., 100.);
+                if(vel_fun)
+                {
+                    vel_fun->set_accuracy(ACCURACY);
+                }
                 update_title();
             }
             break;
         case '>':
-            if(!vel_fun)
+            if(dsc)
             {
                 ACCURACY = std::max(ACCURACY - 1., 1.);
+                if(vel_fun)
+                {
+                    vel_fun->set_accuracy(ACCURACY);
+                }
                 update_title();
             }
             break;

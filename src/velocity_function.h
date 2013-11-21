@@ -26,14 +26,14 @@ namespace DSC {
     template <typename DeformableSimplicialComplex = DeformableSimplicialComplex<>>
     class VelocityFunc
     {
-        int time_step;
+        int time_step = 0;
         int MAX_TIME_STEPS;
         
-        real compute_time;
-        real deform_time;
+        real compute_time = 0.;
+        real deform_time = 0.;
         
-        real total_compute_time;
-        real total_deform_time;
+        real total_compute_time = 0.;
+        real total_deform_time = 0.;
         
     protected:
         real VELOCITY; // Determines the distance each interface vertex moves at each iteration.
@@ -44,11 +44,10 @@ namespace DSC {
         /**
          Creates a velocity function which is applied to the simplicial complex defined by the first input parameter. The velocity parameter determines the velocity of the function.
          */
-        VelocityFunc(real velocity, real accuracy, int max_time_steps):
-        time_step(0), MAX_TIME_STEPS(max_time_steps), VELOCITY(velocity), ACCURACY(accuracy),
-        compute_time(0.), deform_time(0.), total_compute_time(0.), total_deform_time(0.)
+        VelocityFunc(real velocity, real accuracy, int max_time_steps): MAX_TIME_STEPS(max_time_steps)
         {
-            
+            set_velocity(velocity);
+            set_accuracy(accuracy);
         }
         
     public:
@@ -78,12 +77,22 @@ namespace DSC {
             return VELOCITY;
         }
         
+        virtual void set_velocity(real vel)
+        {
+            VELOCITY = vel;
+        }
+        
         /**
          Returns the accuracy.
          */
         real get_accuracy() const
         {
             return ACCURACY;
+        }
+        
+        virtual void set_accuracy(real acc)
+        {
+            ACCURACY = acc;
         }
         
         /**
