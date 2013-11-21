@@ -214,18 +214,20 @@ void UI::keyboard(unsigned char key, int x, int y) {
             CONTINUOUS = !CONTINUOUS;
             break;
         case 'm':
+            std::cout << "MOVE" << std::endl;
             if(vel_fun)
             {
-                std::cout << "MOVE" << std::endl;
                 vel_fun->take_time_step(*dsc);
+                painter->update(*dsc);
+            }
+            else {
+                dsc->deform();
+                painter->update(*dsc);
             }
             break;
         case 'r':
-            if(dsc)
-            {
-                std::cout << "RELOAD MODEL" << std::endl;
-                load_model();
-            }
+            std::cout << "RELOAD MODEL" << std::endl;
+            load_model();
             break;
         case 't':
             if(dsc)
@@ -239,12 +241,12 @@ void UI::keyboard(unsigned char key, int x, int y) {
                 painter->update(*dsc);
                 dsc->test_flip22();
                 painter->update(*dsc);
-            }
-            if(vel_fun)
-            {
-                std::cout << "TEST VELOCITY FUNCTION" << std::endl;
-                vel_fun->test(*dsc);
-                painter->update(*dsc);
+                if(vel_fun)
+                {
+                    std::cout << "TEST VELOCITY FUNCTION" << std::endl;
+                    vel_fun->test(*dsc);
+                    painter->update(*dsc);
+                }
             }
             break;
         case '\t':
