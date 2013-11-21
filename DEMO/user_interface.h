@@ -22,7 +22,7 @@
 #include "draw.h"
 
 /**
- A default user interface which utilize OpenGL, GLEW and GLUT. At least some of the motion functions should be overridden.
+ A default application which utilizes OpenGL, GLEW and GLUT for visualization. Three sample velocity functions (rotation, smoothing and expansion) can be applies to a model specified by the model_file_name variable or as input variable. See https://github.com/asny/DSC/wiki/DEMO-instructions for details on how to use this DEMO application. See https://github.com/asny/DSC/wiki/Instructions for instructions on how to build your own application which uses the implementation of the DSC method.
  */
 class UI
 {
@@ -93,42 +93,14 @@ public:
     void motion(int x, int y);
     
     /**
-     The keyboard is used for all inputs.
-     The workflow is to select parameters (discretization, velocity and accuracy), then the type of motion (the type of velocity function) and finally start the motion.
-     A complete list of options are:
-     
-     *** SELECT PARAMETERS ***
-     ,:         Decreases discretization by 0.5 to a minimum of 1.
-     .:         Increases discretization by 0.5 to a maximum of 100.
-     -:         Decreases velocity by 1 to a minimum of 1.
-     +:         Increases velocity by 1 to a maximum of 100.
-     >:         Decreases accuracy by 1 to a minimum of 1.
-     <:         Increases accuracy by 1 to a maximum of 100.
-     
-     *** START/STOP MOTION ***
-     SPACE:     Starts/pauses the current motion.
-     0:         Stops the current motion.
-     ESCAPE:    Stops the current motion and exits the application
-     m:         Moves the interface vertices one time step according to the current velocity function.
-     
-     *** MISCELLANEOUS ***
-     t:         Performs a test on the current velocity function.
-     s:         Takes a screen shot.
-     e:         Export the simplicial complex to a .dsc file.
-     TAB:       Switches the display type.
-     
-     *** SELECT MOTION ***
-     1:         Selects motion type 1.
-     2:         Selects motion type 2.
-     3:         Selects motion type 3.
-     4:         Selects motion type 4.
-     5:         Selects motion type 5.
-     6:         Selects motion type 6.
+     The keyboard is used for all inputs. See https://github.com/asny/DSC/wiki/DEMO-instructions for up-to-date instructions on how to use the DEMO application.
      */
     void keyboard(unsigned char key, int x, int y);
     
 private:
-    
+    /**
+     Loads the .dsc file specified by the model_file_name variable.
+     */
     void load_model();
     
     /**
