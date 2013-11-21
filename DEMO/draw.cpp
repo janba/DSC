@@ -567,6 +567,13 @@ void Painter::update_low_quality(DSC::DeformableSimplicialComplex<>& dsc)
 void Painter::update_unmoved(DSC::DeformableSimplicialComplex<>& dsc)
 {
     std::vector<vec3> data;
+    data.push_back(vec3(0.));
+    data.push_back(vec3(20.,0.,0.));
+    data.push_back(vec3(0.));
+    data.push_back(vec3(0.,20.,0.));
+    data.push_back(vec3(0.));
+    data.push_back(vec3(0.,0.,20.));
+    
     for (auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
     {
         vec3 vector = nit->get_destination() - nit->get_pos();
