@@ -100,7 +100,6 @@ void Log::write_message(const std::string& message)
 
 void Log::write_timestep(const VelocityFunc<>& vel_fun, DeformableSimplicialComplex<>& dsc)
 {
-    //    std::cout << "\n\n*** Time step #" << vel_fun.get_time_step() << " ***" << std::endl;
     log << std::endl << "*** Time step #" << vel_fun.get_time_step() << " ***" << std::endl;
     log << std::endl;
     write_variable("Compute time", vel_fun.get_compute_time(), "s");
@@ -119,11 +118,7 @@ void Log::write_timestep(const VelocityFunc<>& vel_fun, DeformableSimplicialComp
 void Log::write_log(DeformableSimplicialComplex<>& dsc)
 {
     write_message("SIMPLICIAL COMPLEX INFO");
-    //        write_variable("Size X\t", complex.get_size_x());
-    //        write_variable("Size Y\t", complex.get_size_y());
-    //        write_variable("Avg edge length", complex.get_avg_edge_length());
-    //        write_variable("Min deformation", complex.get_min_deformation());
-    //        write_variable("Total volume", complex.get_volume());
+    write_variable("Discretization", dsc.get_avg_edge_length());
     
     int total, object;
     dsc.count_nodes(total, object);
