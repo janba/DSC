@@ -25,8 +25,6 @@ namespace DSC {
     template <typename node_att = is_mesh::NodeAttributes, typename edge_att = is_mesh::EdgeAttributes, typename face_att = is_mesh::FaceAttributes, typename tet_att = is_mesh::TetAttributes>
     class DeformableSimplicialComplex : public is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>
     {
-        friend class ObjectGenerator;
-        typedef is_mesh::ISMesh<node_att, edge_att, face_att, tet_att> ISMesh;
     public:
         
         typedef is_mesh::NodeKey      node_key;
@@ -79,7 +77,7 @@ namespace DSC {
         
         /// SimplicialComplex constructor.
         DeformableSimplicialComplex(real _AVG_EDGE_LENGTH, std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels, DesignDomain *domain = nullptr):
-            ISMesh(points, tets, tet_labels), design_domain(domain)
+            is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>(points, tets, tet_labels), design_domain(domain)
         {
             set_discretization(_AVG_EDGE_LENGTH);
         }
@@ -89,14 +87,42 @@ namespace DSC {
             delete design_domain;
         }
         
-        using ISMesh::get;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get;
         
-        using ISMesh::get_nodes;
-        using ISMesh::get_edges;
-        using ISMesh::get_faces;
-        using ISMesh::get_tets;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::nodes_begin;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::nodes_end;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::edges_begin;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::edges_end;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::faces_begin;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::faces_end;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::tetrahedra_begin;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::tetrahedra_end;
         
-        using ISMesh::get_pos;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get_pos;
+        
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get_nodes;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get_edges;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get_faces;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get_tets;
+        
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get_edge;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get_face;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::exists;
+        
+    private:
+        
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::flip_22;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::flip_23;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::flip_32;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::flip_44;
+        
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::split;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::collapse;
+        
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::garbage_collect;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::validity_check;
+        
+    public:
         
         virtual void set_discretization(real discretization)
         {
@@ -138,7 +164,7 @@ namespace DSC {
             std::cout << "D = " << d[0] << ", " << d[1] << ", " << d[2]  << std::endl;
             
             std::cout << "\nStar_edges = [";
-            for(auto e : ISMesh::get_edges(n))
+            for(auto e : get_edges(n))
             {
                 auto verts = get_pos(get_nodes(e));
                 vec3 p1 = verts[0];
@@ -149,7 +175,7 @@ namespace DSC {
             std::cout << "];" << std::endl;
             
             std::cout << "\nStar_Iedges = [";
-            for(auto e : ISMesh::get_edges(n))
+            for(auto e : get_edges(n))
             {
                 if(get(e).is_interface())
                 {
@@ -179,7 +205,7 @@ namespace DSC {
             {
                 if(get(e).is_interface())
                 {
-                    auto verts = ISMesh::get_pos(ISMesh::get_nodes(e));
+                    auto verts = get_pos(get_nodes(e));
                     vec3 p1 = verts[0];
                     vec3 p2 = verts[1];
                     std::cout << p1[0] << ", " << p1[1] << ", " << p1[2] << "; " << std::endl;
@@ -197,22 +223,22 @@ namespace DSC {
         
         virtual bool is_unsafe_editable(const node_key& nid)
         {
-            return ISMesh::exists(nid) && !get(nid).is_boundary();
+            return exists(nid) && !get(nid).is_boundary();
         }
         
         virtual bool is_unsafe_editable(const edge_key& eid)
         {
-            return ISMesh::exists(eid) && !get(eid).is_boundary();
+            return exists(eid) && !get(eid).is_boundary();
         }
         
         virtual bool is_unsafe_editable(const face_key& fid)
         {
-            return ISMesh::exists(fid) && !get(fid).is_boundary();
+            return exists(fid) && !get(fid).is_boundary();
         }
         
         virtual bool is_unsafe_editable(const tet_key& tid)
         {
-            return ISMesh::exists(tid);
+            return exists(tid);
         }
         
         virtual bool is_safe_editable(const node_key& nid)
@@ -243,7 +269,7 @@ namespace DSC {
         
         int get_label(const tet_key& t)
         {
-            return ISMesh::get_label(t);
+            return get(t).label();
         }
         
     protected:
@@ -252,10 +278,10 @@ namespace DSC {
          */
         void set_pos(const node_key& nid, const vec3& p)
         {
-            ISMesh::get(nid).set_pos(p);
+            get(nid).set_pos(p);
             if(!is_movable(nid))
             {
-                ISMesh::get(nid).set_destination(p);
+                get(nid).set_destination(p);
             }
         }
         
@@ -486,7 +512,7 @@ namespace DSC {
                 int k = K[i][j];
                 flip_23_recursively(polygon, n1, n2, K, i, k);
                 flip_23_recursively(polygon, n1, n2, K, k, j);
-                ISMesh::flip_23(ISMesh::get_face(n1, n2, polygon[k]));
+                flip_23(get_face(n1, n2, polygon[k]));
             }
         }
         
@@ -496,7 +522,7 @@ namespace DSC {
             int k = K[0][m-1];
             flip_23_recursively(polygon, n1, n2, K, 0, k);
             flip_23_recursively(polygon, n1, n2, K, k, m-1);
-            ISMesh::flip_32(ISMesh::get_edge(n1, n2));
+            flip_32(get_edge(n1, n2));
         }
         
         /**
@@ -531,13 +557,13 @@ namespace DSC {
             
             if(m2 <= 2) {
                 // Find the faces to flip about.
-                face_key f1 = ISMesh::get_face(nids[0], nids[1], polygon1.front());
-                face_key f2 = ISMesh::get_face(nids[0], nids[1], polygon1.back());
+                face_key f1 = get_face(nids[0], nids[1], polygon1.front());
+                face_key f2 = get_face(nids[0], nids[1], polygon1.back());
                 assert(get(f1).is_boundary() && get(f2).is_boundary());
                 
-                if(precond_flip_edge(ISMesh::get_edge(f1, f2), f1, f2))
+                if(precond_flip_edge(get_edge(f1, f2), f1, f2))
                 {
-                    ISMesh::flip_22(f1, f2);
+                    flip_22(f1, f2);
                 }
             }
             else {
@@ -546,12 +572,12 @@ namespace DSC {
                 flip_23_recursively(polygon2, nids[0], nids[1], K2, k, m2-1);
                 
                 // Find the faces to flip about.
-                face_key f1 = ISMesh::get_face(nids[0], nids[1], polygon1.front());
-                face_key f2 = ISMesh::get_face(nids[0], nids[1], polygon1.back());
+                face_key f1 = get_face(nids[0], nids[1], polygon1.front());
+                face_key f2 = get_face(nids[0], nids[1], polygon1.back());
                 
-                if(precond_flip_edge(ISMesh::get_edge(f1, f2), f1, f2))
+                if(precond_flip_edge(get_edge(f1, f2), f1, f2))
                 {
-                    ISMesh::flip_44(f1, f2);
+                    flip_44(f1, f2);
                 }
             }
         }
@@ -592,7 +618,7 @@ namespace DSC {
         void topological_edge_removal()
         {
             std::vector<tet_key> tets;
-            for (auto tit = ISMesh::tetrahedra_begin(); tit != ISMesh::tetrahedra_end(); tit++)
+            for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
                 if (quality(tit.key()) < MIN_TET_QUALITY)
                 {
@@ -604,11 +630,11 @@ namespace DSC {
             int i = 0, j = 0, k = 0;
             for (auto &t : tets)
             {
-                if (ISMesh::exists(t) && quality(t) < MIN_TET_QUALITY)
+                if (exists(t) && quality(t) < MIN_TET_QUALITY)
                 {
-                    for (auto e : ISMesh::get_edges(t))
+                    for (auto e : get_edges(t))
                     {
-                        if (ISMesh::exists(e))
+                        if (exists(e))
                         {
                             if(is_safe_editable(e))
                             {
@@ -630,7 +656,7 @@ namespace DSC {
                 }
             }
             std::cout << "Topological edge removals: " << i + k << "/" << j << " (" << k << " at interface)" << std::endl;
-            ISMesh::garbage_collect();
+            garbage_collect();
         }
         
         //////////////////////////////
@@ -639,7 +665,7 @@ namespace DSC {
         
         is_mesh::SimplexSet<edge_key> test_neighbour(const face_key& f, const node_key& a, const node_key& b, const node_key& u, const node_key& w, real& q_old, real& q_new)
         {
-            edge_key e = ISMesh::get_edge(u,w);
+            edge_key e = get_edge(u,w);
             is_mesh::SimplexSet<face_key> g_set = get_faces(e) - get_faces(get_tets(f));
             real q = Util::quality<real>(get_pos(a), get_pos(b), get_pos(w), get_pos(u));
             
@@ -665,7 +691,7 @@ namespace DSC {
                     
                     if(q_new > q_old || q_new > q)
                     {
-                        is_mesh::SimplexSet<edge_key> edges = {ISMesh::get_edge(f, g)};
+                        is_mesh::SimplexSet<edge_key> edges = {get_edge(f, g)};
                         edges += uv_edges;
                         edges += vw_edges;
                         return edges;
@@ -684,7 +710,7 @@ namespace DSC {
         {
             is_mesh::SimplexSet<node_key> nids = get_nodes(f);
             is_mesh::SimplexSet<node_key> apices = get_nodes(get_tets(f)) - nids;
-            ISMesh::orient_cc(apices[0], nids);
+            this->orient_cc(apices[0], nids);
             
             real q_01_new, q_01_old, q_12_new, q_12_old, q_20_new, q_20_old;
             is_mesh::SimplexSet<edge_key> e01 = test_neighbour(f, apices[0], apices[1], nids[0], nids[1], q_01_old, q_01_new);
@@ -696,18 +722,18 @@ namespace DSC {
             
             if(q_new > q_old)
             {
-                ISMesh::flip_23(f);
+                flip_23(f);
                 for(auto &e : e01)
                 {
-                    ISMesh::flip_32(e);
+                    flip_32(e);
                 }
                 for(auto &e : e12)
                 {
-                    ISMesh::flip_32(e);
+                    flip_32(e);
                 }
                 for(auto &e : e20)
                 {
-                    ISMesh::flip_32(e);
+                    flip_32(e);
                 }
                 return true;
             }
@@ -750,7 +776,7 @@ namespace DSC {
         void topological_face_removal()
         {
             std::vector<tet_key> tets;
-            for (auto tit = ISMesh::tetrahedra_begin(); tit != ISMesh::tetrahedra_end(); tit++)
+            for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
                 if (quality(tit.key()) < MIN_TET_QUALITY)
                 {
@@ -763,13 +789,13 @@ namespace DSC {
             int i = 0, j = 0;
             for (auto &t : tets)
             {
-                if (ISMesh::exists(t) && quality(t) < MIN_TET_QUALITY)
+                if (exists(t) && quality(t) < MIN_TET_QUALITY)
                 {
-                    for (auto f : ISMesh::get_faces(t))
+                    for (auto f : get_faces(t))
                     {
                         if (is_safe_editable(f))
                         {
-                            auto apices = ISMesh::get_nodes(ISMesh::get_tets(f)) - ISMesh::get_nodes(f);
+                            auto apices = get_nodes(get_tets(f)) - get_nodes(f);
                             if(topological_face_removal(apices[0], apices[1]))
                             {
                                 i++;
@@ -781,7 +807,7 @@ namespace DSC {
             }
             std::cout << "Topological face removals: " << i << "/" << j << std::endl;
             
-            ISMesh::garbage_collect();
+            garbage_collect();
         }
         
         ////////////////
@@ -799,7 +825,7 @@ namespace DSC {
             }
             
             std::vector<edge_key> edges;
-            for (auto eit = ISMesh::edges_begin(); eit != ISMesh::edges_end(); eit++)
+            for (auto eit = edges_begin(); eit != edges_end(); eit++)
             {
                 if (is_unsafe_editable(eit.key()) && eit->is_interface() && length(eit.key()) > MAX_LENGTH)
                 {
@@ -833,7 +859,7 @@ namespace DSC {
             }
             
             std::vector<tet_key> tetrahedra;
-            for (auto tit = ISMesh::tetrahedra_begin(); tit != ISMesh::tetrahedra_end(); tit++)
+            for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
                 if (volume(tit.key()) > MAX_VOLUME)
                 {
@@ -843,7 +869,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto &t : tetrahedra)
             {
-                if (ISMesh::exists(t) && volume(t) > MAX_VOLUME)
+                if (exists(t) && volume(t) > MAX_VOLUME)
                 {
                     if(split(t).is_valid())
                     {
@@ -867,7 +893,7 @@ namespace DSC {
             }
             
             std::vector<edge_key> edges;
-            for (auto eit = ISMesh::edges_begin(); eit != ISMesh::edges_end(); eit++)
+            for (auto eit = edges_begin(); eit != edges_end(); eit++)
             {
                 if (is_unsafe_editable(eit.key()) && eit->is_interface() && length(eit.key()) < MIN_LENGTH)
                 {
@@ -900,7 +926,7 @@ namespace DSC {
             }
             
             std::vector<tet_key> tetrahedra;
-            for (auto tit = ISMesh::tetrahedra_begin(); tit != ISMesh::tetrahedra_end(); tit++)
+            for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
                 if (volume(tit.key()) < MIN_VOLUME)
                 {
@@ -910,7 +936,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto &t : tetrahedra)
             {
-                if (ISMesh::exists(t) && volume(t) < MIN_VOLUME)
+                if (exists(t) && volume(t) < MIN_VOLUME)
                 {
                     if(collapse(t))
                     {
@@ -931,7 +957,7 @@ namespace DSC {
         void remove_degenerate_edges()
         {
             std::list<edge_key> edges;
-            for (auto eit = ISMesh::edges_begin(); eit != ISMesh::edges_end(); eit++)
+            for (auto eit = edges_begin(); eit != edges_end(); eit++)
             {
                 if (quality(eit.key()) < DEG_EDGE_QUALITY)
                 {
@@ -941,7 +967,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto e : edges)
             {
-                if(ISMesh::exists(e) && quality(e) < DEG_EDGE_QUALITY && !collapse(e))
+                if(exists(e) && quality(e) < DEG_EDGE_QUALITY && !collapse(e))
                 {
                     if(collapse(e, false))
                     {
@@ -951,14 +977,14 @@ namespace DSC {
                 }
             }
             std::cout << "Removed " << i <<"/"<< j << " degenerate edges" << std::endl;
-            ISMesh::garbage_collect();
+            garbage_collect();
         }
         
         void remove_degenerate_faces()
         {
             std::list<face_key> faces;
             
-            for (auto fit = ISMesh::faces_begin(); fit != ISMesh::faces_end(); fit++)
+            for (auto fit = faces_begin(); fit != faces_end(); fit++)
             {
                 if(quality(fit.key()) < DEG_FACE_QUALITY)
                 {
@@ -969,7 +995,7 @@ namespace DSC {
             int i = 0, j = 0;
             for (auto &f : faces)
             {
-                if (ISMesh::exists(f) && quality(f) < DEG_FACE_QUALITY && !collapse(f))
+                if (exists(f) && quality(f) < DEG_FACE_QUALITY && !collapse(f))
                 {
                     if(collapse(f, false))
                     {
@@ -982,14 +1008,14 @@ namespace DSC {
                 }
             }
             std::cout << "Removed " << i <<"/"<< j << " degenerate faces" << std::endl;
-            ISMesh::garbage_collect();
+            garbage_collect();
         }
         
         void remove_degenerate_tets()
         {
             std::vector<tet_key> tets;
             
-            for (auto tit = ISMesh::tetrahedra_begin(); tit != ISMesh::tetrahedra_end(); tit++)
+            for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
                 if (quality(tit.key()) < DEG_TET_QUALITY)
                 {
@@ -999,7 +1025,7 @@ namespace DSC {
             int i = 0, j = 0;
             for (auto &t : tets)
             {
-                if (ISMesh::exists(t) && quality(t) < DEG_TET_QUALITY && !collapse(t))
+                if (exists(t) && quality(t) < DEG_TET_QUALITY && !collapse(t))
                 {
                     if(collapse(t, false))
                     {
@@ -1012,7 +1038,7 @@ namespace DSC {
                 }
             }
             std::cout << "Removed " << i <<"/"<< j << " degenerate tets" << std::endl;
-            ISMesh::garbage_collect();
+            garbage_collect();
         }
         
         //////////////////////////////////
@@ -1025,7 +1051,7 @@ namespace DSC {
         void remove_edges()
         {
             std::list<edge_key> edges;
-            for (auto eit = ISMesh::edges_begin(); eit != ISMesh::edges_end(); eit++)
+            for (auto eit = edges_begin(); eit != edges_end(); eit++)
             {
                 if (quality(eit.key()) < MIN_EDGE_QUALITY)
                 {
@@ -1035,7 +1061,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto e : edges)
             {
-                if(ISMesh::exists(e) && quality(e) < MIN_EDGE_QUALITY)
+                if(exists(e) && quality(e) < MIN_EDGE_QUALITY)
                 {
                     if(collapse(e))
                     {
@@ -1045,7 +1071,7 @@ namespace DSC {
                 }
             }
             std::cout << "Removed " << i <<"/"<< j << " low quality edges" << std::endl;
-            ISMesh::garbage_collect();
+            garbage_collect();
         }
         
         /**
@@ -1054,19 +1080,19 @@ namespace DSC {
         bool remove_cap(const face_key& fid)
         {
             // Find longest edge
-            edge_key eid = longest_edge(ISMesh::get_edges(fid));
+            edge_key eid = longest_edge(get_edges(fid));
             
             // Find apex
-            node_key apex = (ISMesh::get_nodes(fid) - ISMesh::get_nodes(eid)).front();
+            node_key apex = (get_nodes(fid) - get_nodes(eid)).front();
             // Find the projected position of the apex
             auto verts = get_pos(get_nodes(eid));
             vec3 p = Util::project(get_pos(apex), verts[0], verts[1]);
             
             // Split longest edge
-            node_key n = ISMesh::split(eid, p, p);
+            node_key n = split(eid, p, p);
             
             // Collapse new edge
-            edge_key e_rem = ISMesh::get_edge(apex, n);
+            edge_key e_rem = get_edge(apex, n);
             return collapse(e_rem);
         }
         
@@ -1076,7 +1102,7 @@ namespace DSC {
         bool remove_needle(const face_key& fid)
         {
             // Find shortest edge
-            edge_key e = shortest_edge(ISMesh::get_edges(fid));
+            edge_key e = shortest_edge(get_edges(fid));
             
             // Remove edge
             return collapse(e);
@@ -1101,7 +1127,7 @@ namespace DSC {
         {
             std::list<face_key> faces;
             
-            for (auto fit = ISMesh::faces_begin(); fit != ISMesh::faces_end(); fit++)
+            for (auto fit = faces_begin(); fit != faces_end(); fit++)
             {
                 if(quality(fit.key()) < MIN_FACE_QUALITY)
                 {
@@ -1112,7 +1138,7 @@ namespace DSC {
             int i = 0, j = 0;
             for (auto &f : faces)
             {
-                if (ISMesh::exists(f) && quality(f) < MIN_FACE_QUALITY)
+                if (exists(f) && quality(f) < MIN_FACE_QUALITY)
                 {
                     if(remove_face(f))
                     {
@@ -1122,7 +1148,7 @@ namespace DSC {
                 }
             }
             std::cout << "Removed " << i <<"/"<< j << " low quality faces" << std::endl;
-            ISMesh::garbage_collect();
+            garbage_collect();
         }
         
         /**
@@ -1139,7 +1165,7 @@ namespace DSC {
             node_key n1 = split(e1);
             node_key n2 = split(e2);
             
-            edge_key e = ISMesh::get_edge(n1, n2);
+            edge_key e = get_edge(n1, n2);
             return collapse(e);
         }
         
@@ -1150,20 +1176,20 @@ namespace DSC {
         bool remove_cap(const tet_key& tid)
         {
             // Find the largest face
-            face_key fid = largest_face(ISMesh::get_faces(tid));
+            face_key fid = largest_face(get_faces(tid));
             
             // Find the apex
             node_key apex = (get_nodes(tid) - get_nodes(fid)).front();
             
             // Project the apex
-            auto verts = ISMesh::get_pos(get_nodes(fid));
-            vec3 p = Util::project(ISMesh::get_pos(apex), verts[0], verts[1], verts[2]);
+            auto verts = get_pos(get_nodes(fid));
+            vec3 p = Util::project(get_pos(apex), verts[0], verts[1], verts[2]);
             
             // Split the face
-            node_key n = ISMesh::split(fid, p, p);
+            node_key n = split(fid, p, p);
             
             // Collapse edge
-            edge_key e = ISMesh::get_edge(n, apex);
+            edge_key e = get_edge(n, apex);
             return collapse(e);
         }
         
@@ -1173,7 +1199,7 @@ namespace DSC {
          */
         bool remove_wedge(const tet_key& tid)
         {
-            is_mesh::SimplexSet<edge_key> eids = ISMesh::get_edges(tid);
+            is_mesh::SimplexSet<edge_key> eids = get_edges(tid);
             while(eids.size() > 2)
             {
                 edge_key e = shortest_edge(eids);
@@ -1186,7 +1212,7 @@ namespace DSC {
             return false;
             
             //        simplex_set cl_t;
-            //        ISMesh::closure(t, cl_t);
+            //        closure(t, cl_t);
             //        edge_key e1 = longest_edge(cl_t);
             //        cl_t.erase(e1);
             //        edge_key e2 = longest_edge(cl_t);
@@ -1194,7 +1220,7 @@ namespace DSC {
             //        node_key n1 = split(e1);
             //        node_key n2 = split(e2);
             //
-            //        edge_key e = ISMesh::get_edge(n1, n2);
+            //        edge_key e = get_edge(n1, n2);
             //        return collapse(e);
         }
         
@@ -1204,7 +1230,7 @@ namespace DSC {
          */
         bool remove_needle(const tet_key& tid)
         {
-            is_mesh::SimplexSet<edge_key> eids = ISMesh::get_edges(tid);
+            is_mesh::SimplexSet<edge_key> eids = get_edges(tid);
             while(eids.size() > 1)
             {
                 edge_key e = shortest_edge(eids);
@@ -1235,8 +1261,8 @@ namespace DSC {
             node_key apex = (get_nodes(tid) - nids).front();
             
             // Project the apex
-            auto verts = ISMesh::get_pos(nids);
-            vec3 proj_apex = Util::project(ISMesh::get_pos(apex), verts[0], verts[1], verts[2]);
+            auto verts = get_pos(nids);
+            vec3 proj_apex = Util::project(get_pos(apex), verts[0], verts[1], verts[2]);
             
             // Find barycentric coordinates
             std::vector<real> barycentric_coords = Util::barycentric_coords<real>(proj_apex, verts[0], verts[1], verts[2]);
@@ -1282,7 +1308,7 @@ namespace DSC {
         {
             std::vector<tet_key> tets;
             
-            for (auto tit = ISMesh::tetrahedra_begin(); tit != ISMesh::tetrahedra_end(); tit++)
+            for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
                 if (quality(tit.key()) < MIN_TET_QUALITY)
                 {
@@ -1292,7 +1318,7 @@ namespace DSC {
             int i = 0, j=0;
             for (auto &tet : tets)
             {
-                if (ISMesh::exists(tet) && quality(tet) < MIN_TET_QUALITY)
+                if (exists(tet) && quality(tet) < MIN_TET_QUALITY)
                 {
                     if(remove_tet(tet))
                     {
@@ -1302,7 +1328,7 @@ namespace DSC {
                 }
             }
             std::cout << "Removed " << i <<"/"<< j << " low quality tets" << std::endl;
-            ISMesh::garbage_collect();
+            garbage_collect();
         }
         
         ///////////////
@@ -1332,7 +1358,7 @@ namespace DSC {
         void smooth()
         {
             int i = 0, j = 0;
-            for (auto nit = ISMesh::nodes_begin(); nit != ISMesh::nodes_end(); nit++)
+            for (auto nit = nodes_begin(); nit != nodes_end(); nit++)
             {
                 if (is_safe_editable(nit.key()))
                 {
@@ -1395,7 +1421,7 @@ namespace DSC {
                 std::cout << "\nMove vertices step " << step << std::endl;
                 missing = 0;
                 int movable = 0;
-                for (auto nit = ISMesh::nodes_begin(); nit != ISMesh::nodes_end(); nit++)
+                for (auto nit = nodes_begin(); nit != nodes_end(); nit++)
                 {
                     if (is_movable(nit.key()))
                     {
@@ -1415,8 +1441,8 @@ namespace DSC {
             
             resize_complex();
             
-            ISMesh::garbage_collect();
-            ISMesh::validity_check();
+            garbage_collect();
+            validity_check();
         }
         
     private:
@@ -1458,10 +1484,10 @@ namespace DSC {
             vec3 ray = destination - pos;
 
             real min_t = INFINITY;
-            auto fids = ISMesh::get_faces(ISMesh::get_tets(n)) - ISMesh::get_faces(n);
+            auto fids = get_faces(get_tets(n)) - get_faces(n);
             for(auto f : fids)
             {
-                auto face_pos = ISMesh::get_pos(ISMesh::get_nodes(f));
+                auto face_pos = get_pos(get_nodes(f));
                 real t = Util::intersection_ray_plane<real>(pos, ray, face_pos[0], face_pos[1], face_pos[2]);
                 if (0. <= t)
                 {
@@ -1502,7 +1528,7 @@ namespace DSC {
             assert(new_e_nids.size() == 2);
             
             // Check that there does not already exist an edge.
-            if(ISMesh::get_edge(new_e_nids[0], new_e_nids[1]).is_valid())
+            if(get_edge(new_e_nids[0], new_e_nids[1]).is_valid())
             {
                 return false;
             }
@@ -1529,7 +1555,7 @@ namespace DSC {
             assert(new_e_nids.size() == 2);
             
             // Check that there does not already exist an edge.
-            if(ISMesh::get_edge(new_e_nids[0], new_e_nids[1]).is_valid())
+            if(get_edge(new_e_nids[0], new_e_nids[1]).is_valid())
             {
                 return false;
             }
@@ -1564,7 +1590,7 @@ namespace DSC {
          */
         node_key split(const tet_key& tid)
         {
-            is_mesh::SimplexSet<edge_key> eids = ISMesh::get_edges(tid);
+            is_mesh::SimplexSet<edge_key> eids = get_edges(tid);
             edge_key eid = longest_edge(eids);
             return split(eid);
         }
@@ -1574,7 +1600,7 @@ namespace DSC {
          */
         node_key split(const face_key& fid)
         {
-            is_mesh::SimplexSet<edge_key> eids = ISMesh::get_edges(fid);
+            is_mesh::SimplexSet<edge_key> eids = get_edges(fid);
             edge_key eid = longest_edge(eids);
             return split(eid);
         }
@@ -1584,7 +1610,7 @@ namespace DSC {
          */
         node_key split(const edge_key& eid)
         {
-            auto verts = ISMesh::get_pos(ISMesh::get_nodes(eid));
+            auto verts = get_pos(get_nodes(eid));
             vec3 pos = Util::barycenter(verts[0], verts[1]);
             vec3 destination = pos;
             if(get(eid).is_interface())
@@ -1593,7 +1619,7 @@ namespace DSC {
                 destination = Util::barycenter(dests[0], dests[1]);
             }
             
-            return ISMesh::split(eid, pos, destination);
+            return split(eid, pos, destination);
         }
         
         ///////////////
@@ -1607,7 +1633,7 @@ namespace DSC {
          */
         bool collapse(edge_key& eid, bool safe = true)
         {
-            if (!ISMesh::exists(eid) || !eid.is_valid())
+            if (!exists(eid) || !eid.is_valid())
             {
                 return node_key();
             }
@@ -1650,7 +1676,7 @@ namespace DSC {
             
             if ((safe && is_safe_editable(nids[1])) || (!safe && is_unsafe_editable(nids[1])))
             {
-                vec3 p = ISMesh::get_pos(nids[0]);
+                vec3 p = get_pos(nids[0]);
                 real q = Util::min(q0, min_quality(fids1, get_pos(nids[1]), p));
                 
                 if (q > q_max && (!get(nids[1]).is_interface() || design_domain->is_inside(p)))
@@ -1665,13 +1691,13 @@ namespace DSC {
             {
                 if(!safe)
                 {
-                    ISMesh::collapse(eid, pos_opt, destination_opt);
+                    collapse(eid, pos_opt, destination_opt);
                     return true;
                 }
                 real q_old = Util::min(Util::min(min_quality(e_tids), q1), q0);
                 if(q_max > Util::min(q_old, MIN_TET_QUALITY) + EPSILON)
                 {
-                    ISMesh::collapse(eid, pos_opt, destination_opt);
+                    collapse(eid, pos_opt, destination_opt);
                     return true;
                 }
             }
@@ -1713,7 +1739,7 @@ namespace DSC {
          */
         vec3 get_normal(const face_key& fid)
         {
-            auto pos = ISMesh::get_pos(ISMesh::get_sorted_nodes(fid));
+            auto pos = get_pos(this->get_sorted_nodes(fid));
             return Util::normal_direction(pos[0], pos[1], pos[2]);
         }
         
@@ -1723,7 +1749,7 @@ namespace DSC {
         vec3 get_normal(const node_key& nid)
         {
             vec3 result(0.);
-            for (auto f : ISMesh::get_faces(nid))
+            for (auto f : get_faces(nid))
             {
                 if (get(f).is_interface())
                 {
@@ -2013,8 +2039,8 @@ namespace DSC {
          */
         real cos_dihedral_angle(const face_key& f1, const face_key& f2)
         {
-            auto nids1 = ISMesh::get_nodes(f1);
-            auto nids2 = ISMesh::get_nodes(f2);
+            auto nids1 = get_nodes(f1);
+            auto nids2 = get_nodes(f2);
             is_mesh::SimplexSet<node_key> nids = nids1 & nids2;
             is_mesh::SimplexSet<node_key> apices = (nids1 + nids2) - nids;
             
@@ -2031,7 +2057,7 @@ namespace DSC {
         
         std::vector<real> cos_dihedral_angles(const tet_key& tid)
         {
-            auto verts = ISMesh::get_pos(ISMesh::get_nodes(tid));
+            auto verts = get_pos(get_nodes(tid));
             std::vector<real> angles;
             std::vector<int> apices;
             for (int i = 0; i < verts.size(); i++) {
@@ -2084,7 +2110,7 @@ namespace DSC {
                 histogram[i] = 0;
             }
             
-            for (auto tit = ISMesh::tetrahedra_begin(); tit != ISMesh::tetrahedra_end(); tit++)
+            for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
                 real q = quality(tit.key());
                 min_quality = Util::min(min_quality, q);
@@ -2110,7 +2136,7 @@ namespace DSC {
                 histogram[i] = 0;
             }
             
-            for (auto tit = ISMesh::tetrahedra_begin(); tit != ISMesh::tetrahedra_end(); tit++)
+            for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
                 std::vector<real> angles = cos_dihedral_angles(tit.key());
                 for(auto cos_a : angles)
@@ -2126,7 +2152,7 @@ namespace DSC {
         real min_quality()
         {
             real min_q = INFINITY;
-            for (auto tit = ISMesh::tetrahedra_begin(); tit != ISMesh::tetrahedra_end(); tit++)
+            for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
                 min_q = Util::min(min_q, quality(tit.key()));
             }
@@ -2137,7 +2163,7 @@ namespace DSC {
         void count_nodes(int & total, int & object)
         {
             total = 0, object = 0;
-            for (auto nit = ISMesh::nodes_begin(); nit != ISMesh::nodes_end(); nit++)
+            for (auto nit = nodes_begin(); nit != nodes_end(); nit++)
             {
                 total++;
                 if (nit->is_interface())
@@ -2151,7 +2177,7 @@ namespace DSC {
         void count_edges(int & total, int & object)
         {
             total = 0, object = 0;
-            for (auto eit = ISMesh::edges_begin(); eit != ISMesh::edges_end(); eit++)
+            for (auto eit = edges_begin(); eit != edges_end(); eit++)
             {
                 total++;
                 if (eit->is_interface())
@@ -2165,7 +2191,7 @@ namespace DSC {
         void count_faces(int & total, int & object)
         {
             total = 0, object = 0;
-            for (auto fit = ISMesh::faces_begin(); fit != ISMesh::faces_end(); fit++)
+            for (auto fit = faces_begin(); fit != faces_end(); fit++)
             {
                 total++;
                 if (fit->is_interface())
@@ -2179,7 +2205,7 @@ namespace DSC {
         void count_tetrahedra(int & total, int & object)
         {
             total = 0, object = 0;
-            for (auto tit = ISMesh::tetrahedra_begin(); tit != ISMesh::tetrahedra_end(); tit++)
+            for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
                 total++;
                 if (tit->label() != 0)
@@ -2193,9 +2219,9 @@ namespace DSC {
         void test_split_collapse()
         {
             is_mesh::SimplexSet<edge_key> eids;
-            for (auto eit = ISMesh::edges_begin(); eit != ISMesh::edges_end(); eit++)
+            for (auto eit = edges_begin(); eit != edges_end(); eit++)
             {
-                auto neighbours = ISMesh::get_edges(ISMesh::get_faces(eit.key()));
+                auto neighbours = get_edges(get_faces(eit.key()));
                 bool ok = true;
                 for(auto e : neighbours)
                 {
@@ -2215,14 +2241,14 @@ namespace DSC {
             is_mesh::SimplexSet<edge_key> new_eids;
             std::vector<vec3> verts;
             for (auto e : eids) {
-                auto nids = ISMesh::get_nodes(e);
+                auto nids = get_nodes(e);
                 auto new_nid = split(e);
-                auto new_eid = (ISMesh::get_edges(nids) & ISMesh::get_edges(new_nid)) - e;
+                auto new_eid = (get_edges(nids) & get_edges(new_nid)) - e;
                 assert(new_eid.size() == 1);
                 new_eids += new_eid[0];
-                auto old_nid = ISMesh::get_nodes(new_eid) - new_nid;
+                auto old_nid = get_nodes(new_eid) - new_nid;
                 assert(old_nid.size() == 1);
-                verts.push_back(ISMesh::get_pos(old_nid[0]));
+                verts.push_back(get_pos(old_nid[0]));
                 j++;
                 if(j%1000 == 0)
                 {
@@ -2230,14 +2256,14 @@ namespace DSC {
                 }
             }
             std::cout << " DONE" << std::endl;
-            ISMesh::garbage_collect();
-            ISMesh::validity_check();
+            garbage_collect();
+            validity_check();
             
             std::cout << "Collapse test # = " << new_eids.size();
             j = 0;
             for (int i = 0; i < new_eids.size(); i++) {
-                assert(ISMesh::exists(new_eids[i]));
-                auto nid = ISMesh::collapse(new_eids[i], verts[i], verts[i]);
+                assert(exists(new_eids[i]));
+                auto nid = collapse(new_eids[i], verts[i], verts[i]);
                 assert(nid.is_valid());
                 j++;
                 if(j%1000 == 0)
@@ -2246,14 +2272,14 @@ namespace DSC {
                 }
             }
             std::cout << " DONE" << std::endl;
-            ISMesh::garbage_collect();
-            ISMesh::validity_check();
+            garbage_collect();
+            validity_check();
         }
         
         void test_flip23_flip32()
         {
             is_mesh::SimplexSet<face_key> fids;
-            for (auto fit = ISMesh::faces_begin(); fit != ISMesh::faces_end(); fit++)
+            for (auto fit = faces_begin(); fit != faces_end(); fit++)
             {
                 if(is_safe_editable(fit.key()))
                 {
@@ -2281,8 +2307,8 @@ namespace DSC {
             is_mesh::SimplexSet<edge_key> new_eids;
             int i = 0;
             for (auto f : fids) {
-                assert(ISMesh::exists(f));
-                auto new_eid = ISMesh::flip_23(f);
+                assert(exists(f));
+                auto new_eid = flip_23(f);
                 assert(new_eid.is_valid());
                 new_eids += new_eid;
                 i++;
@@ -2292,13 +2318,13 @@ namespace DSC {
                 }
             }
             std::cout << " DONE" << std::endl;
-            ISMesh::garbage_collect();
-            ISMesh::validity_check();
+            garbage_collect();
+            validity_check();
             
             i=0;
             std::cout << "Flip 3-2 test # = " << new_eids.size();
             for (auto e : new_eids) {
-                auto new_fid = ISMesh::flip_32(e);
+                auto new_fid = flip_32(e);
                 assert(new_fid.is_valid());
                 i++;
                 if(i%1000 == 0)
@@ -2307,14 +2333,14 @@ namespace DSC {
                 }
             }
             std::cout << " DONE" << std::endl;
-            ISMesh::garbage_collect();
-            ISMesh::validity_check();
+            garbage_collect();
+            validity_check();
         }
         
         void test_flip44()
         {
             is_mesh::SimplexSet<edge_key> eids;
-            for (auto eit = ISMesh::edges_begin(); eit != ISMesh::edges_end(); eit++)
+            for (auto eit = edges_begin(); eit != edges_end(); eit++)
             {
                 if(is_unsafe_editable(eit.key()) && eit->is_interface() && get_faces(eit.key()).size() == 4)
                 {
@@ -2359,7 +2385,7 @@ namespace DSC {
                     }
                     assert(flip_fids.size() == 2);
                     assert(get_faces(e).size() == 4);
-                    ISMesh::flip_44(flip_fids[0], flip_fids[1]);
+                    flip_44(flip_fids[0], flip_fids[1]);
                     i++;
                     if(i%100 == 0)
                     {
@@ -2367,15 +2393,15 @@ namespace DSC {
                     }
                 }
                 std::cout << " DONE" << std::endl;
-                ISMesh::garbage_collect();
-                ISMesh::validity_check();
+                garbage_collect();
+                validity_check();
             }
         }
         
         void test_flip22()
         {
             is_mesh::SimplexSet<edge_key> eids;
-            for (auto eit = ISMesh::edges_begin(); eit != ISMesh::edges_end(); eit++)
+            for (auto eit = edges_begin(); eit != edges_end(); eit++)
             {
                 if(eit->is_boundary() && get_faces(eit.key()).size() == 3)
                 {
@@ -2410,7 +2436,7 @@ namespace DSC {
                 std::cout << "Flip 2-2 test # = " << eids.size();
                 int i = 0;
                 for (auto e : eids) {
-                    assert(ISMesh::exists(e));
+                    assert(exists(e));
                     auto fids = get_faces(e);
                     assert(fids.size() == 3);
                     is_mesh::SimplexSet<face_key> flip_fids;
@@ -2423,7 +2449,7 @@ namespace DSC {
                     }
                     
                     assert(flip_fids.size() == 2);
-                    ISMesh::flip_22(flip_fids[0], flip_fids[1]);
+                    flip_22(flip_fids[0], flip_fids[1]);
                     i++;
                     if(i%10 == 0)
                     {
@@ -2431,8 +2457,8 @@ namespace DSC {
                     }
                 }
                 std::cout << " DONE" << std::endl;
-                ISMesh::garbage_collect();
-                ISMesh::validity_check();
+                garbage_collect();
+                validity_check();
             }
         }
         
