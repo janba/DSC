@@ -368,6 +368,12 @@ void UI::stop()
         {
             basic_log->write_log(*vel_fun);
             basic_log->write_timings(*vel_fun);
+            std::string filename = basic_log->get_path() + std::string("/mesh.obj");
+            std::vector<vec3> points;
+            std::vector<int> tets;
+            std::vector<int> tet_labels;
+            dsc->extract_tet_mesh(points, tets, tet_labels);
+            is_mesh::export_tet_mesh(filename, points, tets, tet_labels);
         }
     }
     basic_log = nullptr;
