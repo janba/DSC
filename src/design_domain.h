@@ -33,9 +33,8 @@ namespace DSC {
         /**
          Creates a design domain defined by the design domain type and size. It is possible to specify a boundary gap which translates the entire domain by the amount specified by the input parameter.
          */
-        DesignDomain(DESIGN_DOMAIN_TYPE design, const vec3& size)
+        DesignDomain(DESIGN_DOMAIN_TYPE design, const vec3& center, const vec3& size)
         {
-            vec3 center(0.);
             switch (design) {
                 case CUBE:
                     for (int i = 0; i < 3; i++) {

@@ -32,7 +32,7 @@ namespace DSC {
         typedef is_mesh::FaceKey      face_key;
         typedef is_mesh::TetrahedronKey       tet_key;
         
-    private:
+    protected:
         DesignDomain *design_domain = nullptr;
         
         // Input parameter
@@ -41,7 +41,6 @@ namespace DSC {
         // Should be eliminated
         real FLIP_EDGE_INTERFACE_FLATNESS;
         
-    protected:
         // Thresholds on the quality of edges
         real DEG_EDGE_QUALITY;
         real MIN_EDGE_QUALITY;
