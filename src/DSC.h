@@ -33,7 +33,7 @@ namespace DSC {
         typedef is_mesh::TetrahedronKey       tet_key;
         
     private:
-        DesignDomain *design_domain;
+        DesignDomain *design_domain = nullptr;
         
         // Input parameter
         real AVG_EDGE_LENGTH;
@@ -76,8 +76,8 @@ namespace DSC {
     public:
         
         /// SimplicialComplex constructor.
-        DeformableSimplicialComplex(real _AVG_EDGE_LENGTH, std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels, DesignDomain *domain = nullptr):
-            is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>(points, tets, tet_labels), design_domain(domain)
+        DeformableSimplicialComplex(real _AVG_EDGE_LENGTH, std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels):
+            is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>(points, tets, tet_labels)
         {
             set_discretization(_AVG_EDGE_LENGTH);
         }
@@ -150,6 +150,15 @@ namespace DSC {
             real vol_avg = discretization*discretization*discretization*sqrt(2.)/12.;
             MIN_VOLUME = 0.2*vol_avg;
             MAX_VOLUME = INFINITY;
+        }
+        
+        void set_design_domain(DesignDomain *domain)
+        {
+            if(design_domain)
+            {
+                delete design_domain;
+            }
+            design_domain = domain;
         }
         
     private:
@@ -1475,8 +1484,8 @@ namespace DSC {
         
     public:
         /**
-         * Returns the intersection point (= pos + t*(new_pos-pos)) with the link of the node n and
-         * when moving the node n to the new position new_pos.
+         * Returns the intersection point (= pos + t*(destination-pos)) with the link of the node n and
+         * when moving the node n to the new position destination.
          */
         real intersection_with_link(const node_key & n, const vec3& destination)
         {
