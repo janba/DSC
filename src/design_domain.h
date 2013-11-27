@@ -25,6 +25,7 @@ namespace DSC {
      */
     class DesignDomain
     {
+    protected:
         std::vector<Util::Plane> planes;
         
     public:
@@ -57,17 +58,17 @@ namespace DSC {
         /**
          Clamps p + v to be within the domain by scaling the vector v if p is inside the domain. The position p is therefore not garanteed to be within the domain.
          */
-        void clamp_vector(const vec3& p, vec3& v) const;
+        virtual void clamp_vector(const vec3& p, vec3& v) const;
         
         /**
          Returns whether the position p is inside the domain.
          */
-        bool is_inside(const vec3& p) const;
+        virtual bool is_inside(const vec3& p) const;
         
         /**
          Returns whether the positions in verts are inside the domain.
          */
-        bool is_inside(const std::vector<vec3>& verts) const;
+        virtual bool is_inside(const std::vector<vec3>& verts) const;
         
         const std::vector<Util::Plane>& get_planes() const
         {
