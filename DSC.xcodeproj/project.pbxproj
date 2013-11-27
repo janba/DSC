@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7A0AB5C217D908E10058910E /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0AB5C017D9082A0058910E /* CoreFoundation.framework */; };
 		7A30ED1A17D951EB0051E6C0 /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A30ED1917D951EB0051E6C0 /* libGLEW.a */; };
 		7A3438C1183C6D2700829EEB /* attributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A3438BF183C6D2700829EEB /* attributes.h */; };
 		7A3438C2183C6D2700829EEB /* mesh_io.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A3438C0183C6D2700829EEB /* mesh_io.h */; };
@@ -25,6 +24,9 @@
 		7A45DBA1176E122100B9B388 /* kernel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB94176E122100B9B388 /* kernel.h */; };
 		7A45DBA2176E122100B9B388 /* simplex_set.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB95176E122100B9B388 /* simplex_set.h */; };
 		7A470AE317F51DC3001FC0CB /* log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A470AE117F51DC3001FC0CB /* log.cpp */; };
+		7A4AADF918459B99005211B9 /* libCGLA.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A9C205917DFB4CB0064171E /* libCGLA.a */; };
+		7A4AADFB18459CB3005211B9 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0AB5C017D9082A0058910E /* CoreFoundation.framework */; };
+		7A4AADFD1845A097005211B9 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4AADFC1845A097005211B9 /* util.h */; };
 		7A553EBC17DA6BC400125178 /* libSOIL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0AB5A517D906AD0058910E /* libSOIL.a */; };
 		7A553ECC17DA724800125178 /* image_DXT.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A553EC217DA724800125178 /* image_DXT.c */; };
 		7A553ECD17DA724800125178 /* image_DXT.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A553EC317DA724800125178 /* image_DXT.h */; };
@@ -100,13 +102,11 @@
 		7A9C20D517DFB4D40064171E /* Vec4f.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9C209817DFB4D40064171E /* Vec4f.h */; };
 		7A9C20D617DFB4D40064171E /* Vec4i.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9C209917DFB4D40064171E /* Vec4i.h */; };
 		7A9C20D717DFB4D40064171E /* Vec4uc.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9C209A17DFB4D40064171E /* Vec4uc.h */; };
-		7A9C20D817DFB51C0064171E /* libCGLA.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A9C205917DFB4CB0064171E /* libCGLA.a */; };
 		7A9F2A9217E7548900259577 /* design_domain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A9F2A8E17E7548900259577 /* design_domain.cpp */; };
 		7A9F2A9317E7548900259577 /* design_domain.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9F2A8F17E7548900259577 /* design_domain.h */; };
 		7AB585A1183D2D6F009A25F1 /* libDSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AD617675AE8000F8238 /* libDSC.a */; };
 		7ACA21D917DE37C5005E9309 /* stb_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ACA21D717DE37C5005E9309 /* stb_image.c */; };
 		7ACA21DA17DE37C5005E9309 /* stb_image.h in Headers */ = {isa = PBXBuildFile; fileRef = 7ACA21D817DE37C5005E9309 /* stb_image.h */; };
-		7AE27AF817675B04000F8238 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE817675B04000F8238 /* util.h */; };
 		7AE27AF917675B04000F8238 /* velocity_function.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AE27AE917675B04000F8238 /* velocity_function.h */; };
 		7AE27B1517675CEA000F8238 /* demo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AE27B1117675CEA000F8238 /* demo.cpp */; };
 		7AE27B1717675D34000F8238 /* libDSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AD617675AE8000F8238 /* libDSC.a */; };
@@ -167,6 +167,7 @@
 		7A45DB95176E122100B9B388 /* simplex_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simplex_set.h; path = is_mesh/simplex_set.h; sourceTree = "<group>"; };
 		7A470AE117F51DC3001FC0CB /* log.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = log.cpp; sourceTree = "<group>"; };
 		7A470AE217F51DC3001FC0CB /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = log.h; sourceTree = "<group>"; };
+		7A4AADFC1845A097005211B9 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = is_mesh/util.h; sourceTree = "<group>"; };
 		7A553EC217DA724800125178 /* image_DXT.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = image_DXT.c; sourceTree = "<group>"; };
 		7A553EC317DA724800125178 /* image_DXT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = image_DXT.h; sourceTree = "<group>"; };
 		7A553EC417DA724800125178 /* image_helper.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = image_helper.c; sourceTree = "<group>"; };
@@ -247,7 +248,6 @@
 		7ACA21D717DE37C5005E9309 /* stb_image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image.c; sourceTree = "<group>"; };
 		7ACA21D817DE37C5005E9309 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
 		7AE27AD617675AE8000F8238 /* libDSC.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDSC.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		7AE27AE817675B04000F8238 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = src/util.h; sourceTree = SOURCE_ROOT; };
 		7AE27AE917675B04000F8238 /* velocity_function.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = velocity_function.h; path = src/velocity_function.h; sourceTree = SOURCE_ROOT; };
 		7AE27AFB17675B70000F8238 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		7AE27AFD17675B78000F8238 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
@@ -299,6 +299,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A4AADF918459B99005211B9 /* libCGLA.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -306,8 +307,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A9C20D817DFB51C0064171E /* libCGLA.a in Frameworks */,
-				7A0AB5C217D908E10058910E /* CoreFoundation.framework in Frameworks */,
+				7A4AADFB18459CB3005211B9 /* CoreFoundation.framework in Frameworks */,
 				7A553EBC17DA6BC400125178 /* libSOIL.a in Frameworks */,
 				7AE27B1717675D34000F8238 /* libDSC.a in Frameworks */,
 				7A30ED1A17D951EB0051E6C0 /* libGLEW.a in Frameworks */,
@@ -322,6 +322,7 @@
 		7A07B9B1176B23A8006589A4 /* ISMesh */ = {
 			isa = PBXGroup;
 			children = (
+				7A4AADFC1845A097005211B9 /* util.h */,
 				7A3438C3183C75B100829EEB /* mesh_io.cpp */,
 				7A3438C0183C6D2700829EEB /* mesh_io.h */,
 				7A3438BF183C6D2700829EEB /* attributes.h */,
@@ -495,7 +496,6 @@
 			children = (
 				7A9F2A8F17E7548900259577 /* design_domain.h */,
 				7A9F2A8E17E7548900259577 /* design_domain.cpp */,
-				7AE27AE817675B04000F8238 /* util.h */,
 				7AE27AE917675B04000F8238 /* velocity_function.h */,
 				7AF7E9BE176B4FE400F43714 /* DSC.h */,
 			);
@@ -601,13 +601,13 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7AE27AF817675B04000F8238 /* util.h in Headers */,
 				7AE27AF917675B04000F8238 /* velocity_function.h in Headers */,
 				7AF7E9BF176B4FE400F43714 /* DSC.h in Headers */,
 				7AF7E9C1176B524700F43714 /* is_mesh.h in Headers */,
 				7A3438C1183C6D2700829EEB /* attributes.h in Headers */,
 				7A45DB9C176E122100B9B388 /* key.h in Headers */,
 				7A45DB9D176E122100B9B388 /* simplex.h in Headers */,
+				7A4AADFD1845A097005211B9 /* util.h in Headers */,
 				7A45DBA0176E122100B9B388 /* kernel_iterator.h in Headers */,
 				7A3438C2183C6D2700829EEB /* mesh_io.h in Headers */,
 				7A45DBA1176E122100B9B388 /* kernel.h in Headers */,
