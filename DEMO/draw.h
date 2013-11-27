@@ -17,12 +17,13 @@
 #pragma once
 
 #include <GL/glew.h>
-#ifdef WIN32
+#ifdef _WIN32
 #include <GL/glut.h>
 #else
 #include <GLUT/glut.h>
 #endif
 
+#include <memory>
 #include <SOIL/SOIL.h>
 #include <CGLA/Mat4x4f.h>
 

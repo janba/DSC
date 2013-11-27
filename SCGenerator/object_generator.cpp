@@ -18,7 +18,7 @@
 
 void ObjectGenerator::create_sphere(const std::vector<vec3>& points, const std::vector<int>& tets, const vec3& center, const real& radius, int label, std::vector<int>& tet_labels)
 {
-    for (int k = 0; k < tets.size()/4; k++)
+    for (unsigned int k = 0; k < tets.size()/4; k++)
     {
         bool inside = true;
         for (int j = 0; j < 4; j++)
@@ -43,7 +43,7 @@ void ObjectGenerator::create_sphere(const std::vector<vec3>& points, const std::
 void ObjectGenerator::create_cube(const std::vector<vec3>& points, const std::vector<int>& tets, const vec3& origin, const vec3& size, int label, std::vector<int>& tet_labels)
 {
     vec3 max_pos = origin + size;
-    for (int k = 0; k < tets.size()/4; k++)
+    for (unsigned int k = 0; k < tets.size()/4; k++)
     {
         bool inside = true;
         for (int j = 0; j < 4; j++)

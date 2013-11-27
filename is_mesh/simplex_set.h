@@ -93,7 +93,7 @@ namespace is_mesh
             return set.back();
         }
         
-        const key_type& operator[](int i) const
+        const key_type& operator[](unsigned int i) const
         {
             assert(size() > i);
             return set.at(i);
@@ -119,7 +119,7 @@ namespace is_mesh
             set.push_back(std::move(k));
         }
         
-        void swap(int i = 0, int j = 1)
+        void swap(unsigned int i = 0, unsigned int j = 1)
         {
             assert(size() > i);
             assert(size() > j);

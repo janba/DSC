@@ -65,7 +65,7 @@ public:
         merge_inside_outside(points_interface_real, faces_interface, points_inside, tets_inside, points_outside, tets_outside, points_real, tets, tet_labels);
         
         points.resize(points_real.size()/3);
-        for (int i = 0; i < points_real.size()/3; i++) {
+        for (unsigned int i = 0; i < points_real.size()/3; i++) {
             points[i] = vec3(points_real[i*3], points_real[i*3+1], points_real[i*3+2]);
         }
     }
@@ -79,7 +79,7 @@ public:
         create_points(size, avg_edge_length, Ni, Nj, Nk, points);
         create_tets(Ni, Nj, Nk, tets);
         
-        for (int i = 0; i < tets.size()/4; i++) {
+        for (unsigned int i = 0; i < tets.size()/4; i++) {
             tet_labels.push_back(0);
         }
     }

@@ -263,7 +263,7 @@ namespace CGLA
     }
 
 
-#ifndef WIN32
+#ifndef _WIN32
   /** Multiply two arbitrary matrices. 
       In principle, this function could return a matrix, but in general
       the new matrix will be of a type that is different from either of

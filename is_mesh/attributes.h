@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <bitset>
 #include "util.h"
 
 namespace is_mesh {

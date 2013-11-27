@@ -204,7 +204,7 @@ Painter::Painter(const vec3& light_pos)
     }
     glUniform3fv(lightPosUniform, 1, &lp[0]);
     
-    CGLA::Vec4f wire_col(0.,0.,0., 1.);
+    CGLA::Vec4f wire_col(0.f,0.f,0.f, 1.f);
     GLuint wireColUniform = glGetUniformLocation(wire_shader, "wireCol");
     if (wireColUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'wireCol' uniform."<<std::endl;
@@ -213,12 +213,12 @@ Painter::Painter(const vec3& light_pos)
     
     check_gl_error();
     
-    interface = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.15,0.4,0.5, 1.}, {0.2, 0.3, 0.4, 1.}, {0.2, 0.3, 0.4, 1.}));
-    wire_frame = std::unique_ptr<GLObject>(new GLObject(wire_shader, {0.15,0.4,0.5, 1.}, {0.2, 0.3, 0.4, 1.}, {0.2, 0.3, 0.4, 1.}));
-    domain = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.1, 0.1, 0.3, 1.}, {0.2, 0.2, 0.3, 1.}, {0., 0., 0., 1.}));
-    low_quality = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.3, 0.1, 0.1, 0.1}, {0.6, 0.4, 0.4, 0.2}, {0., 0., 0., 0.}));
-    edges = std::unique_ptr<GLObject>(new GLObject(line_shader, {0.14,0.16,0.88, 1.}, {0., 0., 0., 0.}, {0., 0., 0., 0.}));
-    unmoved = std::unique_ptr<GLObject>(new GLObject(line_shader, {0.2, 0.2, 0.7, 1.}, {0., 0., 0., 0.}, {0., 0., 0., 0.}));
+    interface = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.15f,0.4f,0.5f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}));
+    wire_frame = std::unique_ptr<GLObject>(new GLObject(wire_shader, {0.15f,0.4f,0.5f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}));
+    domain = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.1f, 0.1f, 0.3f, 1.f}, {0.2f, 0.2f, 0.3f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
+    low_quality = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.3f, 0.1f, 0.1f, 0.1f}, {0.6f, 0.4f, 0.4f, 0.2f}, {0.f, 0.f, 0.f, 0.f}));
+    edges = std::unique_ptr<GLObject>(new GLObject(line_shader, {0.14f,0.16f,0.88f, 1.f}, {0.f, 0.f, 0.f, 0.f}, {0.f, 0.f, 0.f, 0.f}));
+    unmoved = std::unique_ptr<GLObject>(new GLObject(line_shader, {0.2f, 0.2f, 0.7f, 1.f}, {0.f, 0.f, 0.f, 0.f}, {0.f, 0.f, 0.f, 0.f}));
     
     // Enable states
     glEnable(GL_DEPTH_TEST);

@@ -2068,12 +2068,12 @@ namespace DSC {
             auto verts = get_pos(get_nodes(tid));
             std::vector<real> angles;
             std::vector<int> apices;
-            for (int i = 0; i < verts.size(); i++) {
-                for (int j = 0; j < verts.size(); j++) {
+            for (unsigned int i = 0; i < verts.size(); i++) {
+                for (unsigned int j = 0; j < verts.size(); j++) {
                     if(i < j)
                     {
                         apices.clear();
-                        for (int k = 0; k < verts.size(); k++) {
+                        for (unsigned int k = 0; k < verts.size(); k++) {
                             if(k != i && k != j)
                             {
                                 apices.push_back(k);   
@@ -2269,7 +2269,7 @@ namespace DSC {
             
             std::cout << "Collapse test # = " << new_eids.size();
             j = 0;
-            for (int i = 0; i < new_eids.size(); i++) {
+            for (unsigned int i = 0; i < new_eids.size(); i++) {
                 assert(exists(new_eids[i]));
                 auto nid = collapse(new_eids[i], verts[i], verts[i]);
                 assert(nid.is_valid());

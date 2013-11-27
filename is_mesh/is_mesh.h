@@ -715,7 +715,7 @@ namespace is_mesh {
         std::vector<vec3> get_pos(const SimplexSet<NodeKey>& nids)
         {
             std::vector<vec3> verts(nids.size());
-            for (int i = 0; i < nids.size(); i++)
+            for (unsigned int i = 0; i < nids.size(); i++)
             {
                 verts[i] = get_pos(nids[i]);
             }
@@ -1053,7 +1053,7 @@ namespace is_mesh {
             }
             
             // Update flags
-            for (int i = 0; i < tids.size(); i++)
+            for (unsigned int i = 0; i < tids.size(); i++)
             {
                 set_label(new_tids[i], get_label(tids[i]));
             }

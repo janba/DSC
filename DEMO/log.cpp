@@ -16,7 +16,7 @@
 
 #include "log.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <direct.h>
 #else
 #include <sys/stat.h>
@@ -32,7 +32,7 @@ Log::Log(const std::string& path_)
     int i = 0;
     do {
         temp = Util::concat4digits(path_ + "_test",i);
-#ifdef WIN32
+#ifdef _WIN32
         error = _mkdir(temp.c_str());
 #else
         error = mkdir(temp.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);

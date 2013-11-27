@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <chrono>
+#include <ctime>
 #include "DSC.h"
 
 namespace DSC {

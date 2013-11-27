@@ -22,6 +22,7 @@
 #include <sstream>
 #include <cmath>
 #include <cassert>
+#include <limits>
 
 #include <CGLA/Vec3d.h>
 #include <CGLA/Vec4d.h>
@@ -34,11 +35,10 @@ typedef CGLA::Vec4d       vec4;
 typedef CGLA::Mat3x3d     mat3;
 typedef CGLA::Mat4x4d     mat4;
 
-constexpr real EPSILON = 1e-8;
+static const real EPSILON = 1e-8;
 
-#ifndef INFINITY
-constexpr real INFINITY = 1e32;
-#endif
+#undef INFINITY
+static const real INFINITY = std::numeric_limits<real>::max();;
 
 namespace Util
 {
@@ -485,7 +485,7 @@ namespace Util
     inline real max_diff(const std::vector<real>& x, const std::vector<real>& y)
     {
         real max_diff = -INFINITY;
-        for (int i = 0; i < x.size(); i++)
+        for (unsigned int i = 0; i < x.size(); i++)
         {
             if (i < y.size()) {
                 max_diff = max(std::abs(x[i] - y[i]), max_diff);

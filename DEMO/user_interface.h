@@ -49,7 +49,7 @@ class UI
     real ACCURACY = 1.;
     static UI* instance;
     
-#ifdef WIN32
+#ifdef _WIN32
     const std::string obj_path = "@PROJECT_SOURCE_DIR@/data/";
 #else
     const std::string obj_path = "./data/";

@@ -50,7 +50,11 @@ UI::UI(int &argc, char** argv)
     instance = this;
 
     glutInit(&argc, argv);
+#ifdef _WIN32
+    glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
+#else
     glutInitDisplayMode(GLUT_3_2_CORE_PROFILE | GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
+#endif
     glutCreateWindow("");
     
     glutDisplayFunc(display_);
