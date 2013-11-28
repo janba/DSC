@@ -651,7 +651,7 @@ namespace DSC {
                                     i++;
                                 }
                             }
-                            else if((get(e).is_interface() || get(e).is_boundary()) && is_flippable(e))
+                            else if(((is_unsafe_editable(e) && get(e).is_interface()) || get(e).is_boundary()) && is_flippable(e))
                             {
                                 if(topological_boundary_edge_removal(e))
                                 {
