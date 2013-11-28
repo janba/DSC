@@ -372,12 +372,16 @@ void UI::stop()
         {
             basic_log->write_log(*vel_fun);
             basic_log->write_timings(*vel_fun);
-            std::string filename = basic_log->get_path() + std::string("/mesh.obj");
+            
             std::vector<vec3> points;
+            std::vector<int> faces;
             std::vector<int> tets;
             std::vector<int> tet_labels;
             dsc->extract_tet_mesh(points, tets, tet_labels);
-            is_mesh::export_tet_mesh(filename, points, tets, tet_labels);
+            is_mesh::export_tet_mesh(basic_log->get_path() + std::string("/mesh.dsc"), points, tets, tet_labels);
+            points.clear();
+            dsc->extract_surface_mesh(points, faces);
+            is_mesh::export_surface_mesh(basic_log->get_path() + std::string("/mesh.obj"), points, faces);
         }
     }
     basic_log = nullptr;
