@@ -17,6 +17,8 @@
 #include "tetralizer.h"
 #include "tetgen.h"
 
+static char* tetgen_flags = "pq1.5Y";
+
 int get_index(int i, int j, int k, int Ni, int Nj, int Nk)
 {
     return i + j*Ni + k*Ni*Nj;
@@ -331,7 +333,6 @@ void Tetralizer::tetrahedralize_inside(const std::vector<real>& points_interface
             p->vertexlist[j] = faces_interface[3*i+j];
     }
     
-    char * tetgen_flags = "pq1.5a0.00005YY";
     tetrahedralize(tetgen_flags, &in, &out);
     
     points_inside.resize(3 * out.numberofpoints);
@@ -390,7 +391,6 @@ void Tetralizer::tetrahedralize_outside(const std::vector<real>& points_interfac
     in.holelist[1] = inside_pts[1];
     in.holelist[2] = inside_pts[2];
     
-    char * tetgen_flags = "pq1.8a0.005YY";
     tetrahedralize(tetgen_flags, &in, &out);
     
     points_outside.resize(3*out.numberofpoints);
