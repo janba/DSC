@@ -104,8 +104,6 @@
 		7A9C20D517DFB4D40064171E /* Vec4f.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9C209817DFB4D40064171E /* Vec4f.h */; };
 		7A9C20D617DFB4D40064171E /* Vec4i.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9C209917DFB4D40064171E /* Vec4i.h */; };
 		7A9C20D717DFB4D40064171E /* Vec4uc.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9C209A17DFB4D40064171E /* Vec4uc.h */; };
-		7A9F2A9217E7548900259577 /* design_domain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A9F2A8E17E7548900259577 /* design_domain.cpp */; };
-		7A9F2A9317E7548900259577 /* design_domain.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9F2A8F17E7548900259577 /* design_domain.h */; };
 		7AB585A1183D2D6F009A25F1 /* libDSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AD617675AE8000F8238 /* libDSC.a */; };
 		7ACA21D917DE37C5005E9309 /* stb_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ACA21D717DE37C5005E9309 /* stb_image.c */; };
 		7ACA21DA17DE37C5005E9309 /* stb_image.h in Headers */ = {isa = PBXBuildFile; fileRef = 7ACA21D817DE37C5005E9309 /* stb_image.h */; };
@@ -247,8 +245,6 @@
 		7A9C209817DFB4D40064171E /* Vec4f.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec4f.h; sourceTree = "<group>"; };
 		7A9C209917DFB4D40064171E /* Vec4i.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec4i.h; sourceTree = "<group>"; };
 		7A9C209A17DFB4D40064171E /* Vec4uc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec4uc.h; sourceTree = "<group>"; };
-		7A9F2A8E17E7548900259577 /* design_domain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = design_domain.cpp; path = src/design_domain.cpp; sourceTree = SOURCE_ROOT; };
-		7A9F2A8F17E7548900259577 /* design_domain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = design_domain.h; path = src/design_domain.h; sourceTree = SOURCE_ROOT; };
 		7ACA21D717DE37C5005E9309 /* stb_image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image.c; sourceTree = "<group>"; };
 		7ACA21D817DE37C5005E9309 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
 		7AE27AD617675AE8000F8238 /* libDSC.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDSC.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -500,8 +496,6 @@
 			children = (
 				7A7E67161849010800EFDF1E /* geometry.h */,
 				7A7E67151849010800EFDF1E /* geometry.cpp */,
-				7A9F2A8F17E7548900259577 /* design_domain.h */,
-				7A9F2A8E17E7548900259577 /* design_domain.cpp */,
 				7AE27AE917675B04000F8238 /* velocity_function.h */,
 				7AF7E9BE176B4FE400F43714 /* DSC.h */,
 			);
@@ -619,7 +613,6 @@
 				7A3438C2183C6D2700829EEB /* mesh_io.h in Headers */,
 				7A45DBA1176E122100B9B388 /* kernel.h in Headers */,
 				7A45DBA2176E122100B9B388 /* simplex_set.h in Headers */,
-				7A9F2A9317E7548900259577 /* design_domain.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -821,7 +814,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A3438C4183C75B100829EEB /* mesh_io.cpp in Sources */,
-				7A9F2A9217E7548900259577 /* design_domain.cpp in Sources */,
 				7A7E67171849010800EFDF1E /* geometry.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

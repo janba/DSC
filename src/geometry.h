@@ -44,6 +44,11 @@ namespace DSC {
             }
             return true;
         }
+        
+        virtual void clamp_vector(const vec3& p, vec3& v)
+        {
+            
+        }
     };
     
     class Point : public Geometry {
@@ -87,6 +92,26 @@ namespace DSC {
             }
             return true;
         }
+        
+        virtual void clamp_vector(const vec3& p, vec3& v) override
+        {
+            if(is_inside(p+v) != is_inside(p))
+            {
+                for (int i = 0; i < 3; i++) {
+                    
+                    real t = Util::intersection_ray_plane<real>(p, v, point + size[i]*directions[i], directions[i]);
+                    if(t >= 0. && t < 1.)
+                    {
+                        v = t*v;
+                    }
+                    t = Util::intersection_ray_plane<real>(p, v, point - size[i]*directions[i], -directions[i]);
+                    if(t >= 0. && t < 1.)
+                    {
+                        v = t*v;
+                    }
+                }
+            }
+        }
     };
     
     class Cylinder : public Point {
@@ -109,6 +134,15 @@ namespace DSC {
             
             vec3 p_proj = p - up_direction * d;
             return sqr_length(p_proj - point) < sqr_radius;
+        }
+        
+        virtual void clamp_vector(const vec3& p, vec3& v) override
+        {
+            assert(false); // NOT IMPLEMENTED YET!
+            if(is_inside(p+v) != is_inside(p))
+            {
+                
+            }
         }
     };
     

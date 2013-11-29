@@ -474,49 +474,15 @@ void Painter::update_edges(DSC::DeformableSimplicialComplex<>& dsc)
     edges->add_data(data);
 }
 
-bool is_boundary(DSC::DeformableSimplicialComplex<>& dsc, const DSC::DeformableSimplicialComplex<>::face_key& fid, std::vector<vec3>& verts)
-{
-    if(dsc.get(fid).is_boundary())
-    {
-        std::swap(verts[0], verts[2]);
-        return true;
-    }
-    auto *design_domain = dsc.get_design_domain();
-    if(design_domain)
-    {
-        for (auto &plane : design_domain->get_planes()) {
-            bool boundary = true;
-            for (auto &p : verts) {
-                if (Util::is_inside(p, plane.p, plane.n)) {
-                    boundary = false;
-                    break;
-                }
-            }
-            if(boundary)
-            {
-                auto apices = dsc.get_nodes(dsc.get_tets(fid)) - dsc.get_nodes(fid);
-                if(Util::is_inside(dsc.get_pos(apices[0]), plane.p, plane.n) != Util::is_inside(dsc.get_pos(apices[1]), plane.p, plane.n))
-                {
-                    if(dot(dsc.get_normal(fid), plane.n) > 0.)
-                    {
-                        std::swap(verts[0], verts[2]);
-                    }
-                    return true;
-                }
-            }
-        }
-    }
-    return false;
-}
-
 void Painter::update_domain(DSC::DeformableSimplicialComplex<>& dsc)
 {
     std::vector<vec3> data;
     for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
     {
-        auto verts = dsc.get_pos(dsc.get_sorted_nodes(fit.key()));
-        if(is_boundary(dsc, fit.key(), verts))
+        if(fit->is_boundary())
         {
+            auto verts = dsc.get_pos(dsc.get_sorted_nodes(fit.key()));
+            std::swap(verts[0], verts[2]);
             vec3 normal = Util::normal_direction(verts[0], verts[1], verts[2]);
             for (auto &p : verts) {
                 data.push_back(p);

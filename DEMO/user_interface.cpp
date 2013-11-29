@@ -119,7 +119,7 @@ void UI::load_model()
     is_mesh::import_tet_mesh(get_data_file_path(model_file_name + extension), points, tets, tet_labels);
     
     dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(DISCRETIZATION, points, tets, tet_labels));
-    dsc->set_design_domain(new DesignDomain(DesignDomain::CUBE, vec3(0.), vec3(50.)));
+    dsc->set_design_domain(new Cube(vec3(0.), vec3(50.)));
     dsc->scale(vec3(20.));
     painter->update(*dsc);
 }

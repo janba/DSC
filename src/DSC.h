@@ -18,7 +18,7 @@
 
 #include "is_mesh.h"
 #include "attributes.h"
-#include "design_domain.h"
+#include "geometry.h"
 
 namespace DSC {
     
@@ -33,7 +33,7 @@ namespace DSC {
         typedef is_mesh::TetrahedronKey       tet_key;
         
     protected:
-        DesignDomain *design_domain = new DesignDomain();
+        Geometry *design_domain = new Geometry();
         
         // Input parameter
         real AVG_EDGE_LENGTH;
@@ -151,7 +151,7 @@ namespace DSC {
             MAX_VOLUME = INFINITY;
         }
         
-        void set_design_domain(DesignDomain *domain)
+        void set_design_domain(Geometry *domain)
         {
             if(design_domain)
             {
@@ -372,7 +372,7 @@ namespace DSC {
             return AVG_EDGE_LENGTH;
         }
         
-        const DesignDomain* get_design_domain() const
+        const Geometry* get_design_domain() const
         {
             return design_domain;
         }
