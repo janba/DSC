@@ -28,12 +28,12 @@ namespace DSC {
             
         }
         
-        virtual bool is_inside(vec3 p)
+        virtual bool is_inside(vec3 p) const
         {
             return true;
         }
         
-        virtual bool is_all_inside(std::vector<vec3> pos)
+        virtual bool is_all_inside(std::vector<vec3> pos) const
         {
             for(vec3& p : pos)
             {
@@ -45,7 +45,7 @@ namespace DSC {
             return true;
         }
         
-        virtual void clamp_vector(const vec3& p, vec3& v)
+        virtual void clamp_vector(const vec3& p, vec3& v) const
         {
             
         }
@@ -61,7 +61,7 @@ namespace DSC {
             
         }
         
-        virtual bool is_inside(vec3 p) override
+        virtual bool is_inside(vec3 p) const override
         {
             return sqr_length(p - point) < EPSILON;
         }
@@ -80,7 +80,7 @@ namespace DSC {
             directions.push_back(normalize(cross(directions[0], directions[1])));
         }
         
-        virtual bool is_inside(vec3 p) override
+        virtual bool is_inside(vec3 p) const override
         {
             for(int i = 0; i < 3; i++)
             {
@@ -93,7 +93,7 @@ namespace DSC {
             return true;
         }
         
-        virtual void clamp_vector(const vec3& p, vec3& v) override
+        virtual void clamp_vector(const vec3& p, vec3& v) const override
         {
             if(is_inside(p+v) != is_inside(p))
             {
@@ -124,7 +124,7 @@ namespace DSC {
             
         }
         
-        virtual bool is_inside(vec3 p) override
+        virtual bool is_inside(vec3 p) const override
         {
             real d = dot(p - point, up_direction);
             if(std::abs(d) > height)
@@ -136,7 +136,7 @@ namespace DSC {
             return sqr_length(p_proj - point) < sqr_radius;
         }
         
-        virtual void clamp_vector(const vec3& p, vec3& v) override
+        virtual void clamp_vector(const vec3& p, vec3& v) const override
         {
             assert(false); // NOT IMPLEMENTED YET!
             if(is_inside(p+v) != is_inside(p))
@@ -156,7 +156,7 @@ namespace DSC {
             
         }
         
-        virtual bool is_inside(vec3 p) override
+        virtual bool is_inside(vec3 p) const override
         {
             return std::abs(dot(p - point, normal)) < EPSILON;
         }
