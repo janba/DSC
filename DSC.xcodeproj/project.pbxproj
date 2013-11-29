@@ -38,6 +38,8 @@
 		7A553ED317DA724800125178 /* stb_image_write.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A553EC917DA724800125178 /* stb_image_write.h */; };
 		7A553ED417DA724800125178 /* stbi_DDS_aug.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A553ECA17DA724800125178 /* stbi_DDS_aug.h */; };
 		7A553ED517DA724800125178 /* stbi_DDS_aug_c.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A553ECB17DA724800125178 /* stbi_DDS_aug_c.h */; };
+		7A7E67171849010800EFDF1E /* geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7E67151849010800EFDF1E /* geometry.cpp */; };
+		7A7E67181849010800EFDF1E /* geometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7E67161849010800EFDF1E /* geometry.h */; };
 		7A8967BD1808F3FA00A55FB6 /* line.frag in Sources */ = {isa = PBXBuildFile; fileRef = 7A8967BA1808F3FA00A55FB6 /* line.frag */; };
 		7A8967BE1808F3FA00A55FB6 /* line.geom in Sources */ = {isa = PBXBuildFile; fileRef = 7A8967BB1808F3FA00A55FB6 /* line.geom */; };
 		7A8967BF1808F3FA00A55FB6 /* line.vert in Sources */ = {isa = PBXBuildFile; fileRef = 7A8967BC1808F3FA00A55FB6 /* line.vert */; };
@@ -178,6 +180,8 @@
 		7A553EC917DA724800125178 /* stb_image_write.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image_write.h; sourceTree = "<group>"; };
 		7A553ECA17DA724800125178 /* stbi_DDS_aug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stbi_DDS_aug.h; sourceTree = "<group>"; };
 		7A553ECB17DA724800125178 /* stbi_DDS_aug_c.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stbi_DDS_aug_c.h; sourceTree = "<group>"; };
+		7A7E67151849010800EFDF1E /* geometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = geometry.cpp; path = src/geometry.cpp; sourceTree = SOURCE_ROOT; };
+		7A7E67161849010800EFDF1E /* geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geometry.h; path = src/geometry.h; sourceTree = SOURCE_ROOT; };
 		7A8967BA1808F3FA00A55FB6 /* line.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = line.frag; sourceTree = "<group>"; };
 		7A8967BB1808F3FA00A55FB6 /* line.geom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = line.geom; sourceTree = "<group>"; };
 		7A8967BC1808F3FA00A55FB6 /* line.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = line.vert; sourceTree = "<group>"; };
@@ -494,6 +498,8 @@
 		7AE27AB917675A1E000F8238 /* DSC */ = {
 			isa = PBXGroup;
 			children = (
+				7A7E67161849010800EFDF1E /* geometry.h */,
+				7A7E67151849010800EFDF1E /* geometry.cpp */,
 				7A9F2A8F17E7548900259577 /* design_domain.h */,
 				7A9F2A8E17E7548900259577 /* design_domain.cpp */,
 				7AE27AE917675B04000F8238 /* velocity_function.h */,
@@ -607,6 +613,7 @@
 				7A3438C1183C6D2700829EEB /* attributes.h in Headers */,
 				7A45DB9C176E122100B9B388 /* key.h in Headers */,
 				7A45DB9D176E122100B9B388 /* simplex.h in Headers */,
+				7A7E67181849010800EFDF1E /* geometry.h in Headers */,
 				7A4AADFD1845A097005211B9 /* util.h in Headers */,
 				7A45DBA0176E122100B9B388 /* kernel_iterator.h in Headers */,
 				7A3438C2183C6D2700829EEB /* mesh_io.h in Headers */,
@@ -815,6 +822,7 @@
 			files = (
 				7A3438C4183C75B100829EEB /* mesh_io.cpp in Sources */,
 				7A9F2A9217E7548900259577 /* design_domain.cpp in Sources */,
+				7A7E67171849010800EFDF1E /* geometry.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

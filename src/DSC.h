@@ -33,7 +33,7 @@ namespace DSC {
         typedef is_mesh::TetrahedronKey       tet_key;
         
     protected:
-        DesignDomain *design_domain = nullptr;
+        DesignDomain *design_domain = new DesignDomain();
         
         // Input parameter
         real AVG_EDGE_LENGTH;

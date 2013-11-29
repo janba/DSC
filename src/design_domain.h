@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "util.h"
+#include "geometry.h"
 
 namespace DSC {
     
@@ -30,6 +30,11 @@ namespace DSC {
         
     public:
         enum DESIGN_DOMAIN_TYPE {CUBE};
+        
+        DesignDomain(Geometry geometry = Geometry())
+        {
+            
+        }
         
         /**
          Creates a design domain defined by the design domain type and size. It is possible to specify a boundary gap which translates the entire domain by the amount specified by the input parameter.
