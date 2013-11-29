@@ -1446,7 +1446,9 @@ namespace DSC {
             resize_complex();
             
             garbage_collect();
+#ifdef DEBUG
             validity_check();
+#endif
         }
         
     private:
@@ -1498,7 +1500,9 @@ namespace DSC {
                     min_t = Util::min(t, min_t);
                 }
             }
+#ifdef DEBUG
             assert(min_t < INFINITY);
+#endif
             return min_t;
         }
         
