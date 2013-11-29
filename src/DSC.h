@@ -1598,6 +1598,10 @@ namespace DSC {
          */
         node_key split(const tet_key& tid)
         {
+            if(!is_unsafe_editable(tid))
+            {
+                return node_key();
+            }
             is_mesh::SimplexSet<edge_key> eids = get_edges(tid);
             edge_key eid = longest_edge(eids);
             return split(eid);
@@ -1608,6 +1612,10 @@ namespace DSC {
          */
         node_key split(const face_key& fid)
         {
+            if(!is_unsafe_editable(fid))
+            {
+                return node_key();
+            }
             is_mesh::SimplexSet<edge_key> eids = get_edges(fid);
             edge_key eid = longest_edge(eids);
             return split(eid);
@@ -1618,6 +1626,10 @@ namespace DSC {
          */
         node_key split(const edge_key& eid)
         {
+            if(!is_unsafe_editable(eid))
+            {
+                return node_key();
+            }
             auto verts = get_pos(get_nodes(eid));
             vec3 pos = Util::barycenter(verts[0], verts[1]);
             vec3 destination = pos;
@@ -1728,12 +1740,20 @@ namespace DSC {
         
         bool collapse(const face_key& fid, bool safe = true)
         {
+            if(!is_unsafe_editable(fid))
+            {
+                return false;
+            }
             is_mesh::SimplexSet<edge_key> eids = get_edges(fid);
             return collapse(eids, safe);
         }
         
         bool collapse(const tet_key& tid, bool safe = true)
         {
+            if(!is_unsafe_editable(tid))
+            {
+                return false;
+            }
             is_mesh::SimplexSet<edge_key> eids = get_edges(tid);
             return collapse(eids, safe);
         }
