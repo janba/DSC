@@ -231,17 +231,17 @@ namespace DSC {
         
         virtual bool is_unsafe_editable(const node_key& nid)
         {
-            return exists(nid) && !get(nid).is_boundary();
+            return exists(nid);
         }
         
         virtual bool is_unsafe_editable(const edge_key& eid)
         {
-            return exists(eid) && !get(eid).is_boundary();
+            return exists(eid);
         }
         
         virtual bool is_unsafe_editable(const face_key& fid)
         {
-            return exists(fid) && !get(fid).is_boundary();
+            return exists(fid);
         }
         
         virtual bool is_unsafe_editable(const tet_key& tid)
@@ -251,17 +251,17 @@ namespace DSC {
         
         virtual bool is_safe_editable(const node_key& nid)
         {
-            return is_unsafe_editable(nid) && !get(nid).is_interface();
+            return is_unsafe_editable(nid) && !get(nid).is_interface() && !get(nid).is_boundary();
         }
         
         virtual bool is_safe_editable(const edge_key& eid)
         {
-            return is_unsafe_editable(eid) && !get(eid).is_interface();
+            return is_unsafe_editable(eid) && !get(eid).is_interface() && !get(eid).is_boundary();
         }
         
         virtual bool is_safe_editable(const face_key& fid)
         {
-            return is_unsafe_editable(fid) && !get(fid).is_interface();
+            return is_unsafe_editable(fid) && !get(fid).is_interface() && !get(fid).is_boundary();
         }
         
         virtual bool is_safe_editable(const tet_key& tid)
@@ -642,24 +642,21 @@ namespace DSC {
                 {
                     for (auto e : get_edges(t))
                     {
-                        if (exists(e))
+                        if(is_safe_editable(e))
                         {
-                            if(is_safe_editable(e))
+                            if(topological_edge_removal(e))
                             {
-                                if(topological_edge_removal(e))
-                                {
-                                    i++;
-                                }
+                                i++;
                             }
-                            else if(((is_unsafe_editable(e) && get(e).is_interface()) || get(e).is_boundary()) && is_flippable(e))
-                            {
-                                if(topological_boundary_edge_removal(e))
-                                {
-                                    k++;
-                                }
-                            }
-                            j++;
                         }
+                        else if(is_unsafe_editable(e) && (get(e).is_interface() || get(e).is_boundary()) && is_flippable(e))
+                        {
+                            if(topological_boundary_edge_removal(e))
+                            {
+                                k++;
+                            }
+                        }
+                        j++;
                     }
                 }
             }
@@ -835,7 +832,7 @@ namespace DSC {
             std::vector<edge_key> edges;
             for (auto eit = edges_begin(); eit != edges_end(); eit++)
             {
-                if (is_unsafe_editable(eit.key()) && eit->is_interface() && length(eit.key()) > MAX_LENGTH)
+                if (eit->is_interface() && length(eit.key()) > MAX_LENGTH)
                 {
                     edges.push_back(eit.key());
                 }
@@ -845,8 +842,7 @@ namespace DSC {
             {
                 if (is_unsafe_editable(e) && get(e).is_interface() && length(e) > MAX_LENGTH)
                 {
-                    node_key nid = split(e);
-                    if(nid.is_valid())
+                    if(split(e).is_valid())
                     {
                         i++;
                     }
@@ -903,7 +899,7 @@ namespace DSC {
             std::vector<edge_key> edges;
             for (auto eit = edges_begin(); eit != edges_end(); eit++)
             {
-                if (is_unsafe_editable(eit.key()) && eit->is_interface() && length(eit.key()) < MIN_LENGTH)
+                if (eit->is_interface() && length(eit.key()) < MIN_LENGTH)
                 {
                     edges.push_back(eit.key());
                 }
