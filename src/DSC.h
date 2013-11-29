@@ -638,7 +638,7 @@ namespace DSC {
             int i = 0, j = 0, k = 0;
             for (auto &t : tets)
             {
-                if (exists(t) && quality(t) < MIN_TET_QUALITY)
+                if (is_unsafe_editable(t) && quality(t) < MIN_TET_QUALITY)
                 {
                     for (auto e : get_edges(t))
                     {
@@ -797,7 +797,7 @@ namespace DSC {
             int i = 0, j = 0;
             for (auto &t : tets)
             {
-                if (exists(t) && quality(t) < MIN_TET_QUALITY)
+                if (is_unsafe_editable(t) && quality(t) < MIN_TET_QUALITY)
                 {
                     for (auto f : get_faces(t))
                     {
@@ -877,7 +877,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto &t : tetrahedra)
             {
-                if (exists(t) && volume(t) > MAX_VOLUME)
+                if (is_unsafe_editable(t) && volume(t) > MAX_VOLUME)
                 {
                     if(split(t).is_valid())
                     {
@@ -944,7 +944,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto &t : tetrahedra)
             {
-                if (exists(t) && volume(t) < MIN_VOLUME)
+                if (is_unsafe_editable(t) && volume(t) < MIN_VOLUME)
                 {
                     if(collapse(t))
                     {
@@ -975,7 +975,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto e : edges)
             {
-                if(exists(e) && quality(e) < DEG_EDGE_QUALITY && !collapse(e))
+                if(is_unsafe_editable(e) && quality(e) < DEG_EDGE_QUALITY && !collapse(e))
                 {
                     if(collapse(e, false))
                     {
@@ -1003,7 +1003,7 @@ namespace DSC {
             int i = 0, j = 0;
             for (auto &f : faces)
             {
-                if (exists(f) && quality(f) < DEG_FACE_QUALITY && !collapse(f))
+                if (is_unsafe_editable(f) && quality(f) < DEG_FACE_QUALITY && !collapse(f))
                 {
                     if(collapse(f, false))
                     {
@@ -1033,7 +1033,7 @@ namespace DSC {
             int i = 0, j = 0;
             for (auto &t : tets)
             {
-                if (exists(t) && quality(t) < DEG_TET_QUALITY && !collapse(t))
+                if (is_unsafe_editable(t) && quality(t) < DEG_TET_QUALITY && !collapse(t))
                 {
                     if(collapse(t, false))
                     {
@@ -1069,7 +1069,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto e : edges)
             {
-                if(exists(e) && quality(e) < MIN_EDGE_QUALITY)
+                if(is_unsafe_editable(e) && quality(e) < MIN_EDGE_QUALITY)
                 {
                     if(collapse(e))
                     {
@@ -1146,7 +1146,7 @@ namespace DSC {
             int i = 0, j = 0;
             for (auto &f : faces)
             {
-                if (exists(f) && quality(f) < MIN_FACE_QUALITY)
+                if (is_unsafe_editable(f) && quality(f) < MIN_FACE_QUALITY)
                 {
                     if(remove_face(f))
                     {
@@ -1326,7 +1326,7 @@ namespace DSC {
             int i = 0, j=0;
             for (auto &tet : tets)
             {
-                if (exists(tet) && quality(tet) < MIN_TET_QUALITY)
+                if (is_unsafe_editable(tet) && quality(tet) < MIN_TET_QUALITY)
                 {
                     if(remove_tet(tet))
                     {
@@ -1641,9 +1641,9 @@ namespace DSC {
          */
         bool collapse(edge_key& eid, bool safe = true)
         {
-            if (!exists(eid) || !eid.is_valid())
+            if (!is_unsafe_editable(eid))
             {
-                return node_key();
+                return false;
             }
             is_mesh::SimplexSet<node_key> nids = get_nodes(eid);
             is_mesh::SimplexSet<tet_key> e_tids = get_tets(eid);
