@@ -272,7 +272,7 @@ namespace DSC {
     public:
         virtual bool is_movable(const node_key& nid)
         {
-            return is_unsafe_editable(nid) && get(nid).is_interface() && !get(nid).is_crossing();
+            return is_unsafe_editable(nid) && get(nid).is_interface() && !get(nid).is_crossing() && !get(nid).is_boundary();
         }
         
         int get_label(const tet_key& t)
