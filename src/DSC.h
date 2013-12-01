@@ -1673,46 +1673,39 @@ namespace DSC {
             {
                 return false;
             }
-            if(!n0_is_editable)
+            std::vector<real> test_weights;
+            if (!n0_is_editable || !n1_is_editable)
             {
-#ifdef DEBUG
-                assert(n1_is_editable);
-#endif
-                nids.swap();
-                n1_is_editable = n0_is_editable;
+                test_weights = {0.};
+                if(!n0_is_editable)
+                {
+                    nids.swap();
+                }
+            }
+            else {
+                test_weights = {0., 0.5, 1.};
             }
             
             is_mesh::SimplexSet<tet_key> e_tids = get_tets(eid);
             is_mesh::SimplexSet<face_key> fids0 = get_faces(get_tets(nids[0]) - e_tids) - get_faces(nids[0]);
             is_mesh::SimplexSet<face_key> fids1 = get_faces(get_tets(nids[1]) - e_tids) - get_faces(nids[1]);
             
-            real q0 = min_quality(fids0, get_pos(nids[0]));
-            real q1 = min_quality(fids1, get_pos(nids[1]));
-            
             real q_max = -INFINITY;
             real weight;
-            if (!n1_is_editable)
+            for (real w : test_weights)
             {
-                if(!get(nids[0]).is_interface() || design_domain->is_inside(get_pos(nids[1])))
+                vec3 p = (1.-w) * get(nids[1]).get_pos() + w * get(nids[0]).get_pos();
+                real q = Util::min(min_quality(fids0, get(nids[0]).get_pos(), p), min_quality(fids1, get(nids[1]).get_pos(), p));
+                
+                if (q > q_max && ((!get(nids[0]).is_interface() && !get(nids[1]).is_interface()) || design_domain->is_inside(p)))
                 {
-                    q_max = Util::min(min_quality(fids0, get_pos(nids[0]), get_pos(nids[1])), q1);
-                    weight = 0.;
-                }
-            }
-            else {
-                for (real w = 0.; w <= 1.; w += 0.5)
-                {
-                    vec3 p = (1.-w) * get(nids[1]).get_pos() + w * get(nids[0]).get_pos();
-                    real q = Util::min(min_quality(fids0, get(nids[0]).get_pos(), p), min_quality(fids1, get(nids[1]).get_pos(), p));
-                    
-                    if (q > q_max && ((!get(nids[0]).is_interface() && !get(nids[1]).is_interface()) || design_domain->is_inside(p)))
-                    {
-                        q_max = q;
-                        weight = w;
-                    }
+                    q_max = q;
+                    weight = w;
                 }
             }
             
+            real q0 = min_quality(fids0, get_pos(nids[0]));
+            real q1 = min_quality(fids1, get_pos(nids[1]));
             real q_old = Util::min(Util::min(min_quality(e_tids), q1), q0);
             if((!safe && q_max > EPSILON) || (safe && q_max > Util::min(q_old, MIN_TET_QUALITY) + EPSILON))
             {
