@@ -1063,14 +1063,16 @@ namespace is_mesh {
             return new_nid;
         }
         
-        virtual void collapse(const NodeKey& nid_new)
+        virtual void collapse(const NodeKey& nid_new, const NodeKey& nid_removed)
         {
             
         }
         
-        NodeKey collapse(const EdgeKey& eid, const vec3& pos, const vec3& destination)
+        /**
+         *  Collapses the edge eid. The node nid and nid_remove must be adjacent to eid before the collapse. The node nid survives, while the nid_remove is removed.
+         */
+        void collapse(const EdgeKey& eid, const NodeKey& nid, const NodeKey& nid_remove)
         {
-            auto nids = get_nodes(eid);
             auto fids = get_faces(eid);
             auto tids = get_tets(eid);
             
@@ -1078,9 +1080,7 @@ namespace is_mesh {
             remove(eid);
             
             // Merge nodes
-            NodeKey nid = merge(nids[1], nids[0]);
-            get(nid).set_pos(pos);
-            get(nid).set_destination(destination);
+            merge(nid, nid_remove);
             
             // Remove faces
             for(auto f : fids)
@@ -1101,9 +1101,7 @@ namespace is_mesh {
             // Update flags.
             update(get_tets(nid));
             
-            collapse(nid);
-            
-            return nid;
+            collapse(nid, nid_remove);
         }
         
         FaceKey flip_32(const EdgeKey& eid)

@@ -1718,13 +1718,17 @@ namespace DSC {
             {
                 if(!safe)
                 {
-                    collapse(eid, pos_opt, destination_opt);
+                    collapse(eid, nids[0], nids[1]);
+                    get(nids[0]).set_pos(pos_opt);
+                    get(nids[0]).set_destination(destination_opt);
                     return true;
                 }
                 real q_old = Util::min(Util::min(min_quality(e_tids), q1), q0);
                 if(q_max > Util::min(q_old, MIN_TET_QUALITY) + EPSILON)
                 {
-                    collapse(eid, pos_opt, destination_opt);
+                    collapse(eid, nids[0], nids[1]);
+                    get(nids[0]).set_pos(pos_opt);
+                    get(nids[0]).set_destination(destination_opt);
                     return true;
                 }
             }
@@ -2298,8 +2302,12 @@ namespace DSC {
             j = 0;
             for (unsigned int i = 0; i < new_eids.size(); i++) {
                 assert(exists(new_eids[i]));
-                auto nid = collapse(new_eids[i], verts[i], verts[i]);
-                assert(nid.is_valid());
+                auto nids = get_nodes(new_eids[i]);
+                collapse(new_eids[i], nids[0], nids[1]);
+                assert(nids[0].is_valid());
+                get(nids[0]).set_pos(verts[i]);
+                get(nids[0]).set_destination(verts[i]);
+                
                 j++;
                 if(j%1000 == 0)
                 {
