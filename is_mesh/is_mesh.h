@@ -621,7 +621,7 @@ namespace is_mesh {
         NodeKey get_node(const EdgeKey& eid1, const EdgeKey& eid2)
         {
             const SimplexSet<NodeKey>& nids = get_nodes(eid2);
-            for (auto& n : get_nodes(eid1)) {
+            for (const NodeKey& n : get_nodes(eid1)) {
                 if(nids.contains(n))
                 {
                     return n;
@@ -636,7 +636,7 @@ namespace is_mesh {
         EdgeKey get_edge(const NodeKey& nid1, const NodeKey& nid2)
         {
             const SimplexSet<EdgeKey>& eids = get_edges(nid2);
-            for (auto& e : get_edges(nid1)) {
+            for (const EdgeKey& e : get_edges(nid1)) {
                 if(eids.contains(e))
                 {
                     return e;
@@ -651,7 +651,7 @@ namespace is_mesh {
         EdgeKey get_edge(const FaceKey& fid1, const FaceKey& fid2)
         {
             const SimplexSet<EdgeKey>& eids = get_edges(fid2);
-            for (auto& e : get_edges(fid1)) {
+            for (const EdgeKey& e : get_edges(fid1)) {
                 if(eids.contains(e))
                 {
                     return e;
@@ -665,9 +665,15 @@ namespace is_mesh {
          */
         FaceKey get_face(const NodeKey& nid1, const NodeKey& nid2, const NodeKey& nid3)
         {
-            SimplexSet<FaceKey> fid = (get_faces(nid1) & get_faces(nid2)) & get_faces(nid3);
-            assert(fid.size() == 1);
-            return fid.front();
+            SimplexSet<FaceKey> fids1 = get_faces(nid1);
+            SimplexSet<FaceKey> fids2 = get_faces(nid2);
+            for (const FaceKey& f : get_faces(nid3)) {
+                if(fids1.contains(f) && fids2.contains(f))
+                {
+                    return f;
+                }
+            }
+            return FaceKey();
         }
         
         /**
@@ -675,14 +681,13 @@ namespace is_mesh {
          */
         FaceKey get_face(const TetrahedronKey& tid1, const TetrahedronKey& tid2)
         {
-            const SimplexSet<EdgeKey>& fids = get_faces(tid2);
-            for (auto& f : get_faces(tid1)) {
+            const SimplexSet<FaceKey>& fids = get_faces(tid2);
+            for (const FaceKey& f : get_faces(tid1)) {
                 if(fids.contains(f))
                 {
                     return f;
                 }
             }
-            assert(false);
             return FaceKey();
         }
         
