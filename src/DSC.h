@@ -2257,6 +2257,7 @@ namespace DSC {
             int j = 0;
             std::cout << "Split test # = " << eids.size();
             is_mesh::SimplexSet<edge_key> new_eids;
+            std::vector<node_key> old_nids;
             for (auto e : eids) {
                 auto nids = get_nodes(e);
                 auto new_nid = split(e);
@@ -2265,6 +2266,7 @@ namespace DSC {
                 new_eids += new_eid[0];
                 auto old_nid = get_nodes(new_eid) - new_nid;
                 assert(old_nid.size() == 1);
+                old_nids.push_back(old_nid.front());
                 j++;
                 if(j%1000 == 0)
                 {
@@ -2280,7 +2282,7 @@ namespace DSC {
             for (unsigned int i = 0; i < new_eids.size(); i++) {
                 assert(exists(new_eids[i]));
                 auto nids = get_nodes(new_eids[i]);
-                collapse(new_eids[i], nids[0], 0.);
+                collapse(new_eids[i], old_nids[i], 0.);
                 assert(nids[0].is_valid());
                 
                 j++;
