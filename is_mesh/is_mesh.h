@@ -1090,24 +1090,32 @@ namespace is_mesh {
             // Remove edge
             remove(eid);
             
-            // Merge nodes
-            merge(nid, nid_remove);
-            
             // Remove faces
             for(auto f : fids)
             {
-                auto eids = get_edges(f);
+                SimplexSet<EdgeKey> eids = get_edges(f);
                 remove(f);
+                if(get_nodes(eids[1]).contains(nid))
+                {
+                    eids.swap();
+                }
                 merge(eids[0], eids[1]);
             }
             
             // Remove tetrahedra
             for(auto t : tids)
             {
-                auto fids = get_faces(t);
+                SimplexSet<FaceKey> fids = get_faces(t);
                 remove(t);
+                if(get_nodes(fids[1]).contains(nid))
+                {
+                    fids.swap();
+                }
                 merge(fids[0], fids[1]);
             }
+            
+            // Merge nodes
+            merge(nid, nid_remove);
             
             // Update flags.
             update(get_tets(nid));
