@@ -1704,13 +1704,13 @@ namespace DSC {
                 }
             }
             
-            real q0 = min_quality(fids0, get_pos(nids[0]));
-            real q1 = min_quality(fids1, get_pos(nids[1]));
-            real q_old = Util::min(Util::min(min_quality(e_tids), q1), q0);
-            if((!safe && q_max > EPSILON) || (safe && q_max > Util::min(q_old, MIN_TET_QUALITY) + EPSILON))
+            if(q_max > EPSILON)
             {
-                collapse(eid, nids[1], weight);
-                return true;
+                if(!safe || q_max > Util::min(min_quality(get_tets(nids[0]) + get_tets(nids[1])), MIN_TET_QUALITY) + EPSILON)
+                {
+                    collapse(eid, nids[1], weight);
+                    return true;
+                }
             }
             return false;
         }
