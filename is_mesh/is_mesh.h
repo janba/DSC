@@ -1063,16 +1063,22 @@ namespace is_mesh {
             return new_nid;
         }
         
-        virtual void collapse(const NodeKey& nid_new, const NodeKey& nid_removed)
+        virtual void collapse(const NodeKey& nid, const NodeKey& nid_removed, real weight)
         {
-            
+            Node<node_traits>& node = get(nid);
+            Node<node_traits>& node_removed = get(nid_removed);
+            node.set_pos((1.-weight) * node.get_pos() + weight * node_removed.get_pos());
+            node.set_destination((1.-weight) * node.get_destination() + weight * node_removed.get_destination());
         }
         
         /**
-         *  Collapses the edge eid. The node nid and nid_remove must be adjacent to eid before the collapse. The node nid survives, while the nid_remove is removed.
+         *  Collapses the edge eid. The node nid must be adjacent to eid before the collapse. The node nid survives, while the other is removed. The weight parameter specifies how the attributes of the old nodes are weighted in the surviving node. For example the position of the surviving node is given by (1.-weight)*get(nid).get_pos() + weight*get(nid_remove).get_pos(). This means that if weight is 0, the surviving node retain its attributes.
          */
-        void collapse(const EdgeKey& eid, const NodeKey& nid, const NodeKey& nid_remove)
+        void collapse(const EdgeKey& eid, const NodeKey& nid, real weight = 0.5)
         {
+            NodeKey nid_remove = (get_nodes(eid) - nid).front();
+            collapse(nid, nid_remove, weight);
+            
             auto fids = get_faces(eid);
             auto tids = get_tets(eid);
             
@@ -1100,8 +1106,6 @@ namespace is_mesh {
             
             // Update flags.
             update(get_tets(nid));
-            
-            collapse(nid, nid_remove);
         }
         
         FaceKey flip_32(const EdgeKey& eid)

@@ -1440,9 +1440,10 @@ namespace DSC {
                     }
                 }
                 std::cout << "Vertices missing to be moved: " << missing <<"/" << movable << std::endl;
-                
                 fix_complex();
-                
+#ifdef DEBUG
+                validity_check();
+#endif
                 ++step;
             } while (missing > 0 && step < num_steps);
             
@@ -1654,7 +1655,7 @@ namespace DSC {
          * If the parameter safe is true, the method if the nodes of edge e are editable, i.e. not a part of the interface, and will therefore not change the interface.
          * Returns whether the collapse was successful.
          */
-        bool collapse(edge_key& eid, bool safe = true)
+        bool collapse(const edge_key& eid, bool safe = true)
         {
             is_mesh::SimplexSet<node_key> nids = get_nodes(eid);
             bool n0_is_editable = (safe && is_safe_editable(nids[0])) || (!safe && is_unsafe_editable(nids[0]) && !get(nids[0]).is_boundary());
@@ -1664,6 +1665,12 @@ namespace DSC {
             {
                 return false;
             }
+            if(!n0_is_editable)
+            {
+                assert(n1_is_editable);
+                nids.swap();
+                n1_is_editable = n0_is_editable;
+            }
             
             is_mesh::SimplexSet<tet_key> e_tids = get_tets(eid);
             is_mesh::SimplexSet<face_key> fids0 = get_faces(get_tets(nids[0]) - e_tids) - get_faces(nids[0]);
@@ -1671,66 +1678,38 @@ namespace DSC {
             
             real q0 = min_quality(fids0, get_pos(nids[0]));
             real q1 = min_quality(fids1, get_pos(nids[1]));
+            real q_old = Util::min(Util::min(min_quality(e_tids), q1), q0);
             
-            vec3 pos_opt, destination_opt;
-            real q_max = -INFINITY;
-            
-            if (n0_is_editable && n1_is_editable)
+            if (!n1_is_editable)
             {
-                vec3 p = Util::barycenter(get_pos(nids[0]), get_pos(nids[1]));
+                real q = Util::min(min_quality(fids0, get_pos(nids[0]), get_pos(nids[1])), q1);
+                if((!safe && q > EPSILON && (!get(nids[0]).is_interface() || design_domain->is_inside(get_pos(nids[1]))))
+                    ||(safe && q > Util::min(q_old, MIN_TET_QUALITY) + EPSILON))
+                {
+                    collapse(eid, nids[1], 0.);
+                    return true;
+                }
+                return false;
+            }
+            
+            real q_max = -INFINITY;
+            real weight;
+            for (real w = 0.; w <= 1.; w += 0.5)
+            {
+                vec3 p = (1.-w) * get_pos(nids[0]) + w * get_pos(nids[1]);
                 real q = Util::min(min_quality(fids0, get_pos(nids[0]), p), min_quality(fids1, get_pos(nids[1]), p));
                 
                 if (q > q_max && ((!get(nids[0]).is_interface() && !get(nids[1]).is_interface()) || design_domain->is_inside(p)))
                 {
-                    destination_opt = Util::barycenter(get_dest(nids[0]), get_dest(nids[1]));
-                    pos_opt = p;
                     q_max = q;
+                    weight = w;
                 }
             }
             
-            if (n0_is_editable)
+            if((!safe && q_max > EPSILON) || (safe && q_max > Util::min(q_old, MIN_TET_QUALITY) + EPSILON))
             {
-                vec3 p = get_pos(nids[1]);
-                real q = Util::min(min_quality(fids0, get_pos(nids[0]), p), q1);
-                
-                if (q > q_max && (!get(nids[0]).is_interface() || design_domain->is_inside(p)))
-                {
-                    destination_opt = get_dest(nids[1]);
-                    pos_opt = p;
-                    q_max = q;
-                }
-            }
-            
-            if (n1_is_editable)
-            {
-                vec3 p = get_pos(nids[0]);
-                real q = Util::min(q0, min_quality(fids1, get_pos(nids[1]), p));
-                
-                if (q > q_max && (!get(nids[1]).is_interface() || design_domain->is_inside(p)))
-                {
-                    destination_opt = get_dest(nids[0]);
-                    pos_opt = p;
-                    q_max = q;
-                }
-            }
-            
-            if(q_max > EPSILON)
-            {
-                if(!safe)
-                {
-                    collapse(eid, nids[0], nids[1]);
-                    get(nids[0]).set_pos(pos_opt);
-                    get(nids[0]).set_destination(destination_opt);
-                    return true;
-                }
-                real q_old = Util::min(Util::min(min_quality(e_tids), q1), q0);
-                if(q_max > Util::min(q_old, MIN_TET_QUALITY) + EPSILON)
-                {
-                    collapse(eid, nids[0], nids[1]);
-                    get(nids[0]).set_pos(pos_opt);
-                    get(nids[0]).set_destination(destination_opt);
-                    return true;
-                }
+                collapse(eid, nids[0], weight);
+                return true;
             }
             return false;
         }
@@ -2278,7 +2257,6 @@ namespace DSC {
             int j = 0;
             std::cout << "Split test # = " << eids.size();
             is_mesh::SimplexSet<edge_key> new_eids;
-            std::vector<vec3> verts;
             for (auto e : eids) {
                 auto nids = get_nodes(e);
                 auto new_nid = split(e);
@@ -2287,7 +2265,6 @@ namespace DSC {
                 new_eids += new_eid[0];
                 auto old_nid = get_nodes(new_eid) - new_nid;
                 assert(old_nid.size() == 1);
-                verts.push_back(get_pos(old_nid[0]));
                 j++;
                 if(j%1000 == 0)
                 {
@@ -2303,10 +2280,8 @@ namespace DSC {
             for (unsigned int i = 0; i < new_eids.size(); i++) {
                 assert(exists(new_eids[i]));
                 auto nids = get_nodes(new_eids[i]);
-                collapse(new_eids[i], nids[0], nids[1]);
+                collapse(new_eids[i], nids[0], 0.);
                 assert(nids[0].is_valid());
-                get(nids[0]).set_pos(verts[i]);
-                get(nids[0]).set_destination(verts[i]);
                 
                 j++;
                 if(j%1000 == 0)
