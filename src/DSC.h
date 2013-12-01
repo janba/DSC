@@ -540,7 +540,9 @@ namespace DSC {
         bool topological_edge_removal(const edge_key& eid)
         {
             std::vector<is_mesh::SimplexSet<node_key>> polygon = get_polygons(eid);
+#ifdef DEBUG
             assert(polygon.size() == 1 && polygon.front().size() > 2);
+#endif
             
             std::vector<std::vector<int>> K;
             real q_new = build_table(eid, polygon.front(), K);
@@ -567,7 +569,9 @@ namespace DSC {
                 // Find the faces to flip about.
                 face_key f1 = get_face(nids[0], nids[1], polygon1.front());
                 face_key f2 = get_face(nids[0], nids[1], polygon1.back());
+#ifdef DEBUG
                 assert(get(f1).is_boundary() && get(f2).is_boundary());
+#endif
                 
                 if(precond_flip_edge(get_edge(f1, f2), f1, f2))
                 {
@@ -1537,7 +1541,9 @@ namespace DSC {
             
             is_mesh::SimplexSet<node_key> e_nids = get_nodes(eid);
             is_mesh::SimplexSet<node_key> new_e_nids = (get_nodes(fids[0]) + get_nodes(fids[1])) - e_nids;
+#ifdef DEBUG
             assert(new_e_nids.size() == 2);
+#endif
             
             // Check that there does not already exist an edge.
             if(get_edge(new_e_nids[0], new_e_nids[1]).is_valid())
@@ -1563,8 +1569,10 @@ namespace DSC {
             is_mesh::SimplexSet<node_key> e_nids = get_nodes(eid);
             is_mesh::SimplexSet<node_key> new_e_nids = (get_nodes(f1) + get_nodes(f2)) - e_nids;
             is_mesh::SimplexSet<node_key> apices = (get_nodes(get_faces(eid)) - e_nids) - new_e_nids;
+#ifdef DEBUG
             assert(e_nids.size() == 2);
             assert(new_e_nids.size() == 2);
+#endif
             
             // Check that there does not already exist an edge.
             if(get_edge(new_e_nids[0], new_e_nids[1]).is_valid())
@@ -1667,7 +1675,9 @@ namespace DSC {
             }
             if(!n0_is_editable)
             {
+#ifdef DEBUG
                 assert(n1_is_editable);
+#endif
                 nids.swap();
                 n1_is_editable = n0_is_editable;
             }
