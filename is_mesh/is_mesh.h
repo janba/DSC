@@ -1006,7 +1006,7 @@ namespace is_mesh {
         
     protected:
         
-        virtual void split(const NodeKey& nid_new, const NodeKey& nid1, const NodeKey& nid2)
+        virtual void update_split(const NodeKey& nid_new, const NodeKey& nid1, const NodeKey& nid2)
         {
             
         }
@@ -1063,12 +1063,12 @@ namespace is_mesh {
                 set_label(new_tids[i], get_label(tids[i]));
             }
             
-            split(new_nid, nids[0], nids[1]);
+            update_split(new_nid, nids[0], nids[1]);
             
             return new_nid;
         }
         
-        virtual void collapse(const NodeKey& nid, const NodeKey& nid_removed, real weight)
+        virtual void update_collapse(const NodeKey& nid, const NodeKey& nid_removed, real weight)
         {
             Node<node_traits>& node = get(nid);
             Node<node_traits>& node_removed = get(nid_removed);
@@ -1082,7 +1082,7 @@ namespace is_mesh {
         void collapse(const EdgeKey& eid, const NodeKey& nid, real weight = 0.5)
         {
             NodeKey nid_remove = (get_nodes(eid) - nid).front();
-            collapse(nid, nid_remove, weight);
+            update_collapse(nid, nid_remove, weight);
             
             auto fids = get_faces(eid);
             auto tids = get_tets(eid);
