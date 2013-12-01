@@ -1418,6 +1418,9 @@ namespace DSC {
          */
         void deform(int num_steps = 10)
         {
+#ifdef DEBUG
+            validity_check();
+#endif
             std::cout << std::endl << "********************************" << std::endl;
             int missing;
             int step = 0;
@@ -1541,8 +1544,8 @@ namespace DSC {
                 return false;
             }
             
-            // Check that the edge is not a feature edge if it is a part of the interface.
-            if(get(eid).is_interface())
+            // Check that the edge is not a feature edge if it is a part of the interface or boundary.
+            if(get(eid).is_interface() || get(eid).is_boundary())
             {
                 real angle = cos_dihedral_angle(fids[0], fids[1]);
                 if(angle < FLIP_EDGE_INTERFACE_FLATNESS)
@@ -1653,11 +1656,15 @@ namespace DSC {
          */
         bool collapse(edge_key& eid, bool safe = true)
         {
-            if (!is_unsafe_editable(eid))
+            is_mesh::SimplexSet<node_key> nids = get_nodes(eid);
+            bool n0_is_editable = (safe && is_safe_editable(nids[0])) || (!safe && is_unsafe_editable(nids[0]) && !get(nids[0]).is_boundary());
+            bool n1_is_editable = (safe && is_safe_editable(nids[1])) || (!safe && is_unsafe_editable(nids[1]) && !get(nids[1]).is_boundary());
+            
+            if (!is_unsafe_editable(eid) || (!n0_is_editable && !n1_is_editable))
             {
                 return false;
             }
-            is_mesh::SimplexSet<node_key> nids = get_nodes(eid);
+            
             is_mesh::SimplexSet<tet_key> e_tids = get_tets(eid);
             is_mesh::SimplexSet<face_key> fids0 = get_faces(get_tets(nids[0]) - e_tids) - get_faces(nids[0]);
             is_mesh::SimplexSet<face_key> fids1 = get_faces(get_tets(nids[1]) - e_tids) - get_faces(nids[1]);
@@ -1668,7 +1675,7 @@ namespace DSC {
             vec3 pos_opt, destination_opt;
             real q_max = -INFINITY;
             
-            if ((safe && is_safe_editable(nids[0]) && is_safe_editable(nids[1])) || (!safe && is_unsafe_editable(nids[0]) && is_unsafe_editable(nids[1])))
+            if (n0_is_editable && n1_is_editable)
             {
                 vec3 p = Util::barycenter(get_pos(nids[0]), get_pos(nids[1]));
                 real q = Util::min(min_quality(fids0, get_pos(nids[0]), p), min_quality(fids1, get_pos(nids[1]), p));
@@ -1681,7 +1688,7 @@ namespace DSC {
                 }
             }
             
-            if ((safe && is_safe_editable(nids[0])) || (!safe && is_unsafe_editable(nids[0])))
+            if (n0_is_editable)
             {
                 vec3 p = get_pos(nids[1]);
                 real q = Util::min(min_quality(fids0, get_pos(nids[0]), p), q1);
@@ -1694,7 +1701,7 @@ namespace DSC {
                 }
             }
             
-            if ((safe && is_safe_editable(nids[1])) || (!safe && is_unsafe_editable(nids[1])))
+            if (n1_is_editable)
             {
                 vec3 p = get_pos(nids[0]);
                 real q = Util::min(q0, min_quality(fids1, get_pos(nids[1]), p));
