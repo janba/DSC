@@ -79,10 +79,10 @@ namespace DSC {
     public:
         
         /// SimplicialComplex constructor.
-        DeformableSimplicialComplex(real _AVG_EDGE_LENGTH, std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels):
+        DeformableSimplicialComplex(real avg_edge_length, std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels):
             is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>(points, tets, tet_labels)
         {
-            set_discretization(_AVG_EDGE_LENGTH);
+            set_avg_edge_length(avg_edge_length);
         }
         
         DeformableSimplicialComplex()
@@ -127,11 +127,11 @@ namespace DSC {
         
     public:
         
-        virtual void set_discretization(real discretization)
+        virtual void set_avg_edge_length(real avg_edge_length)
         {
-            AVG_LENGTH = discretization;
-            AVG_AREA = discretization*discretization*0.5;
-            AVG_VOLUME = discretization*discretization*discretization*sqrt(2.)/12.;
+            AVG_LENGTH = avg_edge_length;
+            AVG_AREA = avg_edge_length*avg_edge_length*0.5;
+            AVG_VOLUME = avg_edge_length*avg_edge_length*avg_edge_length*sqrt(2.)/12.;
         }
         
         void set_parameters(parameters pars_)
