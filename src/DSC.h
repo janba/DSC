@@ -20,6 +20,33 @@
 #include "attributes.h"
 #include "geometry.h"
 
+struct parameters {
+    
+    // Thresholds on the quality of edges
+    real DEG_EDGE_QUALITY;
+    real MIN_EDGE_QUALITY;
+    
+    // Thresholds on the quality of faces.
+    real DEG_FACE_QUALITY;
+    real MIN_FACE_QUALITY;
+    
+    // Thresholds on the quality of tetrahedra.
+    real DEG_TET_QUALITY;
+    real MIN_TET_QUALITY;
+    
+    // Thresholds on the length of edges.
+    real MIN_LENGTH;
+    real MAX_LENGTH;
+    
+    // Thresholds on the area of faces.
+    real MIN_AREA;
+    real MAX_AREA;
+    
+    // Thresholds on the volume of tetrahedra.
+    real MIN_VOLUME;
+    real MAX_VOLUME;
+};
+
 namespace DSC {
     
     template <typename node_att = is_mesh::NodeAttributes, typename edge_att = is_mesh::EdgeAttributes, typename face_att = is_mesh::FaceAttributes, typename tet_att = is_mesh::TetAttributes>
@@ -36,37 +63,15 @@ namespace DSC {
         Geometry *design_domain = new Geometry();
         
         // Input parameter
-        real AVG_EDGE_LENGTH;
+        real AVG_LENGTH;
+        real AVG_AREA;
+        real AVG_VOLUME;
         
         // Should be eliminated
-        real FLIP_EDGE_INTERFACE_FLATNESS;
+        real FLIP_EDGE_INTERFACE_FLATNESS = 0.995;
         
-        // Thresholds on the quality of edges
-        real DEG_EDGE_QUALITY;
-        real MIN_EDGE_QUALITY;
         
-        // Thresholds on the quality of faces.
-        real DEG_FACE_QUALITY;
-        real MIN_FACE_QUALITY;
-        
-        // Thresholds on the quality of tetrahedra.
-        real DEG_TET_QUALITY;
-        real MIN_TET_QUALITY;
-        
-        // Thresholds on the length of edges.
-        real MIN_LENGTH;
-        real MAX_LENGTH;
-        
-        // Thresholds on the area of faces.
-        real MIN_AREA;
-        real MAX_AREA;
-        
-        // Thresholds on the volume of tetrahedra.
-        real MIN_VOLUME;
-        real MAX_VOLUME;
-        
-        // As close as a node can get to an opposite face before movement is stopped.
-        real MIN_DEFORMATION;
+        parameters pars = {0.1, 0.5, 0.0005, 0.015, 0.02, 0.3, 0., 2., 0.2, 5., 0.2, INFINITY};
         
         //////////////////////////
         // INITIALIZE FUNCTIONS //
@@ -125,30 +130,14 @@ namespace DSC {
         
         virtual void set_discretization(real discretization)
         {
-            AVG_EDGE_LENGTH = discretization;
-            MIN_DEFORMATION = 0.0001 * discretization;
-            
-            DEG_EDGE_QUALITY = 0.1;
-            MIN_EDGE_QUALITY = 0.5;
-            
-            DEG_FACE_QUALITY = 1. - cos(2.*M_PI/180.);
-            MIN_FACE_QUALITY = 1. - cos(10.*M_PI/180.);
-            
-            DEG_TET_QUALITY = 0.02;
-            MIN_TET_QUALITY = 0.3;
-            
-            FLIP_EDGE_INTERFACE_FLATNESS = 0.995;
-            
-            MIN_LENGTH = 0.;
-            MAX_LENGTH = 2. * discretization;
-            
-            real area_avg = discretization*discretization*0.5;
-            MIN_AREA = 0.2*area_avg;
-            MAX_AREA = 5.*area_avg;
-            
-            real vol_avg = discretization*discretization*discretization*sqrt(2.)/12.;
-            MIN_VOLUME = 0.2*vol_avg;
-            MAX_VOLUME = INFINITY;
+            AVG_LENGTH = discretization;
+            AVG_AREA = discretization*discretization*0.5;
+            AVG_VOLUME = discretization*discretization*discretization*sqrt(2.)/12.;
+        }
+        
+        void set_parameters(parameters pars_)
+        {
+            pars = pars_;
         }
         
         void set_design_domain(Geometry *domain)
@@ -349,27 +338,27 @@ namespace DSC {
         
         real get_min_tet_quality() const
         {
-            return MIN_TET_QUALITY;
+            return pars.MIN_TET_QUALITY;
         }
         
         real get_deg_tet_quality() const
         {
-            return DEG_TET_QUALITY;
+            return pars.DEG_TET_QUALITY;
         }
         
         real get_deg_face_quality() const
         {
-            return DEG_FACE_QUALITY;
+            return pars.DEG_FACE_QUALITY;
         }
         
         real get_min_face_quality() const
         {
-            return MIN_FACE_QUALITY;
+            return pars.MIN_FACE_QUALITY;
         }
         
         real get_avg_edge_length() const
         {
-            return AVG_EDGE_LENGTH;
+            return AVG_LENGTH;
         }
         
         const Geometry* get_design_domain() const
@@ -632,7 +621,7 @@ namespace DSC {
             std::vector<tet_key> tets;
             for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
-                if (quality(tit.key()) < MIN_TET_QUALITY)
+                if (quality(tit.key()) < pars.MIN_TET_QUALITY)
                 {
                     tets.push_back(tit.key());
                 }
@@ -642,7 +631,7 @@ namespace DSC {
             int i = 0, j = 0, k = 0;
             for (auto &t : tets)
             {
-                if (is_unsafe_editable(t) && quality(t) < MIN_TET_QUALITY)
+                if (is_unsafe_editable(t) && quality(t) < pars.MIN_TET_QUALITY)
                 {
                     for (auto e : get_edges(t))
                     {
@@ -787,7 +776,7 @@ namespace DSC {
             std::vector<tet_key> tets;
             for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
-                if (quality(tit.key()) < MIN_TET_QUALITY)
+                if (quality(tit.key()) < pars.MIN_TET_QUALITY)
                 {
                     tets.push_back(tit.key());
                 }
@@ -798,7 +787,7 @@ namespace DSC {
             int i = 0, j = 0;
             for (auto &t : tets)
             {
-                if (is_unsafe_editable(t) && quality(t) < MIN_TET_QUALITY)
+                if (is_unsafe_editable(t) && quality(t) < pars.MIN_TET_QUALITY)
                 {
                     for (auto f : get_faces(t))
                     {
@@ -828,7 +817,7 @@ namespace DSC {
          */
         void thickening_interface()
         {
-            if(MAX_LENGTH == INFINITY)
+            if(pars.MAX_LENGTH == INFINITY)
             {
                 return;
             }
@@ -836,7 +825,7 @@ namespace DSC {
             std::vector<edge_key> edges;
             for (auto eit = edges_begin(); eit != edges_end(); eit++)
             {
-                if (eit->is_interface() && length(eit.key()) > MAX_LENGTH)
+                if (eit->is_interface() && length(eit.key()) > pars.MAX_LENGTH*AVG_LENGTH)
                 {
                     edges.push_back(eit.key());
                 }
@@ -844,7 +833,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto &e : edges)
             {
-                if (is_unsafe_editable(e) && get(e).is_interface() && length(e) > MAX_LENGTH)
+                if (is_unsafe_editable(e) && get(e).is_interface() && length(e) > pars.MAX_LENGTH*AVG_LENGTH)
                 {
                     if(split(e).is_valid())
                     {
@@ -861,7 +850,7 @@ namespace DSC {
          */
         void thickening()
         {
-            if(MAX_VOLUME == INFINITY)
+            if(pars.MAX_VOLUME == INFINITY)
             {
                 return;
             }
@@ -869,7 +858,7 @@ namespace DSC {
             std::vector<tet_key> tetrahedra;
             for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
-                if (volume(tit.key()) > MAX_VOLUME)
+                if (volume(tit.key()) > pars.MAX_VOLUME*AVG_VOLUME)
                 {
                     tetrahedra.push_back(tit.key());
                 }
@@ -877,7 +866,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto &t : tetrahedra)
             {
-                if (is_unsafe_editable(t) && volume(t) > MAX_VOLUME)
+                if (is_unsafe_editable(t) && volume(t) > pars.MAX_VOLUME*AVG_VOLUME)
                 {
                     if(split(t).is_valid())
                     {
@@ -895,7 +884,7 @@ namespace DSC {
         
         void thinning_interface()
         {
-            if(MIN_LENGTH <= 0.)
+            if(pars.MIN_LENGTH <= 0.)
             {
                 return;
             }
@@ -903,7 +892,7 @@ namespace DSC {
             std::vector<edge_key> edges;
             for (auto eit = edges_begin(); eit != edges_end(); eit++)
             {
-                if (eit->is_interface() && length(eit.key()) < MIN_LENGTH)
+                if (eit->is_interface() && length(eit.key()) < pars.MIN_LENGTH*AVG_LENGTH)
                 {
                     edges.push_back(eit.key());
                 }
@@ -911,7 +900,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto &e : edges)
             {
-                if (is_unsafe_editable(e) && get(e).is_interface() && length(e) < MIN_LENGTH)
+                if (is_unsafe_editable(e) && get(e).is_interface() && length(e) < pars.MIN_LENGTH*AVG_LENGTH)
                 {
                     if(collapse(e, false))
                     {
@@ -928,7 +917,7 @@ namespace DSC {
          */
         void thinning()
         {
-            if(MIN_VOLUME <= 0.)
+            if(pars.MIN_VOLUME <= 0.)
             {
                 return;
             }
@@ -936,7 +925,7 @@ namespace DSC {
             std::vector<tet_key> tetrahedra;
             for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
-                if (volume(tit.key()) < MIN_VOLUME)
+                if (volume(tit.key()) < pars.MIN_VOLUME*AVG_VOLUME)
                 {
                     tetrahedra.push_back(tit.key());
                 }
@@ -944,7 +933,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto &t : tetrahedra)
             {
-                if (is_unsafe_editable(t) && volume(t) < MIN_VOLUME)
+                if (is_unsafe_editable(t) && volume(t) < pars.MIN_VOLUME*AVG_VOLUME)
                 {
                     if(collapse(t))
                     {
@@ -967,7 +956,7 @@ namespace DSC {
             std::list<edge_key> edges;
             for (auto eit = edges_begin(); eit != edges_end(); eit++)
             {
-                if (quality(eit.key()) < DEG_EDGE_QUALITY)
+                if (quality(eit.key()) < pars.DEG_EDGE_QUALITY)
                 {
                     edges.push_back(eit.key());
                 }
@@ -975,7 +964,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto e : edges)
             {
-                if(is_unsafe_editable(e) && quality(e) < DEG_EDGE_QUALITY && !collapse(e))
+                if(is_unsafe_editable(e) && quality(e) < pars.DEG_EDGE_QUALITY && !collapse(e))
                 {
                     if(collapse(e, false))
                     {
@@ -994,7 +983,7 @@ namespace DSC {
             
             for (auto fit = faces_begin(); fit != faces_end(); fit++)
             {
-                if(quality(fit.key()) < DEG_FACE_QUALITY)
+                if(quality(fit.key()) < pars.DEG_FACE_QUALITY)
                 {
                     faces.push_back(fit.key());
                 }
@@ -1003,7 +992,7 @@ namespace DSC {
             int i = 0, j = 0;
             for (auto &f : faces)
             {
-                if (is_unsafe_editable(f) && quality(f) < DEG_FACE_QUALITY && !collapse(f))
+                if (is_unsafe_editable(f) && quality(f) < pars.DEG_FACE_QUALITY && !collapse(f))
                 {
                     if(collapse(f, false))
                     {
@@ -1025,7 +1014,7 @@ namespace DSC {
             
             for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
-                if (quality(tit.key()) < DEG_TET_QUALITY)
+                if (quality(tit.key()) < pars.DEG_TET_QUALITY)
                 {
                     tets.push_back(tit.key());
                 }
@@ -1033,7 +1022,7 @@ namespace DSC {
             int i = 0, j = 0;
             for (auto &t : tets)
             {
-                if (is_unsafe_editable(t) && quality(t) < DEG_TET_QUALITY && !collapse(t))
+                if (is_unsafe_editable(t) && quality(t) < pars.DEG_TET_QUALITY && !collapse(t))
                 {
                     if(collapse(t, false))
                     {
@@ -1061,7 +1050,7 @@ namespace DSC {
             std::list<edge_key> edges;
             for (auto eit = edges_begin(); eit != edges_end(); eit++)
             {
-                if (quality(eit.key()) < MIN_EDGE_QUALITY)
+                if (quality(eit.key()) < pars.MIN_EDGE_QUALITY)
                 {
                     edges.push_back(eit.key());
                 }
@@ -1069,7 +1058,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto e : edges)
             {
-                if(is_unsafe_editable(e) && quality(e) < MIN_EDGE_QUALITY)
+                if(is_unsafe_editable(e) && quality(e) < pars.MIN_EDGE_QUALITY)
                 {
                     if(collapse(e))
                     {
@@ -1137,7 +1126,7 @@ namespace DSC {
             
             for (auto fit = faces_begin(); fit != faces_end(); fit++)
             {
-                if(quality(fit.key()) < MIN_FACE_QUALITY)
+                if(quality(fit.key()) < pars.MIN_FACE_QUALITY)
                 {
                     faces.push_back(fit.key());
                 }
@@ -1146,7 +1135,7 @@ namespace DSC {
             int i = 0, j = 0;
             for (auto &f : faces)
             {
-                if (is_unsafe_editable(f) && quality(f) < MIN_FACE_QUALITY)
+                if (is_unsafe_editable(f) && quality(f) < pars.MIN_FACE_QUALITY)
                 {
                     if(remove_face(f))
                     {
@@ -1318,7 +1307,7 @@ namespace DSC {
             
             for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
             {
-                if (quality(tit.key()) < MIN_TET_QUALITY)
+                if (quality(tit.key()) < pars.MIN_TET_QUALITY)
                 {
                     tets.push_back(tit.key());
                 }
@@ -1326,7 +1315,7 @@ namespace DSC {
             int i = 0, j=0;
             for (auto &tet : tets)
             {
-                if (is_unsafe_editable(tet) && quality(tet) < MIN_TET_QUALITY)
+                if (is_unsafe_editable(tet) && quality(tet) < pars.MIN_TET_QUALITY)
                 {
                     if(remove_tet(tet))
                     {
@@ -1470,16 +1459,16 @@ namespace DSC {
             vec3 destination = get(n).get_destination();
             real l = Util::length(destination - pos);
             
-            if (l < 1e-4*AVG_EDGE_LENGTH) // The vertex is not moved
+            if (l < 1e-4*AVG_LENGTH) // The vertex is not moved
             {
                 return true;
             }
             
-            real max_l = l*intersection_with_link(n, destination) - MIN_DEFORMATION;
+            real max_l = l*intersection_with_link(n, destination) - 1e-4 * AVG_LENGTH;
             l = Util::max(Util::min(0.5*max_l, l), 0.);
             set_pos(n, pos + l*Util::normalize(destination - pos));
             
-            if (Util::length(destination - get_pos(n)) < 1e-4*AVG_EDGE_LENGTH)
+            if (Util::length(destination - get_pos(n)) < 1e-4*AVG_LENGTH)
             {
                 return true;
             }
@@ -1591,7 +1580,7 @@ namespace DSC {
                 if(t > 0. && t < 1.)
                 {
                     std::vector<real> coords = Util::barycentric_coords<real>(p + t*r, c, a, b);
-                    if(coords[0] > MIN_DEFORMATION && coords[1] > MIN_DEFORMATION && coords[2] >= 0.)
+                    if(coords[0] > EPSILON && coords[1] > EPSILON && coords[2] >= 0.)
                     {
                         return true;
                     }
@@ -1706,7 +1695,7 @@ namespace DSC {
             
             if(q_max > EPSILON)
             {
-                if(!safe || q_max > Util::min(min_quality(get_tets(nids[0]) + get_tets(nids[1])), MIN_TET_QUALITY) + EPSILON)
+                if(!safe || q_max > Util::min(min_quality(get_tets(nids[0]) + get_tets(nids[1])), pars.MIN_TET_QUALITY) + EPSILON)
                 {
                     collapse(eid, nids[1], weight);
                     return true;
@@ -1885,7 +1874,7 @@ namespace DSC {
         {
             is_mesh::SimplexSet<node_key> nids = get_nodes(fid);
             auto angles = Util::cos_angles<real>(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]));
-            real worst_a;
+            real worst_a = -INFINITY;
             for(auto a : angles)
             {
                 worst_a = std::max(worst_a, std::abs(a));
@@ -1895,7 +1884,7 @@ namespace DSC {
         
         real quality(const edge_key& eid)
         {
-            return length(eid)/AVG_EDGE_LENGTH;
+            return length(eid)/AVG_LENGTH;
         }
         
         /**
