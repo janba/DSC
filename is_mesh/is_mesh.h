@@ -1210,7 +1210,9 @@ namespace is_mesh {
             for (const NodeKey& n : f_nids)
             {
                 auto new_f_eids = new_fs_eids & get_edges(n);
+#ifdef DEBUG
                 assert(new_f_eids.size() == 2);
+#endif
                 insert_face(new_f_eids[0], new_f_eids[1], new_eid);
             }
             
