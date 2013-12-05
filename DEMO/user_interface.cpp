@@ -237,6 +237,8 @@ void UI::keyboard(unsigned char key, int x, int y) {
             if(dsc)
             {
                 std::cout << "TEST DSC" << std::endl;
+                dsc->validity_check();
+                
                 dsc->test_flip23_flip32();
                 painter->update(*dsc);
                 dsc->test_split_collapse();

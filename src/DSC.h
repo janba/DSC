@@ -70,7 +70,6 @@ namespace DSC {
         // Should be eliminated
         real FLIP_EDGE_INTERFACE_FLATNESS = 0.995;
         
-        
         parameters pars = {0.1, 0.5, 0.0005, 0.015, 0.02, 0.3, 0., 2., 0.2, 5., 0.2, INFINITY};
         
         //////////////////////////
@@ -111,8 +110,8 @@ namespace DSC {
         
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get_edge;
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get_face;
-        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::exists;
         
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::validity_check;
     private:
         
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::flip_22;
@@ -124,7 +123,7 @@ namespace DSC {
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::collapse;
         
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::garbage_collect;
-        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::validity_check;
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::exists;
         
     public:
         
