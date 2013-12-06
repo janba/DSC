@@ -282,26 +282,6 @@ namespace DSC {
         }
         
     public:
-        /// Returns the destination of the node with id nid.
-        vec3 get_dest(const node_key& nid)
-        {
-            if(is_movable(nid))
-            {
-                return get(nid).get_destination();
-            }
-            return get(nid).get_pos();
-        }
-        
-        /// Returns the destinations of the nodes in the simplex set.
-        std::vector<vec3> get_dest(const is_mesh::SimplexSet<node_key>& nids)
-        {
-            std::vector<vec3> verts;
-            for (auto n : nids) {
-                verts.push_back(get_dest(n));
-            }
-            return verts;
-        }
-        
         /**
          * Sets the destination where the node n is moved to when deform() is called.
          */
@@ -1442,6 +1422,10 @@ namespace DSC {
             resize_complex();
             
             garbage_collect();
+            for (auto nit = nodes_begin(); nit != nodes_end(); nit++)
+            {
+                nit->set_destination(nit->get_pos());
+            }
 #ifdef DEBUG
             validity_check();
 #endif
@@ -1635,8 +1619,8 @@ namespace DSC {
             vec3 destination = pos;
             if(get(eid).is_interface())
             {
-                auto dests = get_dest(get_nodes(eid));
-                destination = Util::barycenter(dests[0], dests[1]);
+                auto nids = get_nodes(eid);
+                destination = Util::barycenter(get(nids[0]).get_destination(), get(nids[1]).get_destination());
             }
             
             return split(eid, pos, destination);
@@ -1824,7 +1808,7 @@ namespace DSC {
         real length_destination(const edge_key& eid)
         {
             is_mesh::SimplexSet<node_key> nids = get_nodes(eid);
-            return Util::length(get_dest(nids[0]) - get_dest(nids[1]));
+            return Util::length(get(nids[0]).get_destination() - get(nids[1]).get_destination());
         }
         
         real area(const face_key& fid)
@@ -1836,7 +1820,7 @@ namespace DSC {
         real area_destination(const face_key& fid)
         {
             is_mesh::SimplexSet<node_key> nids = get_nodes(fid);
-            return Util::area<real>(get_dest(nids[0]), get_dest(nids[1]), get_dest(nids[2]));
+            return Util::area<real>(get(nids[0]).get_destination(), get(nids[1]).get_destination(), get(nids[2]).get_destination());
         }
         
         real volume(const tet_key& tid)
@@ -1848,7 +1832,7 @@ namespace DSC {
         real volume_destination(const tet_key& tid)
         {
             is_mesh::SimplexSet<node_key> nids = get_nodes(tid);
-            return Util::volume<real>(get_dest(nids[0]), get_dest(nids[1]), get_dest(nids[2]), get_dest(nids[3]));
+            return Util::volume<real>(get(nids[0]).get_destination(), get(nids[1]).get_destination(), get(nids[2]).get_destination(), get(nids[3]).get_destination());
         }
         
         real quality(const tet_key& tid)
