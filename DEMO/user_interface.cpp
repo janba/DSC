@@ -319,7 +319,7 @@ void UI::keyboard(unsigned char key, int x, int y) {
             if(dsc)
             {
                 DISCRETIZATION = std::min(DISCRETIZATION + 0.5, 100.);
-                dsc->set_discretization(DISCRETIZATION);
+                dsc->set_avg_edge_length(DISCRETIZATION);
                 update_title();
             }
             break;
@@ -327,7 +327,7 @@ void UI::keyboard(unsigned char key, int x, int y) {
             if(dsc)
             {
                 DISCRETIZATION = std::max(DISCRETIZATION - 0.5, 1.);
-                dsc->set_discretization(DISCRETIZATION);
+                dsc->set_avg_edge_length(DISCRETIZATION);
                 update_title();
             }
             break;
