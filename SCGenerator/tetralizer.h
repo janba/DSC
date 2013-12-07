@@ -47,8 +47,6 @@ public:
             points_interface_real.push_back(p[2]);
         }
         
-        vec3 inside_point(0.);
-        
         std::vector<real>    points_boundary;
         std::vector<int>  faces_boundary;
         build_boundary_mesh(points_boundary, avg_edge_length, faces_boundary, size);
@@ -59,7 +57,7 @@ public:
         
         std::vector<real> points_outside;
         std::vector<int> tets_outside;
-        tetrahedralize_outside(points_interface_real, faces_interface, points_boundary, faces_boundary, points_outside, tets_outside, inside_point);
+        tetrahedralize_outside(points_interface_real, faces_interface, points_boundary, faces_boundary, points_outside, tets_outside, vec3(points_inside[0], points_inside[1], points_inside[2]));
 
         std::vector<real> points_real;
         merge_inside_outside(points_interface_real, faces_interface, points_inside, tets_inside, points_outside, tets_outside, points_real, tets, tet_labels);
