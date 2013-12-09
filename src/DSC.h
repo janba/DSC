@@ -1062,7 +1062,7 @@ namespace DSC {
             node_key apex = (get_nodes(fid) - get_nodes(eid)).front();
             // Find the projected position of the apex
             auto verts = get_pos(get_nodes(eid));
-            vec3 p = Util::project(get_pos(apex), verts[0], verts[1]);
+            vec3 p = Util::project_point_line(get_pos(apex), verts[1] - verts[0]);
             
             // Split longest edge
             node_key n = split(eid, p, p);
@@ -1159,7 +1159,7 @@ namespace DSC {
             
             // Project the apex
             auto verts = get_pos(get_nodes(fid));
-            vec3 p = Util::project(get_pos(apex), verts[0], verts[1], verts[2]);
+            vec3 p = Util::project_point_plane(get_pos(apex), verts[0], verts[1], verts[2]);
             
             // Split the face
             node_key n = split(fid, p, p);
@@ -1238,7 +1238,7 @@ namespace DSC {
             
             // Project the apex
             auto verts = get_pos(nids);
-            vec3 proj_apex = Util::project(get_pos(apex), verts[0], verts[1], verts[2]);
+            vec3 proj_apex = Util::project_point_plane(get_pos(apex), verts[0], verts[1], verts[2]);
             
             // Find barycentric coordinates
             std::vector<real> barycentric_coords = Util::barycentric_coords<real>(proj_apex, verts[0], verts[1], verts[2]);

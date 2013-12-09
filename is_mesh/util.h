@@ -285,24 +285,32 @@ namespace Util
     }
     
     /**
-     Returns p projected onto the line spanned by the two points a and b.
+     Returns p projected onto the line spanned by the point a and the vector v.
      */
     template <typename vec3>
-    inline vec3 project(const vec3& p, const vec3& a, const vec3& b)
+    inline vec3 project_point_line(const vec3& p, const vec3& a, const vec3& v)
     {
         vec3 v1 = p - a;
-        vec3 v2 = b - a;
-        return a + v2 * dot(v1,v2)/dot(v2, v2);
+        return a + v * dot(v1,v)/dot(v, v);
+    }
+    
+    /**
+     * Project the point p onto the plane defined by the point a and the normal n.
+     */
+    template<typename vec3>
+    inline vec3 project_point_plane(const vec3& p, const vec3& a, const vec3& n)
+    {
+        return p - n * dot(p - a, n);
     }
     
     /**
      * Project the point p onto the plane spanned by the three points a, b and c.
      */
     template<typename vec3>
-    inline vec3 project(const vec3& p, const vec3& a, const vec3& b, const vec3& c)
+    inline vec3 project_point_plane(const vec3& p, const vec3& a, const vec3& b, const vec3& c)
     {
         vec3 normal = normal_direction(a, b, c);
-        return p - normal * dot(p - a, normal);
+        return project_point_plane(p, a, normal);
     }
     
     template<typename real, typename vec3>
@@ -351,15 +359,24 @@ namespace Util
     }
     
     /**
+     Returns whether the point p is inside the triangle with corners a, b and c. The point p and the triangle must lie in the same plane.
+     */
+    template<typename vec3>
+    inline bool is_inside(const vec3& p, const vec3& a, const vec3& b, const vec3& c)
+    {
+        auto bc = barycentric_coords<real>(p, a, b, c);
+        return bc[0] > -EPSILON && bc[1] > -EPSILON && bc[2] > -EPSILON;
+    }
+    
+    /**
      Returns whether the point p is between the points in the vector corners.
      */
-    template<typename real, typename vec3>
+    template<typename vec3>
     inline bool is_inside(const vec3& p, std::vector<vec3> corners)
     {
         while(corners.size() > 2)
         {
-            auto bc = barycentric_coords<real>(p, corners[0], corners[1], corners[2]);
-            if(bc[0] > -EPSILON && bc[1] > -EPSILON && bc[2] > -EPSILON)
+            if(is_inside(p, corners[0], corners[1], corners[2]))
             {
                 return true;
             }
@@ -371,10 +388,9 @@ namespace Util
     /**
      * Returns whether points p1 and p2 lies on the same side of the plane spanned by points a, b and c. If p1 or p2 lies on the plane, the method returns false.
      */
-    template<typename real, typename vec3>
-    inline bool is_on_same_side(const vec3& p1, const vec3& p2, const vec3& a, const vec3& b, const vec3& c)
+    template<typename vec3>
+    inline bool is_on_same_side(const vec3& p1, const vec3& p2, const vec3& a, const vec3& normal)
     {
-        auto normal = normal_direction(a, b, c);
         auto d1 = dot(p1 - a, normal);
         auto d2 = dot(p2 - a, normal);
         if(std::abs(d1) > EPSILON && std::abs(d2) > EPSILON && sign(d1) == sign(d2))
@@ -385,23 +401,163 @@ namespace Util
     }
     
     /**
-     * Returns the shortest distance from the point p to the plane defined by the point a and the normal.
+     * Returns the shortest distance from the point p to the line segment defined by the two end points a and b.
      */
     template<typename real, typename vec3>
-    inline real distance_plane(const vec3& p, const vec3& a, const vec3& normal)
+    inline real distance_point_linesegment(const vec3& p, const vec3& a, const vec3& b)
     {
-        vec3 v = p - a;
-        return std::abs(dot(v, normal));
+        vec3 v1 = p - a;
+        vec3 v2 = b - a;
+        real d = dot(v1, v2)/sqr_length(v2);
+        if(d <= 0.)
+        {
+            return length(p - a);
+        }
+        if(d >= 1.)
+        {
+            return length(p - b);
+        }
+        return length(v1 - v2 * d);
     }
     
     /**
-     * Returns the shortest distance from the point p to the plane spanned by the points a, b and c.
+     * Returns the shortest distance from the line segment |ab| to the line segment |cd|.
      */
     template<typename real, typename vec3>
-    inline real distance_plane(const vec3& p, const vec3& a, const vec3& b, const vec3& c)
+    inline real distance_linesegment_linesegment(const vec3& a, const vec3& b, const vec3& c, const vec3& d)
     {
-        vec3 n = normal_direction(a, b, c);
-        return distance_plane<real>(p, a, n);
+        vec3 u = b - a;
+        vec3 v = d - c;
+        vec3 w = a - c;
+        real duu = dot(u,u);         // always >= 0
+        real duv = dot(u,v);
+        real dvv = dot(v,v);         // always >= 0
+        real duw = dot(u,w);
+        real dvw = dot(v,w);
+        real D = duu*dvv - duv*duv;        // always >= 0
+        real sc, sN, sD = D;       // sc = sN / sD, default sD = D >= 0
+        real tc, tN, tD = D;       // tc = tN / tD, default tD = D >= 0
+        
+        // compute the line parameters of the two closest points
+        if (D < EPSILON) { // the lines are almost parallel
+            sN = 0.0;         // force using point P0 on segment S1
+            sD = 1.0;         // to prevent possible division by 0.0 later
+            tN = dvw;
+            tD = dvv;
+        }
+        else {                 // get the closest points on the infinite lines
+            sN = (duv*dvw - dvv*duw);
+            tN = (duu*dvw - duv*duw);
+            if (sN < 0.0) {        // sc < 0 => the s=0 edge is visible
+                sN = 0.0;
+                tN = dvw;
+                tD = dvv;
+            }
+            else if (sN > sD) {  // sc > 1  => the s=1 edge is visible
+                sN = sD;
+                tN = dvw + duv;
+                tD = dvv;
+            }
+        }
+        
+        if (tN < 0.0) {            // tc < 0 => the t=0 edge is visible
+            tN = 0.0;
+            // recompute sc for this edge
+            if (-duw < 0.0)
+                sN = 0.0;
+            else if (-duw > duu)
+                sN = sD;
+            else {
+                sN = -duw;
+                sD = duu;
+            }
+        }
+        else if (tN > tD) {      // tc > 1  => the t=1 edge is visible
+            tN = tD;
+            // recompute sc for this edge
+            if ((-duw + duv) < 0.0)
+                sN = 0;
+            else if ((-duw + duv) > duu)
+                sN = sD;
+            else {
+                sN = (-duw +  duv);
+                sD = duu;
+            }
+        }
+        // finally do the division to get sc and tc
+        sc = (abs(sN) < EPSILON ? 0.0 : sN / sD);
+        tc = (abs(tN) < EPSILON ? 0.0 : tN / tD);
+        
+        // get the difference of the two closest points
+        vec3 dP = w + (sc * u) - (tc * v);  // =  S1(sc) - S2(tc)
+        
+        return length(dP);   // return the closest distance
+    }
+    
+    /**
+     * Returns the shortest distance from the point p to the line defined by the point a and the vector v.
+     */
+    template<typename real, typename vec3>
+    inline real distance_point_line(const vec3& p, const vec3& a, const vec3& v)
+    {
+        vec3 v1 = p - a;
+        return length(v1 - v * dot(v1,v));
+    }
+    
+    /**
+     * Returns the shortest distance from the point p to the plane defined by the point a and the normal n.
+     */
+    template<typename real, typename vec3>
+    inline real distance_point_plane(const vec3& p, const vec3& a, const vec3& n)
+    {
+        return std::abs(dot(p - a, n));
+    }
+    
+    /**
+     * Returns the shortest distance from the point p to the triangle spanned by the points a, b and c.
+     */
+    template<typename real, typename vec3>
+    inline real distance_point_triangle(const vec3& p, const vec3& a, const vec3& b, const vec3& c)
+    {
+        vec3 p_proj = project_point_plane(p, a, b, c);
+        if(is_inside(p_proj, a, b, c))
+        {
+            return length(p_proj - p);
+        }
+        
+        real d_line_ab = distance_point_linesegment<real>(p, a, b);
+        real d_line_bc = distance_point_linesegment<real>(p, b, c);
+        real d_line_ca = distance_point_linesegment<real>(p, c, a);
+        
+        return std::min(std::min(d_line_ab, d_line_bc), d_line_ca);
+    }
+    
+    /**
+     * Returns the shortest distance from the triangle |abc| to the triangle |def|.
+     */
+    template<typename real, typename vec3>
+    inline real distance_triangle_triangle(const vec3& a, const vec3& b, const vec3& c, const vec3& d, const vec3& e, const vec3& f)
+    {
+        // Calculate 6 point-triangle distances
+        real dist = distance_point_triangle<real>(a, d, e, f);
+        dist = std::min(dist, distance_point_triangle<real>(b, d, e, f));
+        dist = std::min(dist, distance_point_triangle<real>(c, d, e, f));
+        dist = std::min(dist, distance_point_triangle<real>(d, a, b, c));
+        dist = std::min(dist, distance_point_triangle<real>(e, a, b, c));
+        dist = std::min(dist, distance_point_triangle<real>(f, a, b, c));
+        
+        // Calculate 9 line segment-line segment distances
+        dist = std::min(dist, distance_linesegment_linesegment<real>(a, b, d, e));
+        dist = std::min(dist, distance_linesegment_linesegment<real>(a, b, d, f));
+        dist = std::min(dist, distance_linesegment_linesegment<real>(a, b, e, f));
+        dist = std::min(dist, distance_linesegment_linesegment<real>(a, c, d, e));
+        dist = std::min(dist, distance_linesegment_linesegment<real>(a, c, d, f));
+        dist = std::min(dist, distance_linesegment_linesegment<real>(a, c, e, f));
+        dist = std::min(dist, distance_linesegment_linesegment<real>(b, c, d, e));
+        dist = std::min(dist, distance_linesegment_linesegment<real>(b, c, d, f));
+        dist = std::min(dist, distance_linesegment_linesegment<real>(b, c, e, f));
+        
+        return dist;
     }
     
     /**
