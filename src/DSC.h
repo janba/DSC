@@ -1326,7 +1326,9 @@ namespace DSC {
             vec3 avg_pos = get_barycenter(get_nodes(fids));
             vec3 new_pos = old_pos + alpha * (avg_pos - old_pos);
             
-            if(min_quality_improvement(fids, old_pos, new_pos) > 0.)
+            real q_old, q_new;
+            min_quality(fids, old_pos, new_pos, q_old, q_new);
+            if(q_new > pars.MIN_TET_QUALITY || q_new > q_old)
             {
                 set_pos(nid, new_pos);
                 return true;
@@ -1977,24 +1979,25 @@ namespace DSC {
         }
         
         /**
-         * Returns the improvement in minimum tetrahedral quality of moving a node from old_pos to new_pos. The faces in the link of the node should be passed in fids.
+         * Returns the old (in min_q_old) and new (in min_q_new) minimum tetrahedral quality of when moving a node from old_pos to new_pos. The faces in the link of the node should be passed in fids.
          */
-        real min_quality_improvement(const is_mesh::SimplexSet<face_key>& fids, const vec3& pos_old, const vec3& pos_new)
+        void min_quality(const is_mesh::SimplexSet<face_key>& fids, const vec3& pos_old, const vec3& pos_new, real& min_q_old, real& min_q_new)
         {
-            real min_q_old = INFINITY;
-            real min_q_new = INFINITY;
+            min_q_old = INFINITY;
+            min_q_new = INFINITY;
             for (auto f : fids)
             {
                 is_mesh::SimplexSet<node_key> nids = get_nodes(f);
                 if(Util::sign(Util::signed_volume<real>(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]), pos_old)) !=
                    Util::sign(Util::signed_volume<real>(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]), pos_new)))
                 {
-                    return -INFINITY;
+                    min_q_old = INFINITY;
+                    min_q_new = -INFINITY;
+                    break;
                 }
                 min_q_old = Util::min(min_q_old, std::abs(Util::quality<real>(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]), pos_old)));
                 min_q_new = Util::min(min_q_new, std::abs(Util::quality<real>(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]), pos_new)));
             }
-            return min_q_new - min_q_old;
         }
         
         
