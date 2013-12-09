@@ -619,6 +619,7 @@ namespace DSC {
                             if(topological_edge_removal(e))
                             {
                                 i++;
+                                break;
                             }
                         }
                         else if(is_unsafe_editable(e) && (get(e).is_interface() || get(e).is_boundary()) && is_flippable(e))
@@ -626,10 +627,11 @@ namespace DSC {
                             if(topological_boundary_edge_removal(e))
                             {
                                 k++;
+                                break;
                             }
                         }
-                        j++;
                     }
+                    j++;
                 }
             }
             std::cout << "Topological edge removals: " << i + k << "/" << j << " (" << k << " at interface)" << std::endl;
@@ -776,10 +778,11 @@ namespace DSC {
                             if(topological_face_removal(apices[0], apices[1]))
                             {
                                 i++;
+                                break;
                             }
-                            j++;
                         }
                     }
+                    j++;
                 }
             }
             std::cout << "Topological face removals: " << i << "/" << j << std::endl;
