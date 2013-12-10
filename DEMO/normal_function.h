@@ -64,10 +64,6 @@ public:
             }
         }
         update_compute_time(init_time);
-        init_time = std::chrono::system_clock::now();
-        
-        dsc.deform();
-        
-        update_deform_time(init_time);
+        VelocityFunc::deform(dsc);
     }
 };

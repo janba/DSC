@@ -61,7 +61,10 @@ namespace DSC {
         /**
          Returns the name of the velocity function.
          */
-        virtual std::string get_name() const = 0;
+        virtual std::string get_name() const
+        {
+            return std::string("NO MOTION");
+        }
         
         /**
          Returns the current time step.
@@ -152,7 +155,14 @@ namespace DSC {
         /**
          Computes the motion of each interface vertex and stores the new position in new_pos in the simplicial complex class.
          */
-        virtual void deform(DeformableSimplicialComplex& dsc) = 0;
+        virtual void deform(DeformableSimplicialComplex& dsc)
+        {
+            auto init_time = std::chrono::system_clock::now();
+            
+            dsc.deform();
+            
+            update_deform_time(init_time);
+        }
         
     public:
         /**
