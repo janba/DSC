@@ -70,7 +70,7 @@ namespace DSC {
         // Should be eliminated
         real FLIP_EDGE_INTERFACE_FLATNESS = 0.995;
         
-        parameters pars = {0.1, 0.5, 0.0005, 0.015, 0.02, 0.3, 0., 2., 0.2, 5., 0.2, INFINITY};
+        parameters pars;
         
         //////////////////////////
         // INITIALIZE FUNCTIONS //
@@ -82,10 +82,11 @@ namespace DSC {
         DeformableSimplicialComplex(real avg_edge_length, std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels):
             is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>(points, tets, tet_labels)
         {
+            pars = {0.1, 0.5, 0.0005, 0.015, 0.02, 0.3, 0., 2., 0.2, 5., 0.2, INFINITY};
             set_avg_edge_length(avg_edge_length);
         }
         
-        DeformableSimplicialComplex()
+        ~DeformableSimplicialComplex()
         {
             delete design_domain;
         }
