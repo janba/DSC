@@ -47,7 +47,6 @@ namespace is_mesh {
             create(points, tets);
             init_flags(tet_labels);
             validity_check();
-            simplex_set_test();
         }
         
         ~ISMesh()

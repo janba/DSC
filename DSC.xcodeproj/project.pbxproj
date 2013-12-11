@@ -104,6 +104,7 @@
 		7A9C20D517DFB4D40064171E /* Vec4f.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9C209817DFB4D40064171E /* Vec4f.h */; };
 		7A9C20D617DFB4D40064171E /* Vec4i.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9C209917DFB4D40064171E /* Vec4i.h */; };
 		7A9C20D717DFB4D40064171E /* Vec4uc.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A9C209A17DFB4D40064171E /* Vec4uc.h */; };
+		7AAC14BF185826F500A7219E /* test.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AAC14BE185826F500A7219E /* test.h */; };
 		7AB585A1183D2D6F009A25F1 /* libDSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AD617675AE8000F8238 /* libDSC.a */; };
 		7ACA21D917DE37C5005E9309 /* stb_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ACA21D717DE37C5005E9309 /* stb_image.c */; };
 		7ACA21DA17DE37C5005E9309 /* stb_image.h in Headers */ = {isa = PBXBuildFile; fileRef = 7ACA21D817DE37C5005E9309 /* stb_image.h */; };
@@ -245,6 +246,7 @@
 		7A9C209817DFB4D40064171E /* Vec4f.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec4f.h; sourceTree = "<group>"; };
 		7A9C209917DFB4D40064171E /* Vec4i.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec4i.h; sourceTree = "<group>"; };
 		7A9C209A17DFB4D40064171E /* Vec4uc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec4uc.h; sourceTree = "<group>"; };
+		7AAC14BE185826F500A7219E /* test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = test.h; path = is_mesh/test.h; sourceTree = "<group>"; };
 		7ACA21D717DE37C5005E9309 /* stb_image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image.c; sourceTree = "<group>"; };
 		7ACA21D817DE37C5005E9309 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
 		7AE27AD617675AE8000F8238 /* libDSC.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDSC.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -332,6 +334,7 @@
 				7A45DB93176E122100B9B388 /* kernel_iterator.h */,
 				7A45DB94176E122100B9B388 /* kernel.h */,
 				7AF7E9C0176B524700F43714 /* is_mesh.h */,
+				7AAC14BE185826F500A7219E /* test.h */,
 			);
 			name = ISMesh;
 			sourceTree = "<group>";
@@ -601,6 +604,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7AAC14BF185826F500A7219E /* test.h in Headers */,
 				7AE27AF917675B04000F8238 /* velocity_function.h in Headers */,
 				7AF7E9BF176B4FE400F43714 /* DSC.h in Headers */,
 				7AF7E9C1176B524700F43714 /* is_mesh.h in Headers */,
