@@ -1731,6 +1731,22 @@ namespace DSC {
         // GETTER FUNCTIONS //
         //////////////////////
     public:
+        
+        std::vector<vec3> get_interface_face_positions()
+        {
+            std::vector<vec3> verts;
+            for (auto fit = faces_begin(); fit != faces_end(); fit++) {
+                if(fit->is_interface())
+                {
+                    for(auto n : get_nodes(fit.key()))
+                    {
+                        verts.push_back(get_pos(n));
+                    }
+                }
+            }
+            return verts;
+        }
+        
         /**
          Returns the normal to interface face fid.
          */
