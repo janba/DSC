@@ -31,13 +31,7 @@ public:
     NormalFunc(real velocity, real accuracy, int max_time_steps = 100):
         VelocityFunc<>(velocity, accuracy, max_time_steps)
     {
-        set_velocity(velocity);
-    }
-    
-    
-    virtual void set_velocity(real vel) override
-    {
-        VELOCITY = vel/10.;
+        
     }
 
     /**
@@ -59,7 +53,7 @@ public:
         {
             if(dsc.is_movable(nit.key()))
             {
-                new_pos = nit->get_pos() + VELOCITY * dsc.get_normal(nit.key());
+                new_pos = nit->get_pos() + 0.1*VELOCITY * dsc.get_normal(nit.key());
                 dsc.set_destination(nit.key(), new_pos);
             }
         }

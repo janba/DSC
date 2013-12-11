@@ -33,12 +33,7 @@ public:
     RotateFunc(real velocity, real accuracy, int max_time_steps = 100):
         VelocityFunc<>(velocity, accuracy, max_time_steps)
     {
-        set_velocity(velocity);
-    }
-    
-    virtual void set_velocity(real vel) override
-    {
-        VELOCITY = M_PI*vel/(5.*180.);
+        
     }
 
     /**
@@ -57,7 +52,7 @@ public:
         auto init_time = std::chrono::system_clock::now();
         
         vec3 center = dsc.get_center();
-        mat3 mrot = rotation_Mat3x3d(CGLA::Axis::ZAXIS, VELOCITY);
+        mat3 mrot = rotation_Mat3x3d(CGLA::Axis::ZAXIS, M_PI*VELOCITY/(5.*180.));
         vec3 new_pos;
         for(auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
         {

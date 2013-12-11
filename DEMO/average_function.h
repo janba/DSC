@@ -30,18 +30,7 @@ public:
     AverageFunc(real velocity, real accuracy, int max_time_steps = 100):
         VelocityFunc<>(velocity, accuracy, max_time_steps)
     {
-        set_velocity(velocity);
-        set_accuracy(accuracy);
-    }
-    
-    virtual void set_velocity(real vel) override
-    {
-        VELOCITY = vel/10.;
-    }
-    
-    virtual void set_accuracy(real acc) override
-    {
-        ACCURACY = acc/100.;
+        
     }
     
     /**
@@ -64,7 +53,7 @@ public:
             if(dsc.is_movable(nit.key()))
             {
                 p = nit->get_pos();
-                new_pos = p + VELOCITY * (dsc.get_barycenter(nit.key(), true) - p);
+                new_pos = p + 0.1*VELOCITY * (dsc.get_barycenter(nit.key(), true) - p);
                 dsc.set_destination(nit.key(), new_pos);
             }
         }
