@@ -15,7 +15,6 @@
 		7A3438D4183C7A9600829EEB /* tetgen.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 7A3438D1183C7A9600829EEB /* tetgen.cxx */; };
 		7A3438D5183C7A9600829EEB /* tetgen.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A3438D2183C7A9600829EEB /* tetgen.h */; };
 		7A3438E8183C7B7800829EEB /* generator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3438E3183C7B7800829EEB /* generator.cpp */; };
-		7A3438E9183C7B7800829EEB /* object_generator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3438E4183C7B7800829EEB /* object_generator.cpp */; };
 		7A3438EA183C7B7800829EEB /* tetralizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3438E6183C7B7800829EEB /* tetralizer.cpp */; };
 		7A3438EB183C7BA700829EEB /* libTetGen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A3438C9183C7A8700829EEB /* libTetGen.a */; };
 		7A45DB9C176E122100B9B388 /* key.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A45DB8F176E122100B9B388 /* key.h */; };
@@ -155,8 +154,6 @@
 		7A3438D2183C7A9600829EEB /* tetgen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tetgen.h; sourceTree = "<group>"; };
 		7A3438DA183C7B2E00829EEB /* SCGenerator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SCGenerator; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A3438E3183C7B7800829EEB /* generator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generator.cpp; sourceTree = "<group>"; };
-		7A3438E4183C7B7800829EEB /* object_generator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = object_generator.cpp; sourceTree = "<group>"; };
-		7A3438E5183C7B7800829EEB /* object_generator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = object_generator.h; sourceTree = "<group>"; };
 		7A3438E6183C7B7800829EEB /* tetralizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tetralizer.cpp; sourceTree = "<group>"; };
 		7A3438E7183C7B7800829EEB /* tetralizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tetralizer.h; sourceTree = "<group>"; };
 		7A38E82A17E3B35A0075DC24 /* gouraud.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = gouraud.frag; sourceTree = "<group>"; };
@@ -353,8 +350,6 @@
 			isa = PBXGroup;
 			children = (
 				7A3438E3183C7B7800829EEB /* generator.cpp */,
-				7A3438E4183C7B7800829EEB /* object_generator.cpp */,
-				7A3438E5183C7B7800829EEB /* object_generator.h */,
 				7A3438E6183C7B7800829EEB /* tetralizer.cpp */,
 				7A3438E7183C7B7800829EEB /* tetralizer.h */,
 			);
@@ -782,7 +777,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A3438E9183C7B7800829EEB /* object_generator.cpp in Sources */,
 				7A3438E8183C7B7800829EEB /* generator.cpp in Sources */,
 				7A3438EA183C7B7800829EEB /* tetralizer.cpp in Sources */,
 			);

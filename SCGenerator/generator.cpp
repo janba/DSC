@@ -16,7 +16,6 @@
 
 #include "mesh_io.h"
 #include "tetralizer.h"
-#include "object_generator.h"
 
 using namespace std;
 
@@ -42,52 +41,13 @@ void generate_from_obj(const string& input_file_name, const string& output_file_
     is_mesh::export_tet_mesh(file_path + output_file_name + extension, points, tets, tet_labels);
 }
 
-void generate_empty(const string& output_file_name)
-{
-    vector<vec3> points;
-    vector<int>  tets;
-    vector<int>  tet_labels;
-    
-    Tetralizer::tetralize(vec3(3.), 0.1, points, tets, tet_labels);
-    is_mesh::export_tet_mesh(file_path + output_file_name + extension, points, tets, tet_labels);
-}
-
-void generate_cube(const string& output_file_name)
-{
-    vector<vec3> points;
-    vector<int>  tets;
-    vector<int>  tet_labels;
-    
-    Tetralizer::tetralize(vec3(3.), 0.1, points, tets, tet_labels);
-    ObjectGenerator::create_cube(points, tets, vec3(-1.), vec3(2.), 1, tet_labels);
-    is_mesh::export_tet_mesh(file_path + output_file_name + extension, points, tets, tet_labels);
-}
-
-void generate_sphere(const string& output_file_name)
-{
-    vector<vec3> points;
-    vector<int>  tets;
-    vector<int>  tet_labels;
-    
-    Tetralizer::tetralize(vec3(3.), 0.1, points, tets, tet_labels);
-    ObjectGenerator::create_sphere(points, tets, vec3(0.), 1., 1, tet_labels);
-    is_mesh::export_tet_mesh(file_path + output_file_name + extension, points, tets, tet_labels);
-}
-
 int main(int argc, const char * argv[])
 {
-    if(argc > 1)
+    if(argc > 2)
     {
         string output_file_name = string(argv[1]);
-        
-        if(argc == 2) {
-            generate_empty(output_file_name);
-        }
-        else if(argc == 3)
-        {
-            string input_file_name = string(argv[2]);
-            generate_from_obj(input_file_name, output_file_name);
-        }
+        string input_file_name = string(argv[2]);
+        generate_from_obj(input_file_name, output_file_name);
         
         std::cout << "Generated " << output_file_name + extension << std::endl;
     }
