@@ -630,6 +630,19 @@ namespace is_mesh {
         }
         
         /**
+         *  Returns the node adjacent to edge eid which is not nid.
+         */
+        NodeKey get_node(const EdgeKey& eid, const NodeKey& nid)
+        {
+            const SimplexSet<NodeKey>& nids = get_nodes(eid);
+            if(nids[0] == nid)
+            {
+                return nids[1];
+            }
+            return nids[0];
+        }
+        
+        /**
          *  Returns the edge between the nodes nid1 and nid2.
          */
         EdgeKey get_edge(const NodeKey& nid1, const NodeKey& nid2)
