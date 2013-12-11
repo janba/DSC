@@ -37,22 +37,24 @@ class UI
     vec3 camera_pos = {30., 30., 70.};
     vec3 light_pos = {0., 0., 70.};
     
+    vec3 center = vec3(0.);
+    vec3 size = vec3(40.);
+    
     int WIN_SIZE_X = 700.;
     int WIN_SIZE_Y = 700;
     
     bool CONTINUOUS = false;
-    bool RECORD = true;
-    bool QUIT_ON_COMPLETION = true;
+    bool RECORD = false;
+    bool QUIT_ON_COMPLETION = false;
     
-    real VELOCITY = 5.;
-    real DISCRETIZATION = 2.5;
-    real ACCURACY = 1.;
     static UI* instance;
     
 #ifdef _WIN32
     const std::string obj_path = "@PROJECT_SOURCE_DIR@/../data/";
+    const std::string log_path = "@PROJECT_SOURCE_DIR@/../LOG/";
 #else
     const std::string obj_path = "./data/";
+    const std::string log_path = "./LOG/";
 #endif
     const std::string extension = ".dsc";
     
@@ -65,21 +67,6 @@ public:
         return instance;
     }
     
-private:
-    std::string create_log_path()
-    {
-        std::ostringstream s;
-        s << "LOG/delta" << DISCRETIZATION << "_nu" << VELOCITY << "_alpha" << ACCURACY;
-        return s.str();
-    }
-    
-    std::string get_data_file_path(std::string const & file)
-    {
-        std::cout << obj_path + file << std::endl;
-        return obj_path + file;
-    }
-    
-public:
     void display();
     
     void animate();
@@ -98,10 +85,21 @@ public:
     void keyboard(unsigned char key, int x, int y);
     
 private:
+    
+    void set_size(vec3 s)
+    {
+        size = s;
+        real var = Util::max(Util::max(s[0], s[1]), s[2]);
+        real dist = 1.2*var;
+        eye_pos = {dist, var, dist};
+        camera_pos = {var, var, -dist};
+        light_pos = {0., 0., dist};
+    }
+    
     /**
      Loads the .dsc file specified by the model_file_name variable.
      */
-    void load_model();
+    void load_model(const std::string& file_name, real discretization);
     
     /**
      Updates the window title.
@@ -111,7 +109,7 @@ private:
     /**
      Starts the motion.
      */
-    void start();
+    void start(const std::string& log_folder_name);
     
     /**
      Stops the motion and deletes the DSC object.
