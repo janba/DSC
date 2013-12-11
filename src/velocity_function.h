@@ -43,6 +43,7 @@ namespace DSC {
         
         std::vector<vec3> pos_old;
         
+    public:
         /**
          Creates a velocity function which is applied to the simplicial complex defined by the first input parameter. The velocity parameter determines the velocity of the function.
          */
@@ -52,7 +53,6 @@ namespace DSC {
             set_accuracy(accuracy);
         }
         
-    public:
         virtual ~VelocityFunc()
         {
             pos_old.clear();
@@ -211,7 +211,12 @@ namespace DSC {
          */
         virtual void test(DeformableSimplicialComplex& dsc)
         {
+            dsc.validity_check();
             
+            dsc.test_flip23_flip32();
+            dsc.test_split_collapse();
+            dsc.test_flip44();
+            dsc.test_flip22();
         }
         
     };
