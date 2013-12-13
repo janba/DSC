@@ -50,8 +50,8 @@ class UI
     static UI* instance;
     
 #ifdef _WIN32
-    const std::string obj_path = "@PROJECT_SOURCE_DIR@/../data/";
-    const std::string log_path = "@PROJECT_SOURCE_DIR@/../LOG/";
+    const std::string obj_path = "data\\";
+    const std::string log_path = "LOG\\";
 #else
     const std::string obj_path = "./data/";
     const std::string log_path = "./LOG/";
