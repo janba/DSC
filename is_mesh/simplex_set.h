@@ -104,6 +104,17 @@ namespace is_mesh
             return std::find(set.begin(), set.end(), k) != end();
         }
         
+        int index(const key_type& k) const
+        {
+            for (int i = 0; i < set.size(); i++) {
+                if(set.at(i) == k)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        
         void push_front(const key_type& k)
         {
             set.insert(set.begin(), k);
