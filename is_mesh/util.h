@@ -271,12 +271,12 @@ namespace Util
         return normalize(n);
     }
     
-    template <typename real, typename vec3>
+    template <typename vec3>
     inline vec3 normal_direction(const vec3& a, const vec3& b, const vec3& c, const vec3& d)
     {
-        vec3 n = normal_direction<real>(a, b, c);
-        vec3 bf = barycenter<real>(a, b, c);
-        vec3 bt = barycenter<real>(a, b, c, d);
+        vec3 n = normal_direction(a, b, c);
+        vec3 bf = barycenter(a, b, c);
+        vec3 bt = barycenter(a, b, c, d);
         vec3 v_out = bf - bt;
         if (dot(v_out, n) > 0)
             return n;
