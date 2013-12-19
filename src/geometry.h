@@ -21,11 +21,18 @@
 namespace DSC {
     
     class Geometry {
+    protected:
+        bool inverse = false;
         
     public:
         Geometry()
         {
             
+        }
+        
+        void invert()
+        {
+            inverse = !inverse;
         }
         
         virtual bool is_inside(vec3 p) const
@@ -126,15 +133,27 @@ namespace DSC {
         
         virtual bool is_inside(vec3 p) const override
         {
+            if(!inverse)
+            {
+                for(int i = 0; i < 3; i++)
+                {
+                    real d = dot(p - point, directions[i]);
+                    if(std::abs(d) > size[i])
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
             for(int i = 0; i < 3; i++)
             {
                 real d = dot(p - point, directions[i]);
-                if(std::abs(d) > size[i])
+                if(std::abs(d) > size[i] - EPSILON)
                 {
-                    return false;
+                    return true;
                 }
             }
-            return true;
+            return false;
         }
         
         virtual void clamp_vector(const vec3& p, vec3& v) const override
@@ -155,28 +174,6 @@ namespace DSC {
                     }
                 }
             }
-        }
-    };
-    
-    class InverseCube : public Cube {
-        
-    public:
-        InverseCube(vec3 c, vec3 s, vec3 x = vec3(1., 0., 0.), vec3 y = vec3(0., 1., 0.)) : Cube(c, s, x, y)
-        {
-            
-        }
-        
-        virtual bool is_inside(vec3 p) const override
-        {
-            for(int i = 0; i < 3; i++)
-            {
-                real d = dot(p - point, directions[i]);
-                if(std::abs(d) > size[i] - EPSILON)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
     };
     
