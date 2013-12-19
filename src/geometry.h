@@ -51,6 +51,50 @@ namespace DSC {
         }
     };
     
+    class MultipleGeometry : public Geometry
+    {
+        std::vector<Geometry*> geometries;
+        
+    public:
+        MultipleGeometry()
+        {
+            
+        }
+        
+        ~MultipleGeometry()
+        {
+            for (Geometry* g : geometries) {
+                delete g;
+            }
+        }
+        
+        void add_geometry(Geometry* geometry)
+        {
+            geometries.push_back(geometry);
+        }
+        
+        virtual bool is_inside(vec3 p) const
+        {
+            for (Geometry* geometry : geometries)
+            {
+                if(!geometry->is_inside(p))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        virtual void clamp_vector(const vec3& p, vec3& v) const
+        {
+            for (Geometry* geometry : geometries)
+            {
+                geometry->clamp_vector(p, v);
+            }
+        }
+        
+    };
+    
     class Point : public Geometry {
     protected:
         vec3 point;
@@ -111,6 +155,28 @@ namespace DSC {
                     }
                 }
             }
+        }
+    };
+    
+    class InverseCube : public Cube {
+        
+    public:
+        InverseCube(vec3 c, vec3 s, vec3 x = vec3(1., 0., 0.), vec3 y = vec3(0., 1., 0.)) : Cube(c, s, x, y)
+        {
+            
+        }
+        
+        virtual bool is_inside(vec3 p) const override
+        {
+            for(int i = 0; i < 3; i++)
+            {
+                real d = dot(p - point, directions[i]);
+                if(std::abs(d) > size[i] - EPSILON)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     };
     
