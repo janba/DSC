@@ -113,6 +113,10 @@ namespace DSC {
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get_face;
         
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::validity_check;
+        
+    protected:
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::set_label;
+        
     private:
         
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::flip_22;
@@ -147,6 +151,17 @@ namespace DSC {
                 delete design_domain;
             }
             design_domain = domain;
+        }
+        
+        void set_labels(const Geometry& geometry, int label)
+        {
+            for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++) {
+                is_mesh::SimplexSet<is_mesh::NodeKey> nids = get_nodes(tit.key());
+                if(geometry.is_inside(Util::barycenter(get(nids[0]).get_pos(), get(nids[1]).get_pos(), get(nids[2]).get_pos(), get(nids[3]).get_pos())))
+                {
+                    set_label(tit.key(), label);
+                }
+            }
         }
         
     private:
