@@ -60,7 +60,7 @@ namespace DSC {
         typedef is_mesh::TetrahedronKey       tet_key;
         
     protected:
-        Geometry *design_domain = new Geometry();
+        MultipleGeometry design_domain;
         
         // Input parameter
         real AVG_LENGTH;
@@ -88,7 +88,7 @@ namespace DSC {
         
         ~DeformableSimplicialComplex()
         {
-            delete design_domain;
+            
         }
         
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get;
@@ -144,13 +144,9 @@ namespace DSC {
             pars = pars_;
         }
         
-        void set_design_domain(Geometry *domain)
+        void set_design_domain(Geometry *geometry)
         {
-            if(design_domain)
-            {
-                delete design_domain;
-            }
-            design_domain = domain;
+            design_domain.add_geometry(geometry);
         }
         
         void set_labels(const Geometry& geometry, int label)
@@ -305,16 +301,10 @@ namespace DSC {
         {
             if(is_movable(nid))
             {
-                if(design_domain)
-                {
-                    vec3 p = get_pos(nid);
-                    vec3 vec = dest - p;
-                    design_domain->clamp_vector(p, vec);
-                    get(nid).set_destination(p + vec);
-                }
-                else {
-                    get(nid).set_destination(dest);
-                }
+                vec3 p = get_pos(nid);
+                vec3 vec = dest - p;
+                design_domain.clamp_vector(p, vec);
+                get(nid).set_destination(p + vec);
             }
             else {
                 get(nid).set_destination(get(nid).get_pos());
@@ -356,7 +346,7 @@ namespace DSC {
             return AVG_LENGTH;
         }
         
-        const Geometry* get_design_domain() const
+        const MultipleGeometry& get_design_domain() const
         {
             return design_domain;
         }
@@ -1690,7 +1680,7 @@ namespace DSC {
                 vec3 p = (1.-w) * get(nids[1]).get_pos() + w * get(nids[0]).get_pos();
                 real q = Util::min(min_quality(fids0, get(nids[0]).get_pos(), p), min_quality(fids1, get(nids[1]).get_pos(), p));
                 
-                if (q > q_max && ((!get(nids[0]).is_interface() && !get(nids[1]).is_interface()) || design_domain->is_inside(p)))
+                if (q > q_max && ((!get(nids[0]).is_interface() && !get(nids[1]).is_interface()) || design_domain.is_inside(p)))
                 {
                     q_max = q;
                     weight = w;
