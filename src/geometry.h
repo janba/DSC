@@ -56,6 +56,11 @@ namespace DSC {
         {
             
         }
+        
+        virtual vec3 project(const vec3& p) const
+        {
+            return p;
+        }
     };
     
     class MultipleGeometry : public Geometry
@@ -98,6 +103,22 @@ namespace DSC {
             {
                 geometry->clamp_vector(p, v);
             }
+        }
+        
+        virtual vec3 project(const vec3& p) const
+        {
+            vec3 proj_p;
+            real dist = INFINITY;
+            for (Geometry* geometry : geometries)
+            {
+                vec3 pp = geometry->project(p);
+                if(sqr_length(pp - p) < dist)
+                {
+                    dist = sqr_length(pp - p);
+                    proj_p = pp;
+                }
+            }
+            return proj_p;
         }
         
     };
@@ -175,6 +196,28 @@ namespace DSC {
                 }
             }
         }
+        
+        virtual vec3 project(const vec3& p) const
+        {
+            vec3 proj_p;
+            real dist = INFINITY;
+            for (int i = 0; i < 3; i++) {
+                vec3 pp = Util::project_point_plane(p, point + size[i]*directions[i], directions[i]);
+                if(sqr_length(pp - p) < dist)
+                {
+                    dist = sqr_length(pp - p);
+                    proj_p = pp;
+                }
+                pp = Util::project_point_plane(p, point - size[i]*directions[i], -directions[i]);
+                if(sqr_length(pp - p) < dist)
+                {
+                    dist = sqr_length(pp - p);
+                    proj_p = pp;
+                }
+            }
+            
+            return proj_p;
+        }
     };
     
     class Cylinder : public Point {
@@ -206,6 +249,12 @@ namespace DSC {
             {
                 
             }
+        }
+        
+        virtual vec3 project(const vec3& p) const
+        {
+            assert(false); // NOT IMPLEMENTED YET!
+            return p;
         }
     };
     
