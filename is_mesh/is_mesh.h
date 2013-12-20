@@ -1023,7 +1023,7 @@ namespace is_mesh {
             
         }
         
-        NodeKey split(const EdgeKey& eid, const vec3& pos, const vec3& destination)
+        void split(const EdgeKey& eid, const vec3& pos, const vec3& destination)
         {
             auto nids = get_nodes(eid);
             auto fids = get_faces(eid);
@@ -1076,8 +1076,6 @@ namespace is_mesh {
             }
             
             update_split(new_nid, nids[0], nids[1]);
-            
-            return new_nid;
         }
         
         virtual void update_collapse(const NodeKey& nid, const NodeKey& nid_removed, real weight)

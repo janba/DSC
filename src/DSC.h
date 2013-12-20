@@ -818,19 +818,16 @@ namespace DSC {
                     edges.push_back(eit.key());
                 }
             }
-            int i = 0, j = 0;
+            int i = 0;
             for(auto &e : edges)
             {
                 if (is_unsafe_editable(e) && get(e).is_interface() && length(e) > pars.MAX_LENGTH*AVG_LENGTH)
                 {
-                    if(split(e).is_valid())
-                    {
-                        i++;
-                    }
-                    j++;
+                    split(e);
+                    i++;
                 }
             }
-            std::cout << "Thickening interface splits: " << i << "/" << j << std::endl;
+            std::cout << "Thickening interface splits: " << i << std::endl;
         }
         
         /**
@@ -851,19 +848,16 @@ namespace DSC {
                     tetrahedra.push_back(tit.key());
                 }
             }
-            int i = 0, j = 0;
+            int i = 0;
             for(auto &t : tetrahedra)
             {
                 if (is_unsafe_editable(t) && volume(t) > pars.MAX_VOLUME*AVG_VOLUME)
                 {
-                    if(split(t).is_valid())
-                    {
-                        i++;
-                    }
-                    j++;
+                    split(t);
+                    i++;
                 }
             }
-            std::cout << "Thickening splits: " << i << "/" << j << std::endl;
+            std::cout << "Thickening splits: " << i << std::endl;
         }
         
         //////////////
@@ -1591,40 +1585,28 @@ namespace DSC {
         /**
          * Split a tetrahedron t and returns the new node which is positioned at the barycenter of the vertices of t.
          */
-        node_key split(const tet_key& tid)
+        void split(const tet_key& tid)
         {
-            if(!is_unsafe_editable(tid))
-            {
-                return node_key();
-            }
             is_mesh::SimplexSet<edge_key> eids = get_edges(tid);
             edge_key eid = longest_edge(eids);
-            return split(eid);
+            split(eid);
         }
         
         /**
          * Split a face f and returns the new node which is positioned at the barycenter of the vertices of f.
          */
-        node_key split(const face_key& fid)
+        void split(const face_key& fid)
         {
-            if(!is_unsafe_editable(fid))
-            {
-                return node_key();
-            }
             is_mesh::SimplexSet<edge_key> eids = get_edges(fid);
             edge_key eid = longest_edge(eids);
-            return split(eid);
+            split(eid);
         }
         
         /**
          * Split an edge e and returns the new node which is placed at the middle of e.
          */
-        node_key split(const edge_key& eid)
+        void split(const edge_key& eid)
         {
-            if(!is_unsafe_editable(eid))
-            {
-                return node_key();
-            }
             auto verts = get_pos(get_nodes(eid));
             vec3 pos = Util::barycenter(verts[0], verts[1]);
             vec3 destination = pos;
@@ -1634,7 +1616,7 @@ namespace DSC {
                 destination = Util::barycenter(get(nids[0]).get_destination(), get(nids[1]).get_destination());
             }
             
-            return split(eid, pos, destination);
+            split(eid, pos, destination);
         }
         
         ///////////////
@@ -2255,43 +2237,43 @@ namespace DSC {
                 }
             }
             
-            int j = 0;
-            std::cout << "Split test # = " << eids.size();
-            is_mesh::SimplexSet<edge_key> new_eids;
-            std::vector<node_key> old_nids;
-            for (auto e : eids) {
-                auto nids = get_nodes(e);
-                auto new_nid = split(e);
-                auto new_eid = (get_edges(nids) & get_edges(new_nid)) - e;
-                assert(new_eid.size() == 1);
-                new_eids += new_eid[0];
-                auto old_nid = get_nodes(new_eid) - new_nid;
-                assert(old_nid.size() == 1);
-                old_nids.push_back(old_nid.front());
-                j++;
-                if(j%1000 == 0)
-                {
-                    std::cout << ".";
-                }
-            }
-            std::cout << " DONE" << std::endl;
-            garbage_collect();
-            validity_check();
-            
-            std::cout << "Collapse test # = " << new_eids.size();
-            j = 0;
-            for (unsigned int i = 0; i < new_eids.size(); i++) {
-                assert(exists(new_eids[i]));
-                auto nids = get_nodes(new_eids[i]);
-                collapse(new_eids[i], old_nids[i], 0.);
-                assert(nids[0].is_valid());
-                
-                j++;
-                if(j%1000 == 0)
-                {
-                    std::cout << ".";
-                }
-            }
+//            int j = 0;
+//            std::cout << "Split test # = " << eids.size();
+//            is_mesh::SimplexSet<edge_key> new_eids;
+//            std::vector<node_key> old_nids;
+//            for (auto e : eids) {
+//                auto nids = get_nodes(e);
+//                auto new_nid = split(e);
+//                auto new_eid = (get_edges(nids) & get_edges(new_nid)) - e;
+//                assert(new_eid.size() == 1);
+//                new_eids += new_eid[0];
+//                auto old_nid = get_nodes(new_eid) - new_nid;
+//                assert(old_nid.size() == 1);
+//                old_nids.push_back(old_nid.front());
+//                j++;
+//                if(j%1000 == 0)
+//                {
+//                    std::cout << ".";
+//                }
+//            }
+//            std::cout << " DONE" << std::endl;
+//            garbage_collect();
+//            validity_check();
+//            
+//            std::cout << "Collapse test # = " << new_eids.size();
+//            j = 0;
+//            for (unsigned int i = 0; i < new_eids.size(); i++) {
+//                assert(exists(new_eids[i]));
+//                auto nids = get_nodes(new_eids[i]);
+//                collapse(new_eids[i], old_nids[i], 0.);
+//                assert(nids[0].is_valid());
+//                
+//                j++;
+//                if(j%1000 == 0)
+//                {
+//                    std::cout << ".";
+//                }
+//            }
             std::cout << " DONE" << std::endl;
             garbage_collect();
             validity_check();
