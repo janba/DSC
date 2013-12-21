@@ -1496,6 +1496,29 @@ namespace DSC {
         ///////////
     private:
         
+        /**
+         * Returns whether the interface or boundary faces in fids are flat.
+         */
+        bool is_flat(const is_mesh::SimplexSet<face_key>& fids)
+        {
+            for (const face_key& f1 : fids) {
+                if (get(f1).is_interface() || get(f1).is_boundary())
+                {
+                    vec3 normal1 = get_normal(f1);
+                    for (const face_key& f2 : fids) {
+                        if (f1 != f2 && (get(f2).is_interface() || get(f2).is_boundary()))
+                        {
+                            vec3 normal2 = get_normal(f2);
+                            if(std::abs(dot(normal1, normal2)) < FLIP_EDGE_INTERFACE_FLATNESS)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
         
         /**
          * Returns whether it is possible to flip the edge e or not, i.e. whether the edge is a feature edge
@@ -1531,16 +1554,15 @@ namespace DSC {
             // Check that the edge is not a feature edge if it is a part of the interface or boundary.
             if(get(eid).is_interface() || get(eid).is_boundary())
             {
-                real angle = cos_dihedral_angle(fids[0], fids[1]);
-                if(angle < FLIP_EDGE_INTERFACE_FLATNESS)
-                {
-                    return false;
-                }
+                return is_flat(fids);
             }
             
             return true;
         }
         
+        /**
+         * Returns whether it is possible to flip the edge e or not.
+         */
         bool precond_flip_edge(const edge_key& eid, const face_key& f1, const face_key& f2)
         {
             is_mesh::SimplexSet<node_key> e_nids = get_nodes(eid);
