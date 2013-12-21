@@ -821,7 +821,7 @@ namespace DSC {
             int i = 0;
             for(auto &e : edges)
             {
-                if (exists(e) && (get(e).is_interface() || get(e).is_boundary()) && length(e) > pars.MAX_LENGTH*AVG_LENGTH)
+                if (exists(e) && (get(e).is_interface() || get(e).is_boundary()) && length(e) > pars.MAX_LENGTH*AVG_LENGTH && !is_flat(get_faces(e)))
                 {
                     split(e);
                     i++;
@@ -1649,13 +1649,18 @@ namespace DSC {
         {
             if(safe)
             {
-                return is_safe_editable(nid);
+                if(is_safe_editable(nid))
+                {
+                    return true;
+                }
             }
-            if(is_unsafe_editable(nid))
-            {
-                return true;
+            else {
+                if(is_unsafe_editable(nid))
+                {
+                    return true;
+                }
             }
-            if(!is_unsafe_editable(eid))
+            if(get(eid).is_boundary() || get(eid).is_interface())
             {
                 return is_flat(get_faces(nid));
             }
