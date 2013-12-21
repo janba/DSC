@@ -1623,6 +1623,24 @@ namespace DSC {
         // COLLAPSES //
         ///////////////
     private:
+        bool is_collapsable(const edge_key& eid, const node_key& nid, bool safe)
+        {
+            if(safe)
+            {
+                return is_safe_editable(nid);
+            }
+            if(is_unsafe_editable(nid))
+            {
+                return true;
+            }
+            if(!is_unsafe_editable(eid))
+            {
+                return is_flat(get_faces(nid));
+            }
+            return false;
+        }
+        
+        
         /**
          * Collapses the edge e and places the new node at the most optimal position of the position of either end node or their barycenter.
          * If the parameter safe is true, the method if the nodes of edge e are editable, i.e. not a part of the interface, and will therefore not change the interface.
@@ -1631,10 +1649,10 @@ namespace DSC {
         bool collapse(const edge_key& eid, bool safe = true)
         {
             is_mesh::SimplexSet<node_key> nids = get_nodes(eid);
-            bool n0_is_editable = (safe && is_safe_editable(nids[0])) || (!safe && is_unsafe_editable(nids[0]) && !get(nids[0]).is_boundary());
-            bool n1_is_editable = (safe && is_safe_editable(nids[1])) || (!safe && is_unsafe_editable(nids[1]) && !get(nids[1]).is_boundary());
+            bool n0_is_editable = is_collapsable(eid, nids[0], safe);
+            bool n1_is_editable = is_collapsable(eid, nids[1], safe);
             
-            if (!is_unsafe_editable(eid) || (!n0_is_editable && !n1_is_editable))
+            if (!n0_is_editable && !n1_is_editable)
             {
                 return false;
             }
@@ -1696,20 +1714,12 @@ namespace DSC {
         
         bool collapse(const face_key& fid, bool safe = true)
         {
-            if(!is_unsafe_editable(fid))
-            {
-                return false;
-            }
             is_mesh::SimplexSet<edge_key> eids = get_edges(fid);
             return collapse(eids, safe);
         }
         
         bool collapse(const tet_key& tid, bool safe = true)
         {
-            if(!is_unsafe_editable(tid))
-            {
-                return false;
-            }
             is_mesh::SimplexSet<edge_key> eids = get_edges(tid);
             return collapse(eids, safe);
         }
