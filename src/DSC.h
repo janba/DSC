@@ -231,17 +231,17 @@ namespace DSC {
         
         virtual bool is_unsafe_editable(const node_key& nid)
         {
-            return exists(nid);
+            return exists(nid) && !get(nid).is_boundary();
         }
         
         virtual bool is_unsafe_editable(const edge_key& eid)
         {
-            return exists(eid);
+            return exists(eid) && !get(eid).is_boundary();
         }
         
         virtual bool is_unsafe_editable(const face_key& fid)
         {
-            return exists(fid);
+            return exists(fid) && !get(fid).is_boundary();
         }
         
         virtual bool is_unsafe_editable(const tet_key& tid)
@@ -251,17 +251,17 @@ namespace DSC {
         
         virtual bool is_safe_editable(const node_key& nid)
         {
-            return is_unsafe_editable(nid) && !get(nid).is_interface() && !get(nid).is_boundary();
+            return is_unsafe_editable(nid) && !get(nid).is_interface();
         }
         
         virtual bool is_safe_editable(const edge_key& eid)
         {
-            return is_unsafe_editable(eid) && !get(eid).is_interface() && !get(eid).is_boundary();
+            return is_unsafe_editable(eid) && !get(eid).is_interface();
         }
         
         virtual bool is_safe_editable(const face_key& fid)
         {
-            return is_unsafe_editable(fid) && !get(fid).is_interface() && !get(fid).is_boundary();
+            return is_unsafe_editable(fid) && !get(fid).is_interface();
         }
         
         virtual bool is_safe_editable(const tet_key& tid)
@@ -272,7 +272,7 @@ namespace DSC {
     public:
         virtual bool is_movable(const node_key& nid)
         {
-            return is_unsafe_editable(nid) && get(nid).is_interface() && !get(nid).is_crossing() && !get(nid).is_boundary();
+            return is_unsafe_editable(nid) && get(nid).is_interface() && !get(nid).is_crossing();
         }
         
         int get_label(const tet_key& t)
@@ -628,7 +628,7 @@ namespace DSC {
                                 break;
                             }
                         }
-                        else if(is_unsafe_editable(e) && (get(e).is_interface() || get(e).is_boundary()) && is_flippable(e))
+                        else if(exists(e) && (get(e).is_interface() || get(e).is_boundary()) && is_flippable(e))
                         {
                             if(topological_boundary_edge_removal(e))
                             {
@@ -821,7 +821,7 @@ namespace DSC {
             int i = 0;
             for(auto &e : edges)
             {
-                if (is_unsafe_editable(e) && get(e).is_interface() && length(e) > pars.MAX_LENGTH*AVG_LENGTH)
+                if (exists(e) && (get(e).is_interface() || get(e).is_boundary()) && length(e) > pars.MAX_LENGTH*AVG_LENGTH)
                 {
                     split(e);
                     i++;
@@ -882,7 +882,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto &e : edges)
             {
-                if (is_unsafe_editable(e) && get(e).is_interface() && length(e) < pars.MIN_LENGTH*AVG_LENGTH)
+                if (exists(e) && (get(e).is_interface() || get(e).is_boundary()) && length(e) < pars.MIN_LENGTH*AVG_LENGTH)
                 {
                     if(collapse(e, false))
                     {
@@ -946,7 +946,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto e : edges)
             {
-                if(is_unsafe_editable(e) && quality(e) < pars.DEG_EDGE_QUALITY && !collapse(e))
+                if(exists(e) && quality(e) < pars.DEG_EDGE_QUALITY && !collapse(e))
                 {
                     if(collapse(e, false))
                     {
@@ -974,7 +974,7 @@ namespace DSC {
             int i = 0, j = 0;
             for (auto &f : faces)
             {
-                if (is_unsafe_editable(f) && quality(f) < pars.DEG_FACE_QUALITY && !collapse(f))
+                if (exists(f) && quality(f) < pars.DEG_FACE_QUALITY && !collapse(f))
                 {
                     if(collapse(f, false))
                     {
@@ -1004,7 +1004,7 @@ namespace DSC {
             int i = 0, j = 0;
             for (auto &t : tets)
             {
-                if (is_unsafe_editable(t) && quality(t) < pars.DEG_TET_QUALITY && !collapse(t))
+                if (exists(t) && quality(t) < pars.DEG_TET_QUALITY && !collapse(t))
                 {
                     if(collapse(t, false))
                     {
