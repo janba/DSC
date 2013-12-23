@@ -884,7 +884,7 @@ namespace DSC {
             {
                 if (exists(e) && (get(e).is_interface() || get(e).is_boundary()) && length(e) < pars.MIN_LENGTH*AVG_LENGTH)
                 {
-                    if(collapse(e, false))
+                    if(collapse(e))
                     {
                         i++;
                     }
