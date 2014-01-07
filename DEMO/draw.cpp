@@ -217,7 +217,7 @@ Painter::Painter(const vec3& light_pos)
     wire_frame = std::unique_ptr<GLObject>(new GLObject(wire_shader, {0.15f,0.4f,0.5f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}));
     domain = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.1f, 0.1f, 0.3f, 1.f}, {0.2f, 0.2f, 0.3f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
     low_quality = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.3f, 0.1f, 0.1f, 0.1f}, {0.6f, 0.4f, 0.4f, 0.2f}, {0.f, 0.f, 0.f, 0.f}));
-    edges = std::unique_ptr<GLObject>(new GLObject(line_shader, {0.14f,0.16f,0.88f, 1.f}, {0.f, 0.f, 0.f, 0.f}, {0.f, 0.f, 0.f, 0.f}));
+    edges = std::unique_ptr<GLObject>(new GLObject(line_shader, {0.f,0.f,0.f, 1.f}, {0.f, 0.f, 0.f, 0.f}, {0.f, 0.f, 0.f, 0.f}));
     unmoved = std::unique_ptr<GLObject>(new GLObject(line_shader, {0.2f, 0.2f, 0.7f, 1.f}, {0.f, 0.f, 0.f, 0.f}, {0.f, 0.f, 0.f, 0.f}));
     
     // Enable states
@@ -399,7 +399,7 @@ void Painter::update(DSC::DeformableSimplicialComplex<>& dsc)
             update_domain(dsc);
             break;
         case EDGES:
-            update_interface(dsc);
+            update_wire_frame(dsc);
             update_edges(dsc);
             break;
         case LOW_QUALITY:

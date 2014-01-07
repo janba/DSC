@@ -18,7 +18,7 @@ void main()
     vec3 T = normalize(cross(E, V));
     vec3 D = 0.1*E;
     
-    float w = 0.1;
+    float w = 0.005*length(v[0]);
     
     gl_Position = PMatrix * vec4(p + w * T + D, 1.);
     colour = vertexColour[0];
