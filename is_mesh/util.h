@@ -70,22 +70,12 @@ namespace Util
     }
     
     /**
-     * Computes the signed area of the triangle spanned by vertices with positions v0, v1 and v2.
-     */
-    template <typename real, typename vec3>
-    inline real signed_area(const vec3& v0, const vec3& v1, const vec3& v2)
-    {
-        vec3 n = cross(v1-v0, v2-v0);
-        return 0.5 * n.length();
-    }
-    
-    /**
      * Computes the area of the triangle spanned by vertices with positions v0, v1 and v2.
      */
     template <typename real, typename vec3>
     inline real area(const vec3& v0, const vec3& v1, const vec3& v2)
     {
-        return std::abs(signed_area<real>(v0, v1, v2));
+        return 0.5 * length(cross(v1-v0, v2-v0));
     }
     
     template <typename real, typename vec3>
