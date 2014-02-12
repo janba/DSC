@@ -357,7 +357,7 @@ void Painter::set_view_position(vec3 pos)
 
 void Painter::draw()
 {
-    glClearColor(0.7, 0.7, 0.7, 0.);
+    glClearColor(1., 1., 1., 0.);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     interface->draw();
