@@ -24,12 +24,14 @@
 #include <cassert>
 #include <limits>
 
+#include <CGLA/Vec2d.h>
 #include <CGLA/Vec3d.h>
 #include <CGLA/Vec4d.h>
 #include <CGLA/Mat3x3d.h>
 #include <CGLA/Mat4x4d.h>
 
 typedef double            real;
+typedef CGLA::Vec2d       vec2;
 typedef CGLA::Vec3d       vec3;
 typedef CGLA::Vec4d       vec4;
 typedef CGLA::Mat3x3d     mat3;
