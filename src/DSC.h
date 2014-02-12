@@ -135,8 +135,8 @@ namespace DSC {
         virtual void set_avg_edge_length(real avg_edge_length)
         {
             AVG_LENGTH = avg_edge_length;
-            AVG_AREA = avg_edge_length*avg_edge_length*0.5;
-            AVG_VOLUME = avg_edge_length*avg_edge_length*avg_edge_length*sqrt(2.)/12.;
+            AVG_AREA = 0.5*std::sqrt(3./4.)*avg_edge_length*avg_edge_length;
+            AVG_VOLUME = (sqrt(2.)/12.)*avg_edge_length*avg_edge_length*avg_edge_length;
         }
         
         void set_parameters(parameters pars_)
