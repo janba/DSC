@@ -210,8 +210,6 @@ namespace Util
     template <typename real, typename vec3>
     inline std::vector<real> barycentric_coords(const vec3& p, const vec3& a, const vec3& b, const vec3& c)
     {
-        std::vector<real> coords(3);
-        
         vec3 v0 = b - a;
         vec3 v1 = c - a;
         vec3 v2 = p - a;
@@ -222,11 +220,12 @@ namespace Util
         real d21 = dot(v2, v1);
         real denom = d00 * d11 - d01 * d01;
 #ifdef DEBUG
-        assert(denom != 0.);
+        assert(std::abs(denom) > EPSILON);
 #endif
-        coords[0] = (d11 * d20 - d01 * d21) / denom;
-        coords[1] = (d00 * d21 - d01 * d20) / denom;
-        coords[2] = 1. - coords[0] - coords[1];
+        std::vector<real> coords(3);
+        coords[1] = (d11 * d20 - d01 * d21) / denom;
+        coords[2] = (d00 * d21 - d01 * d20) / denom;
+        coords[0] = 1. - coords[1] - coords[2];
         
         return coords;
     }
@@ -287,6 +286,26 @@ namespace Util
     }
     
     /**
+     Returns p projected onto the linesegment spanned by the points a and b.
+     */
+    template <typename vec3>
+    inline vec3 project_point_linesegment(const vec3& p, const vec3& a, const vec3& b)
+    {
+        vec3 v1 = p - a;
+        vec3 v2 = b - a;
+        real d = dot(v1,v2)/dot(v2,v2);
+        if(d < 0.)
+        {
+            return a;
+        }
+        if(d > 1.)
+        {
+            return b;
+        }
+        return a + v2 * d;
+    }
+    
+    /**
      * Project the point p onto the plane defined by the point a and the normal n.
      */
     template<typename vec3>
@@ -303,6 +322,46 @@ namespace Util
     {
         vec3 normal = normal_direction(a, b, c);
         return project_point_plane(p, a, normal);
+    }
+    
+    /**
+     * Returns the closest point on the triangle |abc| from the point p.
+     */
+    template<typename vec3>
+    inline vec3 closest_point_on_triangle(const vec3& p, const vec3& a, const vec3& b, const vec3& c)
+    {
+        auto bc = Util::barycentric_coords<real>(p, a, b, c);
+        bool b1 = bc[0] > -EPSILON, b2 = bc[1] > -EPSILON, b3 = bc[2] > -EPSILON;
+        if(b1 && b2 && b3)
+        {
+            return project_point_plane(p, a, b, c);
+        }
+        if(b2 && b3)
+        {
+            return project_point_linesegment(p, b, c);
+        }
+        if(b1 && b3)
+        {
+            return project_point_linesegment(p, a, c);
+        }
+        if(b1 && b2)
+        {
+            return project_point_linesegment(p, a, b);
+        }
+        if(b1)
+        {
+            return a;
+        }
+        if(b2)
+        {
+            return b;
+        }
+        if(b3)
+        {
+            return c;
+        }
+        assert(false);
+        return c;
     }
     
     template<typename real, typename vec3>
