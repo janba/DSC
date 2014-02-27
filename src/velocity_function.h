@@ -28,9 +28,6 @@ namespace DSC {
     template <typename DeformableSimplicialComplex = DeformableSimplicialComplex<>>
     class VelocityFunc
     {
-        int time_step = 0;
-        int MAX_TIME_STEPS;
-        
         real compute_time = 0.;
         real deform_time = 0.;
         
@@ -38,6 +35,9 @@ namespace DSC {
         real total_deform_time = 0.;
         
     protected:
+        int time_step = 0;
+        int MAX_TIME_STEPS;
+        
         real VELOCITY; // Determines the distance each interface vertex moves at each iteration.
         real ACCURACY; // Determines the accuracy of the final result.
         
