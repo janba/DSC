@@ -149,7 +149,7 @@ namespace DSC {
             design_domain.add_geometry(geometry);
         }
         
-        void set_labels(const Geometry& geometry, int label)
+        virtual void set_labels(const Geometry& geometry, int label)
         {
             for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++) {
                 is_mesh::SimplexSet<is_mesh::NodeKey> nids = get_nodes(tit.key());
@@ -297,7 +297,7 @@ namespace DSC {
         /**
          * Sets the destination where the node n is moved to when deform() is called.
          */
-        void set_destination(const node_key& nid, vec3 dest)
+        virtual void set_destination(const node_key& nid, const vec3& dest)
         {
             if(is_movable(nid))
             {
