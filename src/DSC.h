@@ -1881,6 +1881,16 @@ namespace DSC {
             return Util::volume<real>(get(nids[0]).get_destination(), get(nids[1]).get_destination(), get(nids[2]).get_destination(), get(nids[3]).get_destination());
         }
         
+        real volume_destination(const is_mesh::SimplexSet<node_key>& nids)
+        {
+            return Util::volume<real>(get(nids[0]).get_destination(), get(nids[1]).get_destination(), get(nids[2]).get_destination(), get(nids[3]).get_destination());
+        }
+        
+        real signed_volume_destination(const is_mesh::SimplexSet<node_key>& nids)
+        {
+            return Util::signed_volume<real>(get(nids[0]).get_destination(), get(nids[1]).get_destination(), get(nids[2]).get_destination(), get(nids[3]).get_destination());
+        }
+        
         vec3 barycenter(const tet_key& tid)
         {
             is_mesh::SimplexSet<node_key> nids = get_nodes(tid);
