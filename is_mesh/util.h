@@ -113,6 +113,75 @@ namespace Util
     }
     
     /**
+     * Returns a rotation matrix.
+     */
+    template <typename real>
+    inline mat3 rotation_matrix(int dimension, real angle)
+    {
+        mat3 m(0.);
+        
+        switch(dimension)
+        {
+            case 0:
+                m[0][0] = 1.0;
+                m[1][1] = cos(angle);
+                m[1][2] = sin(angle);
+                m[2][1] = -sin(angle);
+                m[2][2] = cos(angle);
+                break;
+            case 1:
+                m[0][0] = cos(angle);
+                m[0][2] = -sin(angle);
+                m[2][0] = sin(angle);
+                m[2][2] = cos(angle);
+                m[1][1] = 1.0;
+                break;
+            case 2:
+                m[0][0] = cos(angle);
+                m[0][1] = sin(angle);
+                m[1][0] = -sin(angle);
+                m[1][1] = cos(angle);
+                m[2][2] = 1.0;
+                break;
+        }
+        
+        return m;
+    }
+    
+    /**
+     * Returns the derivative of a rotation matrix.
+     */
+    template <typename real>
+    inline mat3 d_rotation_matrix(int dimension, real angle)
+    {
+        mat3 m(0.);
+        
+        switch(dimension)
+        {
+            case 0:
+                m[1][1] = -sin(angle);
+                m[1][2] = cos(angle);
+                m[2][1] = -cos(angle);
+                m[2][2] = -sin(angle);
+                break;
+            case 1:
+                m[0][0] = -sin(angle);
+                m[0][2] = -cos(angle);
+                m[2][0] = cos(angle);
+                m[2][2] = -sin(angle);
+                break;
+            case 2:
+                m[0][0] = -sin(angle);
+                m[0][1] = cos(angle);
+                m[1][0] = -cos(angle);
+                m[1][1] = -sin(angle);
+                break;
+        }
+        
+        return m;
+    }
+    
+    /**
      * Calculate the cosine of angles in the triangle defined by the vertices a, b and c.
      */
     template <typename real, typename vec3>

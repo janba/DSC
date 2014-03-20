@@ -52,7 +52,7 @@ public:
         auto init_time = std::chrono::system_clock::now();
         
         vec3 center = dsc.get_center();
-        mat3 mrot = rotation_Mat3x3d(CGLA::Axis::ZAXIS, M_PI*VELOCITY/(5.*180.));
+        mat3 mrot = Util::rotation_matrix(2, M_PI*VELOCITY/(5.*180.));
         vec3 new_pos;
         for(auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
         {
