@@ -125,6 +125,49 @@ namespace is_mesh {
         scale(points, 2.);
     }
     
+    void import_voxel_grid(const std::string& filename, int& Ni, int& Nj, int& Nk, vec3& size, std::vector<int>& voxels)
+    {
+        std::ifstream file(filename.data());
+        if(file)
+        {
+            while(!file.eof())
+            {
+                std::string tok;
+                file >> tok;
+                if(tok == "n")
+                {
+                    file >> Ni;
+                    file >> Nj;
+                    file >> Nk;
+                }
+                else if(tok == "s")
+                {
+                    real x, y, z;
+                    file >> x;
+                    file >> y;
+                    file >> z;
+                    size = vec3(x,y,z);
+                }
+                else if(tok == "o")
+                {
+                    real x, y, z;
+                    file >> x;
+                    file >> y;
+                    file >> z;
+                    vec3 origin = vec3(x,y,z);
+                }
+                else {
+                    int l = atoi(tok.c_str());
+                    int n;
+                    file >> n;
+                    for (unsigned int i = 0; i < n; i++) {
+                        voxels.push_back(l);
+                    }
+                }
+            }
+        }
+    }
+    
     void export_tet_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
     {
         scale(points, 3.);

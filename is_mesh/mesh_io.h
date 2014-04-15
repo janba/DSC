@@ -31,6 +31,11 @@ namespace is_mesh {
     void import_surface_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& faces);
     
     /**
+     * Imports a voxel grid from an .txt file.
+     */
+    void import_voxel_grid(const std::string& filename, int& x, int& y, int& z, vec3& size, std::vector<int>& voxels);
+    
+    /**
      * Exports the mesh as a .dsc file.
      */
     void export_tet_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels);
