@@ -26,7 +26,7 @@ class Tetralizer
     
     static void create_tets(int Ni, int Nj, int Nk, std::vector<int>& tets);
     
-    static void create_points(const vec3& size, real avg_edge_length, int Ni, int Nj, int Nk, std::vector<vec3>& points);
+    static void create_points(const vec3& origin, const vec3& voxel_size, int Ni, int Nj, int Nk, std::vector<vec3>& points);
     
     static void build_boundary_mesh(std::vector<real>& points_boundary, real avg_edge_length, std::vector<int>& faces_boundary, const vec3& size);
     
@@ -68,25 +68,10 @@ public:
         }
     }
     
-    static void tetralize(const vec3& size, real avg_edge_length, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
+    static void tetralize(const vec3& origin, const vec3& voxel_size, int Ni, int Nj, int Nk, const std::vector<int>& voxel_labels, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
     {
-        int Ni = std::ceil(size[0]/avg_edge_length) + 1;
-        int Nj = std::ceil(size[1]/avg_edge_length) + 1;
-        int Nk = std::ceil(size[2]/avg_edge_length) + 1;
-        
-        create_points(size, avg_edge_length, Ni, Nj, Nk, points);
+        create_points(origin, voxel_size, Ni, Nj, Nk, points);
         create_tets(Ni, Nj, Nk, tets);
-        
-        for (unsigned int i = 0; i < tets.size()/4; i++) {
-            tet_labels.push_back(0);
-        }
-    }
-    
-    static void tetralize(const vec3& size, int Ni, int Nj, int Nk, const std::vector<int>& voxel_labels, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
-    {
-        real avg_edge_length = (size[0]/static_cast<real>(Ni) + size[1]/static_cast<real>(Nj) + size[2]/static_cast<real>(Nk))/3.;
-        create_points(size, avg_edge_length, Ni+1, Nj+1, Nk+1, points);
-        create_tets(Ni+1, Nj+1, Nk+1, tets);
         
         for (int l : voxel_labels) {
             for (int i = 0; i < 5; i++) {

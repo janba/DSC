@@ -47,12 +47,12 @@ void generate_from_vg(const string& input_file_name, const string& output_file_n
     vector<int> tets;
     vector<int> tet_labels;
     
-    vec3 size;
+    vec3 origin, voxel_size;
     int Ni, Nj, Nk;
     std::vector<int> voxel_labels;
-    is_mesh::import_voxel_grid(file_path + input_file_name, Ni, Nj, Nk, size, voxel_labels);
+    is_mesh::import_voxel_grid(file_path + input_file_name, origin, voxel_size, Ni, Nj, Nk, voxel_labels);
     
-    Tetralizer::tetralize(size, Ni, Nj, Nk, voxel_labels, points, tets, tet_labels);
+    Tetralizer::tetralize(origin, voxel_size, Ni, Nj, Nk, voxel_labels, points, tets, tet_labels);
     
     is_mesh::export_tet_mesh(file_path + output_file_name + extension, points, tets, tet_labels);
 }
@@ -63,12 +63,12 @@ int main(int argc, const char * argv[])
     {
         string output_file_name = string(argv[1]);
         string input_file_name = string(argv[2]);
-        if(input_file_name.compare(input_file_name.size() - 3, 3, "txt") == 0)
+        if(input_file_name.compare(input_file_name.size() - 4, 4, ".txt") == 0)
         {
             generate_from_vg(input_file_name, output_file_name);
             std::cout << "Generated " << output_file_name + extension << " from " << input_file_name << std::endl;
         }
-        else if(input_file_name.compare(input_file_name.size() - 3, 3, "obj") == 0)
+        else if(input_file_name.compare(input_file_name.size() - 4, 4, ".obj") == 0)
         {
             generate_from_obj(input_file_name, output_file_name);
             std::cout << "Generated " << output_file_name + extension << " from " << input_file_name << std::endl;

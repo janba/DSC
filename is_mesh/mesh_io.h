@@ -33,7 +33,7 @@ namespace is_mesh {
     /**
      * Imports a voxel grid from an .txt file.
      */
-    void import_voxel_grid(const std::string& filename, int& x, int& y, int& z, vec3& size, std::vector<int>& voxels);
+    void import_voxel_grid(const std::string& filename, vec3& origin, vec3& voxel_size, int& x, int& y, int& z, std::vector<int>& voxels);
     
     /**
      * Exports the mesh as a .dsc file.

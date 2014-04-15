@@ -125,7 +125,7 @@ namespace is_mesh {
         scale(points, 2.);
     }
     
-    void import_voxel_grid(const std::string& filename, int& Ni, int& Nj, int& Nk, vec3& size, std::vector<int>& voxels)
+    void import_voxel_grid(const std::string& filename, vec3& origin, vec3& voxel_size, int& Ni, int& Nj, int& Nk, std::vector<int>& voxels)
     {
         std::ifstream file(filename.data());
         if(file)
@@ -146,7 +146,7 @@ namespace is_mesh {
                     file >> x;
                     file >> y;
                     file >> z;
-                    size = vec3(x,y,z);
+                    voxel_size = vec3(x,y,z);
                 }
                 else if(tok == "o")
                 {
@@ -154,7 +154,7 @@ namespace is_mesh {
                     file >> x;
                     file >> y;
                     file >> z;
-                    vec3 origin = vec3(x,y,z);
+                    origin = vec3(x,y,z);
                 }
                 else {
                     int l = atoi(tok.c_str());

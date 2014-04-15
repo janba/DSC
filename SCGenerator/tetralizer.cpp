@@ -92,31 +92,29 @@ void Tetralizer::tetralize_cube2(int i, int j, int k, int Ni, int Nj, int Nk, st
 
 void Tetralizer::create_tets(int Ni, int Nj, int Nk, std::vector<int>& tets)
 {
-    for (int k = 0; k < Nk-1; k++) {
-        for (int j = 0; j < Nj-1; j++) {
-            for (int i = 0; i < Ni-1; i++)
+    for (int k = 0; k < Nk; k++) {
+        for (int j = 0; j < Nj; j++) {
+            for (int i = 0; i < Ni; i++)
             {
                 if((i + j + k)%2 == 0)
                 {
-                    tetralize_cube1(i, j, k, Ni, Nj, Nk, tets);
+                    tetralize_cube1(i, j, k, Ni+1, Nj+1, Nk+1, tets);
                 }
                 else {
-                    tetralize_cube2(i, j, k, Ni, Nj, Nk, tets);
+                    tetralize_cube2(i, j, k, Ni+1, Nj+1, Nk+1, tets);
                 }
             }
         }
     }
 }
 
-void Tetralizer::create_points(const vec3& size, real avg_edge_length, int Ni, int Nj, int Nk, std::vector<vec3>& points)
+void Tetralizer::create_points(const vec3& origin, const vec3& voxel_size, int Ni, int Nj, int Nk, std::vector<vec3>& points)
 {
-    for (int k = 0; k < Nk; k++) {
-        for (int j = 0; j < Nj; j++) {
-            for (int i = 0; i < Ni; i++)
+    for (int k = 0; k < Nk+1; k++) {
+        for (int j = 0; j < Nj+1; j++) {
+            for (int i = 0; i < Ni+1; i++)
             {
-                points.push_back(vec3(Util::min(i*avg_edge_length, size[0]) - size[0]/2.,
-                Util::min(j*avg_edge_length, size[1]) - size[1]/2.,
-                Util::min(k*avg_edge_length, size[2]) - size[2]/2.));
+                points.push_back(origin + vec3(i*voxel_size[0], j*voxel_size[1], k*voxel_size[2]));
             }
         }
     }
