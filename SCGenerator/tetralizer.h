@@ -81,4 +81,17 @@ public:
             tet_labels.push_back(0);
         }
     }
+    
+    static void tetralize(const vec3& size, int Ni, int Nj, int Nk, const std::vector<int>& voxel_labels, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
+    {
+        real avg_edge_length = (size[0]/static_cast<real>(Ni) + size[1]/static_cast<real>(Nj) + size[2]/static_cast<real>(Nk))/3.;
+        create_points(size, avg_edge_length, Ni+1, Nj+1, Nk+1, points);
+        create_tets(Ni+1, Nj+1, Nk+1, tets);
+        
+        for (int l : voxel_labels) {
+            for (int i = 0; i < 5; i++) {
+                tet_labels.push_back(l);
+            }
+        }
+    }
 };
