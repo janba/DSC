@@ -827,6 +827,27 @@ namespace is_mesh {
             return false;
         }
         
+        bool is_inverted_destination(const TetrahedronKey& tid)
+        {
+            for(const FaceKey& f : get_faces(tid))
+            {
+                const SimplexSet<TetrahedronKey>& tids = get_tets(f);
+                if(tids.size() == 2) // Check that f is not a boundary face.
+                {
+                    SimplexSet<NodeKey> nids = get_nodes(f);
+                    SimplexSet<NodeKey> apices = get_nodes(tids) - nids;
+                    auto normal = cross(get(nids[0]).get_destination() - get(nids[2]).get_destination(), get(nids[1]).get_destination() - get(nids[2]).get_destination());
+                    auto d1 = dot(get(apices[0]).get_destination() - get(nids[2]).get_destination(), normal);
+                    auto d2 = dot(get(apices[1]).get_destination() - get(nids[2]).get_destination(), normal);
+                    if((d1 < 0. && d2 < 0) || (d1 > 0. && d2 > 0.))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        
         ////////////////////
         // MESH FUNCTIONS //
         ////////////////////
