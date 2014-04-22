@@ -813,7 +813,7 @@ namespace DSC {
             std::vector<edge_key> edges;
             for (auto eit = edges_begin(); eit != edges_end(); eit++)
             {
-                if (eit->is_interface() && length(eit.key()) > pars.MAX_LENGTH*AVG_LENGTH)
+                if ((eit->is_interface() || eit->is_boundary()) && length(eit.key()) > pars.MAX_LENGTH*AVG_LENGTH)
                 {
                     edges.push_back(eit.key());
                 }
@@ -821,7 +821,7 @@ namespace DSC {
             int i = 0;
             for(auto &e : edges)
             {
-                if (exists(e) && (get(e).is_interface() || get(e).is_boundary()) && length(e) > pars.MAX_LENGTH*AVG_LENGTH && !is_flat(get_faces(e)))
+                if (exists(e) && length(e) > pars.MAX_LENGTH*AVG_LENGTH && !is_flat(get_faces(e)))
                 {
                     split(e);
                     i++;
@@ -874,7 +874,7 @@ namespace DSC {
             std::vector<edge_key> edges;
             for (auto eit = edges_begin(); eit != edges_end(); eit++)
             {
-                if (eit->is_interface() && length(eit.key()) < pars.MIN_LENGTH*AVG_LENGTH)
+                if ((eit->is_interface() || eit->is_boundary()) && length(eit.key()) < pars.MIN_LENGTH*AVG_LENGTH)
                 {
                     edges.push_back(eit.key());
                 }
@@ -882,7 +882,7 @@ namespace DSC {
             int i = 0, j = 0;
             for(auto &e : edges)
             {
-                if (exists(e) && (get(e).is_interface() || get(e).is_boundary()) && length(e) < pars.MIN_LENGTH*AVG_LENGTH)
+                if (exists(e) && length(e) < pars.MIN_LENGTH*AVG_LENGTH)
                 {
                     if(collapse(e))
                     {
