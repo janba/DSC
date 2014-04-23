@@ -63,13 +63,15 @@ UI::UI(int &argc, char** argv)
     glutVisibilityFunc(visible_);
     glutReshapeFunc(reshape_);
 	glutIdleFunc(animate_);
-    
+
+#ifndef __APPLE__
 	glewExperimental = GL_TRUE;  // See http://www.opengl.org/wiki/OpenGL_Loading_Library
 	GLint GlewInitResult = glewInit();
 	if (GlewInitResult != GLEW_OK) {
 		printf("ERROR: %s\n", glewGetErrorString(GlewInitResult));
 	}
     check_gl_error(); // Catches a GL_INVALID_ENUM error. See http://www.opengl.org/wiki/OpenGL_Loading_Library
+#endif
     
     // Read input
     std::string motion = "";

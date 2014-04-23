@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7A30ED1A17D951EB0051E6C0 /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A30ED1917D951EB0051E6C0 /* libGLEW.a */; };
 		7A3438C1183C6D2700829EEB /* attributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A3438BF183C6D2700829EEB /* attributes.h */; };
 		7A3438C2183C6D2700829EEB /* mesh_io.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A3438C0183C6D2700829EEB /* mesh_io.h */; };
 		7A3438C4183C75B100829EEB /* mesh_io.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3438C3183C75B100829EEB /* mesh_io.cpp */; };
@@ -144,7 +143,6 @@
 		7A0AB5C017D9082A0058910E /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		7A0B96D4182F29750004CAF3 /* wire.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = wire.frag; sourceTree = "<group>"; };
 		7A0B96D5182F29750004CAF3 /* wire.geom */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = wire.geom; sourceTree = "<group>"; };
-		7A30ED1917D951EB0051E6C0 /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = ../../../../../usr/local/lib/libGLEW.a; sourceTree = "<group>"; };
 		7A3438BF183C6D2700829EEB /* attributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = attributes.h; path = is_mesh/attributes.h; sourceTree = "<group>"; };
 		7A3438C0183C6D2700829EEB /* mesh_io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mesh_io.h; path = is_mesh/mesh_io.h; sourceTree = "<group>"; };
 		7A3438C3183C75B100829EEB /* mesh_io.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mesh_io.cpp; path = is_mesh/mesh_io.cpp; sourceTree = "<group>"; };
@@ -309,7 +307,6 @@
 				7A4AADFB18459CB3005211B9 /* CoreFoundation.framework in Frameworks */,
 				7A553EBC17DA6BC400125178 /* libSOIL.a in Frameworks */,
 				7AE27B1717675D34000F8238 /* libDSC.a in Frameworks */,
-				7A30ED1A17D951EB0051E6C0 /* libGLEW.a in Frameworks */,
 				7AE27B1A17675DA6000F8238 /* OpenGL.framework in Frameworks */,
 				7AE27B1917675DA2000F8238 /* GLUT.framework in Frameworks */,
 			);
@@ -460,7 +457,6 @@
 		7AE27AAE17675A1E000F8238 = {
 			isa = PBXGroup;
 			children = (
-				7A30ED1917D951EB0051E6C0 /* libGLEW.a */,
 				7A0AB5C017D9082A0058910E /* CoreFoundation.framework */,
 				7AE27AFD17675B78000F8238 /* GLUT.framework */,
 				7AE27AFB17675B70000F8238 /* OpenGL.framework */,
