@@ -640,7 +640,9 @@ namespace DSC {
                     j++;
                 }
             }
+#ifdef DEBUG
             std::cout << "Topological edge removals: " << i + k << "/" << j << " (" << k << " at interface)" << std::endl;
+#endif
             garbage_collect();
         }
         
@@ -791,7 +793,9 @@ namespace DSC {
                     j++;
                 }
             }
+#ifdef DEBUG
             std::cout << "Topological face removals: " << i << "/" << j << std::endl;
+#endif
             
             garbage_collect();
         }
@@ -827,7 +831,9 @@ namespace DSC {
                     i++;
                 }
             }
+#ifdef DEBUG
             std::cout << "Thickening interface splits: " << i << std::endl;
+#endif
         }
         
         /**
@@ -857,7 +863,9 @@ namespace DSC {
                     i++;
                 }
             }
+#ifdef DEBUG
             std::cout << "Thickening splits: " << i << std::endl;
+#endif
         }
         
         //////////////
@@ -891,7 +899,9 @@ namespace DSC {
                     j++;
                 }
             }
+#ifdef DEBUG
             std::cout << "Thinning interface collapses: " << i << "/" << j << std::endl;
+#endif
         }
         
         /**
@@ -924,7 +934,9 @@ namespace DSC {
                     j++;
                 }
             }
+#ifdef DEBUG
             std::cout << "Thinning collapses: " << i << "/" << j << std::endl;
+#endif
         }
         
         /////////////////////////
@@ -955,7 +967,9 @@ namespace DSC {
                     j++;
                 }
             }
+#ifdef DEBUG
             std::cout << "Removed " << i <<"/"<< j << " degenerate edges" << std::endl;
+#endif
             garbage_collect();
         }
         
@@ -986,7 +1000,9 @@ namespace DSC {
                     j++;
                 }
             }
+#ifdef DEBUG
             std::cout << "Removed " << i <<"/"<< j << " degenerate faces" << std::endl;
+#endif
             garbage_collect();
         }
         
@@ -1016,7 +1032,9 @@ namespace DSC {
                     j++;
                 }
             }
+#ifdef DEBUG
             std::cout << "Removed " << i <<"/"<< j << " degenerate tets" << std::endl;
+#endif
             garbage_collect();
         }
         
@@ -1049,7 +1067,9 @@ namespace DSC {
                     j++;
                 }
             }
+#ifdef DEBUG
             std::cout << "Removed " << i <<"/"<< j << " low quality edges" << std::endl;
+#endif
             garbage_collect();
         }
         
@@ -1126,7 +1146,9 @@ namespace DSC {
                     j++;
                 }
             }
+#ifdef DEBUG
             std::cout << "Removed " << i <<"/"<< j << " low quality faces" << std::endl;
+#endif
             garbage_collect();
         }
         
@@ -1306,7 +1328,9 @@ namespace DSC {
                     j++;
                 }
             }
+#ifdef DEBUG
             std::cout << "Removed " << i <<"/"<< j << " low quality tets" << std::endl;
+#endif
             garbage_collect();
         }
         
@@ -1350,7 +1374,9 @@ namespace DSC {
                     j++;
                 }
             }
+#ifdef DEBUG
             std::cout << "Smoothed: " << i << "/" << j << std::endl;
+#endif
         }
         
         ///////////////////
