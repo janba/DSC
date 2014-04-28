@@ -57,6 +57,26 @@ namespace is_mesh {
             delete m_node_kernel;
         }
         
+        int get_no_nodes()
+        {
+            return m_node_kernel->size();
+        }
+        
+        int get_no_edges()
+        {
+            return m_edge_kernel->size();
+        }
+        
+        int get_no_faces()
+        {
+            return m_face_kernel->size();
+        }
+        
+        int get_no_tets()
+        {
+            return m_tetrahedron_kernel->size();
+        }
+        
         ///////////////
         // ITERATORS //
         ///////////////
