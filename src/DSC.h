@@ -1423,12 +1423,12 @@ namespace DSC {
         {
 #ifdef DEBUG
             validity_check();
-#endif
             std::cout << std::endl << "********************************" << std::endl;
+#endif
             int missing;
             int step = 0;
             do {
-                std::cout << "\nMove vertices step " << step << std::endl;
+                std::cout << "\n\tMove vertices step " << step << std::endl;
                 missing = 0;
                 int movable = 0;
                 for (auto nit = nodes_begin(); nit != nodes_end(); nit++)
@@ -1442,7 +1442,7 @@ namespace DSC {
                         movable++;
                     }
                 }
-                std::cout << "Vertices missing to be moved: " << missing <<"/" << movable << std::endl;
+                std::cout << "\tVertices missing to be moved: " << missing <<"/" << movable << std::endl;
                 fix_complex();
 #ifdef DEBUG
                 validity_check();
