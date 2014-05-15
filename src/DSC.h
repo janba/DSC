@@ -995,7 +995,11 @@ namespace DSC {
                         i++;
                     }
                     else {
-                        split(longest_edge(get_edges(f)));
+                        edge_key e = longest_edge(get_edges(f));
+                        if(length(e) > AVG_LENGTH)
+                        {
+                            split(e);
+                        }
                     }
                     j++;
                 }
@@ -1027,7 +1031,11 @@ namespace DSC {
                         i++;
                     }
                     else {
-                        split(longest_edge(get_edges(t)));
+                        edge_key e = longest_edge(get_edges(t));
+                        if(length(e) > AVG_LENGTH)
+                        {
+                            split(e);
+                        }
                     }
                     j++;
                 }
