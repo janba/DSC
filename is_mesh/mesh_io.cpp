@@ -168,7 +168,7 @@ namespace is_mesh {
         }
     }
     
-    void import_geometry(const std::string& filename, vec3& origin, vec3& size, real& discretization, std::vector<unsigned int>& labels, std::vector<Geometry>& geometries)
+    void import_geometry(const std::string& filename, vec3& origin, vec3& size, real& discretization, std::vector<unsigned int>& labels, std::vector<Geometry*>& geometries)
     {
         std::ifstream file(filename.data());
         if(file)
@@ -208,7 +208,7 @@ namespace is_mesh {
                     file >> y;
                     file >> z;
                     vec3 s(x,y,z);
-                    geometries.push_back(Cube(c, s));
+                    geometries.push_back(new Cube(c, s));
                     file >> x;
                     labels.push_back(x);
                 }

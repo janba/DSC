@@ -39,7 +39,7 @@ namespace is_mesh {
     /**
      * Imports a volume defined by geometries from an .geo file.
      */
-    void import_geometry(const std::string& filename, vec3& origin, vec3& size, real& discretization, std::vector<unsigned int>& labels, std::vector<Geometry>& geometries);
+    void import_geometry(const std::string& filename, vec3& origin, vec3& size, real& discretization, std::vector<unsigned int>& labels, std::vector<Geometry*>& geometries);
     
     /**
      * Exports the mesh as a .dsc file.
