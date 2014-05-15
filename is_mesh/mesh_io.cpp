@@ -168,6 +168,54 @@ namespace is_mesh {
         }
     }
     
+    void import_geometry(const std::string& filename, vec3& origin, vec3& size, real& discretization, std::vector<unsigned int>& labels, std::vector<Geometry>& geometries)
+    {
+        std::ifstream file(filename.data());
+        if(file)
+        {
+            while(!file.eof())
+            {
+                std::string tok;
+                file >> tok;
+                if(tok == "d")
+                {
+                    file >> discretization;
+                }
+                else if(tok == "o")
+                {
+                    real x, y, z;
+                    file >> x;
+                    file >> y;
+                    file >> z;
+                    origin = vec3(x,y,z);
+                }
+                else if(tok == "s")
+                {
+                    real x, y, z;
+                    file >> x;
+                    file >> y;
+                    file >> z;
+                    size = vec3(x,y,z);
+                }
+                else if(tok == "c")
+                {
+                    real x, y, z;
+                    file >> x;
+                    file >> y;
+                    file >> z;
+                    vec3 c(x,y,z);
+                    file >> x;
+                    file >> y;
+                    file >> z;
+                    vec3 s(x,y,z);
+                    geometries.push_back(Cube(c, s));
+                    file >> x;
+                    labels.push_back(x);
+                }
+            }
+        }
+    }
+    
     void export_tet_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
     {
         scale(points, 3.);

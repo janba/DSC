@@ -17,6 +17,7 @@
 #pragma once
 
 #include "util.h"
+#include "geometry.h"
 
 namespace is_mesh {
     
@@ -34,6 +35,11 @@ namespace is_mesh {
      * Imports a voxel grid from an .txt file.
      */
     void import_voxel_grid(const std::string& filename, vec3& origin, vec3& voxel_size, int& x, int& y, int& z, std::vector<int>& voxels);
+    
+    /**
+     * Imports a volume defined by geometries from an .geo file.
+     */
+    void import_geometry(const std::string& filename, vec3& origin, vec3& size, real& discretization, std::vector<unsigned int>& labels, std::vector<Geometry>& geometries);
     
     /**
      * Exports the mesh as a .dsc file.
