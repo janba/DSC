@@ -40,8 +40,8 @@ class UI
     vec3 center = vec3(0.);
     vec3 size = vec3(40.);
     
-    int WIN_SIZE_X = 700.;
-    int WIN_SIZE_Y = 700;
+    int WIN_SIZE_X = 1280.;
+    int WIN_SIZE_Y = 720;
     
     bool CONTINUOUS = false;
     bool RECORD = false;
