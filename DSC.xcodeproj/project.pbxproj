@@ -319,6 +319,8 @@
 			isa = PBXGroup;
 			children = (
 				7A4AADFC1845A097005211B9 /* util.h */,
+				7A7E67161849010800EFDF1E /* geometry.h */,
+				7A7E67151849010800EFDF1E /* geometry.cpp */,
 				7A3438C3183C75B100829EEB /* mesh_io.cpp */,
 				7A3438C0183C6D2700829EEB /* mesh_io.h */,
 				7A3438BF183C6D2700829EEB /* attributes.h */,
@@ -488,8 +490,6 @@
 		7AE27AB917675A1E000F8238 /* DSC */ = {
 			isa = PBXGroup;
 			children = (
-				7A7E67161849010800EFDF1E /* geometry.h */,
-				7A7E67151849010800EFDF1E /* geometry.cpp */,
 				7AE27AE917675B04000F8238 /* velocity_function.h */,
 				7AF7E9BE176B4FE400F43714 /* DSC.h */,
 			);

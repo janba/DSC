@@ -60,7 +60,7 @@ namespace DSC {
         typedef is_mesh::TetrahedronKey       tet_key;
         
     protected:
-        MultipleGeometry design_domain;
+        is_mesh::MultipleGeometry design_domain;
         
         // Input parameter
         real AVG_LENGTH;
@@ -144,12 +144,12 @@ namespace DSC {
             pars = pars_;
         }
         
-        void set_design_domain(Geometry *geometry)
+        void set_design_domain(is_mesh::Geometry *geometry)
         {
             design_domain.add_geometry(geometry);
         }
         
-        virtual void set_labels(const Geometry& geometry, int label)
+        virtual void set_labels(const is_mesh::Geometry& geometry, int label)
         {
             for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++) {
                 is_mesh::SimplexSet<is_mesh::NodeKey> nids = get_nodes(tit.key());
@@ -346,7 +346,7 @@ namespace DSC {
             return AVG_LENGTH;
         }
         
-        const MultipleGeometry& get_design_domain() const
+        const is_mesh::MultipleGeometry& get_design_domain() const
         {
             return design_domain;
         }

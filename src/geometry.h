@@ -18,7 +18,7 @@
 
 #include "util.h"
 
-namespace DSC {
+namespace is_mesh {
     
     class Geometry {
     protected:
