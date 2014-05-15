@@ -30,7 +30,7 @@ public:
     /**
      Creates a rotating velocity function.
      */
-    RotateFunc(real velocity, real accuracy, int max_time_steps = 100):
+    RotateFunc(real velocity, real accuracy, int max_time_steps = 360):
         VelocityFunc<>(velocity, accuracy, max_time_steps)
     {
         

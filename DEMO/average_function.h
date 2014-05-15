@@ -27,7 +27,7 @@ public:
     /**
      Creates a velocity function which smooths the interface.
      */
-    AverageFunc(real velocity, real accuracy, int max_time_steps = 100):
+    AverageFunc(real velocity, real accuracy, int max_time_steps = 500):
         VelocityFunc<>(velocity, accuracy, max_time_steps)
     {
         

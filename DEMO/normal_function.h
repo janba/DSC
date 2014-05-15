@@ -28,7 +28,7 @@ public:
     /**
      Creates a velocity function which moves the interface vertices in the normal direction.
      */
-    NormalFunc(real velocity, real accuracy, int max_time_steps = 100):
+    NormalFunc(real velocity, real accuracy, int max_time_steps = 200):
         VelocityFunc<>(velocity, accuracy, max_time_steps)
     {
         
