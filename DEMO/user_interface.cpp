@@ -126,9 +126,9 @@ void UI::load_model(const std::string& file_name, real discretization)
     std::vector<int>  tet_labels;
     is_mesh::import_tet_mesh(obj_path + file_name + extension, points, tets, tet_labels);
     
+    scale(points);
+    
     dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(discretization, points, tets, tet_labels));
-    dsc->set_design_domain(new is_mesh::Cube(vec3(0.), vec3(50.)));
-    dsc->scale(vec3(20.));
     painter->update(*dsc);
     std::cout << "Loading done" << std::endl << std::endl;
 }

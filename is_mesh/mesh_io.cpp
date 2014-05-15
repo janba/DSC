@@ -76,7 +76,7 @@ namespace is_mesh {
             c = '\n';
         }
         file.close();
-        scale(points, 3.);
+//        scale(points, 3.);
     }
     
     void import_surface_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& faces)
@@ -122,7 +122,7 @@ namespace is_mesh {
             }
             file.close();
         }
-        scale(points, 2.);
+//        scale(points, 2.);
     }
     
     void import_voxel_grid(const std::string& filename, vec3& origin, vec3& voxel_size, int& Ni, int& Nj, int& Nk, std::vector<int>& voxels)
@@ -218,7 +218,7 @@ namespace is_mesh {
     
     void export_tet_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
     {
-        scale(points, 3.);
+//        scale(points, 3.);
         std::ofstream file(filename.data());
         
         for (auto &p : points)
@@ -236,7 +236,7 @@ namespace is_mesh {
     
     void export_surface_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& faces)
     {
-        scale(points, 2.);
+//        scale(points, 2.);
         std::ofstream obj_file;
         obj_file.open(filename.data());
         

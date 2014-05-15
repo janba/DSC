@@ -37,9 +37,6 @@ class UI
     vec3 camera_pos = {30., 30., 70.};
     vec3 light_pos = {0., 0., 70.};
     
-    vec3 center = vec3(0.);
-    vec3 size = vec3(40.);
-    
     int WIN_SIZE_X = 1280.;
     int WIN_SIZE_Y = 720;
     
@@ -86,10 +83,18 @@ public:
     
 private:
     
-    void set_size(vec3 s)
+    void scale(const std::vector<vec3>& points)
     {
-        size = s;
-        real var = Util::max(Util::max(s[0], s[1]), s[2]);
+        vec3 p_min(INFINITY), p_max(-INFINITY);
+        for (const vec3& p : points) {
+            for (int i = 0; i < 3; i++) {
+                p_min[i] = Util::min(p[i], p_min[i]);
+                p_max[i] = Util::max(p[i], p_max[i]);
+            }
+        }
+        
+        vec3 size = p_max - p_min;
+        real var = Util::max(Util::max(size[0], size[1]), size[2]);
         real dist = 1.2*var;
         eye_pos = {dist, var, dist};
         camera_pos = {var, var, -dist};
