@@ -17,6 +17,7 @@
 #pragma once
 
 #include "util.h"
+#include "geometry.h"
 
 class Tetralizer
 {
@@ -77,6 +78,29 @@ public:
             for (int i = 0; i < 5; i++) {
                 tet_labels.push_back(l);
             }
+        }
+    }
+    
+    static void tetralize(const vec3& origin, const vec3& size, real avg_edge_length, std::vector<unsigned int>& labels, std::vector<is_mesh::Geometry*>& geometries, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
+    {
+        int Ni = std::ceil(size[0]/avg_edge_length);
+        int Nj = std::ceil(size[1]/avg_edge_length);
+        int Nk = std::ceil(size[2]/avg_edge_length);
+        
+        create_points(origin, vec3(avg_edge_length), Ni, Nj, Nk, points);
+        create_tets(Ni, Nj, Nk, tets);
+        
+        for (unsigned int i = 0; i < tets.size(); i += 4)
+        {
+            int label = 0;
+            for (auto g = 0; g < labels.size(); g++) {
+                vec3 bc = Util::barycenter(points[tets[i]], points[tets[i+1]], points[tets[i+2]], points[tets[i+3]]);
+                if(geometries[g]->is_inside(bc))
+                {
+                    label = labels[g];
+                }
+            }
+            tet_labels.push_back(label);
         }
     }
 };

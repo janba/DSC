@@ -57,6 +57,26 @@ void generate_from_vg(const string& input_file_name, const string& output_file_n
     is_mesh::export_tet_mesh(file_path + output_file_name + extension, points, tets, tet_labels);
 }
 
+void generate_from_geo(const string& input_file_name, const string& output_file_name)
+{
+    vector<vec3> points;
+    vector<int> tets;
+    vector<int> tet_labels;
+    
+    vec3 origin;
+    vec3 size;
+    real discretization;
+    std::vector<unsigned int> labels;
+    std::vector<is_mesh::Geometry*> geometries;
+    
+    is_mesh::import_geometry(file_path + input_file_name, origin, size, discretization, labels, geometries);
+    
+    Tetralizer::tetralize(origin - vec3(3.*discretization), size + vec3(6.*discretization), discretization, labels, geometries, points, tets, tet_labels);
+    
+    is_mesh::export_tet_mesh(file_path + output_file_name + extension, points, tets, tet_labels);
+    
+}
+
 int main(int argc, const char * argv[])
 {
     if(argc > 2)
@@ -71,6 +91,11 @@ int main(int argc, const char * argv[])
         else if(input_file_name.compare(input_file_name.size() - 4, 4, ".obj") == 0)
         {
             generate_from_obj(input_file_name, output_file_name);
+            std::cout << "Generated " << output_file_name + extension << " from " << input_file_name << std::endl;
+        }
+        else if(input_file_name.compare(input_file_name.size() - 4, 4, ".geo") == 0)
+        {
+            generate_from_geo(input_file_name, output_file_name);
             std::cout << "Generated " << output_file_name + extension << " from " << input_file_name << std::endl;
         }
         
