@@ -204,7 +204,7 @@ Painter::Painter(const vec3& light_pos)
     }
     glUniform3fv(lightPosUniform, 1, &lp[0]);
     
-    CGLA::Vec4f wire_col(0.f,0.f,0.f, 1.f);
+    CGLA::Vec4f wire_col(0.25,0.5,0.6, 1.);
     GLuint wireColUniform = glGetUniformLocation(wire_shader, "wireCol");
     if (wireColUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'wireCol' uniform."<<std::endl;
