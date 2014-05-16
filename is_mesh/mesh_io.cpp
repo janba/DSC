@@ -225,11 +225,11 @@ namespace is_mesh {
             {
                 std::string tok;
                 file >> tok;
-                if(tok == "d")
+                if(tok == "discretization")
                 {
                     file >> discretization;
                 }
-                else if(tok == "o")
+                else if(tok == "origin")
                 {
                     real x, y, z;
                     file >> x;
@@ -237,7 +237,7 @@ namespace is_mesh {
                     file >> z;
                     origin = vec3(x,y,z);
                 }
-                else if(tok == "s")
+                else if(tok == "size")
                 {
                     real x, y, z;
                     file >> x;
@@ -245,20 +245,12 @@ namespace is_mesh {
                     file >> z;
                     size = vec3(x,y,z);
                 }
-                else if(tok == "c")
+                else if(tok == "label")
                 {
-                    real x, y, z;
-                    file >> x;
-                    file >> y;
-                    file >> z;
-                    vec3 c(x,y,z);
-                    file >> x;
-                    file >> y;
-                    file >> z;
-                    vec3 s(x,y,z);
-                    geometries.push_back(new Cube(c, s));
-                    file >> x;
-                    labels.push_back(x);
+                    int l;
+                    file >> l;
+                    labels.push_back(l);
+                    geometries.push_back(load_geometry(file));
                 }
             }
         }
