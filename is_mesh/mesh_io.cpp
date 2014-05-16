@@ -213,6 +213,23 @@ namespace is_mesh {
             vec3 normal(x,y,z);
             return new Plane(point, normal);
         }
+        else if(tok == "square")
+        {
+            real x, y, z;
+            file >> x;
+            file >> y;
+            file >> z;
+            vec3 center(x,y,z);
+            file >> x;
+            file >> y;
+            file >> z;
+            vec3 width(x,y,z);
+            file >> x;
+            file >> y;
+            file >> z;
+            vec3 height(x,y,z);
+            return new Square(center, width, height);
+        }
         return new Geometry();
     }
     
