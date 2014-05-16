@@ -290,6 +290,11 @@ namespace is_mesh {
         {
             
         }
+        
+        Square(vec3 center, vec3 width, vec3 height) : Cube(center, vec3(length(width), length(height), 2.*EPSILON), normalize(width), normalize(height))
+        {
+            
+        }
     };
     
 }
