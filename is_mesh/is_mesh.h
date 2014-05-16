@@ -57,24 +57,24 @@ namespace is_mesh {
             delete m_node_kernel;
         }
         
-        int get_no_nodes()
+        unsigned int get_no_nodes() const
         {
-            return m_node_kernel->size();
+            return static_cast<unsigned int>(m_node_kernel->size());
         }
         
-        int get_no_edges()
+        unsigned int get_no_edges() const
         {
-            return m_edge_kernel->size();
+            return static_cast<unsigned int>(m_edge_kernel->size());
         }
         
-        int get_no_faces()
+        unsigned int get_no_faces() const
         {
-            return m_face_kernel->size();
+            return static_cast<unsigned int>(m_face_kernel->size());
         }
         
-        int get_no_tets()
+        unsigned int get_no_tets() const
         {
-            return m_tetrahedron_kernel->size();
+            return static_cast<unsigned int>(m_tetrahedron_kernel->size());
         }
         
         ///////////////
