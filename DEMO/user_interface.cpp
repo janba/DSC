@@ -79,7 +79,11 @@ UI::UI(int &argc, char** argv)
     real velocity = 5.;
     real accuracy = 0.25;
     
-    if(argc > 1)
+    if(argc == 2)
+    {
+        model_file_name = std::string(argv[1]);
+    }
+    else if(argc > 2)
     {
         for(int i = 0; i < argc; ++i)
         {
