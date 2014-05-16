@@ -168,6 +168,54 @@ namespace is_mesh {
         }
     }
     
+    Geometry* load_geometry(std::ifstream& file)
+    {
+        std::string tok;
+        file >> tok;
+        if(tok == "cube")
+        {
+            real x, y, z;
+            file >> x;
+            file >> y;
+            file >> z;
+            vec3 center(x,y,z);
+            file >> x;
+            file >> y;
+            file >> z;
+            vec3 size(x,y,z);
+            return new Cube(center, size);
+        }
+        else if(tok == "circle")
+        {
+            real x, y, z;
+            file >> x;
+            file >> y;
+            file >> z;
+            vec3 center(x,y,z);
+            real radius;
+            file >> radius;
+            file >> x;
+            file >> y;
+            file >> z;
+            vec3 normal(x,y,z);
+            return new Circle(center, radius, normal);
+        }
+        else if(tok == "plane")
+        {
+            real x, y, z;
+            file >> x;
+            file >> y;
+            file >> z;
+            vec3 point(x,y,z);
+            file >> x;
+            file >> y;
+            file >> z;
+            vec3 normal(x,y,z);
+            return new Plane(point, normal);
+        }
+        return new Geometry();
+    }
+    
     void import_geometry(const std::string& filename, vec3& origin, vec3& size, real& discretization, std::vector<unsigned int>& labels, std::vector<Geometry*>& geometries)
     {
         std::ifstream file(filename.data());

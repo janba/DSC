@@ -37,6 +37,11 @@ namespace is_mesh {
     void import_voxel_grid(const std::string& filename, vec3& origin, vec3& voxel_size, int& x, int& y, int& z, std::vector<int>& voxels);
     
     /**
+     * Imports a geometry from the file.
+     */
+    Geometry* load_geometry(std::ifstream& file);
+    
+    /**
      * Imports a volume defined by geometries from an .geo file.
      */
     void import_geometry(const std::string& filename, vec3& origin, vec3& size, real& discretization, std::vector<unsigned int>& labels, std::vector<Geometry*>& geometries);
