@@ -82,24 +82,6 @@ public:
     
 private:
     
-    void scale(const std::vector<vec3>& points)
-    {
-        vec3 p_min(INFINITY), p_max(-INFINITY);
-        for (const vec3& p : points) {
-            for (int i = 0; i < 3; i++) {
-                p_min[i] = Util::min(p[i], p_min[i]);
-                p_max[i] = Util::max(p[i], p_max[i]);
-            }
-        }
-        
-        vec3 size = p_max - p_min;
-        real var = Util::max(Util::max(size[0], size[1]), size[2]);
-        real dist = 1.2*var;
-        eye_pos = {dist, var, dist};
-        camera_pos = {var, var, -dist};
-        light_pos = {0., 0., dist};
-    }
-    
     /**
      Loads the .dsc file specified by the model_file_name variable.
      */

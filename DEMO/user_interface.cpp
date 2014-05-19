@@ -130,9 +130,23 @@ void UI::load_model(const std::string& file_name, real discretization)
     std::vector<int>  tet_labels;
     is_mesh::import_tet_mesh(obj_path + file_name + ".dsc", points, tets, tet_labels);
     
-    scale(points);
-    
     dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(points, tets, tet_labels));
+    
+    vec3 p_min(INFINITY), p_max(-INFINITY);
+    for (auto nit = dsc->nodes_begin(); nit != dsc->nodes_end(); nit++) {
+        for (int i = 0; i < 3; i++) {
+            p_min[i] = Util::min(nit->get_pos()[i], p_min[i]);
+            p_max[i] = Util::max(nit->get_pos()[i], p_max[i]);
+        }
+    }
+    
+    vec3 size = p_max - p_min;
+    real var = Util::max(Util::max(size[0], size[1]), size[2]);
+    real dist = 1.2*var;
+    eye_pos = {dist, var, dist};
+    camera_pos = {var, var, -dist};
+    light_pos = {0., 0., dist};
+    
     painter->update(*dsc);
     std::cout << "Loading done" << std::endl << std::endl;
 }
