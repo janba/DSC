@@ -132,7 +132,7 @@ void UI::load_model(const std::string& file_name, real discretization)
     
     scale(points);
     
-    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(discretization, points, tets, tet_labels));
+    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(points, tets, tet_labels));
     painter->update(*dsc);
     std::cout << "Loading done" << std::endl << std::endl;
 }

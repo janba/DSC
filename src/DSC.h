@@ -80,16 +80,10 @@ namespace DSC {
         
         /// SimplicialComplex constructor.
         DeformableSimplicialComplex(std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels):
-        is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>(points, tets, tet_labels)
+            is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>(points, tets, tet_labels)
         {
             pars = {0.1, 0.5, 0.0005, 0.015, 0.02, 0.3, 0., 2., 0.2, 5., 0.2, INFINITY};
-            set_avg_edge_length(1.);
-        }
-        
-        DeformableSimplicialComplex(real avg_edge_length, std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels):
-            DeformableSimplicialComplex(points, tets, tet_labels)
-        {
-            set_avg_edge_length(avg_edge_length);
+            set_avg_edge_length();
         }
         
         ~DeformableSimplicialComplex()
@@ -138,11 +132,18 @@ namespace DSC {
         
     public:
         
-        virtual void set_avg_edge_length(real avg_edge_length)
+        virtual void set_avg_edge_length(real avg_edge_length = 0.)
         {
-            AVG_LENGTH = avg_edge_length;
-            AVG_AREA = 0.5*std::sqrt(3./4.)*avg_edge_length*avg_edge_length;
-            AVG_VOLUME = (sqrt(2.)/12.)*avg_edge_length*avg_edge_length*avg_edge_length;
+            if(avg_edge_length <= 0.)
+            {
+                AVG_LENGTH = compute_avg_edge_length();
+            }
+            else {
+                AVG_LENGTH = avg_edge_length;
+            }
+            
+            AVG_AREA = 0.5*std::sqrt(3./4.)*AVG_LENGTH*AVG_LENGTH;
+            AVG_VOLUME = (sqrt(2.)/12.)*AVG_LENGTH*AVG_LENGTH*AVG_LENGTH;
         }
         
         void set_parameters(parameters pars_)
@@ -2133,6 +2134,20 @@ namespace DSC {
         // DOCUMENT FUNCTIONS //
         ////////////////////////
     public:
+        
+        real compute_avg_edge_length()
+        {
+            real avg_edge_length = 0.;
+            int N = 0;
+            for (auto eit = edges_begin(); eit != edges_end(); eit++) {
+                avg_edge_length += length(eit.key());
+                N++;
+            }
+            if (N > 0) {
+                avg_edge_length /= static_cast<real>(N);
+            }
+            return avg_edge_length;
+        }
         
         /**
          * Returns the cosine to the dihedral angle between face f1 and face f2.
