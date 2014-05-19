@@ -2140,8 +2140,11 @@ namespace DSC {
             real avg_edge_length = 0.;
             int N = 0;
             for (auto eit = edges_begin(); eit != edges_end(); eit++) {
-                avg_edge_length += length(eit.key());
-                N++;
+                if(eit->is_interface())
+                {
+                    avg_edge_length += length(eit.key());
+                    N++;
+                }
             }
             if (N > 0) {
                 avg_edge_length /= static_cast<real>(N);
