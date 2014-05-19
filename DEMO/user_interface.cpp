@@ -123,12 +123,12 @@ UI::UI(int &argc, char** argv)
 
 void UI::load_model(const std::string& file_name, real discretization)
 {
-    std::cout << "\nLoading " << file_name << std::endl;
+    std::cout << "\nLoading " << obj_path + file_name + ".dsc" << std::endl;
     dsc = nullptr;
     std::vector<vec3> points;
     std::vector<int>  tets;
     std::vector<int>  tet_labels;
-    is_mesh::import_tet_mesh(obj_path + file_name + extension, points, tets, tet_labels);
+    is_mesh::import_tet_mesh(obj_path + file_name + ".dsc", points, tets, tet_labels);
     
     scale(points);
     

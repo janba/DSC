@@ -53,7 +53,6 @@ class UI
     const std::string obj_path = "./data/";
     const std::string log_path = "./LOG/";
 #endif
-    const std::string extension = ".dsc";
     
 public:
     

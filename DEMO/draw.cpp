@@ -261,7 +261,7 @@ void Painter::reshape(int width, int height)
 {
     WIDTH = width;
     HEIGHT = height;
-    projectionMatrix = CGLA::perspective_Mat4x4f(53.f, width/float(height), 1., 10000.);
+    projectionMatrix = CGLA::perspective_Mat4x4f(53.f, width/float(height), 1., 1000000.);
     glViewport(0, 0, width, height);
     CGLA::Mat4x4f modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
     
