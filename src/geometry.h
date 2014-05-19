@@ -230,6 +230,11 @@ namespace is_mesh {
             
         }
         
+        Cylinder(vec3 c, real r, vec3 up) : Point(c), sqr_radius(r*r), height(0.5*length(up)), up_direction(normalize(up))
+        {
+            
+        }
+        
         virtual bool is_inside(vec3 p) const override
         {
             real d = dot(p - point, up_direction);

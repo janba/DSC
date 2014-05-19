@@ -200,6 +200,21 @@ namespace is_mesh {
             vec3 normal(x,y,z);
             return new Circle(center, radius, normal);
         }
+        else if(tok == "cylinder")
+        {
+            real x, y, z;
+            file >> x;
+            file >> y;
+            file >> z;
+            vec3 center(x,y,z);
+            real radius;
+            file >> radius;
+            file >> x;
+            file >> y;
+            file >> z;
+            vec3 up(x,y,z);
+            return new Cylinder(center, radius, up);
+        }
         else if(tok == "plane")
         {
             real x, y, z;
