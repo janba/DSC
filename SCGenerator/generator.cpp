@@ -83,7 +83,7 @@ int main(int argc, const char * argv[])
     {
         string output_file_name = string(argv[1]);
         string input_file_name = string(argv[2]);
-        if(input_file_name.compare(input_file_name.size() - 4, 4, ".txt") == 0)
+        if(input_file_name.compare(input_file_name.size() - 4, 4, ".txt") == 0 || input_file_name.compare(input_file_name.size() - 3, 3, ".vg") == 0)
         {
             generate_from_vg(input_file_name, output_file_name);
             std::cout << "Generated " << output_file_name + extension << " from " << input_file_name << std::endl;
