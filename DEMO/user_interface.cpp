@@ -19,8 +19,6 @@
 #include "average_function.h"
 #include "normal_function.h"
 
-#include "mesh_io.h"
-
 using namespace DSC;
 
 void display_(){

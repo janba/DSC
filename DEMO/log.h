@@ -16,7 +16,6 @@
 
 #pragma once
 
-#include "util.h"
 #include "DSC.h"
 #include "velocity_function.h"
 

@@ -19,6 +19,7 @@
 #include "is_mesh.h"
 #include "attributes.h"
 #include "geometry.h"
+#include "mesh_io.h"
 
 struct parameters {
     
