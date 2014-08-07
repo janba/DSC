@@ -74,6 +74,11 @@ namespace DSC {
             return time_step;
         }
         
+        virtual void set_max_time_steps(int max_time_steps)
+        {
+            MAX_TIME_STEPS = max_time_steps;
+        }
+        
         /**
          Returns the velocity.
          */
