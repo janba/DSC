@@ -37,7 +37,7 @@ class UI
     vec3 camera_pos = {30., 30., 70.};
     vec3 light_pos = {0., 0., 70.};
     
-    int WIN_SIZE_X = 1280.;
+    int WIN_SIZE_X = 1280;
     int WIN_SIZE_Y = 720;
     
     bool CONTINUOUS = false;

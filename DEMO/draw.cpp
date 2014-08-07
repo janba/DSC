@@ -52,19 +52,19 @@ void Painter::GLObject::draw(GLenum mode)
     if(data.size() != 0)
     {
         glUseProgram(shader);
-        GLuint uniform = glGetUniformLocation(shader, "ambientMat");
+        GLuint uniform = (GLuint) glGetUniformLocation(shader, "ambientMat");
         if (uniform == NULL_LOCATION) {
             std::cerr << "Shader did not contain the 'ambientMat' uniform."<<std::endl;
         }
         glUniform4fv(uniform, 1, &ambient_mat[0]);
         
-        uniform = glGetUniformLocation(shader, "diffuseMat");
+        uniform = (GLuint) glGetUniformLocation(shader, "diffuseMat");
         if (uniform == NULL_LOCATION) {
             std::cerr << "Shader did not contain the 'diffuseMat' uniform."<<std::endl;
         }
         glUniform4fv(uniform, 1, &diffuse_mat[0]);
         
-        uniform = glGetUniformLocation(shader, "specMat");
+        uniform = (GLuint) glGetUniformLocation(shader, "specMat");
         if (uniform == NULL_LOCATION) {
             std::cerr << "Shader did not contain the 'specMat' uniform."<<std::endl;
         }
@@ -73,8 +73,8 @@ void Painter::GLObject::draw(GLenum mode)
         glUseProgram(shader);
         glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
         
-        glVertexAttribPointer(position_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(vec3), (const GLvoid *)0);
-        glVertexAttribPointer(vector_att, 3, GL_DOUBLE, GL_FALSE, 2.*sizeof(vec3), (const GLvoid *)sizeof(vec3));
+        glVertexAttribPointer(position_att, 3, GL_DOUBLE, GL_FALSE, 2*sizeof(vec3), (const GLvoid *)0);
+        glVertexAttribPointer(vector_att, 3, GL_DOUBLE, GL_FALSE, 2*sizeof(vec3), (const GLvoid *)sizeof(vec3));
         
         glDrawArrays(mode, 0, static_cast<int>(data.size())/2);
         check_gl_error();
