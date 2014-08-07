@@ -20,27 +20,33 @@ using namespace std;
 
 void printMenu(){
     cout << "--------- DSC Demo ---------\n";
-    cout << "Esc     Quit\n";
-    cout << "0       Set velocity function\n";
-    cout << "1       Set rotate function\n";
-    cout << "2       Set average function\n";
-    cout << "Space   Toggle pause\n";
-    cout << "m       Move\n";
-    cout << "r       Reload model\n";
-    cout << "t       Test velocity function\n";
-    cout << "tab     Change display type (INTERFACE, WIRE_FRAME, BOUNDARY, EDGES, LOW_QUALITY, UNMOVED)\n";
-    cout << "s       Save screenshot\n";
-    cout << "e       Export tetrahedron mesh\n";
-    cout << "i       Export triangle mesh\n";
-    cout << "+       Increase velocity\n";
-    cout << "-       Descrease velocity\n";
-    cout << ".       Increase avg edge length\n";
-    cout << ",       Descrease avg edge length\n";
-    cout << "<       Increase accuracy\n";
-    cout << ">       Descrease accuracy\n";
-
-
-
+    cout << " *** SELECT PARAMETERS ***  \n"<<
+            ",:         Decreases discretization by 0.5 to a minimum of 1.\n"<<
+            ".:         Increases discretization by 0.5 to a maximum of 100.\n"<<
+            "-:         Decreases velocity by 1 to a minimum of 1.\n"<<
+            "+:         Increases velocity by 1 to a maximum of 100.\n"<<
+            ">:         Decreases accuracy by 1 to a minimum of 1.\n"<<
+            "<:         Increases accuracy by 1 to a maximum of 100.\n"<<
+            "\n"<<
+            "*** SELECT MOTION ***\n"<<
+            "1:         Selects rotation.\n"<<
+            "2:         Selects smoothing.\n"<<
+            "3:         Selects expansion.\n"<<
+            "\n"<<
+            "*** START/STOP MOTION ***\n"<<
+            "SPACE:     Starts/pauses the current motion.\n"<<
+            "0:         Stops the current motion.\n"<<
+            "ESCAPE:    Stops the current motion and exits the application\n"<<
+            "m:         Moves the interface vertices one time step according to the current velocity function.\n"<<
+            "\n"<<
+            "*** MISCELLANEOUS ***\n"<<
+            "r:         Reloads the model.\n"<<
+            "t:         Performs a test on the current velocity function.\n"<<
+            "s:         Takes a screen shot.\n"<<
+            "e:         Export the simplicial complex to a .dsc file.\n"<<
+            "i:         Export the surface mesh to a .obj file.\n"<<
+            "w:         Switch wireframe rendering on and off.\n"<<
+            "TAB:       Switches the display type (Surface, wireframe, edges, etc.).\n"<<endl;
 }
 
 int main(int argc, char** argv)
