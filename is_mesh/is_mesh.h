@@ -31,11 +31,11 @@ namespace is_mesh {
         NodeIterator(const kernel<node_type, NodeKey> *m_node_kernel) : m_node_kernel(m_node_kernel) {
         }
 
-        typename kernel<node_type, NodeKey>::const_iterator begin() const {
+        typename kernel<node_type, NodeKey>::iterator begin() const {
             return m_node_kernel->begin();
         }
 
-        typename kernel<node_type, NodeKey>::const_iterator end() const {
+        typename kernel<node_type, NodeKey>::iterator end() const {
             return m_node_kernel->end();
         }
     };
