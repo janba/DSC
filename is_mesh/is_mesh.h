@@ -22,7 +22,81 @@
 #include "simplex_set.h"
 
 namespace is_mesh {
-    
+
+    template <typename node_traits>
+    class NodeIterator {
+        typedef Node<node_traits>                                         node_type;
+        const kernel<node_type, NodeKey> *m_node_kernel;
+    public:
+        NodeIterator(const kernel<node_type, NodeKey> *m_node_kernel) : m_node_kernel(m_node_kernel) {
+        }
+
+        typename kernel<node_type, NodeKey>::const_iterator begin() const {
+            return m_node_kernel->begin();
+        }
+
+        typename kernel<node_type, NodeKey>::const_iterator end() const {
+            return m_node_kernel->end();
+        }
+    };
+
+
+    template <typename edge_traits>
+    class EdgeIterator {
+        typedef Edge<edge_traits>                                         edge_type;
+        const kernel<edge_type, EdgeKey>*                  m_edge_kernel;
+    public:
+        EdgeIterator(const kernel<edge_type, EdgeKey> *m_edge_kernel) : m_edge_kernel(m_edge_kernel) {
+        }
+
+        typename kernel<edge_type, EdgeKey>::iterator begin() const {
+            return m_edge_kernel->begin();
+        }
+
+        typename kernel<edge_type, EdgeKey>::iterator end() const {
+            return m_edge_kernel->end();
+        }
+    };
+
+    template <typename face_traits>
+    class FaceIterator {
+        typedef Face<face_traits>                                         face_type;
+        const kernel<face_type, FaceKey>*                  m_face_kernel;
+    public:
+        FaceIterator(const kernel<face_type, FaceKey> *m_face_kernel) : m_face_kernel(m_face_kernel) {
+        }
+
+        typename kernel<face_type, FaceKey>::iterator begin() const {
+            return m_face_kernel->begin();
+        }
+
+        typename kernel<face_type, FaceKey>::iterator end() const {
+            return m_face_kernel->end();
+        }
+
+    };
+
+    template <typename tet_traits>
+    class TetrahedronIterator {
+        typedef Tetrahedron<tet_traits>                           tetrahedron_type;
+        const kernel<tetrahedron_type, TetrahedronKey>*           m_tetrahedron_kernel;
+    public:
+        TetrahedronIterator(const kernel<tetrahedron_type, TetrahedronKey> *m_tetrahedron_kernel)
+                : m_tetrahedron_kernel(m_tetrahedron_kernel) {
+        }
+
+        typename kernel<tetrahedron_type, TetrahedronKey>::iterator begin() const{
+            return m_tetrahedron_kernel->begin();
+        }
+
+        typename kernel<tetrahedron_type, TetrahedronKey>::iterator end() const {
+            return m_tetrahedron_kernel->end();
+        }
+
+    };
+
+
+
     template <typename node_traits, typename edge_traits, typename face_traits, typename tet_traits>
     class ISMesh
     {
@@ -30,7 +104,7 @@ namespace is_mesh {
         typedef Edge<edge_traits>                                         edge_type;
         typedef Face<face_traits>                                         face_type;
         typedef Tetrahedron<tet_traits>                           tetrahedron_type;
-        
+
         kernel<node_type, NodeKey>* m_node_kernel;
         kernel<edge_type, EdgeKey>*                  m_edge_kernel;
         kernel<face_type, FaceKey>*                  m_face_kernel;
@@ -81,6 +155,10 @@ namespace is_mesh {
         // ITERATORS //
         ///////////////
     public:
+        NodeIterator<node_traits> nodes() const {
+            return NodeIterator<node_traits>{m_node_kernel};
+        }
+
         typename kernel<node_type, NodeKey>::iterator nodes_begin()
         {
             return m_node_kernel->begin();
@@ -89,6 +167,10 @@ namespace is_mesh {
         typename kernel<node_type, NodeKey>::iterator nodes_end()
         {
             return m_node_kernel->end();
+        }
+
+        EdgeIterator<edge_traits> edges() const {
+            return EdgeIterator<edge_traits>{m_edge_kernel};
         }
         
         typename kernel<edge_type, EdgeKey>::iterator edges_begin()
@@ -100,6 +182,10 @@ namespace is_mesh {
         {
             return m_edge_kernel->end();
         }
+
+        FaceIterator<face_traits> faces() const {
+            return FaceIterator<face_traits>{m_face_kernel};
+        }
         
         typename kernel<face_type, FaceKey>::iterator faces_begin()
         {
@@ -109,6 +195,10 @@ namespace is_mesh {
         typename kernel<face_type, FaceKey>::iterator faces_end()
         {
             return m_face_kernel->end();
+        }
+
+        TetrahedronIterator<tet_traits> tetrahedra() const {
+            return TetrahedronIterator<tet_traits>{m_tetrahedron_kernel};
         }
         
         typename kernel<tetrahedron_type, TetrahedronKey>::iterator tetrahedra_begin()

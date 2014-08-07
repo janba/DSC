@@ -530,22 +530,21 @@ void Painter::update_low_quality(DSC::DeformableSimplicialComplex<>& dsc)
     low_quality->add_data(data);
 }
 
-void Painter::update_unmoved(DSC::DeformableSimplicialComplex<>& dsc)
-{
+void Painter::update_unmoved(DSC::DeformableSimplicialComplex<>& dsc) {
     std::vector<vec3> data;
     data.push_back(vec3(0.));
-    data.push_back(vec3(20.,0.,0.));
+    data.push_back(vec3(20., 0., 0.));
     data.push_back(vec3(0.));
-    data.push_back(vec3(0.,20.,0.));
+    data.push_back(vec3(0., 20., 0.));
     data.push_back(vec3(0.));
-    data.push_back(vec3(0.,0.,20.));
-    
-    for (auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
+    data.push_back(vec3(0., 0., 20.));
+
+    for (auto & nit : dsc.nodes())
     {
-        vec3 vector = nit->get_destination() - nit->get_pos();
+        vec3 vector = nit.get_destination() - nit.get_pos();
         if(vector.length() > EPSILON)
         {
-            data.push_back(nit->get_pos());
+            data.push_back(nit.get_pos());
             data.push_back(vector);
         }
     }
