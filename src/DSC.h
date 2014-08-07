@@ -93,7 +93,8 @@ namespace DSC {
         }
         
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get;
-        
+        using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get_label;
+
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::nodes_begin;
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::nodes_end;
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::edges_begin;
@@ -102,32 +103,32 @@ namespace DSC {
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::faces_end;
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::tetrahedra_begin;
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::tetrahedra_end;
-        
+
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get_pos;
-        
+
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get_nodes;
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get_edges;
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get_faces;
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get_tets;
-        
+
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get_edge;
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::get_face;
-        
+
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::validity_check;
-        
+
     protected:
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::set_label;
-        
+
     private:
-        
+
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::flip_22;
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::flip_23;
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::flip_32;
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::flip_44;
-        
+
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::split;
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::collapse;
-        
+
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::garbage_collect;
         using is_mesh::ISMesh<node_att, edge_att, face_att, tet_att>::exists;
         
@@ -282,12 +283,7 @@ namespace DSC {
         {
             return is_unsafe_editable(nid) && get(nid).is_interface() && !get(nid).is_crossing();
         }
-        
-        int get_label(const tet_key& t)
-        {
-            return get(t).label();
-        }
-        
+
     protected:
         /**
          * Sets the position of node n.
