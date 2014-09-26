@@ -28,10 +28,31 @@ namespace is_mesh {
         std::bitset<3> flags;
         
     public:
-        
+
+        NodeAttributes()
+        {
+        }
+
         NodeAttributes(vec3 _p) : p(_p), p_new(_p)
         {
             
+        }
+
+        NodeAttributes(const NodeAttributes& other)
+                :p{other.p}, p_new{other.p_new}, flags{other.flags}
+        {}
+
+        NodeAttributes(NodeAttributes&& other)
+        :p{other.p}, p_new{other.p_new}, flags{other.flags}
+        {}
+
+        NodeAttributes& operator=(NodeAttributes&& other){
+            if (this != &other){
+                std::swap(p, other.p);
+                std::swap(p_new, other.p_new);
+                std::swap(flags, other.flags);
+            }
+            return *this;
         }
         
         /**
@@ -97,7 +118,23 @@ namespace is_mesh {
         
     public:
         EdgeAttributes() {}
-        
+
+        EdgeAttributes(const EdgeAttributes& other)
+                :flags(other.flags)
+        {
+        }
+
+        EdgeAttributes(EdgeAttributes&& other)
+        :flags(other.flags)
+        {
+        }
+
+        EdgeAttributes& operator=(EdgeAttributes&& other){
+            if (this != &other){
+                std::swap(flags,other.flags);
+            }
+            return *this;
+        }
         
         bool is_crossing()
         {
@@ -136,6 +173,26 @@ namespace is_mesh {
         
     public:
         FaceAttributes() {}
+
+        FaceAttributes(const FaceAttributes& other)
+                :flags(other.flags)
+        {
+
+        }
+
+        FaceAttributes(FaceAttributes&& other)
+        :flags(other.flags)
+        {
+
+        }
+
+        FaceAttributes& operator=(FaceAttributes&& other){
+            if (this != &other)
+            {
+                std::swap(flags, other.flags);
+            }
+            return *this;
+        }
         
         bool is_boundary()
         {
@@ -164,6 +221,28 @@ namespace is_mesh {
         
     public:
         TetAttributes() {}
+
+        TetAttributes(const TetAttributes& other)
+                :l(other.l)
+        {
+
+        }
+
+
+        TetAttributes(TetAttributes&& other)
+        :l(other.l)
+        {
+
+        }
+
+        TetAttributes& operator=(TetAttributes&& other){
+            if (this != &other)
+            {
+                l = other.l;
+            }
+            return *this;
+        }
+
         
         int label()
         {

@@ -105,7 +105,11 @@ namespace is_mesh
         iterator& operator++()
         {
             kernel_element& cur = m_kernel->lookup(m_key);
-            m_key = cur.next;
+            do {
+                // m_key++;
+                m_key.incr();
+            } while ((int)m_key < m_kernel->m_data.size() && m_kernel->lookup(m_key).state != element_type::VALID);
+//            m_key = cur.next;
             return *this;
         }
         

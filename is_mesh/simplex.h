@@ -53,6 +53,14 @@ namespace is_mesh
             s.m_boundary = nullptr;
             s.m_co_boundary = nullptr;
         }
+
+        Simplex<boundary_key_type, co_boundary_key_type>& operator=(Simplex<boundary_key_type, co_boundary_key_type>&& other){
+            if (this != &other){
+                std::swap(m_boundary, other.m_boundary);
+                std::swap(m_co_boundary, other.m_co_boundary);
+            }
+            return *this;
+        }
         
         ~Simplex()
         {
@@ -115,6 +123,19 @@ namespace is_mesh
         {
             
         }
+
+        Node(Node&& other)
+        :NodeTraits(std::move(other)), Simplex<Key, EdgeKey>(std::move(other))
+        {}
+
+        Node& operator=(Node&& other){
+            if (this != &other){
+                ((NodeTraits*)this)->operator=(std::move(other));
+                ((Simplex<Key, EdgeKey>*)this)->operator=(std::move(other));
+            }
+            return *this;
+        }
+
     };
     
     ///////////////////////////////////////////////////////////////////////////////
@@ -133,6 +154,20 @@ namespace is_mesh
         Edge(const type_traits & t) : type_traits(t), Simplex<NodeKey, FaceKey>()
         {
             
+        }
+
+        Edge(Edge&& other)
+        :EdgeTraits(std::move(other)), Simplex<NodeKey, FaceKey>(std::move(other))
+        {
+
+        }
+
+        Edge& operator=(Edge&& other){
+            if (this != &other){
+                ((EdgeTraits*)this)->operator=(std::move(other));
+                ((Simplex<NodeKey, FaceKey>*)this)->operator=(std::move(other));
+            }
+            return *this;
         }
     };
     
@@ -153,6 +188,18 @@ namespace is_mesh
         {
             
         }
+
+        Face(Face&& other)
+        : FaceTraits(std::move(other)), Simplex<EdgeKey, TetrahedronKey>(std::move(other))
+        {}
+
+        Face& operator=(Face&& other){
+            if (this != &other){
+                ((FaceTraits*)this)->operator=(std::move(other));
+                ((Simplex<EdgeKey, TetrahedronKey>*)this)->operator=(std::move(other));
+            }
+            return *this;
+        }
     };
     
     ///////////////////////////////////////////////////////////////////////////////
@@ -171,6 +218,18 @@ namespace is_mesh
         Tetrahedron(const type_traits & t) : type_traits(t), Simplex<FaceKey, Key>()
         {
             
+        }
+
+        Tetrahedron(Tetrahedron&& other)
+        :TetrahedronTraits(std::move(other)), Simplex<FaceKey, Key>(std::move(other))
+        {}
+
+        Tetrahedron& operator=(Tetrahedron&& other){
+            if (this != &other){
+                ((TetrahedronTraits*)this)->operator=(std::move(other));
+                ((Simplex<FaceKey, Key>*)this)->operator=(std::move(other));
+            }
+            return *this;
         }
     };
 }
