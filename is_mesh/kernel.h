@@ -62,14 +62,11 @@ namespace is_mesh
      * @param value_type The type of the elements that is to be stored in the kernel. The value_type
      *        must have the typedef type_traits.
      * @param key_type The type of the keys used in the kernel. Should be an integer type.
-     * @param allocator_type This type must conform to the C++ standard allocator concept. The
-     *        default argument is the default STL allocator.
      */
     template<typename value_type, typename key_type>
     class kernel
     {
     public:
-        typedef std::allocator<util::kernel_element<value_type, key_type>> allocator_type;
         typedef          kernel<value_type, key_type>                   kernel_type;
         typedef          util::kernel_element<value_type, key_type>     kernel_element;
         typedef          kernel_iterator<kernel_type>                   iterator;
@@ -80,7 +77,7 @@ namespace is_mesh
     private:
         typedef typename value_type::type_traits                        type_traits;
         
-        std::vector<kernel_element, allocator_type> m_data;
+        std::vector<kernel_element> m_data;
         std::vector<key_type> m_data_freelist;
         std::vector<key_type> m_data_marked_for_deletion;
     private:
@@ -303,9 +300,8 @@ namespace is_mesh
         
         /**
          * Commits all changes and permanently deletes all marked elements.
-         * The garbage collect routine performs two functions. First it commits all changes on the undo 
-         * stack and clears all undo marks. Secondly the routine cleans up the kernel and reorders all
-         * lists in the kernel. 
+         * The garbage collect routine performs one functions. First it commits all changes on the undo
+         * stack and clears all undo marks.
          * The operation runs in O(n) - where n is m_capacity or the size of allocated memory (not 
          * efficient, but cleans lists).
          */
