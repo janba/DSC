@@ -189,14 +189,8 @@ void UI::animate()
     if(CONTINUOUS)
     {
         std::cout << "\n***************TIME STEP " << vel_fun->get_time_step() + 1 <<  " START*************\n" << std::endl;
-
         vel_fun->take_time_step(*dsc);
-        std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
         painter->update(*dsc);
-        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-        std::cout << "Update took "
-                << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()
-                << "us.\n";
         if(RECORD && basic_log)
         {
             painter->set_view_position(camera_pos);
