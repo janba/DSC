@@ -71,13 +71,10 @@ namespace is_mesh
     public:
         typedef std::allocator<util::kernel_element<value_type, key_type>> allocator_type;
         typedef          kernel<value_type, key_type>                   kernel_type;
-        typedef typename allocator_type::template rebind<value_type>    rebind_type;
-        typedef typename rebind_type::other                             value_allocator;
         typedef          util::kernel_element<value_type, key_type>     kernel_element;
         typedef          kernel_iterator<kernel_type>                   iterator;
         typedef          iterator const                                 const_iterator;
-        typedef typename allocator_type::size_type                      size_type;
-        
+
         friend class kernel_iterator<kernel_type>;
         
     private:
@@ -96,7 +93,7 @@ namespace is_mesh
          */
         kernel_element& lookup(key_type k)
         {
-//            asume key_type is integer type
+//          assume key_type is integer type
             assert(k >= 0 || !"looked up with negative element");
             assert((int)k < m_data.size() || !"k out of range");
             return m_data[k];
@@ -132,7 +129,7 @@ namespace is_mesh
          *
          * @param size The initial size of the kernel. Has a default value.
          */
-        kernel(size_type size =64)
+        kernel(size_t size =64)
         {
         }
         
@@ -146,7 +143,7 @@ namespace is_mesh
         /**
          * The size of the kernel. That is the number of valid elements in the kernel.
          */
-        size_type size() const     { return m_data.size() - m_data_freelist.size(); }
+        size_t size() const     { return m_data.size() - m_data_freelist.size(); }
         
         /**
          * Returns a boolean value indicating if the size is zero.
@@ -178,7 +175,7 @@ namespace is_mesh
          */
         const_iterator end() const
         {
-            return iterator(this, key_type{(unsigned int)size()});
+            return iterator(this, key_type{(unsigned int)m_data.size()});
         }
         
         /**
@@ -186,7 +183,14 @@ namespace is_mesh
          */
         const_iterator begin() const
         {
-            return iterator(this, key_type{0});
+            unsigned int i = 0;
+            // find first valid element (if any)
+            for (;i<m_data.size();i++){
+                if (m_data[i].state == kernel_element::VALID){
+                    break;
+                }
+            }
+            return iterator(this, key_type{i});
         }
         
         /**
@@ -292,6 +296,7 @@ namespace is_mesh
 
                 //m_alloc.destroy(&p);  // needed?
                 p.state = kernel_element::EMPTY;
+                m_data_freelist.push_back(key);
             }
             m_data_marked_for_deletion.clear();
         }
