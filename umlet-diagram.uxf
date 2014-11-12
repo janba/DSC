@@ -511,7 +511,7 @@ is_mesh::kernel&lt;TetAttributes, TetrahedronKey&gt;
       <w>402</w>
       <h>504</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;-
+    <panel_attributes>lt=-&gt;&gt;
 layer=-1</panel_attributes>
     <additional_attributes>650.0;10.0;650.0;140.0;90.0;140.0;90.0;820.0;10.0;820.0</additional_attributes>
   </element>
