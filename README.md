@@ -16,6 +16,11 @@ _If you want news about the development and use of the DSC method, please apply 
 https://groups.google.com/forum/#!forum/dsc-development
 
 ---
+### Online documentation
+
+https://janba.github.io/DSC/
+
+---
 ### References
 
 For a list of publications, see http://www2.imm.dtu.dk/~janba/DSC-webpage/
