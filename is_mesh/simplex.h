@@ -136,6 +136,10 @@ namespace is_mesh
             return *this;
         }
 
+        const SimplexSet<EdgeKey>& edge_keys(){
+            return get_co_boundary();
+        }
+
     };
     
     ///////////////////////////////////////////////////////////////////////////////
@@ -169,6 +173,14 @@ namespace is_mesh
             }
             return *this;
         }
+
+        const SimplexSet<NodeKey>& node_keys(){
+            return get_boundary();
+        }
+
+        const SimplexSet<FaceKey>& face_keys(){
+            return get_co_boundary();
+        }
     };
     
     ///////////////////////////////////////////////////////////////////////////////
@@ -200,6 +212,14 @@ namespace is_mesh
             }
             return *this;
         }
+
+        const SimplexSet<EdgeKey>& edge_keys(){
+            return get_boundary();
+        }
+
+        const SimplexSet<TetrahedronKey>& tet_keys(){
+            return get_co_boundary();
+        }
     };
     
     ///////////////////////////////////////////////////////////////////////////////
@@ -230,6 +250,10 @@ namespace is_mesh
                 ((Simplex<FaceKey, Key>*)this)->operator=(std::move(other));
             }
             return *this;
+        }
+
+        const SimplexSet<FaceKey>& face_keys(){
+            return get_boundary();
         }
     };
 }
