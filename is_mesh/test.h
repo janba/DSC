@@ -22,9 +22,9 @@
 inline void test_distance_triangle_triangle()
 {
     std::cout << "Testing utility functions:";
-    real d = distance_triangle_triangle<real>(vec3(0.), vec3(0., 1., 0.), vec3(1., 0., 0.), vec3(1., 1., -1.), vec3(1.,1.,2.), vec3(4., 2., 4.));
+    double d = distance_triangle_triangle<double>(vec3(0.), vec3(0., 1., 0.), vec3(1., 0., 0.), vec3(1., 1., -1.), vec3(1.,1.,2.), vec3(4., 2., 4.));
     assert(abs(d - sqrt(2.)/2) < EPSILON);
-    d = distance_triangle_triangle<real>(vec3(0.), vec3(0., 1., 0.), vec3(1., 0., 0.), vec3(1., 1., 0.), vec3(4.,1.,2.), vec3(4., 2., 4.));
+    d = distance_triangle_triangle<double>(vec3(0.), vec3(0., 1., 0.), vec3(1., 0., 0.), vec3(1., 1., 0.), vec3(4.,1.,2.), vec3(4., 2., 4.));
     assert(abs(d - sqrt(2.)/2) < EPSILON);
     std::cout << " PASSED" << std::endl;
 }

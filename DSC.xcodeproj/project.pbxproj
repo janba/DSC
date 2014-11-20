@@ -7,6 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		333AE05CD5D0F5C2C85B21C5 /* DSC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE7429520E940410617BB /* DSC.cpp */; };
+		333AE11523E18BEDA7A761F7 /* is_mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AECEBDB7CDAC6F91FDFC9 /* is_mesh.cpp */; };
+		333AE22C7FF18AA2298B1E3E /* DSC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE7429520E940410617BB /* DSC.cpp */; };
+		333AE247E95F0E5495D6621D /* DSC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE7429520E940410617BB /* DSC.cpp */; };
+		333AE34CF01A98FD02A365AF /* is_mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AECEBDB7CDAC6F91FDFC9 /* is_mesh.cpp */; };
+		333AE4F4BDF51AA8C7594D94 /* is_mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AECEBDB7CDAC6F91FDFC9 /* is_mesh.cpp */; };
+		333AE7459D5B8743E11F5983 /* is_mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AECEBDB7CDAC6F91FDFC9 /* is_mesh.cpp */; };
+		333AE8A64F1BE875E54C6E85 /* DSC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE7429520E940410617BB /* DSC.cpp */; };
+		333AE9B9670725CCA6C998A2 /* is_mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AECEBDB7CDAC6F91FDFC9 /* is_mesh.cpp */; };
+		333AEB56C1F52CDBEE8E60FE /* DSC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE7429520E940410617BB /* DSC.cpp */; };
+		333AEE6AED56D52676260225 /* is_mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AECEBDB7CDAC6F91FDFC9 /* is_mesh.cpp */; };
+		333AEECE2644D2C60EE985BD /* DSC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE7429520E940410617BB /* DSC.cpp */; };
 		7A3438C1183C6D2700829EEB /* attributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A3438BF183C6D2700829EEB /* attributes.h */; };
 		7A3438C2183C6D2700829EEB /* mesh_io.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A3438C0183C6D2700829EEB /* mesh_io.h */; };
 		7A3438C4183C75B100829EEB /* mesh_io.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3438C3183C75B100829EEB /* mesh_io.cpp */; };
@@ -139,6 +151,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		333AE7429520E940410617BB /* DSC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DSC.cpp; sourceTree = SOURCE_ROOT; };
+		333AECEBDB7CDAC6F91FDFC9 /* is_mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = is_mesh.cpp; sourceTree = "<group>"; };
 		7A0AB5A517D906AD0058910E /* libSOIL.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSOIL.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A0AB5C017D9082A0058910E /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		7A0B96D4182F29750004CAF3 /* wire.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = wire.frag; sourceTree = "<group>"; };
@@ -331,6 +345,7 @@
 				7A45DB94176E122100B9B388 /* kernel.h */,
 				7AF7E9C0176B524700F43714 /* is_mesh.h */,
 				7AAC14BE185826F500A7219E /* test.h */,
+				333AECEBDB7CDAC6F91FDFC9 /* is_mesh.cpp */,
 			);
 			name = ISMesh;
 			sourceTree = "<group>";
@@ -492,6 +507,7 @@
 			children = (
 				7AE27AE917675B04000F8238 /* velocity_function.h */,
 				7AF7E9BE176B4FE400F43714 /* DSC.h */,
+				333AE7429520E940410617BB /* DSC.cpp */,
 			);
 			path = DSC;
 			sourceTree = "<group>";
@@ -757,6 +773,8 @@
 				7A553ED017DA724800125178 /* SOIL.c in Sources */,
 				7A553ED217DA724800125178 /* stb_image_write.c in Sources */,
 				7ACA21D917DE37C5005E9309 /* stb_image.c in Sources */,
+				333AE4F4BDF51AA8C7594D94 /* is_mesh.cpp in Sources */,
+				333AEECE2644D2C60EE985BD /* DSC.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -766,6 +784,8 @@
 			files = (
 				7A3438D4183C7A9600829EEB /* tetgen.cxx in Sources */,
 				7A3438D3183C7A9600829EEB /* predicates.cxx in Sources */,
+				333AEE6AED56D52676260225 /* is_mesh.cpp in Sources */,
+				333AE22C7FF18AA2298B1E3E /* DSC.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -775,6 +795,8 @@
 			files = (
 				7A3438E8183C7B7800829EEB /* generator.cpp in Sources */,
 				7A3438EA183C7B7800829EEB /* tetralizer.cpp in Sources */,
+				333AE11523E18BEDA7A761F7 /* is_mesh.cpp in Sources */,
+				333AE05CD5D0F5C2C85B21C5 /* DSC.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -800,6 +822,8 @@
 				7A9C20CD17DFB4D40064171E /* Vec3f.cpp in Sources */,
 				7A9C20D017DFB4D40064171E /* Vec3i.cpp in Sources */,
 				7A8967BD1808F3FA00A55FB6 /* line.frag in Sources */,
+				333AE9B9670725CCA6C998A2 /* is_mesh.cpp in Sources */,
+				333AE247E95F0E5495D6621D /* DSC.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -809,6 +833,8 @@
 			files = (
 				7A3438C4183C75B100829EEB /* mesh_io.cpp in Sources */,
 				7A7E67171849010800EFDF1E /* geometry.cpp in Sources */,
+				333AE34CF01A98FD02A365AF /* is_mesh.cpp in Sources */,
+				333AEB56C1F52CDBEE8E60FE /* DSC.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -820,6 +846,8 @@
 				7AF7E9BA176B402200F43714 /* user_interface.cpp in Sources */,
 				7A470AE317F51DC3001FC0CB /* log.cpp in Sources */,
 				7AF7E9BD176B412900F43714 /* draw.cpp in Sources */,
+				333AE7459D5B8743E11F5983 /* is_mesh.cpp in Sources */,
+				333AE8A64F1BE875E54C6E85 /* DSC.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -940,7 +968,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -972,7 +1000,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -1025,7 +1053,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = NO;
 				HEADER_SEARCH_PATHS = (
-					.,
+					"./**",
 					/usr/local/include/,
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
@@ -1043,7 +1071,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = NO;
 				HEADER_SEARCH_PATHS = (
-					.,
+					"./**",
 					/usr/local/include/,
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib/;

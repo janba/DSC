@@ -108,7 +108,7 @@ namespace is_mesh {
         virtual vec3 project(const vec3& p) const
         {
             vec3 proj_p;
-            real dist = INFINITY;
+            double dist = INFINITY;
             for (Geometry* geometry : geometries)
             {
                 vec3 pp = geometry->project(p);
@@ -158,7 +158,7 @@ namespace is_mesh {
             {
                 for(int i = 0; i < 3; i++)
                 {
-                    real d = dot(p - point, directions[i]);
+                  double d = dot(p - point, directions[i]);
                     if(std::abs(d) > size[i])
                     {
                         return false;
@@ -168,7 +168,7 @@ namespace is_mesh {
             }
             for(int i = 0; i < 3; i++)
             {
-                real d = dot(p - point, directions[i]);
+                double d = dot(p - point, directions[i]);
                 if(std::abs(d) > size[i] - EPSILON)
                 {
                     return true;
@@ -183,12 +183,12 @@ namespace is_mesh {
             {
                 for (int i = 0; i < 3; i++) {
                     
-                    real t = Util::intersection_ray_plane<real>(p, v, point + size[i]*directions[i], directions[i]);
+                    double t = Util::intersection_ray_plane(p, v, point + size[i]*directions[i], directions[i]);
                     if(t >= 0. && t < 1.)
                     {
                         v = t*v;
                     }
-                    t = Util::intersection_ray_plane<real>(p, v, point - size[i]*directions[i], -directions[i]);
+                    t = Util::intersection_ray_plane(p, v, point - size[i]*directions[i], -directions[i]);
                     if(t >= 0. && t < 1.)
                     {
                         v = t*v;
@@ -200,7 +200,7 @@ namespace is_mesh {
         virtual vec3 project(const vec3& p) const
         {
             vec3 proj_p;
-            real dist = INFINITY;
+            double dist = INFINITY;
             for (int i = 0; i < 3; i++) {
                 vec3 pp = Util::project_point_plane(p, point + size[i]*directions[i], directions[i]);
                 if(sqr_length(pp - p) < dist)
@@ -222,22 +222,22 @@ namespace is_mesh {
     
     class Cylinder : public Point {
     protected:
-        real sqr_radius, height;
+        double sqr_radius, height;
         vec3 up_direction;
     public:
-        Cylinder(vec3 c, real r, real h, vec3 up = vec3(0., 1., 0.)) : Point(c), sqr_radius(r*r), height(0.5*h), up_direction(normalize(up))
+        Cylinder(vec3 c, double r, double h, vec3 up = vec3(0., 1., 0.)) : Point(c), sqr_radius(r*r), height(0.5*h), up_direction(normalize(up))
         {
             
         }
         
-        Cylinder(vec3 c, real r, vec3 up) : Point(c), sqr_radius(r*r), height(0.5*length(up)), up_direction(normalize(up))
+        Cylinder(vec3 c, double r, vec3 up) : Point(c), sqr_radius(r*r), height(0.5*length(up)), up_direction(normalize(up))
         {
             
         }
         
         virtual bool is_inside(vec3 p) const override
         {
-            real d = dot(p - point, up_direction);
+            double d = dot(p - point, up_direction);
             if(std::abs(d) > height)
             {
                 return false;
@@ -282,7 +282,7 @@ namespace is_mesh {
     class Circle : public Cylinder {
         
     public:
-        Circle(vec3 center, real radius, vec3 normal) : Cylinder(center, radius, 2.*EPSILON, normal)
+        Circle(vec3 center, double radius, vec3 normal) : Cylinder(center, radius, 2.*EPSILON, normal)
         {
             
         }
@@ -291,7 +291,7 @@ namespace is_mesh {
     class Square : public Cube {
         
     public:
-        Square(vec3 center, real width, real height, vec3 width_dir, vec3 height_dir) : Cube(center, vec3(width, height, 2.*EPSILON), width_dir, height_dir)
+        Square(vec3 center, double width, double height, vec3 width_dir, vec3 height_dir) : Cube(center, vec3(width, height, 2.*EPSILON), width_dir, height_dir)
         {
             
         }

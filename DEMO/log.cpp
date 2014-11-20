@@ -43,22 +43,22 @@ Log::Log(const std::string& path_)
     log.open(path + "/log.txt");
 }
 
-void Log::write_variable(const std::string& name, real value)
+void Log::write_variable(const std::string& name, double value)
 {
     log << "\t" << name << "\t:\t" << value << std::endl;
 }
 
-void Log::write_variable(const std::string& name, real value, real change)
+void Log::write_variable(const std::string& name, double value, double change)
 {
     log << "\t" << name << "\t:\t" << value << "\t\tChange\t:\t" << change << std::endl;
 }
 
-void Log::write_variable(const std::string& name, real value, const std::string& unit)
+void Log::write_variable(const std::string& name, double value, const std::string& unit)
 {
     log << "\t" << name << "\t:\t" << value << " " << unit << std::endl;
 }
 
-void Log::write_variable(const std::string& name, const std::vector<real>& values)
+void Log::write_variable(const std::string& name, const std::vector<double>& values)
 {
     if(values.size() > 0)
     {
@@ -98,7 +98,7 @@ void Log::write_message(const std::string& message)
     std::cout << "*** " << message << " ***" << std::endl;
 }
 
-void Log::write_timestep(const VelocityFunc<>& vel_fun, DeformableSimplicialComplex<>& dsc)
+void Log::write_timestep(const VelocityFunc& vel_fun, DeformableSimplicialComplex& dsc)
 {
     log << std::endl << "*** Time step #" << vel_fun.get_time_step() << " ***" << std::endl;
     log << std::endl;
@@ -109,13 +109,13 @@ void Log::write_timestep(const VelocityFunc<>& vel_fun, DeformableSimplicialComp
     write_variable("Min quality", dsc.min_quality());
     
     std::vector<int> hist;
-    real min_a, max_a;
+    double min_a, max_a;
     dsc.get_dihedral_angles(hist, min_a, max_a);
     write_variable("Min dih. angle", min_a, "degrees");
     write_variable("Max dih. angle", max_a, "degrees");
 }
 
-void Log::write_log(DeformableSimplicialComplex<>& dsc)
+void Log::write_log(DeformableSimplicialComplex& dsc)
 {
     write_message("SIMPLICIAL COMPLEX INFO");
     write_variable("Discretization", dsc.get_avg_edge_length());
@@ -138,7 +138,7 @@ void Log::write_log(DeformableSimplicialComplex<>& dsc)
     write_variable("#obj tets", object);
     
     std::vector<int> hist;
-    real min_a, max_a;
+    double min_a, max_a;
     dsc.get_dihedral_angles(hist, min_a, max_a);
     write_variable("Min dih. angle", min_a, "degrees");
     write_variable("Max dih. angle", max_a, "degrees");
@@ -150,17 +150,17 @@ void Log::write_log(DeformableSimplicialComplex<>& dsc)
     
 }
 
-void Log::write_log(const VelocityFunc<>& vel_fun)
+void Log::write_log(const VelocityFunc& vel_fun)
 {
     write_message("VELOCITY FUNCTION INFO");
     write_variable("Velocity", vel_fun.get_velocity());
     write_variable("Accuracy", vel_fun.get_accuracy());
 }
 
-void Log::write_timings(const VelocityFunc<>& vel_fun)
+void Log::write_timings(const VelocityFunc& vel_fun)
 {
-    real deform_time = vel_fun.get_total_deform_time();
-    real compute_time = vel_fun.get_total_compute_time();
+    double deform_time = vel_fun.get_total_deform_time();
+    double compute_time = vel_fun.get_total_compute_time();
     write_message("TIMINGS");
     write_variable("Total time", deform_time + compute_time, "s");
     write_variable("Compute time", compute_time, "s");

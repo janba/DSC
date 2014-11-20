@@ -120,7 +120,7 @@ void Tetralizer::create_points(const vec3& origin, const vec3& voxel_size, int N
     }
 }
 
-void Tetralizer::build_boundary_mesh(std::vector<real>& points_boundary, real d, std::vector<int>& faces_boundary, const vec3& size)
+void Tetralizer::build_boundary_mesh(std::vector<double>& points_boundary, double d, std::vector<int>& faces_boundary, const vec3& size)
 {
     int n = size[0]/d;
     std::vector<std::vector<int> > face_xp_points(n+1),
@@ -140,7 +140,7 @@ void Tetralizer::build_boundary_mesh(std::vector<real>& points_boundary, real d,
         face_zm_points[i].resize(n+1);
     }
     
-    real x,y,z;
+    double x,y,z;
     int counter = 0;
     
     x = -0.5*size[0];
@@ -298,7 +298,7 @@ void Tetralizer::build_boundary_mesh(std::vector<real>& points_boundary, real d,
         }
 }
 
-void Tetralizer::tetrahedralize_inside(const std::vector<real>& points_interface, const std::vector<int>& faces_interface, std::vector<real>& points_inside, std::vector<int>& tets_inside)
+void Tetralizer::tetrahedralize_inside(const std::vector<double>& points_interface, const std::vector<int>& faces_interface, std::vector<double>& points_inside, std::vector<int>& tets_inside)
 {
     tetgenio in, out;
     
@@ -306,7 +306,7 @@ void Tetralizer::tetrahedralize_inside(const std::vector<real>& points_interface
     in.mesh_dim = 3;
     
     in.numberofpoints = (int)(points_interface.size()/3);
-    in.pointlist = new real[points_interface.size()];
+    in.pointlist = new double[points_interface.size()];
     
     for (unsigned int i = 0; i < points_interface.size(); ++i)
     {
@@ -346,7 +346,7 @@ void Tetralizer::tetrahedralize_inside(const std::vector<real>& points_interface
     }
 }
 
-void Tetralizer::tetrahedralize_outside(const std::vector<real>& points_interface, const std::vector<int>&  faces_interface, std::vector<real>& points_boundary, std::vector<int>&  faces_boundary, std::vector<real>& points_outside, std::vector<int>& tets_outside, const vec3& inside_pts)
+void Tetralizer::tetrahedralize_outside(const std::vector<double>& points_interface, const std::vector<int>&  faces_interface, std::vector<double>& points_boundary, std::vector<int>&  faces_boundary, std::vector<double>& points_outside, std::vector<int>& tets_outside, const vec3& inside_pts)
 {
     tetgenio in, out;
     
@@ -354,7 +354,7 @@ void Tetralizer::tetrahedralize_outside(const std::vector<real>& points_interfac
     in.mesh_dim = 3;
     
     in.numberofpoints = (int)(points_interface.size()/3+points_boundary.size()/3);
-    in.pointlist = new real[points_interface.size()+points_boundary.size()];
+    in.pointlist = new double[points_interface.size()+points_boundary.size()];
     for (unsigned int i = 0; i < points_interface.size(); ++i)
         in.pointlist[i] = points_interface[i];
     for (unsigned int i = points_interface.size(); i < points_interface.size()+points_boundary.size(); ++i)
@@ -384,7 +384,7 @@ void Tetralizer::tetrahedralize_outside(const std::vector<real>& points_interfac
     }
     
     in.numberofholes = 1;
-    in.holelist = new real[3*in.numberofholes];
+    in.holelist = new double[3*in.numberofholes];
     in.holelist[0] = inside_pts[0];
     in.holelist[1] = inside_pts[1];
     in.holelist[2] = inside_pts[2];
@@ -402,7 +402,7 @@ void Tetralizer::tetrahedralize_outside(const std::vector<real>& points_interfac
     }
 }
 
-void Tetralizer::merge_inside_outside(const std::vector<real>& points_interface, const std::vector<int>&  faces_interface, std::vector<real>& points_inside, std::vector<int>&  tets_inside, std::vector<real>& points_outside, std::vector<int>&  tets_outside, std::vector<real>& output_points, std::vector<int>&  output_tets, std::vector<int>&  output_tet_flags)
+void Tetralizer::merge_inside_outside(const std::vector<double>& points_interface, const std::vector<int>&  faces_interface, std::vector<double>& points_inside, std::vector<int>&  tets_inside, std::vector<double>& points_outside, std::vector<int>&  tets_outside, std::vector<double>& output_points, std::vector<int>&  output_tets, std::vector<int>&  output_tet_flags)
 {
     int no_interface_points = static_cast<int>(points_interface.size()/3);
     int no_outside_points = static_cast<int>(points_outside.size()/3);

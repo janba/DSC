@@ -1,11 +1,10 @@
-
 #pragma once
 
 #include <cassert>
 #include <iostream>
 #include <vector>
 
-#include <is_mesh/kernel_iterator.h>
+#include "kernel_iterator.h"
 
 namespace is_mesh
 {

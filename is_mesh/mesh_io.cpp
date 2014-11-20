@@ -19,7 +19,7 @@
 
 namespace is_mesh {
     
-    void scale(std::vector<vec3>& points, real size)
+    void scale(std::vector<vec3>& points, double size)
     {
         vec3 p_min(INFINITY), p_max(-INFINITY);
         for (vec3 p : points) {
@@ -30,7 +30,7 @@ namespace is_mesh {
         }
         
         vec3 center = 0.5*(p_max + p_min);
-        real scale = -INFINITY;
+        double scale = -INFINITY;
         for (int i = 0; i < 3; i++) {
             scale = Util::max(p_max[i] - p_min[i], scale);
         }
@@ -50,7 +50,7 @@ namespace is_mesh {
             file >> c;
             if (c == 'v')
             {
-                real x,y,z; // The (x,y,z) coordinates of a vertex.
+                double x,y,z; // The (x,y,z) coordinates of a vertex.
                 file >> x;
                 file >> y;
                 file >> z;
@@ -91,7 +91,7 @@ namespace is_mesh {
                 file >> tok;
                 if(tok == "v")
                 {
-                    real x,y,z;
+                    double x,y,z;
                     file >> x;
                     file >> y;
                     file >> z;
@@ -142,7 +142,7 @@ namespace is_mesh {
                 }
                 else if(tok == "s")
                 {
-                    real x, y, z;
+                    double x, y, z;
                     file >> x;
                     file >> y;
                     file >> z;
@@ -150,7 +150,7 @@ namespace is_mesh {
                 }
                 else if(tok == "o")
                 {
-                    real x, y, z;
+                    double x, y, z;
                     file >> x;
                     file >> y;
                     file >> z;
@@ -174,7 +174,7 @@ namespace is_mesh {
         file >> tok;
         if(tok == "cube")
         {
-            real x, y, z;
+            double x, y, z;
             file >> x;
             file >> y;
             file >> z;
@@ -187,12 +187,12 @@ namespace is_mesh {
         }
         else if(tok == "circle")
         {
-            real x, y, z;
+            double x, y, z;
             file >> x;
             file >> y;
             file >> z;
             vec3 center(x,y,z);
-            real radius;
+            double radius;
             file >> radius;
             file >> x;
             file >> y;
@@ -202,12 +202,12 @@ namespace is_mesh {
         }
         else if(tok == "cylinder")
         {
-            real x, y, z;
+            double x, y, z;
             file >> x;
             file >> y;
             file >> z;
             vec3 center(x,y,z);
-            real radius;
+            double radius;
             file >> radius;
             file >> x;
             file >> y;
@@ -217,7 +217,7 @@ namespace is_mesh {
         }
         else if(tok == "plane")
         {
-            real x, y, z;
+            double x, y, z;
             file >> x;
             file >> y;
             file >> z;
@@ -230,7 +230,7 @@ namespace is_mesh {
         }
         else if(tok == "square")
         {
-            real x, y, z;
+            double x, y, z;
             file >> x;
             file >> y;
             file >> z;
@@ -248,7 +248,7 @@ namespace is_mesh {
         return new Geometry();
     }
     
-    void import_geometry(const std::string& filename, vec3& origin, vec3& size, real& discretization, std::vector<unsigned int>& labels, std::vector<Geometry*>& geometries)
+    void import_geometry(const std::string& filename, vec3& origin, vec3& size, double& discretization, std::vector<unsigned int>& labels, std::vector<Geometry*>& geometries)
     {
         std::ifstream file(filename.data());
         if(file)
@@ -263,7 +263,7 @@ namespace is_mesh {
                 }
                 else if(tok == "origin")
                 {
-                    real x, y, z;
+                    double x, y, z;
                     file >> x;
                     file >> y;
                     file >> z;
@@ -271,7 +271,7 @@ namespace is_mesh {
                 }
                 else if(tok == "size")
                 {
-                    real x, y, z;
+                    double x, y, z;
                     file >> x;
                     file >> y;
                     file >> z;

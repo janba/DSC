@@ -22,7 +22,7 @@
 /**
  A rotating velocity function.
  */
-class RotateFunc: public DSC::VelocityFunc<>
+class RotateFunc: public DSC::VelocityFunc
 {
     
     
@@ -30,8 +30,8 @@ public:
     /**
      Creates a rotating velocity function.
      */
-    RotateFunc(real velocity, real accuracy, int max_time_steps = 360):
-        VelocityFunc<>(velocity, accuracy, max_time_steps)
+    RotateFunc(double velocity, double accuracy, int max_time_steps = 360):
+        VelocityFunc(velocity, accuracy, max_time_steps)
     {
         
     }
@@ -47,7 +47,7 @@ public:
     /**
      Computes the motion of each interface vertex and stores the new position in new_pos in the simplicial complex class.
      */
-    virtual void deform(DSC::DeformableSimplicialComplex<>& dsc)
+    virtual void deform(DSC::DeformableSimplicialComplex& dsc)
     {
         auto init_time = std::chrono::system_clock::now();
         

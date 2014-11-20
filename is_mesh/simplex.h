@@ -17,6 +17,7 @@
 #pragma once
 
 #include "simplex_set.h"
+#include "attributes.h"
 
 namespace is_mesh
 {
@@ -109,28 +110,26 @@ namespace is_mesh
     ///////////////////////////////////////////////////////////////////////////////
     ///  N O D E
     ///////////////////////////////////////////////////////////////////////////////
-    template<typename NodeTraits>
-    class Node : public NodeTraits, public Simplex<Key, EdgeKey>
+    class Node : public NodeAttributes, public Simplex<Key, EdgeKey>
     {
     public:
-        typedef NodeTraits  type_traits;
-        
+        typedef NodeAttributes type_traits;
         Node() : Simplex<Key, EdgeKey>()
         {
             
         }
-        Node(const type_traits & t) : type_traits(t), Simplex<Key, EdgeKey>()
+        Node(const NodeAttributes & t) : NodeAttributes(t), Simplex<Key, EdgeKey>()
         {
             
         }
 
         Node(Node&& other)
-        :NodeTraits(std::move(other)), Simplex<Key, EdgeKey>(std::move(other))
+        :NodeAttributes(std::move(other)), Simplex<Key, EdgeKey>(std::move(other))
         {}
 
         Node& operator=(Node&& other){
             if (this != &other){
-                ((NodeTraits*)this)->operator=(std::move(other));
+                ((NodeAttributes*)this)->operator=(std::move(other));
                 ((Simplex<Key, EdgeKey>*)this)->operator=(std::move(other));
             }
             return *this;
@@ -145,30 +144,29 @@ namespace is_mesh
     ///////////////////////////////////////////////////////////////////////////////
     ///  E D G E
     ///////////////////////////////////////////////////////////////////////////////
-    template<typename EdgeTraits>
-    class Edge : public EdgeTraits, public Simplex<NodeKey, FaceKey>
+    class Edge : public EdgeAttributes, public Simplex<NodeKey, FaceKey>
     {
     public:
-        typedef EdgeTraits type_traits;
+        typedef EdgeAttributes type_traits;
         
         Edge() : Simplex<NodeKey, FaceKey>()
         {
             
         }
-        Edge(const type_traits & t) : type_traits(t), Simplex<NodeKey, FaceKey>()
+        Edge(const type_traits & t) : EdgeAttributes(t), Simplex<NodeKey, FaceKey>()
         {
             
         }
 
         Edge(Edge&& other)
-        :EdgeTraits(std::move(other)), Simplex<NodeKey, FaceKey>(std::move(other))
+        :EdgeAttributes(std::move(other)), Simplex<NodeKey, FaceKey>(std::move(other))
         {
 
         }
 
         Edge& operator=(Edge&& other){
             if (this != &other){
-                ((EdgeTraits*)this)->operator=(std::move(other));
+                ((EdgeAttributes*)this)->operator=(std::move(other));
                 ((Simplex<NodeKey, FaceKey>*)this)->operator=(std::move(other));
             }
             return *this;
@@ -186,28 +184,27 @@ namespace is_mesh
     ///////////////////////////////////////////////////////////////////////////////
     //  F A C E
     ///////////////////////////////////////////////////////////////////////////////
-    template<typename FaceTraits>
-    class Face : public FaceTraits, public Simplex<EdgeKey, TetrahedronKey>
+    class Face : public FaceAttributes, public Simplex<EdgeKey, TetrahedronKey>
     {
     public:
-        typedef FaceTraits type_traits;
+        typedef FaceAttributes type_traits;
         
         Face() : Simplex<EdgeKey, TetrahedronKey>()
         {
             
         }
-        Face(const type_traits & t) : type_traits(t), Simplex<EdgeKey, TetrahedronKey>()
+        Face(const type_traits & t) : FaceAttributes(t), Simplex<EdgeKey, TetrahedronKey>()
         {
             
         }
 
         Face(Face&& other)
-        : FaceTraits(std::move(other)), Simplex<EdgeKey, TetrahedronKey>(std::move(other))
+        : FaceAttributes(std::move(other)), Simplex<EdgeKey, TetrahedronKey>(std::move(other))
         {}
 
         Face& operator=(Face&& other){
             if (this != &other){
-                ((FaceTraits*)this)->operator=(std::move(other));
+                ((FaceAttributes*)this)->operator=(std::move(other));
                 ((Simplex<EdgeKey, TetrahedronKey>*)this)->operator=(std::move(other));
             }
             return *this;
@@ -225,28 +222,27 @@ namespace is_mesh
     ///////////////////////////////////////////////////////////////////////////////
     // T E T R A H E D R O N
     ///////////////////////////////////////////////////////////////////////////////
-    template<typename TetrahedronTraits>
-    class Tetrahedron : public TetrahedronTraits, public Simplex<FaceKey, Key>
+    class Tetrahedron : public TetAttributes, public Simplex<FaceKey, Key>
     {
     public:
-        typedef TetrahedronTraits  type_traits;
+        typedef TetAttributes  type_traits;
         
         Tetrahedron() : Simplex<FaceKey, Key>()
         {
             
         }
-        Tetrahedron(const type_traits & t) : type_traits(t), Simplex<FaceKey, Key>()
+        Tetrahedron(const type_traits & t) : TetAttributes(t), Simplex<FaceKey, Key>()
         {
             
         }
 
         Tetrahedron(Tetrahedron&& other)
-        :TetrahedronTraits(std::move(other)), Simplex<FaceKey, Key>(std::move(other))
+        :TetAttributes(std::move(other)), Simplex<FaceKey, Key>(std::move(other))
         {}
 
         Tetrahedron& operator=(Tetrahedron&& other){
             if (this != &other){
-                ((TetrahedronTraits*)this)->operator=(std::move(other));
+                ((TetAttributes*)this)->operator=(std::move(other));
                 ((Simplex<FaceKey, Key>*)this)->operator=(std::move(other));
             }
             return *this;

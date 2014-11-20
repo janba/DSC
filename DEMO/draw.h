@@ -132,7 +132,7 @@ public:
     /**
      Updates what to draw.
      */
-    void update(DSC::DeformableSimplicialComplex<>& dsc);
+    void update(DSC::DeformableSimplicialComplex& dsc);
     
     /**
      Saves the current painting to the selected folder.
@@ -143,24 +143,24 @@ private:
     /**
      Updates the drawn interface.
      */
-    void update_interface(DSC::DeformableSimplicialComplex<>& dsc);
+    void update_interface(DSC::DeformableSimplicialComplex& dsc);
     
-    void update_wire_frame(DSC::DeformableSimplicialComplex<>& dsc);
+    void update_wire_frame(DSC::DeformableSimplicialComplex& dsc);
     
     /**
      Updates the drawn edges.
      */
-    void update_edges(DSC::DeformableSimplicialComplex<>& dsc);
+    void update_edges(DSC::DeformableSimplicialComplex& dsc);
     
     /**
      Updates the drawn domain.
      */
-    void update_domain(DSC::DeformableSimplicialComplex<>& dsc);
+    void update_domain(DSC::DeformableSimplicialComplex& dsc);
     
     /**
      Updates the drawn tetrahedra.
      */
-    void update_low_quality(DSC::DeformableSimplicialComplex<>& dsc);
+    void update_low_quality(DSC::DeformableSimplicialComplex& dsc);
     
-    void update_unmoved(DSC::DeformableSimplicialComplex<>& dsc);
+    void update_unmoved(DSC::DeformableSimplicialComplex& dsc);
 };

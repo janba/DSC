@@ -30,7 +30,7 @@ namespace CGLA {
 		Quatf() : ArithQuat<float, Vec3f, Quatf>() {}
 
     /// Construct quaternion from vector and scalar
-    Quatf(const Vec3f& imaginary, float real = 1.0f) : ArithQuat<float, Vec3f, Quatf>(imaginary, real) {}
+    Quatf(const Vec3f& imaginary, float double = 1.0f) : ArithQuat<float, Vec3f, Quatf>(imaginary, double) {}
 
     /// Construct quaternion from four scalars
     Quatf(float x, float y, float z, float _qw) :  ArithQuat<float, Vec3f, Quatf>(x,y,z,_qw) {}

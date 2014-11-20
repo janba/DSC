@@ -379,7 +379,7 @@ void Painter::switch_display_type()
     display_type = static_cast<DISPLAY_TYPE>((display_type+1)%DISPLAY_TYPE_END);
 }
 
-void Painter::update(DSC::DeformableSimplicialComplex<>& dsc)
+void Painter::update(DSC::DeformableSimplicialComplex& dsc)
 {
     interface->clear_data();
     wire_frame->clear_data();
@@ -417,7 +417,7 @@ void Painter::update(DSC::DeformableSimplicialComplex<>& dsc)
     
 }
 
-void Painter::update_interface(DSC::DeformableSimplicialComplex<>& dsc)
+void Painter::update_interface(DSC::DeformableSimplicialComplex& dsc)
 {
     std::vector<vec3> data;
     for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
@@ -437,7 +437,7 @@ void Painter::update_interface(DSC::DeformableSimplicialComplex<>& dsc)
     interface->add_data(data);
 }
 
-void Painter::update_wire_frame(DSC::DeformableSimplicialComplex<>& dsc)
+void Painter::update_wire_frame(DSC::DeformableSimplicialComplex& dsc)
 {
     std::vector<vec3> data;
     for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
@@ -457,7 +457,7 @@ void Painter::update_wire_frame(DSC::DeformableSimplicialComplex<>& dsc)
     wire_frame->add_data(data);
 }
 
-void Painter::update_edges(DSC::DeformableSimplicialComplex<>& dsc)
+void Painter::update_edges(DSC::DeformableSimplicialComplex& dsc)
 {
     std::vector<vec3> data;
     for (auto eit = dsc.edges_begin(); eit != dsc.edges_end(); eit++)
@@ -474,7 +474,7 @@ void Painter::update_edges(DSC::DeformableSimplicialComplex<>& dsc)
     edges->add_data(data);
 }
 
-void Painter::update_domain(DSC::DeformableSimplicialComplex<>& dsc)
+void Painter::update_domain(DSC::DeformableSimplicialComplex& dsc)
 {
     std::vector<vec3> data;
     for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
@@ -493,7 +493,7 @@ void Painter::update_domain(DSC::DeformableSimplicialComplex<>& dsc)
     domain->add_data(data);
 }
 
-void Painter::update_low_quality(DSC::DeformableSimplicialComplex<>& dsc)
+void Painter::update_low_quality(DSC::DeformableSimplicialComplex& dsc)
 {
     std::vector<vec3> data;
     for (auto tit = dsc.tetrahedra_begin(); tit != dsc.tetrahedra_end(); tit++)
@@ -530,7 +530,7 @@ void Painter::update_low_quality(DSC::DeformableSimplicialComplex<>& dsc)
     low_quality->add_data(data);
 }
 
-void Painter::update_unmoved(DSC::DeformableSimplicialComplex<>& dsc) {
+void Painter::update_unmoved(DSC::DeformableSimplicialComplex& dsc) {
     std::vector<vec3> data;
     data.push_back(vec3(0.));
     data.push_back(vec3(20., 0., 0.));

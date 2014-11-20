@@ -21,14 +21,14 @@
 /**
  A velocity function which moves the interface vertices towards the average of their neighbouring interface vertices, i.e. a constant smoothing of the interface.
  */
-class AverageFunc: public DSC::VelocityFunc<> {
+class AverageFunc: public DSC::VelocityFunc {
     
 public:
     /**
      Creates a velocity function which smooths the interface.
      */
-    AverageFunc(real velocity, real accuracy, int max_time_steps = 500):
-        VelocityFunc<>(velocity, accuracy, max_time_steps)
+    AverageFunc(double velocity, double accuracy, int max_time_steps = 500):
+        VelocityFunc(velocity, accuracy, max_time_steps)
     {
         
     }
@@ -44,7 +44,7 @@ public:
     /**
      Computes the motion of each interface vertex and stores the new position in new_pos in the simplicial complex class.
      */
-    virtual void deform(DSC::DeformableSimplicialComplex<>& dsc)
+    virtual void deform(DSC::DeformableSimplicialComplex& dsc)
     {
         auto init_time = std::chrono::system_clock::now();
         vec3 new_pos, p;

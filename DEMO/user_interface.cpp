@@ -78,9 +78,9 @@ UI::UI(int &argc, char** argv)
     
     // Read input
     std::string motion = "";
-    real discretization = 2.5;
-    real velocity = 5.;
-    real accuracy = 0.25;
+    double discretization = 2.5;
+    double velocity = 5.;
+    double accuracy = 0.25;
     
     if(argc == 2)
     {
@@ -113,7 +113,7 @@ UI::UI(int &argc, char** argv)
     
     if(motion.empty())
     {
-        vel_fun = std::unique_ptr<VelocityFunc<>>(new VelocityFunc<>(velocity, accuracy, 500));
+        vel_fun = std::unique_ptr<VelocityFunc>(new VelocityFunc(velocity, accuracy, 500));
         start("");
     }
     else {
@@ -124,7 +124,7 @@ UI::UI(int &argc, char** argv)
     check_gl_error();
 }
 
-void UI::load_model(const std::string& file_name, real discretization)
+void UI::load_model(const std::string& file_name, double discretization)
 {
     std::cout << "\nLoading " << obj_path + file_name + ".dsc" << std::endl;
     dsc = nullptr;
@@ -133,7 +133,7 @@ void UI::load_model(const std::string& file_name, real discretization)
     std::vector<int>  tet_labels;
     is_mesh::import_tet_mesh(obj_path + file_name + ".dsc", points, tets, tet_labels);
     
-    dsc = std::unique_ptr<DeformableSimplicialComplex<>>(new DeformableSimplicialComplex<>(points, tets, tet_labels));
+    dsc = std::unique_ptr<DeformableSimplicialComplex>(new DeformableSimplicialComplex(points, tets, tet_labels));
     
     vec3 p_min(INFINITY), p_max(-INFINITY);
     for (auto nit = dsc->nodes_begin(); nit != dsc->nodes_end(); nit++) {
@@ -144,8 +144,8 @@ void UI::load_model(const std::string& file_name, real discretization)
     }
     
     vec3 size = p_max - p_min;
-    real var = Util::max(Util::max(size[0], size[1]), size[2]);
-    real dist = 1.2*var;
+    double var = Util::max(Util::max(size[0], size[1]), size[2]);
+    double dist = 1.2*var;
     eye_pos = {dist, var, dist};
     camera_pos = {var, var, -dist};
     light_pos = {0., 0., dist};
@@ -219,28 +219,28 @@ void UI::keyboard(unsigned char key, int x, int y) {
             stop();
             QUIT_ON_COMPLETION = false;
             RECORD = false;
-            vel_fun = std::unique_ptr<VelocityFunc<>>(new VelocityFunc<>(vel_fun->get_velocity(), vel_fun->get_accuracy(), 500));
+            vel_fun = std::unique_ptr<VelocityFunc>(new VelocityFunc(vel_fun->get_velocity(), vel_fun->get_accuracy(), 500));
             start("");
             break;
         case '1':
             stop();
             QUIT_ON_COMPLETION = true;
             RECORD = true;
-            vel_fun = std::unique_ptr<VelocityFunc<>>(new RotateFunc(vel_fun->get_velocity(), vel_fun->get_accuracy()));
+            vel_fun = std::unique_ptr<VelocityFunc>(new RotateFunc(vel_fun->get_velocity(), vel_fun->get_accuracy()));
             start("rotate");
             break;
         case '2':
             stop();
             QUIT_ON_COMPLETION = true;
             RECORD = true;
-            vel_fun = std::unique_ptr<VelocityFunc<>>(new AverageFunc(vel_fun->get_velocity(), vel_fun->get_accuracy()));
+            vel_fun = std::unique_ptr<VelocityFunc>(new AverageFunc(vel_fun->get_velocity(), vel_fun->get_accuracy()));
             start("smooth");
             break;
         case '3':
             stop();
             QUIT_ON_COMPLETION = true;
             RECORD = true;
-            vel_fun = std::unique_ptr<VelocityFunc<>>(new NormalFunc(vel_fun->get_velocity(), vel_fun->get_accuracy()));
+            vel_fun = std::unique_ptr<VelocityFunc>(new NormalFunc(vel_fun->get_velocity(), vel_fun->get_accuracy()));
             start("expand");
             break;
         case ' ':
@@ -304,42 +304,42 @@ void UI::keyboard(unsigned char key, int x, int y) {
             break;
         case '+':
         {
-            real velocity = std::min(vel_fun->get_velocity() + 1., 100.);
+            double velocity = std::min(vel_fun->get_velocity() + 1., 100.);
             vel_fun->set_velocity(velocity);
             update_title();
         }
             break;
         case '-':
         {
-            real velocity = std::max(vel_fun->get_velocity() - 1., 0.);
+            double velocity = std::max(vel_fun->get_velocity() - 1., 0.);
             vel_fun->set_velocity(velocity);
             update_title();
         }
             break;
         case '.':
         {
-            real discretization = std::min(dsc->get_avg_edge_length() + 0.5, 100.);
+            double discretization = std::min(dsc->get_avg_edge_length() + 0.5, 100.);
             dsc->set_avg_edge_length(discretization);
             update_title();
         }
             break;
         case ',':
         {
-            real discretization = std::max(dsc->get_avg_edge_length() - 0.5, 1.);
+            double discretization = std::max(dsc->get_avg_edge_length() - 0.5, 1.);
             dsc->set_avg_edge_length(discretization);
             update_title();
         }
             break;
         case '<':
         {
-            real accuracy = std::min(vel_fun->get_accuracy() + 1., 100.);
+            double accuracy = std::min(vel_fun->get_accuracy() + 1., 100.);
             vel_fun->set_accuracy(accuracy);
             update_title();
         }
             break;
         case '>':
         {
-            real accuracy = std::max(vel_fun->get_accuracy() - 1., 1.);
+            double accuracy = std::max(vel_fun->get_accuracy() - 1., 1.);
             vel_fun->set_accuracy(accuracy);
             update_title();
         }

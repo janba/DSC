@@ -26,8 +26,8 @@
  */
 class UI
 {
-    std::unique_ptr<DSC::VelocityFunc<>> vel_fun;
-    std::unique_ptr<DSC::DeformableSimplicialComplex<>> dsc;
+    std::unique_ptr<DSC::VelocityFunc> vel_fun;
+    std::unique_ptr<DSC::DeformableSimplicialComplex> dsc;
     std::unique_ptr<Log> basic_log;
     std::unique_ptr<Painter> painter;
     
@@ -85,7 +85,7 @@ private:
     /**
      Loads the .dsc file specified by the model_file_name variable.
      */
-    void load_model(const std::string& file_name, real discretization);
+    void load_model(const std::string& file_name, double discretization);
     
     /**
      Updates the window title.

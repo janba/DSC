@@ -29,38 +29,38 @@ class Tetralizer
     
     static void create_points(const vec3& origin, const vec3& voxel_size, int Ni, int Nj, int Nk, std::vector<vec3>& points);
     
-    static void build_boundary_mesh(std::vector<real>& points_boundary, real avg_edge_length, std::vector<int>& faces_boundary, const vec3& size);
+    static void build_boundary_mesh(std::vector<double>& points_boundary, double avg_edge_length, std::vector<int>& faces_boundary, const vec3& size);
     
-    static void tetrahedralize_inside(const std::vector<real>& points_interface, const std::vector<int>& faces_interface, std::vector<real>& points_inside, std::vector<int>& tets_inside);
+    static void tetrahedralize_inside(const std::vector<double>& points_interface, const std::vector<int>& faces_interface, std::vector<double>& points_inside, std::vector<int>& tets_inside);
     
-    static void tetrahedralize_outside(const std::vector<real>& points_interface, const std::vector<int>&  faces_interface, std::vector<real>& points_boundary, std::vector<int>&  faces_boundary, std::vector<real>& points_outside, std::vector<int>& tets_outside, const vec3& inside_pts);
+    static void tetrahedralize_outside(const std::vector<double>& points_interface, const std::vector<int>&  faces_interface, std::vector<double>& points_boundary, std::vector<int>&  faces_boundary, std::vector<double>& points_outside, std::vector<int>& tets_outside, const vec3& inside_pts);
     
-    static void merge_inside_outside(const std::vector<real>& points_interface, const std::vector<int>&  faces_interface, std::vector<real>& points_inside, std::vector<int>&  tets_inside, std::vector<real>& points_outside, std::vector<int>&  tets_outside, std::vector<real>& output_points, std::vector<int>&  output_tets, std::vector<int>&  output_tet_flags);
+    static void merge_inside_outside(const std::vector<double>& points_interface, const std::vector<int>&  faces_interface, std::vector<double>& points_inside, std::vector<int>&  tets_inside, std::vector<double>& points_outside, std::vector<int>&  tets_outside, std::vector<double>& output_points, std::vector<int>&  output_tets, std::vector<int>&  output_tet_flags);
     
 public:
     
-    static void tetralize(const vec3& size, real avg_edge_length, const std::vector<vec3>& points_interface, const std::vector<int>& faces_interface, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
+    static void tetralize(const vec3& size, double avg_edge_length, const std::vector<vec3>& points_interface, const std::vector<int>& faces_interface, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
     {
-        std::vector<real> points_interface_real;
+        std::vector<double> points_interface_real;
         for (vec3 p : points_interface) {
             points_interface_real.push_back(p[0]);
             points_interface_real.push_back(p[1]);
             points_interface_real.push_back(p[2]);
         }
         
-        std::vector<real>    points_boundary;
+        std::vector<double>    points_boundary;
         std::vector<int>  faces_boundary;
         build_boundary_mesh(points_boundary, avg_edge_length, faces_boundary, size);
         
-        std::vector<real> points_inside;
+        std::vector<double> points_inside;
         std::vector<int> tets_inside;
         tetrahedralize_inside(points_interface_real, faces_interface, points_inside, tets_inside);
         
-        std::vector<real> points_outside;
+        std::vector<double> points_outside;
         std::vector<int> tets_outside;
         tetrahedralize_outside(points_interface_real, faces_interface, points_boundary, faces_boundary, points_outside, tets_outside, vec3(points_inside[0], points_inside[1], points_inside[2]));
 
-        std::vector<real> points_real;
+        std::vector<double> points_real;
         merge_inside_outside(points_interface_real, faces_interface, points_inside, tets_inside, points_outside, tets_outside, points_real, tets, tet_labels);
         
         points.resize(points_real.size()/3);
@@ -81,7 +81,7 @@ public:
         }
     }
     
-    static void tetralize(const vec3& origin, const vec3& size, real avg_edge_length, std::vector<unsigned int>& labels, std::vector<is_mesh::Geometry*>& geometries, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
+    static void tetralize(const vec3& origin, const vec3& size, double avg_edge_length, std::vector<unsigned int>& labels, std::vector<is_mesh::Geometry*>& geometries, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
     {
         int Ni = std::ceil(size[0]/avg_edge_length);
         int Nj = std::ceil(size[1]/avg_edge_length);

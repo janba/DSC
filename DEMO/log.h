@@ -53,22 +53,22 @@ private:
     /**
      Write a variable with name and value to the log.
      */
-    void write_variable(const std::string& name, real value);
+    void write_variable(const std::string& name, double value);
     
     /**
      Write a variable with name, value and change in value to the log.
      */
-    void write_variable(const std::string& name, real value, real change);
+    void write_variable(const std::string& name, double value, double change);
     
     /**
      Write a variable with name, value and unit of the value to the log.
      */
-    void write_variable(const std::string& name, real value, const std::string& unit);
+    void write_variable(const std::string& name, double value, const std::string& unit);
     
     /**
      Write a variable with name and values to the log.
      */
-    void write_variable(const std::string& name, const std::vector<real>& values);
+    void write_variable(const std::string& name, const std::vector<double>& values);
     
     void write_variable(const std::string& name, const std::vector<int>& values);
     
@@ -82,20 +82,20 @@ public:
     /**
      Write the time step number, timings and additional time step information to the log.
      */
-    void write_timestep(const DSC::VelocityFunc<>& vel_fun, DSC::DeformableSimplicialComplex<>& dsc);
+    void write_timestep(const DSC::VelocityFunc& vel_fun, DSC::DeformableSimplicialComplex& dsc);
     
     /**
      Writes simplicial complex information to the log.
      */
-    void write_log(DSC::DeformableSimplicialComplex<>& dsc);
+    void write_log(DSC::DeformableSimplicialComplex& dsc);
     
     /**
      Writes velocity function information to the log.
      */
-    void write_log(const DSC::VelocityFunc<>& vel_fun);
+    void write_log(const DSC::VelocityFunc& vel_fun);
     
     /**
      Writes timings to the log.
      */
-    void write_timings(const DSC::VelocityFunc<>& vel_fun);
+    void write_timings(const DSC::VelocityFunc& vel_fun);
 };

@@ -65,7 +65,7 @@ void generate_from_geo(const string& input_file_name, const string& output_file_
     
     vec3 origin;
     vec3 size;
-    real discretization;
+    double discretization;
     std::vector<unsigned int> labels;
     std::vector<is_mesh::Geometry*> geometries;
     
