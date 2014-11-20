@@ -588,12 +588,12 @@ namespace is_mesh{
     }
 
     NodeKey ISMesh::insert_node(const vec3& p) {
-        auto node = m_node_kernel->create(NodeAttributes(p));
+        auto node = m_node_kernel->create(NodeAttributes(p), this);
         return node.key();
     }
 
     EdgeKey ISMesh::insert_edge(NodeKey node1, NodeKey node2) {
-        auto edge = m_edge_kernel->create(EdgeAttributes());
+        auto edge = m_edge_kernel->create(EdgeAttributes(), this);
         //add the new simplex to the co-boundary relation of the boundary simplices
         get(node1).add_co_face(edge.key());
         get(node2).add_co_face(edge.key());
@@ -604,7 +604,7 @@ namespace is_mesh{
     }
 
     FaceKey ISMesh::insert_face(EdgeKey edge1, EdgeKey edge2, EdgeKey edge3) {
-        auto face = m_face_kernel->create(FaceAttributes());
+        auto face = m_face_kernel->create(FaceAttributes(), this);
         //update relations
         get(edge1).add_co_face(face.key());
         get(edge2).add_co_face(face.key());
@@ -616,7 +616,7 @@ namespace is_mesh{
     }
 
     TetrahedronKey ISMesh::insert_tetrahedron(FaceKey face1, FaceKey face2, FaceKey face3, FaceKey face4) {
-        auto tetrahedron = m_tetrahedron_kernel->create(TetAttributes());
+        auto tetrahedron = m_tetrahedron_kernel->create(TetAttributes(), this);
         //update relations
         get(face1).add_co_face(tetrahedron.key());
         get(face2).add_co_face(tetrahedron.key());

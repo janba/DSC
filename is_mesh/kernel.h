@@ -5,10 +5,13 @@
 #include <vector>
 
 #include "kernel_iterator.h"
+#include "is_mesh.h"
 
 namespace is_mesh
 {
-    
+
+    class ISMesh;
+
     /**
      * namespace that defines auxiliary data structures and helper methods.
      */
@@ -28,10 +31,9 @@ namespace is_mesh
             
             enum state_type { VALID, MARKED, EMPTY };
             
-            kernel_element() : value() { }
+            kernel_element() : value(nullptr) { }
             
-            kernel_element(kernel_element&& ke) : value() {
-                value = std::move(ke.value);
+            kernel_element(kernel_element&& ke) : value{std::move(ke.value)} {
                 key = ke.key;
                 state = ke.state;
             }
@@ -154,14 +156,14 @@ namespace is_mesh
          *
          * @return      An iterator pointing to the element.
          */
-        const_iterator create(const type_traits& attributes)
+        const_iterator create(const type_traits& attributes, ISMesh* isMesh)
         {
             kernel_element& cur = get_next_free_cell();
 
             assert(cur.state != kernel_element::VALID || !"Cannot create new element, duplicate key.");
             assert(cur.state != kernel_element::MARKED || !"Attempted to overwrite a marked element.");
             
-            cur.value = value_type{attributes};
+            cur.value = value_type{isMesh, attributes};
             cur.state = kernel_element::VALID;
             return iterator(this, cur.key);
         }
