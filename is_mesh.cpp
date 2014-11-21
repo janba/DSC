@@ -1,7 +1,9 @@
 #include "is_mesh.h"
 
+using namespace std;
+
 namespace is_mesh{
-    ISMesh::ISMesh(std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels) {
+    ISMesh::ISMesh(vector<vec3> & points, vector<int> & tets, const vector<int>& tet_labels) {
         m_node_kernel = new kernel<node_type, NodeKey>();
         m_edge_kernel = new kernel<edge_type, EdgeKey>();
         m_face_kernel = new kernel<face_type, FaceKey>();
@@ -94,9 +96,9 @@ namespace is_mesh{
         update(tids);
     }
 
-    bool ISMesh::create(const std::vector<vec3>& points, const std::vector<int>& tets) {
-        std::map<edge_key, int> edge_map;
-        std::map<face_key, int> face_map;
+    bool ISMesh::create(const vector<vec3>& points, const vector<int>& tets) {
+        map<edge_key, int> edge_map;
+        map<face_key, int> face_map;
 
         for (vec3 p : points)
         {
@@ -131,7 +133,7 @@ namespace is_mesh{
         return true;
     }
 
-    void ISMesh::init_flags(const std::vector<int>& tet_labels) {
+    void ISMesh::init_flags(const vector<int>& tet_labels) {
         if(tet_labels.size() > 0)
         {
             for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
@@ -506,8 +508,8 @@ namespace is_mesh{
         return get(nid).get_pos();
     }
 
-    std::vector<vec3> ISMesh::get_pos(const SimplexSet<NodeKey>& nids) {
-        std::vector<vec3> verts(nids.size());
+    vector<vec3> ISMesh::get_pos(const SimplexSet<NodeKey>& nids) {
+        vector<vec3> verts(nids.size());
         for (unsigned int i = 0; i < nids.size(); i++)
         {
             verts[i] = get_pos(nids[i]);
@@ -1008,10 +1010,10 @@ namespace is_mesh{
         }
     }
 
-    void ISMesh::extract_surface_mesh(std::vector<vec3>& points, std::vector<int>& faces) {
+    void ISMesh::extract_surface_mesh(vector<vec3>& points, vector<int>& faces) {
         garbage_collect();
 
-        std::map<NodeKey, int> indices;
+        map<NodeKey, int> indices;
         // Extract vertices
         for (auto nit = nodes_begin(); nit != nodes_end(); nit++)
         {
@@ -1035,10 +1037,10 @@ namespace is_mesh{
         }
     }
 
-    void ISMesh::extract_tet_mesh(std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels) {
+    void ISMesh::extract_tet_mesh(vector<vec3>& points, vector<int>& tets, vector<int>& tet_labels) {
         garbage_collect();
 
-        std::map<NodeKey, int> indices;
+        map<NodeKey, int> indices;
         // Extract vertices
         for (auto nit = nodes_begin(); nit != nodes_end(); nit++)
         {
@@ -1057,7 +1059,7 @@ namespace is_mesh{
     }
 
     void ISMesh::validity_check() {
-        std::cout << "Testing connectivity of simplicial complex: ";
+        cout << "Testing connectivity of simplicial complex: ";
         for(auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
         {
             assert(exists(tit.key()));
@@ -1068,7 +1070,7 @@ namespace is_mesh{
                 assert(exists(f));
                 auto cotets = get_tets(f);
                 assert((get(f).is_boundary() && cotets.size() == 1) || (!get(f).is_boundary() && cotets.size() == 2));
-                assert(std::find(cotets.begin(), cotets.end(), tit.key()) != cotets.end());
+                assert(find(cotets.begin(), cotets.end(), tit.key()) != cotets.end());
                 for (auto f2 : faces) {
                     assert(f == f2 || get_edge(f, f2).is_valid());
                 }
@@ -1080,7 +1082,7 @@ namespace is_mesh{
                 {
                     assert(exists(e));
                     auto cofaces = get_faces(e);
-                    assert(std::find(cofaces.begin(), cofaces.end(), f) != cofaces.end());
+                    assert(find(cofaces.begin(), cofaces.end(), f) != cofaces.end());
                     for (auto e2 : edges) {
                         assert(e == e2 || get_node(e, e2).is_valid());
                     }
@@ -1092,7 +1094,7 @@ namespace is_mesh{
                     {
                         assert(exists(n));
                         auto coedges = get_edges(n);
-                        assert(std::find(coedges.begin(), coedges.end(), e) != coedges.end());
+                        assert(find(coedges.begin(), coedges.end(), e) != coedges.end());
                     }
                 }
 
@@ -1101,16 +1103,16 @@ namespace is_mesh{
             assert(get_edges(tit.key()).size() == 6);
             assert(get_nodes(tit.key()).size() == 4);
         }
-        std::cout << "PASSED" << std::endl;
+        cout << "PASSED" << endl;
 
-        std::cout << "Testing for inverted tetrahedra: ";
+        cout << "Testing for inverted tetrahedra: ";
         for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
         {
             assert(!is_inverted(tit.key()));
         }
-        std::cout << "PASSED" << std::endl;
+        cout << "PASSED" << endl;
 
-        std::cout << "Testing for corrupted interface or boundary: ";
+        cout << "Testing for corrupted interface or boundary: ";
         for (auto eit = edges_begin(); eit != edges_end(); eit++)
         {
             int boundary = 0;
@@ -1128,6 +1130,6 @@ namespace is_mesh{
             assert((eit->is_interface() && interface >= 2) || (!eit->is_interface() && interface == 0)); // Check that the interface is not corrupted
             assert((eit->is_boundary() && boundary == 2) || (!eit->is_boundary() && boundary == 0)); // Check that the boundary is not corrupted
         }
-        std::cout << "PASSED" << std::endl;
+        cout << "PASSED" << endl;
     }
 }
