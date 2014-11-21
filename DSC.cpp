@@ -48,7 +48,7 @@ namespace DSC {
         }
     }
 
-    void DeformableSimplicialComplex::print(const node_key& n) {
+    void DeformableSimplicialComplex::print(const NodeKey& n) {
         cout << "Node: " << n << endl;
         vec3 p = get_pos(n);
         vec3 d = get(n).get_destination();
@@ -107,43 +107,43 @@ namespace DSC {
         cout << "];" << endl;
     }
 
-    bool DeformableSimplicialComplex::is_unsafe_editable(const node_key& nid) {
+    bool DeformableSimplicialComplex::is_unsafe_editable(const NodeKey& nid) {
         return exists(nid) && !get(nid).is_boundary();
     }
 
-    bool DeformableSimplicialComplex::is_unsafe_editable(const edge_key& eid) {
+    bool DeformableSimplicialComplex::is_unsafe_editable(const EdgeKey& eid) {
         return exists(eid) && !get(eid).is_boundary();
     }
 
-    bool DeformableSimplicialComplex::is_unsafe_editable(const face_key& fid) {
+    bool DeformableSimplicialComplex::is_unsafe_editable(const FaceKey& fid) {
         return exists(fid) && !get(fid).is_boundary();
     }
 
-    bool DeformableSimplicialComplex::is_unsafe_editable(const tet_key& tid) {
+    bool DeformableSimplicialComplex::is_unsafe_editable(const TetrahedronKey& tid) {
         return exists(tid);
     }
 
-    bool DeformableSimplicialComplex::is_safe_editable(const node_key& nid) {
+    bool DeformableSimplicialComplex::is_safe_editable(const NodeKey& nid) {
         return is_unsafe_editable(nid) && !get(nid).is_interface();
     }
 
-    bool DeformableSimplicialComplex::is_safe_editable(const edge_key& eid) {
+    bool DeformableSimplicialComplex::is_safe_editable(const EdgeKey& eid) {
         return is_unsafe_editable(eid) && !get(eid).is_interface();
     }
 
-    bool DeformableSimplicialComplex::is_safe_editable(const face_key& fid) {
+    bool DeformableSimplicialComplex::is_safe_editable(const FaceKey& fid) {
         return is_unsafe_editable(fid) && !get(fid).is_interface();
     }
 
-    bool DeformableSimplicialComplex::is_safe_editable(const tet_key& tid) {
+    bool DeformableSimplicialComplex::is_safe_editable(const TetrahedronKey& tid) {
         return is_unsafe_editable(tid);
     }
 
-    bool DeformableSimplicialComplex::is_movable(const node_key& nid) {
+    bool DeformableSimplicialComplex::is_movable(const NodeKey& nid) {
         return is_unsafe_editable(nid) && get(nid).is_interface() && !get(nid).is_crossing();
     }
 
-    void DeformableSimplicialComplex::set_pos(const node_key& nid, const vec3& p) {
+    void DeformableSimplicialComplex::set_pos(const NodeKey& nid, const vec3& p) {
         get(nid).set_pos(p);
         if(!is_movable(nid))
         {
@@ -151,7 +151,7 @@ namespace DSC {
         }
     }
 
-    void DeformableSimplicialComplex::set_destination(const node_key& nid, const vec3& dest) {
+    void DeformableSimplicialComplex::set_destination(const NodeKey& nid, const vec3& dest) {
         if(is_movable(nid))
         {
             vec3 p = get_pos(nid);
@@ -192,8 +192,8 @@ namespace DSC {
         return design_domain;
     }
 
-    double DeformableSimplicialComplex::build_table(const edge_key& e, const SimplexSet<node_key>& polygon, vector<vector<int>>& K) {
-        SimplexSet<node_key> nids = get_nodes(e);
+    double DeformableSimplicialComplex::build_table(const EdgeKey& e, const SimplexSet<NodeKey>& polygon, vector<vector<int>>& K) {
+        SimplexSet<NodeKey> nids = get_nodes(e);
 
         const int m = (int) polygon.size();
 
@@ -249,8 +249,8 @@ namespace DSC {
     }
 
     SimplexSet<NodeKey> DeformableSimplicialComplex::get_polygon(SimplexSet<EdgeKey>& eids) {
-        SimplexSet<node_key> polygon = {get_nodes(eids[0]).front()};
-        node_key next_nid;
+        SimplexSet<NodeKey> polygon = {get_nodes(eids[0]).front()};
+        NodeKey next_nid;
         do {
             next_nid = get_next(polygon.back(), eids);
             if(next_nid.is_valid() && !polygon.contains(next_nid))
@@ -271,7 +271,7 @@ namespace DSC {
 
     vector<SimplexSet<NodeKey>> DeformableSimplicialComplex::get_polygons(const EdgeKey& eid)
     {
-        vector<SimplexSet<tet_key>> tid_groups;
+        vector<SimplexSet<TetrahedronKey>> tid_groups;
         for (auto t : get_tets(eid))
         {
             bool found = false;
@@ -311,7 +311,7 @@ namespace DSC {
         return polygons;
     }
 
-    void DeformableSimplicialComplex::flip_23_recursively(const SimplexSet<node_key>& polygon, const node_key& n1, const node_key& n2, vector<vector<int>>& K, int i, int j) {
+    void DeformableSimplicialComplex::flip_23_recursively(const SimplexSet<NodeKey>& polygon, const NodeKey& n1, const NodeKey& n2, vector<vector<int>>& K, int i, int j) {
         if(j >= i+2)
         {
             int k = K[i][j];
@@ -321,7 +321,7 @@ namespace DSC {
         }
     }
 
-    void DeformableSimplicialComplex::topological_edge_removal(const SimplexSet<node_key>& polygon, const node_key& n1, const node_key& n2, vector<vector<int>>& K) {
+    void DeformableSimplicialComplex::topological_edge_removal(const SimplexSet<NodeKey>& polygon, const NodeKey& n1, const NodeKey& n2, vector<vector<int>>& K) {
         const int m = static_cast<int>(polygon.size());
         int k = K[0][m-1];
         flip_23_recursively(polygon, n1, n2, K, 0, k);
@@ -329,8 +329,8 @@ namespace DSC {
         flip_32(get_edge(n1, n2));
     }
 
-    bool DeformableSimplicialComplex::topological_edge_removal(const edge_key& eid) {
-        vector<SimplexSet<node_key>> polygon = get_polygons(eid);
+    bool DeformableSimplicialComplex::topological_edge_removal(const EdgeKey& eid) {
+        vector<SimplexSet<NodeKey>> polygon = get_polygons(eid);
 #ifdef DEBUG
         assert(polygon.size() == 1 && polygon.front().size() > 2);
 #endif
@@ -340,14 +340,14 @@ namespace DSC {
 
         if (q_new > min_quality(get_tets(eid)))
         {
-            const SimplexSet<node_key>& nodes = get_nodes(eid);
+            const SimplexSet<NodeKey>& nodes = get_nodes(eid);
             topological_edge_removal(polygon.front(), nodes[0], nodes[1], K);
             return true;
         }
         return false;
     }
 
-    void DeformableSimplicialComplex::topological_boundary_edge_removal(const SimplexSet<node_key>& polygon1, const SimplexSet<node_key>& polygon2, const edge_key& eid, vector<vector<int>>& K1, vector<vector<int>>& K2) {
+    void DeformableSimplicialComplex::topological_boundary_edge_removal(const SimplexSet<NodeKey>& polygon1, const SimplexSet<NodeKey>& polygon2, const EdgeKey& eid, vector<vector<int>>& K1, vector<vector<int>>& K2) {
         auto nids = get_nodes(eid);
         const int m1 = static_cast<int>(polygon1.size());
         const int m2 = static_cast<int>(polygon2.size());
@@ -357,8 +357,8 @@ namespace DSC {
 
         if(m2 <= 2) {
             // Find the faces to flip about.
-            face_key f1 = get_face(nids[0], nids[1], polygon1.front());
-            face_key f2 = get_face(nids[0], nids[1], polygon1.back());
+            FaceKey f1 = get_face(nids[0], nids[1], polygon1.front());
+            FaceKey f2 = get_face(nids[0], nids[1], polygon1.back());
 #ifdef DEBUG
             assert(get(f1).is_boundary() && get(f2).is_boundary());
 #endif
@@ -374,8 +374,8 @@ namespace DSC {
             flip_23_recursively(polygon2, nids[0], nids[1], K2, k, m2-1);
 
             // Find the faces to flip about.
-            face_key f1 = get_face(nids[0], nids[1], polygon1.front());
-            face_key f2 = get_face(nids[0], nids[1], polygon1.back());
+            FaceKey f1 = get_face(nids[0], nids[1], polygon1.front());
+            FaceKey f2 = get_face(nids[0], nids[1], polygon1.back());
 
             if(precond_flip_edge(get_edge(f1, f2), f1, f2))
             {
@@ -384,8 +384,8 @@ namespace DSC {
         }
     }
 
-    bool DeformableSimplicialComplex::topological_boundary_edge_removal(const edge_key& eid) {
-        vector<SimplexSet<node_key>> polygons = get_polygons(eid);
+    bool DeformableSimplicialComplex::topological_boundary_edge_removal(const EdgeKey& eid) {
+        vector<SimplexSet<NodeKey>> polygons = get_polygons(eid);
 
         if(polygons.size() > 2 || polygons[0].size() <= 2)
         {
@@ -413,7 +413,7 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::topological_edge_removal() {
-        vector<tet_key> tets;
+        vector<TetrahedronKey> tets;
         for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
         {
             if (quality(tit.key()) < pars.MIN_TET_QUALITY)
@@ -456,15 +456,15 @@ namespace DSC {
         garbage_collect();
     }
 
-    SimplexSet<EdgeKey> DeformableSimplicialComplex::test_neighbour(const face_key& f, const node_key& a, const node_key& b, const node_key& u, const node_key& w, double& q_old, double& q_new) {
+    SimplexSet<EdgeKey> DeformableSimplicialComplex::test_neighbour(const FaceKey& f, const NodeKey& a, const NodeKey& b, const NodeKey& u, const NodeKey& w, double& q_old, double& q_new) {
         EdgeKey e = get_edge(u,w);
-        SimplexSet<face_key> g_set = get_faces(e) - get_faces(get_tets(f));
+        SimplexSet<FaceKey> g_set = get_faces(e) - get_faces(get_tets(f));
         double q = Util::quality(get_pos(a), get_pos(b), get_pos(w), get_pos(u));
 
         if(g_set.size() == 1 && is_safe_editable(e))
         {
-            face_key g = g_set.front();
-            node_key v = (get_nodes(g) - get_nodes(e)).front();
+            FaceKey g = g_set.front();
+            NodeKey v = (get_nodes(g) - get_nodes(e)).front();
             double V_uv = Util::signed_volume(get_pos(a), get_pos(b), get_pos(v), get_pos(u));
             double V_vw = Util::signed_volume(get_pos(a), get_pos(b), get_pos(w), get_pos(v));
             double V_wu = Util::signed_volume(get_pos(a), get_pos(b), get_pos(u), get_pos(w));
@@ -475,15 +475,15 @@ namespace DSC {
                         Util::quality(get_pos(u), get_pos(v), get_pos(b), get_pos(w)));
 
                 double q_uv_old, q_uv_new, q_vw_old, q_vw_new;
-                SimplexSet<edge_key> uv_edges = test_neighbour(g, a, b, u, v, q_uv_old, q_uv_new);
-                SimplexSet<edge_key> vw_edges = test_neighbour(g, a, b, v, w, q_vw_old, q_vw_new);
+                SimplexSet<EdgeKey> uv_edges = test_neighbour(g, a, b, u, v, q_uv_old, q_uv_new);
+                SimplexSet<EdgeKey> vw_edges = test_neighbour(g, a, b, v, w, q_vw_old, q_vw_new);
 
                 q_old = Util::min(Util::min(q_old, q_uv_old), q_vw_old);
                 q_new = Util::min(q_uv_new, q_vw_new);
 
                 if(q_new > q_old || q_new > q)
                 {
-                    SimplexSet<edge_key> edges = {get_edge(f, g)};
+                    SimplexSet<EdgeKey> edges = {get_edge(f, g)};
                     edges += uv_edges;
                     edges += vw_edges;
                     return edges;
@@ -495,15 +495,15 @@ namespace DSC {
         return {};
     }
 
-    bool DeformableSimplicialComplex::topological_face_removal(const face_key& f) {
-        SimplexSet<node_key> nids = get_nodes(f);
-        SimplexSet<node_key> apices = get_nodes(get_tets(f)) - nids;
+    bool DeformableSimplicialComplex::topological_face_removal(const FaceKey& f) {
+        SimplexSet<NodeKey> nids = get_nodes(f);
+        SimplexSet<NodeKey> apices = get_nodes(get_tets(f)) - nids;
         this->orient_cc(apices[0], nids);
 
         double q_01_new, q_01_old, q_12_new, q_12_old, q_20_new, q_20_old;
-        SimplexSet<edge_key> e01 = test_neighbour(f, apices[0], apices[1], nids[0], nids[1], q_01_old, q_01_new);
-        SimplexSet<edge_key> e12 = test_neighbour(f, apices[0], apices[1], nids[1], nids[2], q_12_old, q_12_new);
-        SimplexSet<edge_key> e20 = test_neighbour(f, apices[0], apices[1], nids[2], nids[0], q_20_old, q_20_new);
+        SimplexSet<EdgeKey> e01 = test_neighbour(f, apices[0], apices[1], nids[0], nids[1], q_01_old, q_01_new);
+        SimplexSet<EdgeKey> e12 = test_neighbour(f, apices[0], apices[1], nids[1], nids[2], q_12_old, q_12_new);
+        SimplexSet<EdgeKey> e20 = test_neighbour(f, apices[0], apices[1], nids[2], nids[0], q_20_old, q_20_new);
 
         double q_old = Util::min(Util::min(Util::min(min_quality(get_tets(f)), q_01_old), q_12_old), q_20_old);
         double q_new = Util::min(Util::min(q_01_new, q_12_new), q_20_new);
@@ -528,8 +528,8 @@ namespace DSC {
         return false;
     }
 
-    bool DeformableSimplicialComplex::topological_face_removal(const node_key& apex1, const node_key& apex2) {
-        SimplexSet<face_key> fids = get_faces(get_tets(apex1)) & get_faces(get_tets(apex2));
+    bool DeformableSimplicialComplex::topological_face_removal(const NodeKey& apex1, const NodeKey& apex2) {
+        SimplexSet<FaceKey> fids = get_faces(get_tets(apex1)) & get_faces(get_tets(apex2));
         vec3 p = get_pos(apex1);
         vec3 ray = get_pos(apex2) - p;
         for(auto f : fids)
@@ -553,7 +553,7 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::topological_face_removal() {
-        vector<tet_key> tets;
+        vector<TetrahedronKey> tets;
         for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
         {
             if (quality(tit.key()) < pars.MIN_TET_QUALITY)
@@ -597,7 +597,7 @@ namespace DSC {
             return;
         }
 
-        vector<edge_key> edges;
+        vector<EdgeKey> edges;
         for (auto eit = edges_begin(); eit != edges_end(); eit++)
         {
             if ((eit->is_interface() || eit->is_boundary()) && length(eit.key()) > pars.MAX_LENGTH*AVG_LENGTH)
@@ -625,7 +625,7 @@ namespace DSC {
             return;
         }
 
-        vector<tet_key> tetrahedra;
+        vector<TetrahedronKey> tetrahedra;
         for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
         {
             if (volume(tit.key()) > pars.MAX_VOLUME*AVG_VOLUME)
@@ -653,7 +653,7 @@ namespace DSC {
             return;
         }
 
-        vector<edge_key> edges;
+        vector<EdgeKey> edges;
         for (auto eit = edges_begin(); eit != edges_end(); eit++)
         {
             if ((eit->is_interface() || eit->is_boundary()) && length(eit.key()) < pars.MIN_LENGTH*AVG_LENGTH)
@@ -684,7 +684,7 @@ namespace DSC {
             return;
         }
 
-        vector<tet_key> tetrahedra;
+        vector<TetrahedronKey> tetrahedra;
         for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
         {
             if (volume(tit.key()) < pars.MIN_VOLUME*AVG_VOLUME)
@@ -710,7 +710,7 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::remove_degenerate_edges() {
-        list<edge_key> edges;
+        list<EdgeKey> edges;
         for (auto eit = edges_begin(); eit != edges_end(); eit++)
         {
             if (quality(eit.key()) < pars.DEG_EDGE_QUALITY)
@@ -737,7 +737,7 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::remove_degenerate_faces() {
-        list<face_key> faces;
+        list<FaceKey> faces;
 
         for (auto fit = faces_begin(); fit != faces_end(); fit++)
         {
@@ -757,7 +757,7 @@ namespace DSC {
                     i++;
                 }
                 else {
-                    edge_key e = longest_edge(get_edges(f));
+                    EdgeKey e = longest_edge(get_edges(f));
                     if(length(e) > AVG_LENGTH)
                     {
                         split(e);
@@ -773,7 +773,7 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::remove_degenerate_tets() {
-        vector<tet_key> tets;
+        vector<TetrahedronKey> tets;
 
         for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
         {
@@ -792,7 +792,7 @@ namespace DSC {
                     i++;
                 }
                 else {
-                    edge_key e = longest_edge(get_edges(t));
+                    EdgeKey e = longest_edge(get_edges(t));
                     if(length(e) > AVG_LENGTH)
                     {
                         split(e);
@@ -808,7 +808,7 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::remove_edges() {
-        list<edge_key> edges;
+        list<EdgeKey> edges;
         for (auto eit = edges_begin(); eit != edges_end(); eit++)
         {
             if (quality(eit.key()) < pars.MIN_EDGE_QUALITY)
@@ -834,34 +834,34 @@ namespace DSC {
         garbage_collect();
     }
 
-    bool DeformableSimplicialComplex::remove_cap(const face_key& fid) {
+    bool DeformableSimplicialComplex::remove_cap(const FaceKey& fid) {
         // Find longest edge
-        edge_key eid = longest_edge(get_edges(fid));
+        EdgeKey eid = longest_edge(get_edges(fid));
 
         // Find apex
-        node_key apex = (get_nodes(fid) - get_nodes(eid)).front();
+        NodeKey apex = (get_nodes(fid) - get_nodes(eid)).front();
         // Find the projected position of the apex
         auto verts = get_pos(get_nodes(eid));
         vec3 p = Util::project_point_line(get_pos(apex), verts[1], verts[0]);
 
         // Split longest edge
-        node_key n = ISMesh::split(eid, p, p);
+        NodeKey n = ISMesh::split(eid, p, p);
 
         // Collapse new edge
-        edge_key e_rem = get_edge(apex, n);
+        EdgeKey e_rem = get_edge(apex, n);
         return collapse(e_rem);
 
     }
 
-    bool DeformableSimplicialComplex::remove_needle(const face_key& fid) {
+    bool DeformableSimplicialComplex::remove_needle(const FaceKey& fid) {
         // Find shortest edge
-        edge_key e = shortest_edge(get_edges(fid));
+        EdgeKey e = shortest_edge(get_edges(fid));
 
         // Remove edge
         return collapse(e);
     }
 
-    bool DeformableSimplicialComplex::remove_face(const face_key& f) {
+    bool DeformableSimplicialComplex::remove_face(const FaceKey& f) {
         if(max_angle(f) > 0.9*M_PI)
         {
             return remove_cap(f);
@@ -870,7 +870,7 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::remove_faces() {
-        list<face_key> faces;
+        list<FaceKey> faces;
 
         for (auto fit = faces_begin(); fit != faces_end(); fit++)
         {
@@ -898,44 +898,44 @@ namespace DSC {
         garbage_collect();
     }
 
-    bool DeformableSimplicialComplex::remove_sliver(const tet_key& tid) {
-        SimplexSet<edge_key> eids = get_edges(tid);
-        edge_key e1 = longest_edge(eids);
+    bool DeformableSimplicialComplex::remove_sliver(const TetrahedronKey& tid) {
+        SimplexSet<EdgeKey> eids = get_edges(tid);
+        EdgeKey e1 = longest_edge(eids);
         eids -= e1;
-        edge_key e2 = longest_edge(eids);
+        EdgeKey e2 = longest_edge(eids);
 
-        node_key n1 = split(e1);
-        node_key n2 = split(e2);
+        NodeKey n1 = split(e1);
+        NodeKey n2 = split(e2);
 
-        edge_key e = get_edge(n1, n2);
+        EdgeKey e = get_edge(n1, n2);
         return collapse(e);
     }
 
-    bool DeformableSimplicialComplex::remove_cap(const tet_key& tid) {
+    bool DeformableSimplicialComplex::remove_cap(const TetrahedronKey& tid) {
         // Find the largest face
-        face_key fid = largest_face(get_faces(tid));
+        FaceKey fid = largest_face(get_faces(tid));
 
         // Find the apex
-        node_key apex = (get_nodes(tid) - get_nodes(fid)).front();
+        NodeKey apex = (get_nodes(tid) - get_nodes(fid)).front();
 
         // Project the apex
         auto verts = get_pos(get_nodes(fid));
         vec3 p = Util::project_point_plane(get_pos(apex), verts[0], verts[1], verts[2]);
 
         // Split the face
-//        node_key n = ISMesh::split(fid, p, p);
+//        NodeKey n = ISMesh::split(fid, p, p);
 
         // Collapse edge
-//        edge_key e = get_edge(n, apex);
+//        EdgeKey e = get_edge(n, apex);
 //        return collapse(e);
         throw string{"Not implemented"};
     }
 
-    bool DeformableSimplicialComplex::remove_wedge(const tet_key& tid) {
-        SimplexSet<edge_key> eids = get_edges(tid);
+    bool DeformableSimplicialComplex::remove_wedge(const TetrahedronKey& tid) {
+        SimplexSet<EdgeKey> eids = get_edges(tid);
         while(eids.size() > 2)
         {
-            edge_key e = shortest_edge(eids);
+            EdgeKey e = shortest_edge(eids);
             if(collapse(e))
             {
                 return true;
@@ -946,22 +946,22 @@ namespace DSC {
 
         //        simplex_set cl_t;
         //        closure(t, cl_t);
-        //        edge_key e1 = longest_edge(cl_t);
+        //        EdgeKey e1 = longest_edge(cl_t);
         //        cl_t.erase(e1);
-        //        edge_key e2 = longest_edge(cl_t);
+        //        EdgeKey e2 = longest_edge(cl_t);
         //
-        //        node_key n1 = split(e1);
-        //        node_key n2 = split(e2);
+        //        NodeKey n1 = split(e1);
+        //        NodeKey n2 = split(e2);
         //
-        //        edge_key e = get_edge(n1, n2);
+        //        EdgeKey e = get_edge(n1, n2);
         //        return collapse(e);
     }
 
-    bool DeformableSimplicialComplex::remove_needle(const tet_key& tid) {
-        SimplexSet<edge_key> eids = get_edges(tid);
+    bool DeformableSimplicialComplex::remove_needle(const TetrahedronKey& tid) {
+        SimplexSet<EdgeKey> eids = get_edges(tid);
         while(eids.size() > 1)
         {
-            edge_key e = shortest_edge(eids);
+            EdgeKey e = shortest_edge(eids);
             if(collapse(e))
             {
                 return true;
@@ -973,14 +973,14 @@ namespace DSC {
         //        return true;
     }
 
-    bool DeformableSimplicialComplex::remove_tet(const tet_key& tid) {
+    bool DeformableSimplicialComplex::remove_tet(const TetrahedronKey& tid) {
         // Find the largest face
-        SimplexSet<face_key> fids = get_faces(tid);
-        face_key fid = largest_face(fids);
-        SimplexSet<node_key> nids = get_nodes(fid);
+        SimplexSet<FaceKey> fids = get_faces(tid);
+        FaceKey fid = largest_face(fids);
+        SimplexSet<NodeKey> nids = get_nodes(fid);
 
         // Find the apex
-        node_key apex = (get_nodes(tid) - nids).front();
+        NodeKey apex = (get_nodes(tid) - nids).front();
 
         // Project the apex
         auto verts = get_pos(nids);
@@ -1024,7 +1024,7 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::remove_tets() {
-        vector<tet_key> tets;
+        vector<TetrahedronKey> tets;
 
         for (auto tit = tetrahedra_begin(); tit != tetrahedra_end(); tit++)
         {
@@ -1051,9 +1051,9 @@ namespace DSC {
         garbage_collect();
     }
 
-    bool DeformableSimplicialComplex::smart_laplacian(const node_key& nid, double alpha) {
-        SimplexSet<tet_key> tids = get_tets(nid);
-        SimplexSet<face_key> fids = get_faces(tids) - get_faces(nid);
+    bool DeformableSimplicialComplex::smart_laplacian(const NodeKey& nid, double alpha) {
+        SimplexSet<TetrahedronKey> tids = get_tets(nid);
+        SimplexSet<FaceKey> fids = get_faces(tids) - get_faces(nid);
 
         vec3 old_pos = get_pos(nid);
         vec3 avg_pos = get_barycenter(get_nodes(fids));
@@ -1156,7 +1156,7 @@ namespace DSC {
 #endif
     }
 
-    bool DeformableSimplicialComplex::move_vertex(const node_key & n) {
+    bool DeformableSimplicialComplex::move_vertex(const NodeKey & n) {
         vec3 pos = get_pos(n);
         vec3 destination = get(n).get_destination();
         double l = Util::length(destination - pos);
@@ -1177,7 +1177,7 @@ namespace DSC {
         return false;
     }
 
-    double DeformableSimplicialComplex::intersection_with_link(const node_key & n, const vec3& destination) {
+    double DeformableSimplicialComplex::intersection_with_link(const NodeKey & n, const vec3& destination) {
         vec3 pos = get_pos(n);
         vec3 ray = destination - pos;
 
@@ -1198,12 +1198,12 @@ namespace DSC {
         return min_t;
     }
 
-    bool DeformableSimplicialComplex::is_flat(const SimplexSet<face_key>& fids) {
-        for (const face_key& f1 : fids) {
+    bool DeformableSimplicialComplex::is_flat(const SimplexSet<FaceKey>& fids) {
+        for (const FaceKey& f1 : fids) {
             if (get(f1).is_interface() || get(f1).is_boundary())
             {
                 vec3 normal1 = get_normal(f1);
-                for (const face_key& f2 : fids) {
+                for (const FaceKey& f2 : fids) {
                     if (f1 != f2 && (get(f2).is_interface() || get(f2).is_boundary()))
                     {
                         vec3 normal2 = get_normal(f2);
@@ -1218,8 +1218,8 @@ namespace DSC {
         return true;
     }
 
-    bool DeformableSimplicialComplex::is_flippable(const edge_key & eid) {
-        SimplexSet<face_key> fids;
+    bool DeformableSimplicialComplex::is_flippable(const EdgeKey & eid) {
+        SimplexSet<FaceKey> fids;
         for(auto f : get_faces(eid))
         {
             if (get(f).is_interface() || get(f).is_boundary())
@@ -1232,8 +1232,8 @@ namespace DSC {
             return false;
         }
 
-        SimplexSet<node_key> e_nids = get_nodes(eid);
-        SimplexSet<node_key> new_e_nids = (get_nodes(fids[0]) + get_nodes(fids[1])) - e_nids;
+        SimplexSet<NodeKey> e_nids = get_nodes(eid);
+        SimplexSet<NodeKey> new_e_nids = (get_nodes(fids[0]) + get_nodes(fids[1])) - e_nids;
 #ifdef DEBUG
         assert(new_e_nids.size() == 2);
 #endif
@@ -1253,10 +1253,10 @@ namespace DSC {
         return true;
     }
 
-    bool DeformableSimplicialComplex::precond_flip_edge(const edge_key& eid, const face_key& f1, const face_key& f2) {
-        SimplexSet<node_key> e_nids = get_nodes(eid);
-        SimplexSet<node_key> new_e_nids = (get_nodes(f1) + get_nodes(f2)) - e_nids;
-        SimplexSet<node_key> apices = (get_nodes(get_faces(eid)) - e_nids) - new_e_nids;
+    bool DeformableSimplicialComplex::precond_flip_edge(const EdgeKey& eid, const FaceKey& f1, const FaceKey& f2) {
+        SimplexSet<NodeKey> e_nids = get_nodes(eid);
+        SimplexSet<NodeKey> new_e_nids = (get_nodes(f1) + get_nodes(f2)) - e_nids;
+        SimplexSet<NodeKey> apices = (get_nodes(get_faces(eid)) - e_nids) - new_e_nids;
 #ifdef DEBUG
         assert(e_nids.size() == 2);
         assert(new_e_nids.size() == 2);
@@ -1273,7 +1273,7 @@ namespace DSC {
         vec3 a = get_pos(e_nids[0]);
         vec3 b = get_pos(e_nids[1]);
 
-        for (node_key n : apices) {
+        for (NodeKey n : apices) {
             vec3 c = get_pos(n);
             double t = Util::intersection_ray_plane(p, r, a, b, c);
             if(t > 0. && t < 1.)
@@ -1289,15 +1289,15 @@ namespace DSC {
         return false;
     }
 
-    NodeKey DeformableSimplicialComplex::split(const tet_key& tid) {
-        SimplexSet<edge_key> eids = get_edges(tid);
-        edge_key eid = longest_edge(eids);
+    NodeKey DeformableSimplicialComplex::split(const TetrahedronKey& tid) {
+        SimplexSet<EdgeKey> eids = get_edges(tid);
+        EdgeKey eid = longest_edge(eids);
         return split(eid);
     }
 
-    NodeKey DeformableSimplicialComplex::split(const face_key& fid) {
-        SimplexSet<edge_key> eids = get_edges(fid);
-        edge_key eid = longest_edge(eids);
+    NodeKey DeformableSimplicialComplex::split(const FaceKey& fid) {
+        SimplexSet<EdgeKey> eids = get_edges(fid);
+        EdgeKey eid = longest_edge(eids);
         return split(eid);
     }
 
@@ -1314,7 +1314,7 @@ namespace DSC {
         return ISMesh::split(eid, pos, destination);
     }
 
-    bool DeformableSimplicialComplex::is_collapsable(const edge_key& eid, const node_key& nid, bool safe) {
+    bool DeformableSimplicialComplex::is_collapsable(const EdgeKey& eid, const NodeKey& nid, bool safe) {
         if(safe)
         {
             if(is_safe_editable(nid))
@@ -1336,7 +1336,7 @@ namespace DSC {
     }
 
     bool DeformableSimplicialComplex::collapse(const EdgeKey& eid, bool safe) {
-        SimplexSet<node_key> nids = get_nodes(eid);
+        SimplexSet<NodeKey> nids = get_nodes(eid);
         bool n0_is_editable = is_collapsable(eid, nids[0], safe);
         bool n1_is_editable = is_collapsable(eid, nids[1], safe);
 
@@ -1357,9 +1357,9 @@ namespace DSC {
             test_weights = {0., 0.5, 1.};
         }
 
-        SimplexSet<tet_key> e_tids = get_tets(eid);
-        SimplexSet<face_key> fids0 = get_faces(get_tets(nids[0]) - e_tids) - get_faces(nids[0]);
-        SimplexSet<face_key> fids1 = get_faces(get_tets(nids[1]) - e_tids) - get_faces(nids[1]);
+        SimplexSet<TetrahedronKey> e_tids = get_tets(eid);
+        SimplexSet<FaceKey> fids0 = get_faces(get_tets(nids[0]) - e_tids) - get_faces(nids[0]);
+        SimplexSet<FaceKey> fids1 = get_faces(get_tets(nids[1]) - e_tids) - get_faces(nids[1]);
 
         double q_max = -INFINITY;
         double weight;
@@ -1386,10 +1386,10 @@ namespace DSC {
         return false;
     }
 
-    bool DeformableSimplicialComplex::collapse(SimplexSet<edge_key>& eids, bool safe) {
+    bool DeformableSimplicialComplex::collapse(SimplexSet<EdgeKey>& eids, bool safe) {
         while(eids.size() > 0)
         {
-            edge_key e = shortest_edge(eids);
+            EdgeKey e = shortest_edge(eids);
             if(collapse(e, safe))
             {
                 return true;
@@ -1399,13 +1399,13 @@ namespace DSC {
         return false;
     }
 
-    bool DeformableSimplicialComplex::collapse(const face_key& fid, bool safe) {
-        SimplexSet<edge_key> eids = get_edges(fid);
+    bool DeformableSimplicialComplex::collapse(const FaceKey& fid, bool safe) {
+        SimplexSet<EdgeKey> eids = get_edges(fid);
         return collapse(eids, safe);
     }
 
-    bool DeformableSimplicialComplex::collapse(const tet_key& tid, bool safe) {
-        SimplexSet<edge_key> eids = get_edges(tid);
+    bool DeformableSimplicialComplex::collapse(const TetrahedronKey& tid, bool safe) {
+        SimplexSet<EdgeKey> eids = get_edges(tid);
         return collapse(eids, safe);
     }
 
@@ -1423,12 +1423,12 @@ namespace DSC {
         return verts;
     }
 
-    vec3 DeformableSimplicialComplex::get_normal(const face_key& fid) {
+    vec3 DeformableSimplicialComplex::get_normal(const FaceKey& fid) {
         auto pos = get_pos(this->get_sorted_nodes(fid));
         return Util::normal_direction(pos[0], pos[1], pos[2]);
     }
 
-    vec3 DeformableSimplicialComplex::get_normal(const node_key& nid) {
+    vec3 DeformableSimplicialComplex::get_normal(const NodeKey& nid) {
         vec3 result(0.);
         for (auto f : get_faces(nid))
         {
@@ -1446,7 +1446,7 @@ namespace DSC {
         return Util::normalize(result);
     }
 
-    vec3 DeformableSimplicialComplex::get_barycenter(const SimplexSet<node_key>& nids, bool interface) {
+    vec3 DeformableSimplicialComplex::get_barycenter(const SimplexSet<NodeKey>& nids, bool interface) {
         vec3 avg_pos(0.);
         int i = 0;
         for (auto n : nids)
@@ -1463,81 +1463,81 @@ namespace DSC {
         return avg_pos / static_cast<double>(i);
     }
 
-    vec3 DeformableSimplicialComplex::get_barycenter(const node_key& nid, bool interface) {
+    vec3 DeformableSimplicialComplex::get_barycenter(const NodeKey& nid, bool interface) {
         if(interface && !get(nid).is_interface())
         {
             return get_pos(nid);
         }
 
-        SimplexSet<node_key> nids = get_nodes(get_tets(nid)) - nid;
+        SimplexSet<NodeKey> nids = get_nodes(get_tets(nid)) - nid;
         return get_barycenter(nids, interface);
     }
 
-    double DeformableSimplicialComplex::length(const edge_key& eid) {
-        SimplexSet<node_key> nids = get_nodes(eid);
+    double DeformableSimplicialComplex::length(const EdgeKey& eid) {
+        SimplexSet<NodeKey> nids = get_nodes(eid);
         return Util::length(get_pos(nids[0]) - get_pos(nids[1]));
     }
 
-    double DeformableSimplicialComplex::length_destination(const edge_key& eid) {
-        SimplexSet<node_key> nids = get_nodes(eid);
+    double DeformableSimplicialComplex::length_destination(const EdgeKey& eid) {
+        SimplexSet<NodeKey> nids = get_nodes(eid);
         return Util::length(get(nids[0]).get_destination() - get(nids[1]).get_destination());
     }
 
-    double DeformableSimplicialComplex::area(const face_key& fid) {
-        SimplexSet<node_key> nids = get_nodes(fid);
+    double DeformableSimplicialComplex::area(const FaceKey& fid) {
+        SimplexSet<NodeKey> nids = get_nodes(fid);
         return Util::area(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]));
     }
 
-    double DeformableSimplicialComplex::area_destination(const face_key& fid) {
-        SimplexSet<node_key> nids = get_nodes(fid);
+    double DeformableSimplicialComplex::area_destination(const FaceKey& fid) {
+        SimplexSet<NodeKey> nids = get_nodes(fid);
         return Util::area(get(nids[0]).get_destination(), get(nids[1]).get_destination(), get(nids[2]).get_destination());
     }
 
-    double DeformableSimplicialComplex::volume(const tet_key& tid) {
-        SimplexSet<node_key> nids = get_nodes(tid);
+    double DeformableSimplicialComplex::volume(const TetrahedronKey& tid) {
+        SimplexSet<NodeKey> nids = get_nodes(tid);
         return Util::volume(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]), get_pos(nids[3]));
     }
 
-    double DeformableSimplicialComplex::volume_destination(const tet_key& tid) {
-        SimplexSet<node_key> nids = get_nodes(tid);
+    double DeformableSimplicialComplex::volume_destination(const TetrahedronKey& tid) {
+        SimplexSet<NodeKey> nids = get_nodes(tid);
         return Util::volume(get(nids[0]).get_destination(), get(nids[1]).get_destination(), get(nids[2]).get_destination(), get(nids[3]).get_destination());
     }
 
-    double DeformableSimplicialComplex::volume_destination(const SimplexSet<node_key>& nids) {
+    double DeformableSimplicialComplex::volume_destination(const SimplexSet<NodeKey>& nids) {
         return Util::volume(get(nids[0]).get_destination(), get(nids[1]).get_destination(), get(nids[2]).get_destination(), get(nids[3]).get_destination());
     }
 
-    double DeformableSimplicialComplex::signed_volume_destination(const SimplexSet<node_key>& nids) {
+    double DeformableSimplicialComplex::signed_volume_destination(const SimplexSet<NodeKey>& nids) {
         return Util::signed_volume(get(nids[0]).get_destination(), get(nids[1]).get_destination(), get(nids[2]).get_destination(), get(nids[3]).get_destination());
     }
 
-    vec3 DeformableSimplicialComplex::barycenter(const tet_key& tid) {
-        SimplexSet<node_key> nids = get_nodes(tid);
+    vec3 DeformableSimplicialComplex::barycenter(const TetrahedronKey& tid) {
+        SimplexSet<NodeKey> nids = get_nodes(tid);
         return Util::barycenter(get(nids[0]).get_pos(), get(nids[1]).get_pos(), get(nids[2]).get_pos(), get(nids[3]).get_pos());
     }
 
-    vec3 DeformableSimplicialComplex::barycenter_destination(const tet_key& tid) {
-        SimplexSet<node_key> nids = get_nodes(tid);
+    vec3 DeformableSimplicialComplex::barycenter_destination(const TetrahedronKey& tid) {
+        SimplexSet<NodeKey> nids = get_nodes(tid);
         return Util::barycenter(get(nids[0]).get_destination(), get(nids[1]).get_destination(), get(nids[2]).get_destination(), get(nids[3]).get_destination());
     }
 
-    double DeformableSimplicialComplex::quality(const tet_key& tid) {
-        SimplexSet<node_key> nids = get_nodes(tid);
+    double DeformableSimplicialComplex::quality(const TetrahedronKey& tid) {
+        SimplexSet<NodeKey> nids = get_nodes(tid);
         return abs(Util::quality(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]), get_pos(nids[3])));
     }
 
-    double DeformableSimplicialComplex::min_angle(const face_key& fid) {
-        SimplexSet<node_key> nids = get_nodes(fid);
+    double DeformableSimplicialComplex::min_angle(const FaceKey& fid) {
+        SimplexSet<NodeKey> nids = get_nodes(fid);
         return Util::min_angle(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]));
     }
 
-    double DeformableSimplicialComplex::max_angle(const face_key& fid) {
-        SimplexSet<node_key> nids = get_nodes(fid);
+    double DeformableSimplicialComplex::max_angle(const FaceKey& fid) {
+        SimplexSet<NodeKey> nids = get_nodes(fid);
         return Util::max_angle(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]));
     }
 
-    double DeformableSimplicialComplex::quality(const face_key& fid) {
-        SimplexSet<node_key> nids = get_nodes(fid);
+    double DeformableSimplicialComplex::quality(const FaceKey& fid) {
+        SimplexSet<NodeKey> nids = get_nodes(fid);
         auto angles = Util::cos_angles(get_pos(nids[0]), get_pos(nids[1]), get_pos(nids[2]));
         double worst_a = -INFINITY;
         for(auto a : angles)
@@ -1547,13 +1547,13 @@ namespace DSC {
         return 1. - worst_a;
     }
 
-    double DeformableSimplicialComplex::quality(const edge_key& eid) {
+    double DeformableSimplicialComplex::quality(const EdgeKey& eid) {
         return length(eid)/AVG_LENGTH;
     }
 
     FaceKey DeformableSimplicialComplex::largest_face(const SimplexSet<FaceKey>& fids) {
         double max_a = -INFINITY;
-        face_key max_f;
+        FaceKey max_f;
         for(auto f : fids)
         {
             double a = area(f);
@@ -1682,20 +1682,20 @@ namespace DSC {
         return avg_edge_length;
     }
 
-    double DeformableSimplicialComplex::cos_dihedral_angle(const face_key& f1, const face_key& f2) {
+    double DeformableSimplicialComplex::cos_dihedral_angle(const FaceKey& f1, const FaceKey& f2) {
         auto nids1 = get_nodes(f1);
         auto nids2 = get_nodes(f2);
-        SimplexSet<node_key> nids = nids1 & nids2;
-        SimplexSet<node_key> apices = (nids1 + nids2) - nids;
+        SimplexSet<NodeKey> nids = nids1 & nids2;
+        SimplexSet<NodeKey> apices = (nids1 + nids2) - nids;
 
         return Util::cos_dihedral_angle(get_pos(nids[0]), get_pos(nids[1]), get_pos(apices[0]), get_pos(apices[1]));
     }
 
-    double DeformableSimplicialComplex::dihedral_angle(const face_key& f1, const face_key& f2) {
+    double DeformableSimplicialComplex::dihedral_angle(const FaceKey& f1, const FaceKey& f2) {
         return acos(cos_dihedral_angle(f1, f2));
     }
 
-    vector<double> DeformableSimplicialComplex::cos_dihedral_angles(const tet_key& tid) {
+    vector<double> DeformableSimplicialComplex::cos_dihedral_angles(const TetrahedronKey& tid) {
         auto verts = get_pos(get_nodes(tid));
         vector<double> angles;
         vector<int> apices;
@@ -1717,7 +1717,7 @@ namespace DSC {
         return angles;
     }
 
-    double DeformableSimplicialComplex::min_cos_dihedral_angle(const tet_key& t) {
+    double DeformableSimplicialComplex::min_cos_dihedral_angle(const TetrahedronKey& t) {
         double min_angle = -1.;
         vector<double> angles = cos_dihedral_angles(t);
         for(auto a : angles)
@@ -1727,7 +1727,7 @@ namespace DSC {
         return min_angle;
     }
 
-    double DeformableSimplicialComplex::min_dihedral_angle(const tet_key& t) {
+    double DeformableSimplicialComplex::min_dihedral_angle(const TetrahedronKey& t) {
         return acos(min_cos_dihedral_angle(t));
     }
 
@@ -1832,7 +1832,7 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::test_split_collapse() {
-        SimplexSet<edge_key> eids;
+        SimplexSet<EdgeKey> eids;
         for (auto eit = edges_begin(); eit != edges_end(); eit++)
         {
             auto neighbours = get_edges(get_faces(eit.key()));
@@ -1852,8 +1852,8 @@ namespace DSC {
 
         //            int j = 0;
         //            cout << "Split test # = " << eids.size();
-        //            SimplexSet<edge_key> new_eids;
-        //            vector<node_key> old_nids;
+        //            SimplexSet<EdgeKey> new_eids;
+        //            vector<NodeKey> old_nids;
         //            for (auto e : eids) {
         //                auto nids = get_nodes(e);
         //                auto new_nid = split(e);
@@ -1893,7 +1893,7 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::test_flip23_flip32() {
-        SimplexSet<face_key> fids;
+        SimplexSet<FaceKey> fids;
         for (auto fit = faces_begin(); fit != faces_end(); fit++)
         {
             if(is_safe_editable(fit.key()))
@@ -1919,7 +1919,7 @@ namespace DSC {
         }
 
         cout << "Flip 2-3 test # = " << fids.size();
-        SimplexSet<edge_key> new_eids;
+        SimplexSet<EdgeKey> new_eids;
         int i = 0;
         for (auto f : fids) {
             assert(exists(f));
@@ -1953,7 +1953,7 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::test_flip44() {
-        SimplexSet<edge_key> eids;
+        SimplexSet<EdgeKey> eids;
         for (auto eit = edges_begin(); eit != edges_end(); eit++)
         {
             if(is_unsafe_editable(eit.key()) && eit->is_interface() && get_faces(eit.key()).size() == 4)
@@ -1967,7 +1967,7 @@ namespace DSC {
                         ok = false;
                     }
                 }
-                SimplexSet<face_key> flip_fids;
+                SimplexSet<FaceKey> flip_fids;
                 for(auto f : get_faces(eit.key()))
                 {
                     if(get(f).is_interface())
@@ -1989,7 +1989,7 @@ namespace DSC {
             cout << "Flip 4-4 test # = " << eids.size();
             int i = 0;
             for (auto e : eids) {
-                SimplexSet<face_key> flip_fids;
+                SimplexSet<FaceKey> flip_fids;
                 for(auto f : get_faces(e))
                 {
                     if(get(f).is_interface())
@@ -2013,7 +2013,7 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::test_flip22() {
-        SimplexSet<edge_key> eids;
+        SimplexSet<EdgeKey> eids;
         for (auto eit = edges_begin(); eit != edges_end(); eit++)
         {
             if(eit->is_boundary() && get_faces(eit.key()).size() == 3)
@@ -2027,7 +2027,7 @@ namespace DSC {
                         ok = false;
                     }
                 }
-                SimplexSet<face_key> flip_fids;
+                SimplexSet<FaceKey> flip_fids;
                 for(auto f : get_faces(eit.key()))
                 {
                     if(get(f).is_boundary())
@@ -2052,7 +2052,7 @@ namespace DSC {
                 assert(exists(e));
                 auto fids = get_faces(e);
                 assert(fids.size() == 3);
-                SimplexSet<face_key> flip_fids;
+                SimplexSet<FaceKey> flip_fids;
                 for(auto f : fids)
                 {
                     if(get(f).is_boundary())

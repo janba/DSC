@@ -41,6 +41,16 @@ static const double EPSILON = 1e-8;
 #undef INFINITY
 static const double INFINITY = std::numeric_limits<double>::max();;
 
+
+#ifdef __GNUC__
+#define DEPRECATED __attribute__((deprecated))
+#elif defined(_MSC_VER)
+#define DEPRECATED __declspec(deprecated)
+#else
+#pragma message("WARNING: You need to implement DEPRECATED for this compiler")
+#define DEPRECATED
+#endif
+
 namespace Util
 {
     using CGLA::isnan;

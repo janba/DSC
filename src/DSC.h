@@ -20,6 +20,7 @@
 #include "attributes.h"
 #include "geometry.h"
 #include "mesh_io.h"
+#include "util.h"
 
 struct parameters {
     
@@ -54,10 +55,14 @@ namespace DSC {
     class DeformableSimplicialComplex : public is_mesh::ISMesh
     {
     public:
-        
+
+        DEPRECATED
         typedef is_mesh::NodeKey      node_key;
+        DEPRECATED
         typedef is_mesh::EdgeKey      edge_key;
+        DEPRECATED
         typedef is_mesh::FaceKey      face_key;
+        DEPRECATED
         typedef is_mesh::TetrahedronKey       tet_key;
         
     protected:
@@ -83,47 +88,7 @@ namespace DSC {
         DeformableSimplicialComplex(std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels);
 
         ~DeformableSimplicialComplex();
-        /*
-        using is_mesh::ISMesh::get;
-        using is_mesh::ISMesh::get_label;
 
-        using is_mesh::ISMesh::nodes_begin;
-        using is_mesh::ISMesh::nodes_end;
-        using is_mesh::ISMesh::edges_begin;
-        using is_mesh::ISMesh::edges_end;
-        using is_mesh::ISMesh::faces_begin;
-        using is_mesh::ISMesh::faces_end;
-        using is_mesh::ISMesh::tetrahedra_begin;
-        using is_mesh::ISMesh::tetrahedra_end;
-
-        using is_mesh::ISMesh::get_pos;
-
-        using is_mesh::ISMesh::get_nodes;
-        using is_mesh::ISMesh::get_edges;
-        using is_mesh::ISMesh::get_faces;
-        using is_mesh::ISMesh::get_tets;
-
-        using is_mesh::ISMesh<tet_att>::get_edge;
-        using is_mesh::ISMesh<tet_att>::get_face;
-
-        using is_mesh::ISMesh<tet_att>::validity_check;
-
-    protected:
-        using is_mesh::ISMesh<tet_att>::set_label;
-
-    private:
-
-        using is_mesh::ISMesh<tet_att>::flip_22;
-        using is_mesh::ISMesh<tet_att>::flip_23;
-        using is_mesh::ISMesh<tet_att>::flip_32;
-        using is_mesh::ISMesh<tet_att>::flip_44;
-
-        using is_mesh::ISMesh<tet_att>::split;
-        using is_mesh::ISMesh<tet_att>::collapse;
-
-        using is_mesh::ISMesh<tet_att>::garbage_collect;
-        using is_mesh::ISMesh<tet_att>::exists;
-             */
     public:
 
         virtual void set_avg_edge_length(double avg_edge_length = 0.);
@@ -136,7 +101,7 @@ namespace DSC {
 
     private:
 
-        void print(const node_key& n);
+        void print(const is_mesh::NodeKey& n);
         
         /////////////////////////
         // ATTRIBUTE FUNCTIONS //
@@ -144,30 +109,30 @@ namespace DSC {
         
     protected:
 
-        virtual bool is_unsafe_editable(const node_key& nid);
+        virtual bool is_unsafe_editable(const is_mesh::NodeKey& nid);
 
-        virtual bool is_unsafe_editable(const edge_key& eid);
+        virtual bool is_unsafe_editable(const is_mesh::EdgeKey& eid);
 
-        virtual bool is_unsafe_editable(const face_key& fid);
+        virtual bool is_unsafe_editable(const is_mesh::FaceKey& fid);
 
-        virtual bool is_unsafe_editable(const tet_key& tid);
+        virtual bool is_unsafe_editable(const is_mesh::TetrahedronKey& tid);
 
-        virtual bool is_safe_editable(const node_key& nid);
+        virtual bool is_safe_editable(const is_mesh::NodeKey& nid);
 
-        virtual bool is_safe_editable(const edge_key& eid);
+        virtual bool is_safe_editable(const is_mesh::EdgeKey& eid);
 
-        virtual bool is_safe_editable(const face_key& fid);
+        virtual bool is_safe_editable(const is_mesh::FaceKey& fid);
 
-        virtual bool is_safe_editable(const tet_key& tid);
+        virtual bool is_safe_editable(const is_mesh::TetrahedronKey& tid);
 
     public:
-        virtual bool is_movable(const node_key& nid);
+        virtual bool is_movable(const is_mesh::NodeKey& nid);
 
     protected:
-        void set_pos(const node_key& nid, const vec3& p);
+        void set_pos(const is_mesh::NodeKey& nid, const vec3& p);
         
     public:
-        virtual void set_destination(const node_key& nid, const vec3& dest);
+        virtual void set_destination(const is_mesh::NodeKey& nid, const vec3& dest);
 
         /////////////
         // GETTERS //
@@ -197,24 +162,24 @@ namespace DSC {
         // TOPOLOGICAL EDGE REMOVAL //
         //////////////////////////////
 
-        double build_table(const edge_key& e, const is_mesh::SimplexSet<node_key>& polygon, std::vector<std::vector<int>>& K);
+        double build_table(const is_mesh::EdgeKey& e, const is_mesh::SimplexSet<is_mesh::NodeKey>& polygon, std::vector<std::vector<int>>& K);
 
 
-        node_key get_next(const node_key& nid, is_mesh::SimplexSet<edge_key>& eids);
+        is_mesh::NodeKey get_next(const is_mesh::NodeKey& nid, is_mesh::SimplexSet<is_mesh::EdgeKey>& eids);
 
-        is_mesh::SimplexSet<node_key> get_polygon(is_mesh::SimplexSet<edge_key>& eids);
+        is_mesh::SimplexSet<is_mesh::NodeKey> get_polygon(is_mesh::SimplexSet<is_mesh::EdgeKey>& eids);
         
-        std::vector<is_mesh::SimplexSet<node_key>> get_polygons(const edge_key& eid);
+        std::vector<is_mesh::SimplexSet<is_mesh::NodeKey>> get_polygons(const is_mesh::EdgeKey& eid);
 
-        void flip_23_recursively(const is_mesh::SimplexSet<node_key>& polygon, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K, int i, int j);
+        void flip_23_recursively(const is_mesh::SimplexSet<is_mesh::NodeKey>& polygon, const is_mesh::NodeKey& n1, const is_mesh::NodeKey& n2, std::vector<std::vector<int>>& K, int i, int j);
 
-        void topological_edge_removal(const is_mesh::SimplexSet<node_key>& polygon, const node_key& n1, const node_key& n2, std::vector<std::vector<int>>& K);
+        void topological_edge_removal(const is_mesh::SimplexSet<is_mesh::NodeKey>& polygon, const is_mesh::NodeKey& n1, const is_mesh::NodeKey& n2, std::vector<std::vector<int>>& K);
 
-        bool topological_edge_removal(const edge_key& eid);
+        bool topological_edge_removal(const is_mesh::EdgeKey& eid);
 
-        void topological_boundary_edge_removal(const is_mesh::SimplexSet<node_key>& polygon1, const is_mesh::SimplexSet<node_key>& polygon2, const edge_key& eid, std::vector<std::vector<int>>& K1, std::vector<std::vector<int>>& K2);
+        void topological_boundary_edge_removal(const is_mesh::SimplexSet<is_mesh::NodeKey>& polygon1, const is_mesh::SimplexSet<is_mesh::NodeKey>& polygon2, const is_mesh::EdgeKey& eid, std::vector<std::vector<int>>& K1, std::vector<std::vector<int>>& K2);
 
-        bool topological_boundary_edge_removal(const edge_key& eid);
+        bool topological_boundary_edge_removal(const is_mesh::EdgeKey& eid);
 
         void topological_edge_removal();
         
@@ -222,11 +187,11 @@ namespace DSC {
         // TOPOLOGICAL FACE REMOVAL //
         //////////////////////////////
 
-        is_mesh::SimplexSet<edge_key> test_neighbour(const face_key& f, const node_key& a, const node_key& b, const node_key& u, const node_key& w, double& q_old, double& q_new);
+        is_mesh::SimplexSet<is_mesh::EdgeKey> test_neighbour(const is_mesh::FaceKey& f, const is_mesh::NodeKey& a, const is_mesh::NodeKey& b, const is_mesh::NodeKey& u, const is_mesh::NodeKey& w, double& q_old, double& q_new);
 
-        bool topological_face_removal(const face_key& f);
+        bool topological_face_removal(const is_mesh::FaceKey& f);
 
-        bool topological_face_removal(const node_key& apex1, const node_key& apex2);
+        bool topological_face_removal(const is_mesh::NodeKey& apex1, const is_mesh::NodeKey& apex2);
 
         void topological_face_removal();
         
@@ -261,23 +226,23 @@ namespace DSC {
 
         void remove_edges();
 
-        bool remove_cap(const face_key& fid);
+        bool remove_cap(const is_mesh::FaceKey& fid);
 
-        bool remove_needle(const face_key& fid);
+        bool remove_needle(const is_mesh::FaceKey& fid);
 
-        bool remove_face(const face_key& f);
+        bool remove_face(const is_mesh::FaceKey& f);
 
         void remove_faces();
 
-        bool remove_sliver(const tet_key& tid);
+        bool remove_sliver(const is_mesh::TetrahedronKey& tid);
 
-        bool remove_cap(const tet_key& tid);
+        bool remove_cap(const is_mesh::TetrahedronKey& tid);
 
-        bool remove_wedge(const tet_key& tid);
+        bool remove_wedge(const is_mesh::TetrahedronKey& tid);
 
-        bool remove_needle(const tet_key& tid);
+        bool remove_needle(const is_mesh::TetrahedronKey& tid);
 
-        bool remove_tet(const tet_key& tid);
+        bool remove_tet(const is_mesh::TetrahedronKey& tid);
 
         void remove_tets();
         
@@ -285,7 +250,7 @@ namespace DSC {
         // SMOOTHING //
         ///////////////
     private:
-        bool smart_laplacian(const node_key& nid, double alpha = 1.);
+        bool smart_laplacian(const is_mesh::NodeKey& nid, double alpha = 1.);
 
         void smooth();
         
@@ -305,46 +270,46 @@ namespace DSC {
         
     private:
 
-        bool move_vertex(const node_key & n);
+        bool move_vertex(const is_mesh::NodeKey & n);
         
         
     public:
-        double intersection_with_link(const node_key & n, const vec3& destination);
+        double intersection_with_link(const is_mesh::NodeKey & n, const vec3& destination);
         
         ///////////
         // FLIPS //
         ///////////
     private:
 
-        bool is_flat(const is_mesh::SimplexSet<face_key>& fids);
+        bool is_flat(const is_mesh::SimplexSet<is_mesh::FaceKey>& fids);
 
-        bool is_flippable(const edge_key & eid);
+        bool is_flippable(const is_mesh::EdgeKey & eid);
 
-        bool precond_flip_edge(const edge_key& eid, const face_key& f1, const face_key& f2);
+        bool precond_flip_edge(const is_mesh::EdgeKey& eid, const is_mesh::FaceKey& f1, const is_mesh::FaceKey& f2);
         
         ////////////
         // SPLITS //
         ////////////
     public:
-        is_mesh::NodeKey split(const tet_key& tid);
+        is_mesh::NodeKey split(const is_mesh::TetrahedronKey& tid);
 
-        is_mesh::NodeKey split(const face_key& fid);
+        is_mesh::NodeKey split(const is_mesh::FaceKey& fid);
 
-        is_mesh::NodeKey split(const edge_key& eid);
+        is_mesh::NodeKey split(const is_mesh::EdgeKey& eid);
 
         ///////////////
         // COLLAPSES //
         ///////////////
     private:
-        bool is_collapsable(const edge_key& eid, const node_key& nid, bool safe);
+        bool is_collapsable(const is_mesh::EdgeKey& eid, const is_mesh::NodeKey& nid, bool safe);
 
-        bool collapse(const edge_key& eid, bool safe = true);
+        bool collapse(const is_mesh::EdgeKey& eid, bool safe = true);
 
-        bool collapse(is_mesh::SimplexSet<edge_key>& eids, bool safe);
+        bool collapse(is_mesh::SimplexSet<is_mesh::EdgeKey>& eids, bool safe);
 
-        bool collapse(const face_key& fid, bool safe = true);
+        bool collapse(const is_mesh::FaceKey& fid, bool safe = true);
 
-        bool collapse(const tet_key& tid, bool safe = true);
+        bool collapse(const is_mesh::TetrahedronKey& tid, bool safe = true);
         
         //////////////////////
         // GETTER FUNCTIONS //
@@ -353,13 +318,13 @@ namespace DSC {
 
         std::vector<vec3> get_interface_face_positions();
 
-        vec3 get_normal(const face_key& fid);
+        vec3 get_normal(const is_mesh::FaceKey& fid);
 
-        vec3 get_normal(const node_key& nid);
+        vec3 get_normal(const is_mesh::NodeKey& nid);
 
-        vec3 get_barycenter(const is_mesh::SimplexSet<node_key>& nids, bool interface = false);
+        vec3 get_barycenter(const is_mesh::SimplexSet<is_mesh::NodeKey>& nids, bool interface = false);
 
-        vec3 get_barycenter(const node_key& nid, bool interface = false);
+        vec3 get_barycenter(const is_mesh::NodeKey& nid, bool interface = false);
         
         ///////////////////////
         // UTILITY FUNCTIONS //
@@ -367,54 +332,54 @@ namespace DSC {
         
     public:
 
-        double length(const edge_key& eid);
+        double length(const is_mesh::EdgeKey& eid);
 
-        double length_destination(const edge_key& eid);
+        double length_destination(const is_mesh::EdgeKey& eid);
 
-        double area(const face_key& fid);
+        double area(const is_mesh::FaceKey& fid);
 
-        double area_destination(const face_key& fid);
+        double area_destination(const is_mesh::FaceKey& fid);
 
-        double volume(const tet_key& tid);
+        double volume(const is_mesh::TetrahedronKey& tid);
 
-        double volume_destination(const tet_key& tid);
+        double volume_destination(const is_mesh::TetrahedronKey& tid);
 
-        double volume_destination(const is_mesh::SimplexSet<node_key>& nids);
+        double volume_destination(const is_mesh::SimplexSet<is_mesh::NodeKey>& nids);
 
-        double signed_volume_destination(const is_mesh::SimplexSet<node_key>& nids);
+        double signed_volume_destination(const is_mesh::SimplexSet<is_mesh::NodeKey>& nids);
 
-        vec3 barycenter(const tet_key& tid);
+        vec3 barycenter(const is_mesh::TetrahedronKey& tid);
 
-        vec3 barycenter_destination(const tet_key& tid);
+        vec3 barycenter_destination(const is_mesh::TetrahedronKey& tid);
 
-        double quality(const tet_key& tid);
+        double quality(const is_mesh::TetrahedronKey& tid);
 
-        double min_angle(const face_key& fid);
+        double min_angle(const is_mesh::FaceKey& fid);
 
-        double max_angle(const face_key& fid);
+        double max_angle(const is_mesh::FaceKey& fid);
 
-        double quality(const face_key& fid);
+        double quality(const is_mesh::FaceKey& fid);
 
-        double quality(const edge_key& eid);
+        double quality(const is_mesh::EdgeKey& eid);
 
-        face_key largest_face(const is_mesh::SimplexSet<face_key>& fids);
+        is_mesh::FaceKey largest_face(const is_mesh::SimplexSet<is_mesh::FaceKey>& fids);
 
-        edge_key shortest_edge(const is_mesh::SimplexSet<edge_key>& eids);
+        is_mesh::EdgeKey shortest_edge(const is_mesh::SimplexSet<is_mesh::EdgeKey>& eids);
 
-        edge_key longest_edge(const is_mesh::SimplexSet<edge_key>& eids);
+        is_mesh::EdgeKey longest_edge(const is_mesh::SimplexSet<is_mesh::EdgeKey>& eids);
 
-        double min_quality(const is_mesh::SimplexSet<tet_key>& tids);
+        double min_quality(const is_mesh::SimplexSet<is_mesh::TetrahedronKey>& tids);
 
-        double min_quality(const is_mesh::SimplexSet<face_key>& fids, const vec3& pos);
+        double min_quality(const is_mesh::SimplexSet<is_mesh::FaceKey>& fids, const vec3& pos);
 
-        double min_quality(const is_mesh::SimplexSet<face_key>& fids, const vec3& pos_old, const vec3& pos_new);
+        double min_quality(const is_mesh::SimplexSet<is_mesh::FaceKey>& fids, const vec3& pos_old, const vec3& pos_new);
 
-        void min_quality(const is_mesh::SimplexSet<face_key>& fids, const vec3& pos_old, const vec3& pos_new, double& min_q_old, double& min_q_new);
+        void min_quality(const is_mesh::SimplexSet<is_mesh::FaceKey>& fids, const vec3& pos_old, const vec3& pos_new, double& min_q_old, double& min_q_new);
         
         
     private:
 
-        void check_consistency(const is_mesh::SimplexSet<node_key>& nids, is_mesh::SimplexSet<node_key>& polygon);
+        void check_consistency(const is_mesh::SimplexSet<is_mesh::NodeKey>& nids, is_mesh::SimplexSet<is_mesh::NodeKey>& polygon);
         
         ////////////////////////
         // DOCUMENT FUNCTIONS //
@@ -423,15 +388,15 @@ namespace DSC {
 
         double compute_avg_edge_length();
 
-        double cos_dihedral_angle(const face_key& f1, const face_key& f2);
+        double cos_dihedral_angle(const is_mesh::FaceKey& f1, const is_mesh::FaceKey& f2);
 
-        double dihedral_angle(const face_key& f1, const face_key& f2);
+        double dihedral_angle(const is_mesh::FaceKey& f1, const is_mesh::FaceKey& f2);
 
-        std::vector<double> cos_dihedral_angles(const tet_key& tid);
+        std::vector<double> cos_dihedral_angles(const is_mesh::TetrahedronKey& tid);
 
-        double min_cos_dihedral_angle(const tet_key& t);
+        double min_cos_dihedral_angle(const is_mesh::TetrahedronKey& t);
 
-        double min_dihedral_angle(const tet_key& t);
+        double min_dihedral_angle(const is_mesh::TetrahedronKey& t);
 
         void get_qualities(std::vector<int>& histogram, double& min_quality);
 

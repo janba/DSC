@@ -104,7 +104,6 @@ namespace is_mesh
          */
         iterator& operator++()
         {
-            kernel_element& cur = m_kernel->lookup(m_key);
             do {
                 // m_key++;
                 m_key.incr();
