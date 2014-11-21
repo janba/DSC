@@ -844,12 +844,11 @@ namespace DSC {
         vec3 p = Util::project_point_line(get_pos(apex), verts[1], verts[0]);
 
         // Split longest edge
-        // node_key n = split(eid, p, p);
-        throw std::string{"Unsupported"};
+        node_key n = ISMesh::split(eid, p, p);
 
         // Collapse new edge
-        //edge_key e_rem = get_edge(apex, n);
-        //return collapse(e_rem);
+        edge_key e_rem = get_edge(apex, n);
+        return collapse(e_rem);
 
     }
 
@@ -904,12 +903,11 @@ namespace DSC {
         eids -= e1;
         edge_key e2 = longest_edge(eids);
 
-        //node_key n1 = split(e1);
-        //node_key n2 = split(e2);
+        node_key n1 = split(e1);
+        node_key n2 = split(e2);
 
-        //edge_key e = get_edge(n1, n2);
-        //return collapse(e);
-        throw std::string("Not implemented");
+        edge_key e = get_edge(n1, n2);
+        return collapse(e);
     }
 
     bool DeformableSimplicialComplex::remove_cap(const tet_key& tid) {
@@ -924,7 +922,7 @@ namespace DSC {
         vec3 p = Util::project_point_plane(get_pos(apex), verts[0], verts[1], verts[2]);
 
         // Split the face
-//        node_key n = split(fid, p, p);
+//        node_key n = ISMesh::split(fid, p, p);
 
         // Collapse edge
 //        edge_key e = get_edge(n, apex);
@@ -1290,19 +1288,19 @@ namespace DSC {
         return false;
     }
 
-    void DeformableSimplicialComplex::split(const tet_key& tid) {
+    is_mesh::NodeKey DeformableSimplicialComplex::split(const tet_key& tid) {
         is_mesh::SimplexSet<edge_key> eids = get_edges(tid);
         edge_key eid = longest_edge(eids);
-        split(eid);
+        return split(eid);
     }
 
-    void DeformableSimplicialComplex::split(const face_key& fid) {
+    NodeKey DeformableSimplicialComplex::split(const face_key& fid) {
         is_mesh::SimplexSet<edge_key> eids = get_edges(fid);
         edge_key eid = longest_edge(eids);
-        split(eid);
+        return split(eid);
     }
 
-    void DeformableSimplicialComplex::split(const EdgeKey& eid) {
+    NodeKey DeformableSimplicialComplex::split(const EdgeKey& eid) {
         auto verts = get_pos(get_nodes(eid));
         vec3 pos = Util::barycenter(verts[0], verts[1]);
         vec3 destination = pos;
@@ -1312,8 +1310,7 @@ namespace DSC {
             destination = Util::barycenter(get(nids[0]).get_destination(), get(nids[1]).get_destination());
         }
 
-        //split(eid, pos, destination);
-        throw std::string{"Not implemented"};
+        return ISMesh::split(eid, pos, destination);
     }
 
     bool DeformableSimplicialComplex::is_collapsable(const edge_key& eid, const node_key& nid, bool safe) {
@@ -1381,8 +1378,7 @@ namespace DSC {
         {
             if(!safe || q_max > Util::min(min_quality(get_tets(nids[0]) + get_tets(nids[1])), pars.MIN_TET_QUALITY) + EPSILON)
             {
-                throw std::string{"Not implemented"};
-                //collapse(eid, nids[1], weight);
+                ISMesh::collapse(eid, nids[1], weight);
                 return true;
             }
         }

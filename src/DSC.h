@@ -326,18 +326,17 @@ namespace DSC {
         // SPLITS //
         ////////////
     public:
-        void split(const tet_key& tid);
+        is_mesh::NodeKey split(const tet_key& tid);
 
-        void split(const face_key& fid);
+        is_mesh::NodeKey split(const face_key& fid);
 
-        void split(const edge_key& eid);
-        
+        is_mesh::NodeKey split(const edge_key& eid);
+
         ///////////////
         // COLLAPSES //
         ///////////////
     private:
         bool is_collapsable(const edge_key& eid, const node_key& nid, bool safe);
-
 
         bool collapse(const edge_key& eid, bool safe = true);
 

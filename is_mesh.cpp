@@ -683,7 +683,7 @@ namespace is_mesh{
          throw "Not implemented";
     }
 
-    void ISMesh::split(const EdgeKey& eid, const vec3& pos, const vec3& destination) {
+    NodeKey ISMesh::split(const EdgeKey& eid, const vec3& pos, const vec3& destination) {
         auto nids = get_nodes(eid);
         auto fids = get_faces(eid);
         auto tids = get_tets(eid);
@@ -735,6 +735,8 @@ namespace is_mesh{
         }
 
         update_split(new_nid, nids[0], nids[1]);
+
+        return new_nid;
     }
 
     void ISMesh::update_collapse(const NodeKey& nid, const NodeKey& nid_removed, double weight) {
