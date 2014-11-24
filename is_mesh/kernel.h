@@ -160,7 +160,7 @@ namespace is_mesh
             
             cur.value = value_type{isMesh, attributes};
             cur.state = kernel_element::VALID;
-            return itRemove key from Kernel elementerator(this, key);
+            return iterator(this, key);
         }
         
         /**
