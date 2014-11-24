@@ -110,30 +110,14 @@ namespace is_mesh
     class Node : public NodeAttributes, public Simplex<Key, EdgeKey>
     {
     public:
-        Node(ISMesh *owner) : Simplex<Key, EdgeKey>(owner)
-        {
+        Node(ISMesh *owner);
+        Node(ISMesh *owner,const NodeAttributes & t);
 
-        }
-        Node(ISMesh *owner,const NodeAttributes & t) : NodeAttributes(t), Simplex<Key, EdgeKey>(owner)
-        {
+        Node(Node&& other);
 
-        }
+        Node& operator=(Node&& other);
 
-        Node(Node&& other)
-        :NodeAttributes(std::move(other)), Simplex<Key, EdgeKey>(std::move(other))
-        {}
-
-        Node& operator=(Node&& other){
-            if (this != &other){
-                ((NodeAttributes*)this)->operator=(std::move(other));
-                ((Simplex<Key, EdgeKey>*)this)->operator=(std::move(other));
-            }
-            return *this;
-        }
-
-        const SimplexSet<EdgeKey>& edge_keys(){
-            return get_co_boundary();
-        }
+        const SimplexSet<EdgeKey> & edge_keys();
 
     };
     
@@ -143,36 +127,16 @@ namespace is_mesh
     class Edge : public EdgeAttributes, public Simplex<NodeKey, FaceKey>
     {
     public:
-        Edge(ISMesh *owner) : Simplex<NodeKey, FaceKey>(owner)
-        {
-            
-        }
-        Edge(ISMesh *owner,const EdgeAttributes & t) : EdgeAttributes(t), Simplex<NodeKey, FaceKey>(owner)
-        {
-            
-        }
+        Edge(ISMesh *owner);
+        Edge(ISMesh *owner,const EdgeAttributes & t);
 
-        Edge(Edge&& other)
-        :EdgeAttributes(std::move(other)), Simplex<NodeKey, FaceKey>(std::move(other))
-        {
+        Edge(Edge&& other);
 
-        }
+        Edge& operator=(Edge&& other);
 
-        Edge& operator=(Edge&& other){
-            if (this != &other){
-                ((EdgeAttributes*)this)->operator=(std::move(other));
-                ((Simplex<NodeKey, FaceKey>*)this)->operator=(std::move(other));
-            }
-            return *this;
-        }
+        const SimplexSet<NodeKey> & node_keys();
 
-        const SimplexSet<NodeKey>& node_keys(){
-            return get_boundary();
-        }
-
-        const SimplexSet<FaceKey>& face_keys(){
-            return get_co_boundary();
-        }
+        const SimplexSet<FaceKey> & face_keys();
     };
     
     ///////////////////////////////////////////////////////////////////////////////
@@ -181,34 +145,16 @@ namespace is_mesh
     class Face : public FaceAttributes, public Simplex<EdgeKey, TetrahedronKey>
     {
     public:
-        Face(ISMesh *owner) : Simplex<EdgeKey, TetrahedronKey>(owner)
-        {
-            
-        }
-        Face(ISMesh *owner, const FaceAttributes & t) : FaceAttributes(t), Simplex<EdgeKey, TetrahedronKey>(owner)
-        {
-            
-        }
+        Face(ISMesh *owner);
+        Face(ISMesh *owner, const FaceAttributes & t);
 
-        Face(Face&& other)
-        : FaceAttributes(std::move(other)), Simplex<EdgeKey, TetrahedronKey>(std::move(other))
-        {}
+        Face(Face&& other);
 
-        Face& operator=(Face&& other){
-            if (this != &other){
-                ((FaceAttributes*)this)->operator=(std::move(other));
-                ((Simplex<EdgeKey, TetrahedronKey>*)this)->operator=(std::move(other));
-            }
-            return *this;
-        }
+        Face& operator=(Face&& other);
 
-        const SimplexSet<EdgeKey>& edge_keys(){
-            return get_boundary();
-        }
+        const SimplexSet<EdgeKey> & edge_keys();
 
-        const SimplexSet<TetrahedronKey>& tet_keys(){
-            return get_co_boundary();
-        }
+        const SimplexSet<TetrahedronKey> & tet_keys();
     };
     
     ///////////////////////////////////////////////////////////////////////////////
@@ -217,29 +163,13 @@ namespace is_mesh
     class Tetrahedron : public TetAttributes, public Simplex<FaceKey, Key>
     {
     public:
-        Tetrahedron(ISMesh *owner) : Simplex<FaceKey, Key>(owner)
-        {
-            
-        }
-        Tetrahedron(ISMesh *owner,const TetAttributes & t) : TetAttributes(t), Simplex<FaceKey, Key>(owner)
-        {
-            
-        }
+        Tetrahedron(ISMesh *owner);
+        Tetrahedron(ISMesh *owner,const TetAttributes & t);
 
-        Tetrahedron(Tetrahedron&& other)
-        :TetAttributes(std::move(other)), Simplex<FaceKey, Key>(std::move(other))
-        {}
+        Tetrahedron(Tetrahedron&& other);
 
-        Tetrahedron& operator=(Tetrahedron&& other){
-            if (this != &other){
-                ((TetAttributes*)this)->operator=(std::move(other));
-                ((Simplex<FaceKey, Key>*)this)->operator=(std::move(other));
-            }
-            return *this;
-        }
+        Tetrahedron& operator=(Tetrahedron&& other);
 
-        const SimplexSet<FaceKey>& face_keys(){
-            return get_boundary();
-        }
+        const SimplexSet<FaceKey> & face_keys();
     };
 }

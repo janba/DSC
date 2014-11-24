@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <iostream>
+
 namespace is_mesh
 {
     class Key

@@ -57,7 +57,9 @@ namespace is_mesh
         
         SimplexSet& operator=(SimplexSet&& ss)
         {
-            set = std::move(ss.set);
+            if (this != &ss){
+                set = std::move(ss.set);
+            }
             return *this;
         }
         
