@@ -35,7 +35,7 @@ namespace is_mesh
         SimplexSet<boundary_key_type>* m_boundary = nullptr;
         SimplexSet<co_boundary_key_type>* m_co_boundary = nullptr;
     protected:
-        ISMesh *owner;
+        ISMesh *owner = nullptr;
     public:
         
         Simplex(ISMesh *owner):owner{owner}
@@ -52,12 +52,9 @@ namespace is_mesh
         
         Simplex(Simplex&& s)
         {
-            m_boundary = s.m_boundary;
-            m_co_boundary = s.m_co_boundary;
-            owner = s.owner;
-            s.m_boundary = nullptr;
-            s.m_co_boundary = nullptr;
-            s.owner = nullptr;
+            std::swap(m_boundary, s.m_boundary);
+            std::swap(m_co_boundary, s.m_co_boundary);
+            std::swap(owner, s.owner);
         }
 
         Simplex<boundary_key_type, co_boundary_key_type>& operator=(Simplex<boundary_key_type, co_boundary_key_type>&& other){
@@ -71,14 +68,8 @@ namespace is_mesh
         
         ~Simplex()
         {
-            if(m_boundary)
-            {
-                delete m_boundary;
-            }
-            if(m_co_boundary)
-            {
-                delete m_co_boundary;
-            }
+            delete m_boundary;
+            delete m_co_boundary;
         }
         
     public:
@@ -119,14 +110,13 @@ namespace is_mesh
     class Node : public NodeAttributes, public Simplex<Key, EdgeKey>
     {
     public:
-        typedef NodeAttributes type_traits;
         Node(ISMesh *owner) : Simplex<Key, EdgeKey>(owner)
         {
-            
+
         }
         Node(ISMesh *owner,const NodeAttributes & t) : NodeAttributes(t), Simplex<Key, EdgeKey>(owner)
         {
-            
+
         }
 
         Node(Node&& other)
@@ -153,13 +143,11 @@ namespace is_mesh
     class Edge : public EdgeAttributes, public Simplex<NodeKey, FaceKey>
     {
     public:
-        typedef EdgeAttributes type_traits;
-        
         Edge(ISMesh *owner) : Simplex<NodeKey, FaceKey>(owner)
         {
             
         }
-        Edge(ISMesh *owner,const type_traits & t) : EdgeAttributes(t), Simplex<NodeKey, FaceKey>(owner)
+        Edge(ISMesh *owner,const EdgeAttributes & t) : EdgeAttributes(t), Simplex<NodeKey, FaceKey>(owner)
         {
             
         }
@@ -193,13 +181,11 @@ namespace is_mesh
     class Face : public FaceAttributes, public Simplex<EdgeKey, TetrahedronKey>
     {
     public:
-        typedef FaceAttributes type_traits;
-        
         Face(ISMesh *owner) : Simplex<EdgeKey, TetrahedronKey>(owner)
         {
             
         }
-        Face(ISMesh *owner, const type_traits & t) : FaceAttributes(t), Simplex<EdgeKey, TetrahedronKey>(owner)
+        Face(ISMesh *owner, const FaceAttributes & t) : FaceAttributes(t), Simplex<EdgeKey, TetrahedronKey>(owner)
         {
             
         }
@@ -231,13 +217,11 @@ namespace is_mesh
     class Tetrahedron : public TetAttributes, public Simplex<FaceKey, Key>
     {
     public:
-        typedef TetAttributes  type_traits;
-        
         Tetrahedron(ISMesh *owner) : Simplex<FaceKey, Key>(owner)
         {
             
         }
-        Tetrahedron(ISMesh *owner,const type_traits & t) : TetAttributes(t), Simplex<FaceKey, Key>(owner)
+        Tetrahedron(ISMesh *owner,const TetAttributes & t) : TetAttributes(t), Simplex<FaceKey, Key>(owner)
         {
             
         }

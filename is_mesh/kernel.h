@@ -76,8 +76,6 @@ namespace is_mesh
         friend class kernel_iterator<kernel_type>;
         
     private:
-        typedef typename value_type::type_traits                        type_traits;
-        
         std::vector<kernel_element> m_data;
         std::vector<key_type> m_data_freelist;
         std::vector<key_type> m_data_marked_for_deletion;
@@ -156,7 +154,8 @@ namespace is_mesh
          *
          * @return      An iterator pointing to the element.
          */
-        const_iterator create(const type_traits& attributes, ISMesh* isMesh)
+        template<typename attribute_type>
+        const_iterator create(const attribute_type& attributes, ISMesh* isMesh)
         {
             kernel_element& cur = get_next_free_cell();
 
