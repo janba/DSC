@@ -4,10 +4,10 @@ using namespace std;
 
 namespace is_mesh{
     ISMesh::ISMesh(vector<vec3> & points, vector<int> & tets, const vector<int>& tet_labels) {
-        m_node_kernel = new kernel<node_type, NodeKey>();
-        m_edge_kernel = new kernel<edge_type, EdgeKey>();
-        m_face_kernel = new kernel<face_type, FaceKey>();
-        m_tetrahedron_kernel = new kernel<tetrahedron_type, TetrahedronKey>();
+        m_node_kernel = new kernel<Node, NodeKey>();
+        m_edge_kernel = new kernel<Edge, EdgeKey>();
+        m_face_kernel = new kernel<Face, FaceKey>();
+        m_tetrahedron_kernel = new kernel<Tetrahedron, TetrahedronKey>();
 
         create(points, tets);
         init_flags(tet_labels);
