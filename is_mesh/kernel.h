@@ -97,16 +97,16 @@ namespace is_mesh
          *
          * @return The handle to the new cell.
          */
-        kernel_element& get_next_free_cell(int &key)
+        kernel_element& get_next_free_cell(unsigned int &key)
         {
             if (m_data_freelist.size()==0){
-                key = m_data.size();
+                key = (unsigned int)m_data.size();
                 m_data.emplace_back();
                 kernel_element& element = m_data.back();
                 element.state = kernel_element::EMPTY;
                 return element;
             } else {
-                key = (int)m_data_freelist.back();
+                key = (unsigned int)m_data_freelist.back();
                 m_data_freelist.pop_back();
                 return m_data[key];
             }
@@ -152,7 +152,7 @@ namespace is_mesh
         template<typename attribute_type>
         const_iterator create(const attribute_type& attributes, ISMesh* isMesh)
         {
-            int key;
+            unsigned int key;
             kernel_element& cur = get_next_free_cell(key);
 
             assert(cur.state != kernel_element::VALID || !"Cannot create new element, duplicate key.");
