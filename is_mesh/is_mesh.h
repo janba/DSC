@@ -195,8 +195,7 @@ namespace is_mesh {
                 return false;
             }
         };
-        struct tetrahedron_key { int k1, k2, k3, k4; };
-        
+
         template<typename map_type, typename mesh_type>
         inline int create_edge(int i, int j, map_type& edge_map, mesh_type& mesh)
         {

@@ -32,27 +32,24 @@ namespace is_mesh
         
     private:
         
-        key_type         m_key;
+        unsigned int     m_key;
         kernel_type*     m_kernel;
-        value_type*      m_value;   //temporary storage for value when returning it
         
     public:
         /**
          * The only constructor.
          * Creates a kernel iterator. Should only be created from the kernel.
          */
-        kernel_iterator(kernel_type const * const kernel, key_type const & key) : m_key(key)
-        //kernel_iterator(kernel_type const * const kernel, key_type & key) : m_key(key)
+        kernel_iterator(kernel_type const * const kernel, unsigned int const & key) : m_key(key)
         {
-            //hack.. can this be avoided???
-            m_kernel = (kernel_type*) &*kernel;
+            m_kernel = const_cast<kernel_type*>(kernel);
         }
         
     public:
         /**
          * Converts the iterator to a handle or key.
          */
-        key_type     key()    const { return m_key; }
+        key_type     key()    const { return key_type{m_key}; }
         /**
          * Returns a pointer to the kernel that the iterator is bound to.
          */
@@ -66,7 +63,7 @@ namespace is_mesh
             return (i.m_key == j.m_key) && (i.m_kernel == j.m_kernel);
         }
         /**
-         * Compares two iteators for inequality.
+         * Compares two iterators for inequality.
          */
         friend bool operator!=(const iterator& i, const iterator& j)
         {
@@ -80,9 +77,8 @@ namespace is_mesh
          */
         value_type* operator->()
         {
-            assert(m_kernel->lookup(m_key).state == element_type::VALID);
-            m_value = &m_kernel->lookup(m_key).value;
-            return m_value;
+            assert(m_kernel->lookup(key_type{m_key}).state == element_type::VALID);
+            return &m_kernel->m_data[m_key].value;
         }
         
         /**
@@ -92,9 +88,8 @@ namespace is_mesh
          */
         value_type& operator*()
         {
-            assert(m_kernel->lookup(m_key).state == element_type::VALID);
-            m_value = &m_kernel->lookup(m_key).value;
-            return *m_value;
+            assert(m_kernel->lookup(key_type{m_key}).state == element_type::VALID);
+            return m_kernel->m_data[m_key].value;
         }
         
         /**
@@ -105,10 +100,8 @@ namespace is_mesh
         iterator& operator++()
         {
             do {
-                // m_key++;
-                m_key.incr();
-            } while ((int)m_key < m_kernel->m_data.size() && m_kernel->lookup(m_key).state != element_type::VALID);
-//            m_key = cur.next;
+                m_key++;
+            } while (m_key < m_kernel->m_data.size() && m_kernel->m_data[m_key].state != element_type::VALID);
             return *this;
         }
         

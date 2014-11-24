@@ -60,8 +60,6 @@ namespace is_mesh
         friend inline bool operator< (unsigned int const & k, Key    const & b)   { return   k   <  b.key; }
         friend inline bool operator< (Key    const & a, unsigned int const & k)   { return a.key <    k;   }
 
-        void incr(){ key++; }
-
         friend std::ostream& operator<< (std::ostream & os, Key const & a) { return (os << a.key); }
         friend std::istream& operator>> (std::istream & is, Key       & a) { return (is >> a.key); }
     };

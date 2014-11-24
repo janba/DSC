@@ -34,21 +34,18 @@ namespace is_mesh
             kernel_element() : value(nullptr) { }
             
             kernel_element(kernel_element&& ke) : value{std::move(ke.value)} {
-                key = ke.key;
                 state = ke.state;
             }
 
             kernel_element&& operator=(kernel_element&& other) {
                 if (this != &other) {
                     value = std::move(other.value);
-                    key = other.key;
                     state = other.state;
                 }
                 return *this;
             }
             
             value_type              value;
-            key_type                key;
             state_type              state;
         };
     }
@@ -100,20 +97,17 @@ namespace is_mesh
          *
          * @return The handle to the new cell.
          */
-        kernel_element& get_next_free_cell()
+        kernel_element& get_next_free_cell(int &key)
         {
-            key_type key;
             if (m_data_freelist.size()==0){
                 key = m_data.size();
                 m_data.emplace_back();
                 kernel_element& element = m_data.back();
-                element.key = key;
                 element.state = kernel_element::EMPTY;
                 return element;
             } else {
-                key = m_data_freelist.back();
+                key = (int)m_data_freelist.back();
                 m_data_freelist.pop_back();
-                assert(m_data[key].key == key);
                 return m_data[key];
             }
         }
@@ -123,10 +117,11 @@ namespace is_mesh
          * Default constructor for the kernel. This will initialize all lists and memory used by the kernel.
          * The initial should always be greater than 0.
          *
-         * @param size The initial size of the kernel. Has a default value.
+         * @param reservedSize The initial capacity of the kernel.
          */
-        kernel(size_t size =64)
+        kernel(size_t reservedSize =64)
         {
+            m_data.reserve(reservedSize);
         }
         
         /**
@@ -157,14 +152,15 @@ namespace is_mesh
         template<typename attribute_type>
         const_iterator create(const attribute_type& attributes, ISMesh* isMesh)
         {
-            kernel_element& cur = get_next_free_cell();
+            int key;
+            kernel_element& cur = get_next_free_cell(key);
 
             assert(cur.state != kernel_element::VALID || !"Cannot create new element, duplicate key.");
             assert(cur.state != kernel_element::MARKED || !"Attempted to overwrite a marked element.");
             
             cur.value = value_type{isMesh, attributes};
             cur.state = kernel_element::VALID;
-            return iterator(this, cur.key);
+            return itRemove key from Kernel elementerator(this, key);
         }
         
         /**
@@ -237,9 +233,7 @@ namespace is_mesh
          */
         iterator find_iterator(key_type const & k)
         {
-            //we don't just return iterator(this, k) as this is not defensive enough, we need to return valid values.
-            kernel_element& tmp = lookup(k);
-            if (tmp.state == kernel_element::VALID && tmp.key == k)
+            if (is_valid(k))
                 return iterator(this, k);
             else
                 return end();
@@ -256,7 +250,6 @@ namespace is_mesh
         {
             kernel_element& tmp = lookup(k);
             assert(tmp.state == kernel_element::VALID);
-            assert(tmp.key == k);
             return tmp.value;
         }
         
