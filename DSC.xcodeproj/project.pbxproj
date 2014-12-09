@@ -817,9 +817,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE0E895A1A23531C000E3B30 /* simplex.cpp in Sources */,
-				FE0E89591A23531C000E3B30 /* is_mesh.cpp in Sources */,
 				FE0E89561A23530F000E3B30 /* DSC.cpp in Sources */,
+				FE0E89591A23531C000E3B30 /* is_mesh.cpp in Sources */,
+				FE0E895A1A23531C000E3B30 /* simplex.cpp in Sources */,
 				333AEC6975EE6CEB58482956 /* geometry.cpp in Sources */,
 				333AE336DB894CBE87DCED8D /* mesh_io.cpp in Sources */,
 			);
@@ -1009,6 +1009,7 @@
 		7AE27AD817675AE8000F8238 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++11";
 				EXECUTABLE_PREFIX = lib;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_WARN_UNUSED_FUNCTION = YES;
@@ -1020,6 +1021,7 @@
 		7AE27AD917675AE8000F8238 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++11";
 				EXECUTABLE_PREFIX = lib;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_WARN_UNUSED_FUNCTION = YES;
