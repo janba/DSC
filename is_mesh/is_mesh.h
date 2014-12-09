@@ -228,9 +228,13 @@ namespace is_mesh {
         }
 
         bool create(const std::vector<vec3>& points, const std::vector<int>& tets);
-
+        /**
+        * Perform an initial update of flags for all nodes, edges and faces.
+        */
         void init_flags(const std::vector<int>& tet_labels);
-
+        /**
+        * Updates the flags (is interface, is boundary, is crossing) of simplices in set.
+        */
         void update(const SimplexSet<TetrahedronKey>& tids);
 
         void update_flag(const FaceKey & f);
@@ -332,23 +336,41 @@ namespace is_mesh {
         }
         
         // Other getter functions
-
+        /**
+        *  Returns the node shared by the edges eid1 and eid2.
+        */
         NodeKey get_node(const EdgeKey& eid1, const EdgeKey& eid2);
-
+        /**
+        *  Returns the node adjacent to edge eid which is not nid.
+        */
         NodeKey get_node(const EdgeKey& eid, const NodeKey& nid);
-
+        /**
+        *  Returns the edge between the nodes nid1 and nid2.
+        */
         EdgeKey get_edge(const NodeKey& nid1, const NodeKey& nid2);
-
+        /**
+        *  Returns the edge shared by the faces fid1 and fid2.
+        */
         EdgeKey get_edge(const FaceKey& fid1, const FaceKey& fid2);
-
+        /**
+        *  Returns the face between the nodes nid1, nid2 and nid3.
+        */
         FaceKey get_face(const NodeKey& nid1, const NodeKey& nid2, const NodeKey& nid3);
-
+        /**
+        *  Returns the face shared by the tetrahedra tid1 and tid2.
+        */
         FaceKey get_face(const TetrahedronKey& tid1, const TetrahedronKey& tid2);
-
+        /**
+        *  Returns the tetrahedron which shares the face fid with tid, i.e. the neighbour to tid.
+        */
         TetrahedronKey get_tet(const TetrahedronKey& tid, const FaceKey& fid);
-
+        /**
+        * Returns the position of node nid.
+        */
         vec3 get_pos(const NodeKey& nid);
-
+        /**
+        * Returns the positions of nodes nids.
+        */
         std::vector<vec3> get_pos(const SimplexSet<NodeKey>& nids);
         
         //////////////////////
@@ -371,9 +393,13 @@ namespace is_mesh {
         
     public:
         bool is_clockwise_order(const NodeKey& nid, SimplexSet<NodeKey>& nids);
-
+        /*
+         * Orient the nodes in a counter clockwise order seen from the node a.
+         */
         void orient_cc(const NodeKey& nid, SimplexSet<NodeKey>& nids);
-
+        /**
+        * Returns whether the tetrahedron with ID tid is inverted.
+        */
         bool is_inverted(const TetrahedronKey& tid);
 
         bool is_inverted_destination(const TetrahedronKey& tid);
@@ -383,12 +409,24 @@ namespace is_mesh {
         ////////////////////
     
     public:
+        /**
+        * Inserts a node into the mesh. Trivial.
+        */
         NodeKey insert_node(const vec3& p);
-
+        /**
+        * Inserts an edge into the mesh. Updates the co-boundary of the boundary nodes with the newly created edge.
+        * Leaves the closure of the edge in an uncompressed state.
+        */
         EdgeKey insert_edge(NodeKey node1, NodeKey node2);
-
+        /**
+        * Inserts a face into the mesh. Updates the co-boundary of the boundary faces with the newly created face.
+        * Leaves the closure of the face in an uncompressed state.
+        */
         FaceKey insert_face(EdgeKey edge1, EdgeKey edge2, EdgeKey edge3);
-
+        /**
+        * Inserts a tetrahedron into the mesh. Updates the co-boundary of the boundary edges with the newly created tetrahedron.
+        * Leaves the closure of the tetrahedron in an uncompressed state.
+        */
         TetrahedronKey insert_tetrahedron(FaceKey face1, FaceKey face2, FaceKey face3, FaceKey face4);
         
     private:
@@ -463,7 +501,9 @@ namespace is_mesh {
         NodeKey split(const EdgeKey& eid, const vec3& pos, const vec3& destination);
 
         virtual void update_collapse(const NodeKey& nid, const NodeKey& nid_removed, double weight);
-
+        /**
+        *  Collapses the edge eid. The node nid must be adjacent to eid before the collapse. The node nid survives, while the other is removed. The weight parameter specifies how the attributes of the old nodes are weighted in the surviving node. For example the position of the surviving node is given by (1.-weight)*get(nid).get_pos() + weight*get(nid_remove).get_pos(). This means that if weight is 0, the surviving node retain its attributes.
+        */
         void collapse(const EdgeKey& eid, const NodeKey& nid, double weight = 0.5);
 
         FaceKey flip_32(const EdgeKey& eid);

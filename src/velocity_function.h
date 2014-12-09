@@ -44,188 +44,89 @@ namespace DSC {
         
     public:
         /**
-         Creates a velocity function which is applied to the simplicial complex defined by the first input parameter. The velocity parameter determines the velocity of the function.
-         */
-        VelocityFunc(double velocity, double accuracy, int max_time_steps): MAX_TIME_STEPS(max_time_steps)
-        {
-            set_velocity(velocity);
-            set_accuracy(accuracy);
-        }
-        
-        virtual ~VelocityFunc()
-        {
-            pos_old.clear();
-        }
-        
+        Creates a velocity function which is applied to the simplicial complex defined by the first input parameter. The velocity parameter determines the velocity of the function.
+        */
+        VelocityFunc(double velocity, double accuracy, int max_time_steps);
+
+        virtual ~VelocityFunc();
+
         /**
-         Returns the name of the velocity function.
-         */
-        virtual std::string get_name() const
-        {
-            return std::string("NO MOTION");
-        }
-        
+        Returns the name of the velocity function.
+        */
+        virtual std::string get_name() const;
+
         /**
-         Returns the current time step.
-         */
-        int get_time_step() const
-        {
-            return time_step;
-        }
-        
-        virtual void set_max_time_steps(int max_time_steps)
-        {
-            MAX_TIME_STEPS = max_time_steps;
-        }
-        
+        Returns the current time step.
+        */
+        int get_time_step() const;
+
+        virtual void set_max_time_steps(int max_time_steps);
+
         /**
-         Returns the velocity.
-         */
-        double get_velocity() const
-        {
-            return VELOCITY;
-        }
-        
-        virtual void set_velocity(double vel)
-        {
-            VELOCITY = vel;
-        }
-        
+        Returns the velocity.
+        */
+        double get_velocity() const;
+
+        virtual void set_velocity(double vel);
+
         /**
-         Returns the accuracy.
-         */
-        double get_accuracy() const
-        {
-            return ACCURACY;
-        }
-        
-        virtual void set_accuracy(double acc)
-        {
-            ACCURACY = acc;
-        }
-        
+        Returns the accuracy.
+        */
+        double get_accuracy() const;
+
+        virtual void set_accuracy(double acc);
+
         /**
-         Returns the time it took to deform the interface in this time step.
-         */
-        double get_deform_time() const
-        {
-            return deform_time;
-        }
-        
+        Returns the time it took to deform the interface in this time step.
+        */
+        double get_deform_time() const;
+
         /**
-         Returns the time it took to compute the new positions of the interface in this time step.
-         */
-        double get_compute_time() const
-        {
-            return compute_time;
-        }
-        
+        Returns the time it took to compute the new positions of the interface in this time step.
+        */
+        double get_compute_time() const;
+
         /**
-         Returns the total time it took to deform the interface.
-         */
-        double get_total_deform_time() const
-        {
-            return total_deform_time;
-        }
-        
+        Returns the total time it took to deform the interface.
+        */
+        double get_total_deform_time() const;
+
         /**
-         Returns the total time it took to compute the new positions of the interface.
-         */
-        double get_total_compute_time() const
-        {
-            return total_compute_time;
-        }
+        Returns the total time it took to compute the new positions of the interface.
+        */
+        double get_total_compute_time() const;
         
     protected:
         /**
-         Updates the time it took to compute new positions for the interface vertices.
-         */
-        void update_compute_time(const std::chrono::time_point<std::chrono::system_clock>& start_time)
-        {
-            std::chrono::duration<double> t = std::chrono::system_clock::now() - start_time;
-            compute_time += t.count();
-            total_compute_time += t.count();
-        }
+        Updates the time it took to compute new positions for the interface vertices.
+        */
+        void update_compute_time(const std::chrono::time_point<std::chrono::system_clock>& start_time);
+
         /**
-         Updates the time it took to deform the interface.
-         */
-        void update_deform_time(const std::chrono::time_point<std::chrono::system_clock>& start_time)
-        {
-            std::chrono::duration<double> t = std::chrono::system_clock::now() - start_time;
-            deform_time += t.count();
-            total_deform_time += t.count();
-        }
+        Updates the time it took to deform the interface.
+        */
+        void update_deform_time(const std::chrono::time_point<std::chrono::system_clock>& start_time);
         
         /**
          Computes the motion of each interface vertex and stores the new position in new_pos in the simplicial complex class.
          */
-        virtual void deform(DeformableSimplicialComplex& dsc)
-        {
-            auto init_time = std::chrono::system_clock::now();
-            
-            dsc.deform();
-            
-            update_deform_time(init_time);
-        }
+        virtual void deform(DeformableSimplicialComplex& dsc);
         
     public:
         /**
-         Returns wether the motion has finished.
+         Returns whether the motion has finished.
          */
-        virtual bool is_motion_finished(DeformableSimplicialComplex& dsc)
-        {
-            if(time_step < MAX_TIME_STEPS)
-            {
-                for (auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
-                {
-                    if(dsc.is_movable(nit.key()))
-                    {
-                        bool match = false;
-                        for (int i = 0; i+2 < pos_old.size(); i += 3)
-                        {
-                            if (Util::distance_point_triangle(nit->get_pos(), pos_old[i], pos_old[i+1], pos_old[i+2]) < ACCURACY)
-                            {
-                                match = true;
-                                break;
-                            }
-                        }
-                        if (!match) {
-                            std::cout << "Stopping criteria: Position " << nit->get_pos() << " has moved." << std::endl;
-                            pos_old = dsc.get_interface_face_positions();
-                            return false;
-                        }
-                    }
-                }
-                pos_old = dsc.get_interface_face_positions();
-            }
-            return true;
-        }
+        virtual bool is_motion_finished(DeformableSimplicialComplex& dsc);
         
         /**
          Takes one time step thereby deforming the simplicial complex according to the velocity function.
          */
-        void take_time_step(DeformableSimplicialComplex& dsc)
-        {
-            compute_time = 0.;
-            deform_time = 0.;
-            
-            deform(dsc);
-            
-            time_step++;
-        }
+        void take_time_step(DeformableSimplicialComplex& dsc);
         
         /**
          An optional test function which can be used to test some aspect of the velocity function.
          */
-        virtual void test(DeformableSimplicialComplex& dsc)
-        {
-            dsc.validity_check();
-            
-            dsc.test_flip23_flip32();
-            dsc.test_split_collapse();
-            dsc.test_flip44();
-            dsc.test_flip22();
-        }
+        virtual void test(DeformableSimplicialComplex& dsc);
         
     };
     

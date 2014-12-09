@@ -15,6 +15,7 @@
 		333AE9402FFA4B5BD244E818 /* is_mesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AEB9FDC8710743C9CF985 /* is_mesh.h */; };
 		333AEB72D047513E5E90FF36 /* mesh_io.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AEF915FE236382288972B /* mesh_io.h */; };
 		333AEBF9E35AB77707B24910 /* key.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AEFD4824DB30E67D2DD5F /* key.h */; };
+		333AEC106B7E6B77E5FEF3E3 /* velocity_function.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE534F62014006381EBFA /* velocity_function.cpp */; };
 		333AEC2B6E956CD9BE9F941B /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AE6BDE0F08B0B2E7878ED /* util.h */; };
 		333AEC31AAFB2539DC0CA593 /* geometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AE9D0F6BD66F3713E5C5B /* geometry.h */; };
 		333AEC3E9AFB5F24E30DA814 /* test.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AE5DE319BCEDA3BABE713 /* test.h */; };
@@ -145,6 +146,7 @@
 		333AE0BAAE7617F653EEF43C /* mesh_io.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mesh_io.cpp; path = is_mesh/mesh_io.cpp; sourceTree = "<group>"; };
 		333AE15025019E84F966ACA2 /* simplex_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simplex_set.h; path = is_mesh/simplex_set.h; sourceTree = "<group>"; };
 		333AE2B179980E5CEDEDC72E /* attributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = attributes.h; path = is_mesh/attributes.h; sourceTree = "<group>"; };
+		333AE534F62014006381EBFA /* velocity_function.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = velocity_function.cpp; sourceTree = SOURCE_ROOT; };
 		333AE5DE319BCEDA3BABE713 /* test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = test.h; path = is_mesh/test.h; sourceTree = "<group>"; };
 		333AE6BDE0F08B0B2E7878ED /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = is_mesh/util.h; sourceTree = "<group>"; };
 		333AE9D0F6BD66F3713E5C5B /* geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geometry.h; path = src/geometry.h; sourceTree = "<group>"; };
@@ -502,6 +504,7 @@
 				7AE27AE917675B04000F8238 /* velocity_function.h */,
 				7AF7E9BE176B4FE400F43714 /* DSC.h */,
 				333AECAB916ABFD6FCBC9B35 /* ISMesh */,
+				333AE534F62014006381EBFA /* velocity_function.cpp */,
 			);
 			path = DSC;
 			sourceTree = "<group>";
@@ -822,6 +825,7 @@
 				FE0E895A1A23531C000E3B30 /* simplex.cpp in Sources */,
 				333AEC6975EE6CEB58482956 /* geometry.cpp in Sources */,
 				333AE336DB894CBE87DCED8D /* mesh_io.cpp in Sources */,
+				333AEC106B7E6B77E5FEF3E3 /* velocity_function.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

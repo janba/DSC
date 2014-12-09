@@ -87,7 +87,7 @@ namespace DSC {
         /// SimplicialComplex constructor.
         DeformableSimplicialComplex(std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels);
 
-        ~DeformableSimplicialComplex();
+        virtual ~DeformableSimplicialComplex();
 
     public:
 
@@ -100,7 +100,7 @@ namespace DSC {
         virtual void set_labels(const is_mesh::Geometry& geometry, int label);
 
     private:
-
+        // For debugging!
         void print(const is_mesh::NodeKey& n);
         
         /////////////////////////
@@ -129,9 +129,15 @@ namespace DSC {
         virtual bool is_movable(const is_mesh::NodeKey& nid);
 
     protected:
+        /**
+        * Sets the position of node n.
+        */
         void set_pos(const is_mesh::NodeKey& nid, const vec3& p);
         
     public:
+        /**
+        * Sets the destination where the node n is moved to when deform() is called.
+        */
         virtual void set_destination(const is_mesh::NodeKey& nid, const vec3& dest);
 
         /////////////
@@ -161,7 +167,10 @@ namespace DSC {
         //////////////////////////////
         // TOPOLOGICAL EDGE REMOVAL //
         //////////////////////////////
-
+        /**
+        * Build a table K for the dynamic programming method by Klincsek (see Shewchuk "Two Discrete Optimization Algorithms
+        * for the Topological Improvement of Tetrahedral Meshes" article for details).
+        */
         double build_table(const is_mesh::EdgeKey& e, const is_mesh::SimplexSet<is_mesh::NodeKey>& polygon, std::vector<std::vector<int>>& K);
 
 
@@ -174,12 +183,16 @@ namespace DSC {
         void flip_23_recursively(const is_mesh::SimplexSet<is_mesh::NodeKey>& polygon, const is_mesh::NodeKey& n1, const is_mesh::NodeKey& n2, std::vector<std::vector<int>>& K, int i, int j);
 
         void topological_edge_removal(const is_mesh::SimplexSet<is_mesh::NodeKey>& polygon, const is_mesh::NodeKey& n1, const is_mesh::NodeKey& n2, std::vector<std::vector<int>>& K);
-
+        /**
+        * Attempt to remove edge e by mesh reconnection using the dynamic programming method by Klincsek (see Shewchuk "Two Discrete Optimization Algorithms
+        * for the Topological Improvement of Tetrahedral Meshes" article for details).
+        */
         bool topological_edge_removal(const is_mesh::EdgeKey& eid);
 
         void topological_boundary_edge_removal(const is_mesh::SimplexSet<is_mesh::NodeKey>& polygon1, const is_mesh::SimplexSet<is_mesh::NodeKey>& polygon2, const is_mesh::EdgeKey& eid, std::vector<std::vector<int>>& K1, std::vector<std::vector<int>>& K2);
 
         bool topological_boundary_edge_removal(const is_mesh::EdgeKey& eid);
+
 
         void topological_edge_removal();
         
@@ -188,19 +201,31 @@ namespace DSC {
         //////////////////////////////
 
         is_mesh::SimplexSet<is_mesh::EdgeKey> test_neighbour(const is_mesh::FaceKey& f, const is_mesh::NodeKey& a, const is_mesh::NodeKey& b, const is_mesh::NodeKey& u, const is_mesh::NodeKey& w, double& q_old, double& q_new);
-
+        /**
+        * Attempt to remove the faces sandwiched between the apices of f using multi-face removal. The face f is used as a starting point.
+        */
         bool topological_face_removal(const is_mesh::FaceKey& f);
-
+        /**
+        * Attempt to remove the faces sandwiched between the nodes apex1 and apex2 using multi-face removal.
+        * The face which intersects with the line segment |apex1 apex2| is used as a starting point.
+        */
         bool topological_face_removal(const is_mesh::NodeKey& apex1, const is_mesh::NodeKey& apex2);
-
+        /**
+        * Improve tetrahedra quality by the topological operation (re-connection) edge removal. It do so only for tetrahedra of quality lower than MIN_TET_QUALITY.
+        * For details see "Two Discrete Optimization Algorithms for the Topological Improvement of Tetrahedral Meshes" by Shewchuk.
+        */
         void topological_face_removal();
         
         ////////////////
         // THICKENING //
         ////////////////
-
+        /**
+        * Splits all interface edges with a volume greater than MAX_EDGE_LENGTH by inserting a vertex.
+        */
         void thickening_interface();
-
+        /**
+        * Splits all tetrahedra with a volume greater than MAX_TET_VOLUME by inserting a vertex.
+        */
         void thickening();
         
         //////////////
@@ -208,12 +233,17 @@ namespace DSC {
         //////////////
 
         void thinning_interface();
-
+        /**
+        * Collapses all edges which is shorter than MIN_EDGE_LENGTH. However, the collapse is only performed if it does not alter the interface and it improves the minimum quality of the tetrahedra in the star of the edge.
+        */
         void thinning();
         
         /////////////////////////
         // REMOVE DEGENERACIES //
         /////////////////////////
+        /**
+        * Attempt to remove edges with lower quality than DEG_EDGE_QUALITY by collapsing them.
+        */
         void remove_degenerate_edges();
 
         void remove_degenerate_faces();
@@ -223,33 +253,64 @@ namespace DSC {
         //////////////////////////////////
         // REMOVE LOW QUALITY SIMPLICES //
         //////////////////////////////////
-
+        /**
+        * Attempt to remove edges with worse quality than MIN_EDGE_QUALITY by safely collapsing them.
+        */
         void remove_edges();
-
+        /**
+        * Attempt to remove the cap f by splitting the longest edge and collapsing it with cap's apex.
+        */
         bool remove_cap(const is_mesh::FaceKey& fid);
-
+        /**
+        * Attempt to remove the cap f by splitting the longest edge and collapsing it with cap's apex.
+        */
         bool remove_needle(const is_mesh::FaceKey& fid);
-
+        /**
+        * Attempt to remove the face f by first determining whether it's a cap or a needle.
+        */
         bool remove_face(const is_mesh::FaceKey& f);
-
+        /**
+        * Attempts to remove degenerate faces (faces with a minimum angle smaller than MIN_ANGLE).
+        */
         void remove_faces();
-
+        /**
+        * Remove a degenerate tetrahedron of a type "sliver" by splitting the two longest edges
+        * and collapsing the newly created vertices together. Return true if successful.
+        */
         bool remove_sliver(const is_mesh::TetrahedronKey& tid);
-
+        /**
+        * Remove a degenerate tetrahedron of a type "cap" by splitting the face opposite cap's apex and collapsing cap's apex with the newly created vertex.
+        * Return true if successful.
+        */
         bool remove_cap(const is_mesh::TetrahedronKey& tid);
-
+        /**
+        * Remove a degenerate tetrahedron of a type "wedge" or "needle" by collapsing the shortest edge.
+        * Return true if successful.
+        */
         bool remove_wedge(const is_mesh::TetrahedronKey& tid);
-
+        /**
+        * Remove a tetrahedron of a type "needle" by splitting the tetrahedron.
+        * Return true if successful.
+        */
         bool remove_needle(const is_mesh::TetrahedronKey& tid);
-
+        /**
+        * Destroy degenerate (nearly flat) tetrahedron t by splits and collapses.
+        * This function detects what type of degeneracy tetrahedron t is (sliver, cap, needle or wedge)
+        * and selects appropriate degeneracy removal routine.
+        */
         bool remove_tet(const is_mesh::TetrahedronKey& tid);
-
+        /**
+        * Attempt to remove tetrahedra with quality lower than MIN_TET_QUALITY.
+        */
         void remove_tets();
         
         ///////////////
         // SMOOTHING //
         ///////////////
     private:
+        /**
+        * Performs Laplacian smoothing if it improves the minimum tetrahedron quality locally.
+        */
         bool smart_laplacian(const is_mesh::NodeKey& nid, double alpha = 1.);
 
         void smooth();
@@ -266,35 +327,58 @@ namespace DSC {
         // MOVE FUNCTIONS //
         ////////////////////
     public:
+        /**
+        * Moves all the vertices to their destination which can be set by the set_destination() function.
+        */
         void deform(int num_steps = 10);
         
     private:
-
+        /**
+        * Tries moving the node n to the new position new_pos. Returns true if it succeeds.
+        */
         bool move_vertex(const is_mesh::NodeKey & n);
         
         
     public:
+        /**
+        * Returns the intersection point (= pos + t*(destination-pos)) with the link of the node n and
+        * when moving the node n to the new position destination.
+        */
         double intersection_with_link(const is_mesh::NodeKey & n, const vec3& destination);
         
         ///////////
         // FLIPS //
         ///////////
     private:
-
+        /**
+        * Returns whether the interface or boundary faces in fids are flat.
+        */
         bool is_flat(const is_mesh::SimplexSet<is_mesh::FaceKey>& fids);
-
+        /**
+        * Returns whether it is possible to flip the edge e or not, i.e. whether the edge is a feature edge
+        * (it is not a feature edge if its neighborhood is sufficiently flat).
+        */
         bool is_flippable(const is_mesh::EdgeKey & eid);
-
+        /**
+        * Returns whether it is possible to flip the edge e or not.
+        */
         bool precond_flip_edge(const is_mesh::EdgeKey& eid, const is_mesh::FaceKey& f1, const is_mesh::FaceKey& f2);
         
         ////////////
         // SPLITS //
         ////////////
     public:
+        /**
+        * Split a tetrahedron t and returns the new node which is positioned at the barycenter of the vertices of t.
+        */
         is_mesh::NodeKey split(const is_mesh::TetrahedronKey& tid);
-
+        /**
+        * Split a face f and returns the new node which is positioned at the barycenter of the vertices of f.
+        */
         is_mesh::NodeKey split(const is_mesh::FaceKey& fid);
-
+        /**
+        * Split an edge e and returns the new node which is placed at the middle of e.
+        */
         is_mesh::NodeKey split(const is_mesh::EdgeKey& eid);
 
         ///////////////
@@ -302,7 +386,11 @@ namespace DSC {
         ///////////////
     private:
         bool is_collapsable(const is_mesh::EdgeKey& eid, const is_mesh::NodeKey& nid, bool safe);
-
+        /**
+        * Collapses the edge e and places the new node at the most optimal position of the position of either end node or their barycenter.
+        * If the parameter safe is true, the method if the nodes of edge e are editable, i.e. not a part of the interface, and will therefore not change the interface.
+        * Returns whether the collapse was successful.
+        */
         bool collapse(const is_mesh::EdgeKey& eid, bool safe = true);
 
         bool collapse(is_mesh::SimplexSet<is_mesh::EdgeKey>& eids, bool safe);
@@ -317,13 +405,23 @@ namespace DSC {
     public:
 
         std::vector<vec3> get_interface_face_positions();
-
+        /**
+        Returns the normal to interface face fid.
+        */
         vec3 get_normal(const is_mesh::FaceKey& fid);
-
+        /**
+        Returns the normal to interface node n.
+        */
         vec3 get_normal(const is_mesh::NodeKey& nid);
-
+        /**
+        * Calculates the average position of the nodes in the simplex set nids.
+        * If interface is true, the average position is only calculated among the nodes which are interface.
+        */
         vec3 get_barycenter(const is_mesh::SimplexSet<is_mesh::NodeKey>& nids, bool interface = false);
-
+        /**
+        * Calculates the average position of the neighbouring nodes to node n.
+        * If interface is true, the average position is only calculated among the neighbouring nodes which are interface.
+        */
         vec3 get_barycenter(const is_mesh::NodeKey& nid, bool interface = false);
         
         ///////////////////////
@@ -361,24 +459,41 @@ namespace DSC {
         double quality(const is_mesh::FaceKey& fid);
 
         double quality(const is_mesh::EdgeKey& eid);
-
+        /**
+        * Returns the largest face in the simplex set.
+        */
         is_mesh::FaceKey largest_face(const is_mesh::SimplexSet<is_mesh::FaceKey>& fids);
-
+        /**
+        * Returns the shortest edge in the simplex set.
+        */
         is_mesh::EdgeKey shortest_edge(const is_mesh::SimplexSet<is_mesh::EdgeKey>& eids);
-
+        /**
+        * Returns the longest edge in the simplex set.
+        */
         is_mesh::EdgeKey longest_edge(const is_mesh::SimplexSet<is_mesh::EdgeKey>& eids);
-
+        /**
+        * Returns the minimum quality of the tetrahedra in simplex set s.
+        */
         double min_quality(const is_mesh::SimplexSet<is_mesh::TetrahedronKey>& tids);
-
+        /**
+        * Returns the minimum tetrahedral quality of a node with position pos. The faces in the link of the node should be passed in fids.
+        */
         double min_quality(const is_mesh::SimplexSet<is_mesh::FaceKey>& fids, const vec3& pos);
-
+        /**
+        * Returns the new minimum tetrahedral quality when moving a node from old_pos to new_pos. The faces in the link of the node should be passed in fids.
+        */
         double min_quality(const is_mesh::SimplexSet<is_mesh::FaceKey>& fids, const vec3& pos_old, const vec3& pos_new);
-
+        /**
+        * Returns the old (in min_q_old) and new (in min_q_new) minimum tetrahedral quality of when moving a node from old_pos to new_pos. The faces in the link of the node should be passed in fids.
+        */
         void min_quality(const is_mesh::SimplexSet<is_mesh::FaceKey>& fids, const vec3& pos_old, const vec3& pos_new, double& min_q_old, double& min_q_new);
         
         
     private:
-
+        /**
+        * Check if the sequence of vertices in polygon is consistent with positive orientation of tetrahedra in the mesh
+        * with respect to the ordered pair of vertices in vv. If not, reverse the order of vertices in polygon.
+        */
         void check_consistency(const is_mesh::SimplexSet<is_mesh::NodeKey>& nids, is_mesh::SimplexSet<is_mesh::NodeKey>& polygon);
         
         ////////////////////////
@@ -387,29 +502,40 @@ namespace DSC {
     public:
 
         double compute_avg_edge_length();
-
+        /**
+        * Returns the cosine to the dihedral angle between face f1 and face f2.
+        */
         double cos_dihedral_angle(const is_mesh::FaceKey& f1, const is_mesh::FaceKey& f2);
-
+        /**
+        * Returns the dihedral angle between face f1 and face f2.
+        */
         double dihedral_angle(const is_mesh::FaceKey& f1, const is_mesh::FaceKey& f2);
 
         std::vector<double> cos_dihedral_angles(const is_mesh::TetrahedronKey& tid);
-
+        /**
+        * Returns the cosine of the minimum dihedral angle between the faces of tetrahedron t.
+        */
         double min_cos_dihedral_angle(const is_mesh::TetrahedronKey& t);
-
+        /**
+        * Returns the minimum dihedral angle between the faces of tetrahedron t.
+        */
         double min_dihedral_angle(const is_mesh::TetrahedronKey& t);
 
         void get_qualities(std::vector<int>& histogram, double& min_quality);
-
+        /**
+        * Calculates the dihedral angles in the SimplicialComplex and returns these in a histogram,
+        * along with the minimum and maximum dihedral angles.
+        */
         void get_dihedral_angles(std::vector<int> & histogram, double & min_angle, double & max_angle);
 
         double min_quality();
-
+        /// Counts the total number of nodes and the number of nodes on the interface(s).
         void count_nodes(int & total, int & object);
-
+        /// Counts the total number of edges and the number of edges on the interface(s).
         void count_edges(int & total, int & object);
-
+        /// Counts the total number of faces and the number of faces on the interface(s).
         void count_faces(int & total, int & object);
-
+        /// Counts the total number of tetrahedra and the number of tetrahedra in the object(s).
         void count_tetrahedra(int & total, int & object);
         
     public:
