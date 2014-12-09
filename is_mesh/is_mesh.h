@@ -148,7 +148,7 @@ namespace is_mesh {
         /////////////////////
     public:
 
-        int get_label(const TetrahedronKey& t);
+        virtual int get_label(const TetrahedronKey& t);
         
     private:
         template<typename key>
@@ -170,7 +170,7 @@ namespace is_mesh {
         }
         
     public:
-        void set_label(const TetrahedronKey& tid, int label);
+        virtual void set_label(const TetrahedronKey& tid, int label);
         
     private:
 
