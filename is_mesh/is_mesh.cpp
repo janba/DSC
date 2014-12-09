@@ -682,7 +682,7 @@ namespace is_mesh{
     }
 
     void ISMesh::update_split(const NodeKey& nid_new, const NodeKey& nid1, const NodeKey& nid2) {
-         throw "Not implemented";
+         cout << "Warn: ISMesh::update_split Not implemented"<<endl;
     }
 
     NodeKey ISMesh::split(const EdgeKey& eid, const vec3& pos, const vec3& destination) {
