@@ -846,6 +846,7 @@
 		7A0AB5A617D906AD0058910E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				EXECUTABLE_PREFIX = lib;
 				FRAMEWORK_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -855,6 +856,7 @@
 		7A0AB5A717D906AD0058910E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				EXECUTABLE_PREFIX = lib;
 				FRAMEWORK_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -940,6 +942,7 @@
 		7A9C205B17DFB4CB0064171E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				EXECUTABLE_PREFIX = lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -948,6 +951,7 @@
 		7A9C205C17DFB4CB0064171E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				EXECUTABLE_PREFIX = lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1013,6 +1017,7 @@
 		7AE27AD817675AE8000F8238 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++11";
 				EXECUTABLE_PREFIX = lib;
 				FRAMEWORK_SEARCH_PATHS = "";
@@ -1025,6 +1030,7 @@
 		7AE27AD917675AE8000F8238 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++11";
 				EXECUTABLE_PREFIX = lib;
 				FRAMEWORK_SEARCH_PATHS = "";

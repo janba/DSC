@@ -117,7 +117,7 @@ namespace is_mesh
 
         Node& operator=(Node&& other);
 
-        const SimplexSet<EdgeKey> & edge_keys();
+        const SimplexSet<EdgeKey> & edge_keys() const;
 
     };
     
@@ -134,9 +134,9 @@ namespace is_mesh
 
         Edge& operator=(Edge&& other);
 
-        const SimplexSet<NodeKey> & node_keys();
+        const SimplexSet<NodeKey> & node_keys()  const;
 
-        const SimplexSet<FaceKey> & face_keys();
+        const SimplexSet<FaceKey> & face_keys() const;
     };
     
     ///////////////////////////////////////////////////////////////////////////////
@@ -152,9 +152,9 @@ namespace is_mesh
 
         Face& operator=(Face&& other);
 
-        const SimplexSet<EdgeKey> & edge_keys();
+        const SimplexSet<EdgeKey> & edge_keys() const;
 
-        const SimplexSet<TetrahedronKey> & tet_keys();
+        const SimplexSet<TetrahedronKey> & tet_keys() const;
     };
     
     ///////////////////////////////////////////////////////////////////////////////
@@ -170,6 +170,6 @@ namespace is_mesh
 
         Tetrahedron& operator=(Tetrahedron&& other);
 
-        const SimplexSet<FaceKey> & face_keys();
+        const SimplexSet<FaceKey> & face_keys() const;
     };
 }

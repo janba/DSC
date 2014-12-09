@@ -696,7 +696,7 @@ namespace Util
     }
     
     /**
-     Concatonates the integer number to the string name.
+     Concatenates the integer number to the string name.
      */
     inline std::string concat4digits(std::string name, int number)
     {

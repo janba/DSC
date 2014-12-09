@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <functional>
 #include "util.h"
 #include "kernel.h"
 #include "simplex.h"
@@ -91,6 +92,12 @@ namespace is_mesh {
 
     };
 
+    struct GarbageCollectDeletions {
+        std::vector<NodeKey> nodeKeys;
+        std::vector<EdgeKey> edgeKeys;
+        std::vector<FaceKey> faceKeys;
+        std::vector<TetrahedronKey> tetrahedronKeys;
+    };
 
 
     class ISMesh
@@ -101,7 +108,8 @@ namespace is_mesh {
         kernel<Edge, EdgeKey>*                  m_edge_kernel;
         kernel<Face, FaceKey>*                  m_face_kernel;
         kernel<Tetrahedron, TetrahedronKey>*           m_tetrahedron_kernel;
-        
+
+        std::map<long,std::function<void(const GarbageCollectDeletions&)>> m_gc_listeners;
     public:
         ISMesh(std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels);
 
@@ -531,6 +539,12 @@ namespace is_mesh {
         void extract_tet_mesh(std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels);
 
         void validity_check();
+
+        // returns listener id
+        long add_gc_listener(std::function<void(const GarbageCollectDeletions&)> fn);
+
+        // remove listener by id
+        bool remove_gc_listener(long id);
     };
     
 }

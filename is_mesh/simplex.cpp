@@ -23,7 +23,7 @@ namespace is_mesh
         return *this;
     }
 
-    const SimplexSet<EdgeKey> &Node::edge_keys() {
+    const SimplexSet<EdgeKey> &Node::edge_keys() const {
         return get_co_boundary();
     }
 
@@ -47,11 +47,11 @@ namespace is_mesh
         return *this;
     }
 
-    const SimplexSet<NodeKey> &Edge::node_keys() {
+    const SimplexSet<NodeKey> &Edge::node_keys()  const {
         return get_boundary();
     }
 
-    const SimplexSet<FaceKey> &Edge::face_keys() {
+    const SimplexSet<FaceKey> &Edge::face_keys()  const {
         return get_co_boundary();
     }
 
@@ -73,11 +73,11 @@ namespace is_mesh
         return *this;
     }
 
-    const SimplexSet<EdgeKey> &Face::edge_keys() {
+    const SimplexSet<EdgeKey> &Face::edge_keys()  const {
         return get_boundary();
     }
 
-    const SimplexSet<TetrahedronKey> &Face::tet_keys() {
+    const SimplexSet<TetrahedronKey> &Face::tet_keys()  const {
         return get_co_boundary();
     }
 
@@ -100,7 +100,7 @@ namespace is_mesh
         return *this;
     }
 
-    const SimplexSet<FaceKey> &Tetrahedron::face_keys() {
+    const SimplexSet<FaceKey> &Tetrahedron::face_keys()  const {
         return get_boundary();
     }
 }

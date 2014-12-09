@@ -98,7 +98,7 @@ namespace is_mesh
         const key_type& operator[](unsigned int i) const
         {
             assert(size() > i);
-            return set.at(i);
+            return set[i];
         }
         
         bool contains(const key_type& k) const
@@ -109,7 +109,7 @@ namespace is_mesh
         int index(const key_type& k) const
         {
             for (int i = 0; i < set.size(); i++) {
-                if(set.at(i) == k)
+                if(set[i] == k)
                 {
                     return i;
                 }

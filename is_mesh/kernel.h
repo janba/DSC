@@ -279,8 +279,9 @@ namespace is_mesh
         /**
          * Commits all the changes in the kernel, and permanently removes all the marked elements.
          */
-        void commit_all()
+        std::vector<key_type> commit_all()
         {
+            std::vector<key_type> deletedKeys = m_data_marked_for_deletion;
             for (auto key : m_data_marked_for_deletion){
                 auto & p = m_data[key];
 
@@ -289,6 +290,7 @@ namespace is_mesh
                 m_data_freelist.push_back(key);
             }
             m_data_marked_for_deletion.clear();
+            return deletedKeys;
         }
         
         /**
@@ -298,9 +300,9 @@ namespace is_mesh
          * The operation runs in O(n) - where n is m_capacity or the size of allocated memory (not 
          * efficient, but cleans lists).
          */
-        void garbage_collect() 
+        std::vector<key_type> garbage_collect()
         {
-            commit_all();
+            return commit_all();
         }
     };
 }

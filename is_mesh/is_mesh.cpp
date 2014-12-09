@@ -1,5 +1,7 @@
 #include "is_mesh.h"
 
+#include <algorithm>
+
 using namespace std;
 
 namespace is_mesh{
@@ -997,10 +999,12 @@ namespace is_mesh{
     }
 
     void ISMesh::garbage_collect() {
-        m_node_kernel->garbage_collect();
-        m_edge_kernel->garbage_collect();
-        m_face_kernel->garbage_collect();
-        m_tetrahedron_kernel->garbage_collect();
+        GarbageCollectDeletions res {
+            m_node_kernel->garbage_collect(),
+            m_edge_kernel->garbage_collect(),
+            m_face_kernel->garbage_collect(),
+            m_tetrahedron_kernel->garbage_collect()};
+
     }
 
     void ISMesh::scale(const vec3& s) {
@@ -1131,5 +1135,16 @@ namespace is_mesh{
             assert((eit->is_boundary() && boundary == 2) || (!eit->is_boundary() && boundary == 0)); // Check that the boundary is not corrupted
         }
         cout << "PASSED" << endl;
+    }
+
+    long ISMesh::add_gc_listener(function<void(const GarbageCollectDeletions&)> fn) {
+        static long globalId = 0;
+        globalId++;
+        m_gc_listeners[globalId] = fn;
+        return globalId;
+    }
+
+    bool ISMesh::remove_gc_listener(long id) {
+        return m_gc_listeners.erase(id)>0;
     }
 }
