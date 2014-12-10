@@ -1004,7 +1004,9 @@ namespace is_mesh{
             m_edge_kernel->garbage_collect(),
             m_face_kernel->garbage_collect(),
             m_tetrahedron_kernel->garbage_collect()};
-
+        for (auto & fn : m_gc_listeners){
+            fn.second(res);
+        }
     }
 
     void ISMesh::scale(const vec3& s) {
