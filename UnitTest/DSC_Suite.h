@@ -5,5 +5,5 @@
 
 using namespace std;
 
-int t1(void);
+int tetGenTest(void);
 
