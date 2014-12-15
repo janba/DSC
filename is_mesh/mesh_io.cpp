@@ -43,7 +43,10 @@ namespace is_mesh {
     void import_tet_mesh(const std::string & filename, std::vector<vec3>& points, std::vector<int>&  tets, std::vector<int>& tet_labels)
     {
         std::ifstream file(filename.data());
-        
+        if (!file.is_open()){
+            std::cerr << "Could not open file "<<filename<<std::endl;
+            throw;
+        }
         while (!file.eof())
         {
             char c;
@@ -82,7 +85,10 @@ namespace is_mesh {
     void import_surface_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& faces)
     {
         std::ifstream file(filename.data());
-        
+        if (!file.is_open()){
+            std::cerr << "Could not open file "<<filename<<std::endl;
+            throw;
+        }
         if(file)
         {
             while(!file.eof())
@@ -128,6 +134,10 @@ namespace is_mesh {
     void import_voxel_grid(const std::string& filename, vec3& origin, vec3& voxel_size, int& Ni, int& Nj, int& Nk, std::vector<int>& voxels)
     {
         std::ifstream file(filename.data());
+        if (!file.is_open()){
+            std::cerr << "Could not open file "<<filename<<std::endl;
+            throw;
+        }
         if(file)
         {
             while(!file.eof())
@@ -251,6 +261,10 @@ namespace is_mesh {
     void import_geometry(const std::string& filename, vec3& origin, vec3& size, double& discretization, std::vector<unsigned int>& labels, std::vector<Geometry*>& geometries)
     {
         std::ifstream file(filename.data());
+        if (!file.is_open()){
+            std::cerr << "Could not open file "<<filename<<std::endl;
+            throw;
+        }
         if(file)
         {
             while(!file.eof())
