@@ -99,6 +99,8 @@ int main(int argc, const char * argv[])
             std::cout << "Generated " << output_file_name + extension << " from " << input_file_name << std::endl;
         }
         
+    } else {
+        std::cout << "Usage:\nSCGenerator [output-file] [input-file]\n\nSupported input-file formats: vg, obj, geo\n";
     }
     
     return 0;
