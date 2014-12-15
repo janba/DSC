@@ -437,7 +437,7 @@ void Tetralizer::merge_inside_outside(const std::vector<double>& points_interfac
     }
 }
 
-void static Tetralizer::tetralize(const vec3& size, double avg_edge_length, const std::vector<vec3>& points_interface, const std::vector<int>& faces_interface, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels) {
+void Tetralizer::tetralize(const vec3& size, double avg_edge_length, const std::vector<vec3>& points_interface, const std::vector<int>& faces_interface, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels) {
     std::vector<double> points_interface_real;
     for (vec3 p : points_interface) {
         points_interface_real.push_back(p[0]);
@@ -466,7 +466,7 @@ void static Tetralizer::tetralize(const vec3& size, double avg_edge_length, cons
     }
 }
 
-void static Tetralizer::tetralize(const vec3& origin, const vec3& voxel_size, int Ni, int Nj, int Nk, const std::vector<int>& voxel_labels, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels) {
+void Tetralizer::tetralize(const vec3& origin, const vec3& voxel_size, int Ni, int Nj, int Nk, const std::vector<int>& voxel_labels, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels) {
     create_points(origin, voxel_size, Ni, Nj, Nk, points);
     create_tets(Ni, Nj, Nk, tets);
 
@@ -477,7 +477,7 @@ void static Tetralizer::tetralize(const vec3& origin, const vec3& voxel_size, in
     }
 }
 
-void static Tetralizer::tetralize(const vec3& origin, const vec3& size, double avg_edge_length, std::vector<unsigned int>& labels, std::vector<is_mesh::Geometry*>& geometries, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels) {
+void Tetralizer::tetralize(const vec3& origin, const vec3& size, double avg_edge_length, std::vector<unsigned int>& labels, std::vector<is_mesh::Geometry*>& geometries, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels) {
     int Ni = std::ceil(size[0]/avg_edge_length);
     int Nj = std::ceil(size[1]/avg_edge_length);
     int Nk = std::ceil(size[2]/avg_edge_length);
