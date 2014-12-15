@@ -436,3 +436,65 @@ void Tetralizer::merge_inside_outside(const std::vector<double>& points_interfac
         if (it%4 == 0) output_tet_flags[it/4] = 1;
     }
 }
+
+void static Tetralizer::tetralize(const vec3& size, double avg_edge_length, const std::vector<vec3>& points_interface, const std::vector<int>& faces_interface, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels) {
+    std::vector<double> points_interface_real;
+    for (vec3 p : points_interface) {
+        points_interface_real.push_back(p[0]);
+        points_interface_real.push_back(p[1]);
+        points_interface_real.push_back(p[2]);
+    }
+
+    std::vector<double>    points_boundary;
+    std::vector<int>  faces_boundary;
+    build_boundary_mesh(points_boundary, avg_edge_length, faces_boundary, size);
+
+    std::vector<double> points_inside;
+    std::vector<int> tets_inside;
+    tetrahedralize_inside(points_interface_real, faces_interface, points_inside, tets_inside);
+
+    std::vector<double> points_outside;
+    std::vector<int> tets_outside;
+    tetrahedralize_outside(points_interface_real, faces_interface, points_boundary, faces_boundary, points_outside, tets_outside, vec3(points_inside[0], points_inside[1], points_inside[2]));
+
+    std::vector<double> points_real;
+    merge_inside_outside(points_interface_real, faces_interface, points_inside, tets_inside, points_outside, tets_outside, points_real, tets, tet_labels);
+
+    points.resize(points_real.size()/3);
+    for (unsigned int i = 0; i < points_real.size()/3; i++) {
+        points[i] = vec3(points_real[i*3], points_real[i*3+1], points_real[i*3+2]);
+    }
+}
+
+void static Tetralizer::tetralize(const vec3& origin, const vec3& voxel_size, int Ni, int Nj, int Nk, const std::vector<int>& voxel_labels, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels) {
+    create_points(origin, voxel_size, Ni, Nj, Nk, points);
+    create_tets(Ni, Nj, Nk, tets);
+
+    for (int l : voxel_labels) {
+        for (int i = 0; i < 5; i++) {
+            tet_labels.push_back(l);
+        }
+    }
+}
+
+void static Tetralizer::tetralize(const vec3& origin, const vec3& size, double avg_edge_length, std::vector<unsigned int>& labels, std::vector<is_mesh::Geometry*>& geometries, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels) {
+    int Ni = std::ceil(size[0]/avg_edge_length);
+    int Nj = std::ceil(size[1]/avg_edge_length);
+    int Nk = std::ceil(size[2]/avg_edge_length);
+
+    create_points(origin, vec3(avg_edge_length), Ni, Nj, Nk, points);
+    create_tets(Ni, Nj, Nk, tets);
+
+    for (unsigned int i = 0; i < tets.size(); i += 4)
+    {
+        int label = 0;
+        for (auto g = 0; g < labels.size(); g++) {
+            vec3 bc = Util::barycenter(points[tets[i]], points[tets[i+1]], points[tets[i+2]], points[tets[i+3]]);
+            if(geometries[g]->is_inside(bc))
+            {
+                label = labels[g];
+            }
+        }
+        tet_labels.push_back(label);
+    }
+}
