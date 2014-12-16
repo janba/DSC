@@ -10,8 +10,10 @@
 		333AE0349A8E5E3503484A66 /* libDSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AD617675AE8000F8238 /* libDSC.a */; };
 		333AE157A5545C460FEE8947 /* simplex_set.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AE15025019E84F966ACA2 /* simplex_set.h */; };
 		333AE2BE73A0EB768FDCB56B /* simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AEA3D640D6474001E3637 /* simplex.h */; };
+		333AE2E6B6FA4DF3E03B0169 /* velocity_function.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE0FFD3D296CF68540BDC /* velocity_function.cpp */; };
 		333AE336DB894CBE87DCED8D /* mesh_io.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE0BAAE7617F653EEF43C /* mesh_io.cpp */; };
 		333AE435914CBE1BF588DC06 /* attributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AE2B179980E5CEDEDC72E /* attributes.h */; };
+		333AE4D71610C5757EA5D6F9 /* tetralizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE1EBBC67D11132AE7932 /* tetralizer.cpp */; };
 		333AE52646F2A7EFD927EA1A /* libSOIL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0AB5A517D906AD0058910E /* libSOIL.a */; };
 		333AE695D49555CA4972CBBB /* kernel_iterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AECDC254783B574397B4C /* kernel_iterator.h */; };
 		333AE7547F1935D8A72FFE48 /* DSC_Suite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AED17ACD8EBBDD488D61E /* DSC_Suite.cpp */; };
@@ -22,16 +24,15 @@
 		333AEC31AAFB2539DC0CA593 /* geometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AE9D0F6BD66F3713E5C5B /* geometry.h */; };
 		333AEC3E9AFB5F24E30DA814 /* test.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AE5DE319BCEDA3BABE713 /* test.h */; };
 		333AEC6975EE6CEB58482956 /* geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AEC06E863C03D5FC8E477 /* geometry.cpp */; };
+		333AED0BB67A22EC9D89FC8B /* tetralizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE1EBBC67D11132AE7932 /* tetralizer.cpp */; };
 		333AEDDE59E7DD542F4CEB15 /* libCGLA.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A9C205917DFB4CB0064171E /* libCGLA.a */; };
 		333AEDE396500E666E2A0A60 /* kernel.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AEB17A4AC266E9950A4F4 /* kernel.h */; };
-		333AEE470E9B5FA794BB42DF /* velocity_function.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE15F470B618A70F289A1 /* velocity_function.cpp */; };
 		333AEF18100639CC4A78A90C /* libTetGen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A3438C9183C7A8700829EEB /* libTetGen.a */; };
 		333AEF76644ED4892E02430A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AED7A4DEF22621EDFA5FE /* main.cpp */; };
 		7A3438D3183C7A9600829EEB /* predicates.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 7A3438CF183C7A9600829EEB /* predicates.cxx */; };
 		7A3438D4183C7A9600829EEB /* tetgen.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 7A3438D1183C7A9600829EEB /* tetgen.cxx */; };
 		7A3438D5183C7A9600829EEB /* tetgen.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A3438D2183C7A9600829EEB /* tetgen.h */; };
 		7A3438E8183C7B7800829EEB /* generator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3438E3183C7B7800829EEB /* generator.cpp */; };
-		7A3438EA183C7B7800829EEB /* tetralizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3438E6183C7B7800829EEB /* tetralizer.cpp */; };
 		7A3438EB183C7BA700829EEB /* libTetGen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A3438C9183C7A8700829EEB /* libTetGen.a */; };
 		7A470AE317F51DC3001FC0CB /* log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A470AE117F51DC3001FC0CB /* log.cpp */; };
 		7A4AADF918459B99005211B9 /* libCGLA.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A9C205917DFB4CB0064171E /* libCGLA.a */; };
@@ -159,9 +160,11 @@
 
 /* Begin PBXFileReference section */
 		333AE0BAAE7617F653EEF43C /* mesh_io.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mesh_io.cpp; path = is_mesh/mesh_io.cpp; sourceTree = "<group>"; };
+		333AE0FFD3D296CF68540BDC /* velocity_function.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = velocity_function.cpp; sourceTree = SOURCE_ROOT; };
 		333AE15025019E84F966ACA2 /* simplex_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simplex_set.h; path = is_mesh/simplex_set.h; sourceTree = "<group>"; };
-		333AE15F470B618A70F289A1 /* velocity_function.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = velocity_function.cpp; path = src/velocity_function.cpp; sourceTree = "<group>"; };
+		333AE1904606FBB5025645DA /* tetralizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tetralizer.h; sourceTree = "<group>"; };
 		333AE19898B1B66A337DACF8 /* UnitTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = UnitTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		333AE1EBBC67D11132AE7932 /* tetralizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tetralizer.cpp; sourceTree = "<group>"; };
 		333AE2B179980E5CEDEDC72E /* attributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = attributes.h; path = is_mesh/attributes.h; sourceTree = "<group>"; };
 		333AE5DE319BCEDA3BABE713 /* test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = test.h; path = is_mesh/test.h; sourceTree = "<group>"; };
 		333AE6BDE0F08B0B2E7878ED /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = is_mesh/util.h; sourceTree = "<group>"; };
@@ -186,8 +189,6 @@
 		7A3438D2183C7A9600829EEB /* tetgen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tetgen.h; sourceTree = "<group>"; };
 		7A3438DA183C7B2E00829EEB /* SCGenerator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SCGenerator; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A3438E3183C7B7800829EEB /* generator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generator.cpp; sourceTree = "<group>"; };
-		7A3438E6183C7B7800829EEB /* tetralizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tetralizer.cpp; sourceTree = "<group>"; };
-		7A3438E7183C7B7800829EEB /* tetralizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tetralizer.h; sourceTree = "<group>"; };
 		7A38E82A17E3B35A0075DC24 /* gouraud.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = gouraud.frag; sourceTree = "<group>"; };
 		7A38E82B17E3B35A0075DC24 /* gouraud.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = gouraud.vert; sourceTree = "<group>"; };
 		7A470AE117F51DC3001FC0CB /* log.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = log.cpp; sourceTree = "<group>"; };
@@ -371,7 +372,6 @@
 				333AEB17A4AC266E9950A4F4 /* kernel.h */,
 				333AEB9FDC8710743C9CF985 /* is_mesh.h */,
 				333AE5DE319BCEDA3BABE713 /* test.h */,
-				333AE15F470B618A70F289A1 /* velocity_function.cpp */,
 			);
 			name = ISMesh;
 			path = ../../DSC;
@@ -401,8 +401,8 @@
 			isa = PBXGroup;
 			children = (
 				7A3438E3183C7B7800829EEB /* generator.cpp */,
-				7A3438E6183C7B7800829EEB /* tetralizer.cpp */,
-				7A3438E7183C7B7800829EEB /* tetralizer.h */,
+				333AE1EBBC67D11132AE7932 /* tetralizer.cpp */,
+				333AE1904606FBB5025645DA /* tetralizer.h */,
 			);
 			path = SCGenerator;
 			sourceTree = "<group>";
@@ -547,6 +547,7 @@
 				7AE27AE917675B04000F8238 /* velocity_function.h */,
 				7AF7E9BE176B4FE400F43714 /* DSC.h */,
 				333AECAB916ABFD6FCBC9B35 /* ISMesh */,
+				333AE0FFD3D296CF68540BDC /* velocity_function.cpp */,
 			);
 			path = DSC;
 			sourceTree = "<group>";
@@ -827,6 +828,7 @@
 			files = (
 				333AEF76644ED4892E02430A /* main.cpp in Sources */,
 				333AE7547F1935D8A72FFE48 /* DSC_Suite.cpp in Sources */,
+				333AE4D71610C5757EA5D6F9 /* tetralizer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -856,7 +858,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A3438E8183C7B7800829EEB /* generator.cpp in Sources */,
-				7A3438EA183C7B7800829EEB /* tetralizer.cpp in Sources */,
+				333AED0BB67A22EC9D89FC8B /* tetralizer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -894,7 +896,7 @@
 				FE0E895A1A23531C000E3B30 /* simplex.cpp in Sources */,
 				333AEC6975EE6CEB58482956 /* geometry.cpp in Sources */,
 				333AE336DB894CBE87DCED8D /* mesh_io.cpp in Sources */,
-				333AEE470E9B5FA794BB42DF /* velocity_function.cpp in Sources */,
+				333AE2E6B6FA4DF3E03B0169 /* velocity_function.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -940,6 +942,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"./**",
+					/usr/local/include/,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -980,6 +986,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"./**",
+					/usr/local/include/,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
