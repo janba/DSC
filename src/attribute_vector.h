@@ -11,7 +11,7 @@
 
 namespace DSC {
 
-template<typename ITEM, typename ITEMID>
+template<typename ITEMID, typename ITEM>
 class AttributeVector
 {
     std::vector<ITEM> items;
@@ -59,6 +59,12 @@ public:
     size_t size() const
     {
         return items.size();
+    }
+
+    void erase(std::vector<ITEMID> ids, ITEM item = ITEM()){
+        for (auto id : ids){
+            items[id] = item;
+        }
     }
 };
 }
