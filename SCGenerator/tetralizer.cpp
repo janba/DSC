@@ -19,6 +19,15 @@
 
 static char* tetgen_flags = "pq1.5Y";
 
+namespace {
+    double lerp(
+            double y1,double y2,
+            double mu)
+    {
+        return(y1*(1-mu)+y2*mu);
+    }
+}
+
 int get_index(int i, int j, int k, int Ni, int Nj, int Nk)
 {
     return i + j*Ni + k*Ni*Nj;
@@ -120,108 +129,110 @@ void Tetralizer::create_points(const vec3& origin, const vec3& voxel_size, int N
     }
 }
 
-void Tetralizer::build_boundary_mesh(std::vector<double>& points_boundary, double d, std::vector<int>& faces_boundary, const vec3& size)
+void Tetralizer::build_boundary_mesh(std::vector<double>& points_boundary, double avg_edge_length, std::vector<int>& faces_boundary, const vec3& min, const vec3& max)
 {
-    int n = size[0]/d;
-    std::vector<std::vector<int> > face_xp_points(n+1),
-    face_xm_points(n+1),
-    face_yp_points(n+1),
-    face_ym_points(n+1),
-    face_zp_points(n+1),
-    face_zm_points(n+1);
+    vec3 size = max - min;
+    size_t slices = (size_t)std::ceil(std::max({size[0]/ avg_edge_length,size[1]/ avg_edge_length,size[2]/ avg_edge_length}));
+
+    std::vector<std::vector<int> > face_xp_points(slices +1),
+        face_xm_points(slices +1),
+        face_yp_points(slices +1),
+        face_ym_points(slices +1),
+        face_zp_points(slices +1),
+        face_zm_points(slices +1);
     
-    for (int i = 0; i < n+1; ++i)
+    for (int i = 0; i < slices +1; ++i)
     {
-        face_xp_points[i].resize(n+1);
-        face_xm_points[i].resize(n+1);
-        face_yp_points[i].resize(n+1);
-        face_ym_points[i].resize(n+1);
-        face_zp_points[i].resize(n+1);
-        face_zm_points[i].resize(n+1);
+        face_xp_points[i].resize(slices +1);
+        face_xm_points[i].resize(slices +1);
+        face_yp_points[i].resize(slices +1);
+        face_ym_points[i].resize(slices +1);
+        face_zp_points[i].resize(slices +1);
+        face_zm_points[i].resize(slices +1);
     }
     
     double x,y,z;
     int counter = 0;
     
-    x = -0.5*size[0];
-    for (int iy = 0; iy < n+1; ++iy)
+    x = min[0];
+    for (int iy = 0; iy < slices +1; ++iy)
     {
-        for (int iz = 0; iz < n+1; ++iz)
+        for (int iz = 0; iz < slices +1; ++iz)
         {
-            y = -0.5*size[1]+iy*d;
-            z = -0.5*size[2]+iz*d;
+            y = lerp(min[1], max[1], iy/(double)(slices));
+            z = lerp(min[2], max[2], iz/(double)(slices));
             points_boundary.push_back(x);
             points_boundary.push_back(y);
             points_boundary.push_back(z);
             face_xm_points[iy][iz] = counter;
             if (iy == 0) face_ym_points[0][iz] = counter;
-            if (iy == n) face_yp_points[0][iz] = counter;
+            if (iy == slices) face_yp_points[0][iz] = counter;
             if (iz == 0) face_zm_points[0][iy] = counter;
-            if (iz == n) face_zp_points[0][iy] = counter;
+            if (iz == slices) face_zp_points[0][iy] = counter;
             counter++;
         }
     }
     
-    x = 0.5*size[0];
-    for (int iy = 0; iy < n+1; ++iy)
+    x = max[0];
+    for (int iy = 0; iy < slices +1; ++iy)
     {
-        for (int iz = 0; iz < n+1; ++iz)
+        for (int iz = 0; iz < slices +1; ++iz)
         {
-            y = -0.5*size[1]+iy*d;
-            z = -0.5*size[2]+iz*d;
+            y = lerp(min[1], max[1], iy/(double)(slices));
+            z = lerp(min[2], max[2], iz/(double)(slices));
             points_boundary.push_back(x);
             points_boundary.push_back(y);
             points_boundary.push_back(z);
             face_xp_points[iy][iz] = counter;
-            if (iy == 0) face_ym_points[n][iz] = counter;
-            if (iy == n) face_yp_points[n][iz] = counter;
-            if (iz == 0) face_zm_points[n][iy] = counter;
-            if (iz == n) face_zp_points[n][iy] = counter;
+            if (iy == 0) face_ym_points[slices][iz] = counter;
+            if (iy == slices) face_yp_points[slices][iz] = counter;
+            if (iz == 0) face_zm_points[slices][iy] = counter;
+            if (iz == slices) face_zp_points[slices][iy] = counter;
             counter++;
         }
     }
     
-    y = -0.5*size[1];
-    for (int ix = 1; ix < n; ++ix)
+    y = min[1];
+    for (int ix = 1; ix < slices; ++ix)
     {
-        for (int iz = 0; iz < n+1; ++iz)
+        for (int iz = 0; iz < slices +1; ++iz)
         {
-            x = -0.5*size[0]+ix*d;
-            z = -0.5*size[2]+iz*d;
+            x = lerp(min[0], max[0], ix/(double)(slices));
+            z = lerp(min[2], max[2], iz/(double)(slices));
             points_boundary.push_back(x);
             points_boundary.push_back(y);
             points_boundary.push_back(z);
             face_ym_points[ix][iz] = counter;
             if (iz == 0) face_zm_points[ix][0] = counter;
-            if (iz == n) face_zp_points[ix][0] = counter;
+            if (iz == slices) face_zp_points[ix][0] = counter;
             counter++;
         }
     }
     
-    y = 0.5*size[1];
-    for (int ix = 1; ix < n; ++ix)
+    y = max[1];
+    for (int ix = 1; ix < slices; ++ix)
     {
-        for (int iz = 0; iz < n+1; ++iz)
+        for (int iz = 0; iz < slices +1; ++iz)
         {
-            x = -0.5*size[0]+ix*d;
-            z = -0.5*size[2]+iz*d;
+            x = lerp(min[0], max[0], ix/(double)(slices));
+            z = lerp(min[2], max[2], iz/(double)(slices));
             points_boundary.push_back(x);
             points_boundary.push_back(y);
             points_boundary.push_back(z);
             face_yp_points[ix][iz] = counter;
-            if (iz == 0) face_zm_points[ix][n] = counter;
-            if (iz == n) face_zp_points[ix][n] = counter;
+            if (iz == 0) face_zm_points[ix][slices] = counter;
+            if (iz == slices) face_zp_points[ix][slices] = counter;
             counter++;
         }
     }
     
-    z = -0.5*size[2];
-    for (int ix = 1; ix < n; ++ix)
+    z = min[2];
+    for (int ix = 1; ix < slices; ++ix)
     {
-        for (int iy = 1; iy < n; ++iy)
+        for (int iy = 1; iy < slices; ++iy)
         {
-            x = -0.5*size[0]+ix*d;
-            y = -0.5*size[1]+iy*d;
+            x = lerp(min[0], max[0], ix/(double)(slices));
+            y = lerp(min[1], max[1], iy/(double)(slices));
             points_boundary.push_back(x);
             points_boundary.push_back(y);
             points_boundary.push_back(z);
@@ -230,13 +241,13 @@ void Tetralizer::build_boundary_mesh(std::vector<double>& points_boundary, doubl
         }
     }
     
-    z = 0.5*size[2];
-    for (int ix = 1; ix < n; ++ix)
+    z = max[2];
+    for (int ix = 1; ix < slices; ++ix)
     {
-        for (int iy = 1; iy < n; ++iy)
+        for (int iy = 1; iy < slices; ++iy)
         {
-            x = -0.5*size[0]+ix*d;
-            y = -0.5*size[1]+iy*d;
+            x = lerp(min[0], max[0], ix/(double)(slices));
+            y = lerp(min[1], max[1], iy/(double)(slices));
             points_boundary.push_back(x);
             points_boundary.push_back(y);
             points_boundary.push_back(z);
@@ -245,8 +256,8 @@ void Tetralizer::build_boundary_mesh(std::vector<double>& points_boundary, doubl
         }
     }
     
-    for (int i = 0; i < n; ++i)
-        for (int j = 0; j < n; ++j)
+    for (int i = 0; i < slices; ++i)
+        for (int j = 0; j < slices; ++j)
         {
             faces_boundary.push_back(face_xm_points[i  ][j  ]);
             faces_boundary.push_back(face_xm_points[i  ][j+1]);
@@ -414,12 +425,12 @@ void Tetralizer::merge_inside_outside(const std::vector<double>& points_interfac
     unsigned int ip, it;
     for (ip = 0; ip < points_outside.size(); ++ip)
     {
-        output_points[ip] = points_outside[ip];
+        output_points.at(ip) = points_outside[ip];
     }
     int i = 0;
     for (; ip < output_points.size(); ++ip, ++i)
     {
-        output_points[ip] = points_inside[points_interface.size() + i];
+        output_points.at(ip) = points_inside[points_interface.size() + i];
     }
     
     for (it = 0; it < tets_outside.size(); ++it)
@@ -430,14 +441,14 @@ void Tetralizer::merge_inside_outside(const std::vector<double>& points_interfac
     for (; it < output_tets.size(); ++it)
     {
         if (tets_inside[it-tets_outside.size()] < no_interface_points)
-            output_tets[it] = tets_inside[it-tets_outside.size()];
+            output_tets.at(it) = tets_inside[it-tets_outside.size()];
         else
-            output_tets[it] = tets_inside[it-tets_outside.size()]-no_interface_points+no_outside_points;
+            output_tets.at(it) = tets_inside[it-tets_outside.size()]-no_interface_points+no_outside_points;
         if (it%4 == 0) output_tet_flags[it/4] = 1;
     }
 }
 
-void Tetralizer::tetralize(const vec3& size, double avg_edge_length, const std::vector<vec3>& points_interface, const std::vector<int>& faces_interface, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels) {
+void Tetralizer::tetralize(double padding, double avg_edge_length, const std::vector<vec3>& points_interface, const std::vector<int>& faces_interface, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels) {
     std::vector<double> points_interface_real;
     for (vec3 p : points_interface) {
         points_interface_real.push_back(p[0]);
@@ -445,9 +456,21 @@ void Tetralizer::tetralize(const vec3& size, double avg_edge_length, const std::
         points_interface_real.push_back(p[2]);
     }
 
+    vec3 interface_min = vec3{FLT_MAX};
+    vec3 interface_max = vec3{-FLT_MAX};
+    for (vec3 p : points_interface){
+        for (int i=0;i<3;i++){
+            interface_min[i] = std::min(interface_min[i], p[i]);
+            interface_max[i] = std::max(interface_max[i], p[i]);
+        }
+    }
+    interface_min -= vec3{padding,padding,padding};
+    interface_max += vec3{padding,padding,padding};
+    std::cout << "Creating boundary mesh "<<interface_min<<" to "<<interface_max<<std::endl;
+
     std::vector<double>    points_boundary;
     std::vector<int>  faces_boundary;
-    build_boundary_mesh(points_boundary, avg_edge_length, faces_boundary, size);
+    build_boundary_mesh(points_boundary, avg_edge_length, faces_boundary, interface_min, interface_max);
 
     std::vector<double> points_inside;
     std::vector<int> tets_inside;
@@ -478,9 +501,9 @@ void Tetralizer::tetralize(const vec3& origin, const vec3& voxel_size, int Ni, i
 }
 
 void Tetralizer::tetralize(const vec3& origin, const vec3& size, double avg_edge_length, std::vector<unsigned int>& labels, std::vector<is_mesh::Geometry*>& geometries, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels) {
-    int Ni = std::ceil(size[0]/avg_edge_length);
-    int Nj = std::ceil(size[1]/avg_edge_length);
-    int Nk = std::ceil(size[2]/avg_edge_length);
+    int Ni = (int)std::ceil(size[0]/avg_edge_length);
+    int Nj = (int)std::ceil(size[1]/avg_edge_length);
+    int Nk = (int)std::ceil(size[2]/avg_edge_length);
 
     create_points(origin, vec3(avg_edge_length), Ni, Nj, Nk, points);
     create_tets(Ni, Nj, Nk, tets);

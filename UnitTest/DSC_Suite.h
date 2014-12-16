@@ -5,5 +5,7 @@
 
 using namespace std;
 
+int build_boundary_mesh_test(void);
+
 int tetGenTest(void);
 

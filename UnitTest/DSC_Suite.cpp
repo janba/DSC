@@ -18,6 +18,26 @@ bool equal(vec3 v1, vec3 v2){
     return true;
 }
 
+int build_boundary_mesh_test(void){
+    std::vector<double> points_boundary;
+    double avg_edge_length = 0.5;
+    std::vector<int> faces_boundary;
+    const vec3 min{-2,-3,-4};
+    const vec3 max{5};
+    Tetralizer::build_boundary_mesh(points_boundary, avg_edge_length,faces_boundary,min, max);
+
+    std::vector<vec3> pos;
+    for (int i=0;i<points_boundary.size();i+=3){
+        pos.push_back(vec3{points_boundary[i],points_boundary[i+1],points_boundary[i+2]});
+    }
+    for (auto & i : faces_boundary){
+        i++;
+    }
+
+    is_mesh::export_surface_mesh("data/output.obj", pos, faces_boundary);
+    return 1;
+}
+
 int tetGenTest(void) {
 //    int* p = NULL;
 //    TINYTEST_ASSERT(!p);
@@ -30,7 +50,7 @@ int tetGenTest(void) {
     std::vector<int> faces_interface;
     is_mesh::import_surface_mesh("data/blob.obj", points_interface, faces_interface);
 
-    Tetralizer::tetralize(vec3(3.), 0.5, points_interface, faces_interface, points, tets, tet_labels);
+    Tetralizer::tetralize(0.5f, 0.5f, points_interface, faces_interface, points, tets, tet_labels);
 
     is_mesh::export_tet_mesh( "data/blob-test.dsc", points, tets, tet_labels);
 

@@ -26,7 +26,7 @@ const std::string file_path = "./data/";
 #endif
 const string extension = ".dsc";
 
-void generate_from_obj(const string& input_file_name, const string& output_file_name)
+void generate_from_obj(string input_file_name, string output_file_name, double padding, double avg_edge_length)
 {
     vector<vec3> points;
     vector<int> tets;
@@ -35,8 +35,16 @@ void generate_from_obj(const string& input_file_name, const string& output_file_
     std::vector<vec3> points_interface;
     std::vector<int> faces_interface;
     is_mesh::import_surface_mesh(file_path + input_file_name, points_interface, faces_interface);
-    
-    Tetralizer::tetralize(vec3(3.), 0.5, points_interface, faces_interface, points, tets, tet_labels);
+    // debug
+    std::cout<<"Points"<<std::endl;
+    for (int i=0;i<points_interface.size();i++){
+        std::cout << i<<"\t"<<points_interface[i]<<std::endl;
+    }
+    std::cout<<"faces_interface"<<std::endl;
+    for (int i=0;i<faces_interface.size();i+=3){
+        std::cout << i/3<<"\t"<<faces_interface[i]<<" "<<faces_interface[i+1]<<" "<<faces_interface[i+2]<<" "<<std::endl;
+    }
+    Tetralizer::tetralize(padding, avg_edge_length, points_interface, faces_interface, points, tets, tet_labels);
     
     is_mesh::export_tet_mesh(file_path + output_file_name + extension, points, tets, tet_labels);
 }
@@ -81,6 +89,14 @@ int main(int argc, const char * argv[])
 {
     if(argc > 2)
     {
+        double padding = 0.5;
+        double avg_edge_length = 0.5;
+        if(argc > 3){
+            padding = stod(argv[3]);
+        }
+        if(argc > 4){
+            avg_edge_length = stod(argv[4]);
+        }
         string output_file_name = string(argv[1]);
         string input_file_name = string(argv[2]);
         if(input_file_name.compare(input_file_name.size() - 4, 4, ".txt") == 0 || input_file_name.compare(input_file_name.size() - 3, 3, ".vg") == 0)
@@ -90,17 +106,27 @@ int main(int argc, const char * argv[])
         }
         else if(input_file_name.compare(input_file_name.size() - 4, 4, ".obj") == 0)
         {
-            generate_from_obj(input_file_name, output_file_name);
-            std::cout << "Generated " << output_file_name + extension << " from " << input_file_name << std::endl;
+            generate_from_obj(input_file_name, output_file_name, padding, avg_edge_length);
+            std::cout << "Generated " << output_file_name + extension << " from " << input_file_name << " padding "<<padding<<" avg edge length "<<avg_edge_length<<std::endl;
         }
         else if(input_file_name.compare(input_file_name.size() - 4, 4, ".geo") == 0)
         {
             generate_from_geo(input_file_name, output_file_name);
             std::cout << "Generated " << output_file_name + extension << " from " << input_file_name << std::endl;
+        } else {
+            std::cout << "Supported input-file formats: txt, vg, obj, geo"<<std::endl;
         }
         
-    } else {
-        std::cout << "Usage:\nSCGenerator [output-file] [input-file]\n\nSupported input-file formats: vg, obj, geo\n";
+    }
+    if (argc <=2) {
+        std::cout << R"(
+Usage:
+SCGenerator [output-file] [input-file] [padding=0.5] [avg_edge_length=0.5]
+
+Supported input-file formats: txt, vg (voxel-grid), obj, geo (is-mesh)
+
+Note that padding and avg edge length are only used for obj-files.
+)";
     }
     
     return 0;
