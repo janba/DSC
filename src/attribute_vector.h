@@ -61,7 +61,7 @@ public:
         return items.size();
     }
 
-    void erase(std::vector<ITEMID> ids, ITEM item = ITEM()){
+    void erase(const std::vector<ITEMID> & ids, ITEM item = ITEM()){
         for (auto id : ids){
             items[id] = item;
         }
