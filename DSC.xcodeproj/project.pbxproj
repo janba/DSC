@@ -10,8 +10,8 @@
 		333AE0349A8E5E3503484A66 /* libDSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AD617675AE8000F8238 /* libDSC.a */; };
 		333AE157A5545C460FEE8947 /* simplex_set.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AE15025019E84F966ACA2 /* simplex_set.h */; };
 		333AE2BE73A0EB768FDCB56B /* simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AEA3D640D6474001E3637 /* simplex.h */; };
-		333AE2E6B6FA4DF3E03B0169 /* velocity_function.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE0FFD3D296CF68540BDC /* velocity_function.cpp */; };
 		333AE336DB894CBE87DCED8D /* mesh_io.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE0BAAE7617F653EEF43C /* mesh_io.cpp */; };
+		333AE3A6F4A4793D6955C22B /* velocity_function.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE4D9108906877AEAB7BD /* velocity_function.cpp */; };
 		333AE435914CBE1BF588DC06 /* attributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AE2B179980E5CEDEDC72E /* attributes.h */; };
 		333AE4D71610C5757EA5D6F9 /* tetralizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE1EBBC67D11132AE7932 /* tetralizer.cpp */; };
 		333AE52646F2A7EFD927EA1A /* libSOIL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0AB5A517D906AD0058910E /* libSOIL.a */; };
@@ -126,6 +126,7 @@
 		FE0E89561A23530F000E3B30 /* DSC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0E89551A23530F000E3B30 /* DSC.cpp */; };
 		FE0E89591A23531C000E3B30 /* is_mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0E89571A23531C000E3B30 /* is_mesh.cpp */; };
 		FE0E895A1A23531C000E3B30 /* simplex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0E89581A23531C000E3B30 /* simplex.cpp */; };
+		FEA860751A408C5100CCB2D8 /* attribute_vector.h in Headers */ = {isa = PBXBuildFile; fileRef = FEA860741A408C5100CCB2D8 /* attribute_vector.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -160,12 +161,12 @@
 
 /* Begin PBXFileReference section */
 		333AE0BAAE7617F653EEF43C /* mesh_io.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mesh_io.cpp; path = is_mesh/mesh_io.cpp; sourceTree = "<group>"; };
-		333AE0FFD3D296CF68540BDC /* velocity_function.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = velocity_function.cpp; sourceTree = SOURCE_ROOT; };
 		333AE15025019E84F966ACA2 /* simplex_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simplex_set.h; path = is_mesh/simplex_set.h; sourceTree = "<group>"; };
 		333AE1904606FBB5025645DA /* tetralizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tetralizer.h; sourceTree = "<group>"; };
 		333AE19898B1B66A337DACF8 /* UnitTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = UnitTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		333AE1EBBC67D11132AE7932 /* tetralizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tetralizer.cpp; sourceTree = "<group>"; };
 		333AE2B179980E5CEDEDC72E /* attributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = attributes.h; path = is_mesh/attributes.h; sourceTree = "<group>"; };
+		333AE4D9108906877AEAB7BD /* velocity_function.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = velocity_function.cpp; path = src/velocity_function.cpp; sourceTree = "<group>"; };
 		333AE5DE319BCEDA3BABE713 /* test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = test.h; path = is_mesh/test.h; sourceTree = "<group>"; };
 		333AE6BDE0F08B0B2E7878ED /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = is_mesh/util.h; sourceTree = "<group>"; };
 		333AE9D0F6BD66F3713E5C5B /* geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geometry.h; path = src/geometry.h; sourceTree = "<group>"; };
@@ -287,6 +288,7 @@
 		FE0E89551A23530F000E3B30 /* DSC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DSC.cpp; path = src/DSC.cpp; sourceTree = SOURCE_ROOT; };
 		FE0E89571A23531C000E3B30 /* is_mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = is_mesh.cpp; path = is_mesh/is_mesh.cpp; sourceTree = "<group>"; };
 		FE0E89581A23531C000E3B30 /* simplex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = simplex.cpp; path = is_mesh/simplex.cpp; sourceTree = "<group>"; };
+		FEA860741A408C5100CCB2D8 /* attribute_vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = attribute_vector.h; path = src/attribute_vector.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -372,6 +374,7 @@
 				333AEB17A4AC266E9950A4F4 /* kernel.h */,
 				333AEB9FDC8710743C9CF985 /* is_mesh.h */,
 				333AE5DE319BCEDA3BABE713 /* test.h */,
+				333AE4D9108906877AEAB7BD /* velocity_function.cpp */,
 			);
 			name = ISMesh;
 			path = ../../DSC;
@@ -543,11 +546,11 @@
 		7AE27AB917675A1E000F8238 /* DSC */ = {
 			isa = PBXGroup;
 			children = (
+				FEA860741A408C5100CCB2D8 /* attribute_vector.h */,
 				FE0E89551A23530F000E3B30 /* DSC.cpp */,
 				7AE27AE917675B04000F8238 /* velocity_function.h */,
 				7AF7E9BE176B4FE400F43714 /* DSC.h */,
 				333AECAB916ABFD6FCBC9B35 /* ISMesh */,
-				333AE0FFD3D296CF68540BDC /* velocity_function.cpp */,
 			);
 			path = DSC;
 			sourceTree = "<group>";
@@ -655,6 +658,7 @@
 				7AF7E9BF176B4FE400F43714 /* DSC.h in Headers */,
 				333AEC2B6E956CD9BE9F941B /* util.h in Headers */,
 				333AEC31AAFB2539DC0CA593 /* geometry.h in Headers */,
+				FEA860751A408C5100CCB2D8 /* attribute_vector.h in Headers */,
 				333AEB72D047513E5E90FF36 /* mesh_io.h in Headers */,
 				333AE435914CBE1BF588DC06 /* attributes.h in Headers */,
 				333AEBF9E35AB77707B24910 /* key.h in Headers */,
@@ -896,7 +900,7 @@
 				FE0E895A1A23531C000E3B30 /* simplex.cpp in Sources */,
 				333AEC6975EE6CEB58482956 /* geometry.cpp in Sources */,
 				333AE336DB894CBE87DCED8D /* mesh_io.cpp in Sources */,
-				333AE2E6B6FA4DF3E03B0169 /* velocity_function.cpp in Sources */,
+				333AE3A6F4A4793D6955C22B /* velocity_function.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1241,6 +1245,7 @@
 				333AEA6D4DA14C814481EAAB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7A0AB5A817D906AD0058910E /* Build configuration list for PBXNativeTarget "SOIL" */ = {
 			isa = XCConfigurationList;
