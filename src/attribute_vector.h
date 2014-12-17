@@ -61,7 +61,11 @@ public:
         return items.size();
     }
 
-    void erase(const std::vector<ITEMID> & ids, ITEM item = ITEM()){
+    // Set selected elements to the default value
+    // Should be invoked when garbage collection on is_mesh is run (See is_mesh::add_gc_listener )
+    // The garbage collection will destroy deleted elements and elements with same ids
+    // can later be reused.
+    void garbage_collect(const std::vector<ITEMID> & ids, ITEM item = ITEM()){
         for (auto id : ids){
             items[id] = item;
         }

@@ -540,6 +540,7 @@ namespace is_mesh {
 
         void validity_check();
 
+        // subscribe for gc events - needed if you are working with persistent attribute_vectors
         // returns listener id
         long add_gc_listener(std::function<void(const GarbageCollectDeletions&)> fn);
 
