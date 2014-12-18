@@ -220,6 +220,7 @@ namespace is_mesh {
     
     class TetAttributes
     {
+    protected:
         unsigned int l = 0;
         
     public:
@@ -251,12 +252,12 @@ namespace is_mesh {
         {
             return l;
         }
-        
+    private:
         void label(unsigned int _label)
         {
             l = _label;
         }
-        
+        friend class ISMesh;
     };
     
 }

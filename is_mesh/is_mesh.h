@@ -80,17 +80,10 @@ namespace is_mesh {
         typename kernel<TetrahedronKey,Tetrahedron>::iterator tetrahedra_begin();
 
         typename kernel<TetrahedronKey,Tetrahedron>::iterator tetrahedra_end();
-        
-        /////////////////////
-        // LABEL FUNCTIONS //
-        /////////////////////
-    public:
 
-        virtual int get_label(const TetrahedronKey& t);
-        
     public:
         virtual void set_label(const TetrahedronKey& tid, int label);
-        
+
     private:
 
         struct edge_key {
@@ -284,8 +277,9 @@ namespace is_mesh {
         */
         TetrahedronKey get_tet(const TetrahedronKey& tid, const FaceKey& fid);
         /**
-        * Returns the position of node nid.
+        * Use get(nid).get_pot()
         */
+        DEPRECATED
         vec3 get_pos(const NodeKey& nid);
         /**
         * Returns the positions of nodes nids.
@@ -457,6 +451,11 @@ namespace is_mesh {
 
         // remove listener by id
         bool remove_gc_listener(long id);
+
+        friend class Node;
+        friend class Edge;
+        friend class Face;
+        friend class Tetrahedron;
     };
     
 }

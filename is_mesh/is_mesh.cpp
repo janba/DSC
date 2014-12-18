@@ -88,10 +88,6 @@ namespace is_mesh{
         return m_tetrahedron_kernel->end();
     }
 
-    int ISMesh::get_label(const TetrahedronKey& t) {
-        return get(t).label();
-    }
-
     void ISMesh::set_label(const TetrahedronKey& tid, int label) {
         get(tid).label(label);
         SimplexSet<TetrahedronKey> tids = {tid};
@@ -202,14 +198,14 @@ namespace is_mesh{
         {
             // On the boundary
             face.set_boundary(true);
-            if (get_label(tids.front()) != 0)
+            if (get(tids.front()).label() != 0)
             {
                 face.set_interface(true);
             }
         }
         else if(tids.size() == 2)
         {
-            if (get_label(tids.front()) != get_label(tids.back()))
+            if (get(tids.front()).label() != get(tids.back()).label())
             {
                 // On the interface
                 face.set_interface(true);
@@ -246,7 +242,7 @@ namespace is_mesh{
     }
 
     void ISMesh::connected_component(SimplexSet<TetrahedronKey>& tids, const TetrahedronKey& tid) {
-                int label = get_label(tid);
+                int label = get(tid).label();
                 tids -= tid;
 
                 for(auto f : get_faces(tid))
@@ -254,7 +250,7 @@ namespace is_mesh{
                     if(get_tets(f).size() == 2)
                     {
                         TetrahedronKey tid2 = get_tet(tid, f);
-                        if(tids.contains(tid2) && label == get_label(tid2))
+                        if(tids.contains(tid2) && label == get(tid2).label())
                         {
                             connected_component(tids, tid2);
                         }
@@ -363,7 +359,7 @@ namespace is_mesh{
             TetrahedronKey tid;
             for (auto t : get_tets(fid))
             {
-                int tl = get_label(t);
+                int tl = get(t).label();
                 if (tl > label)
                 {
                     label = tl;
@@ -738,7 +734,7 @@ namespace is_mesh{
         // Update flags
         for (unsigned int i = 0; i < tids.size(); i++)
         {
-            set_label(new_tids[i], get_label(tids[i]));
+            set_label(new_tids[i], get(tids[i]).label());
         }
 
         update_split(new_nid, nids[0], nids[1]);
@@ -801,11 +797,11 @@ namespace is_mesh{
         assert(e_fids.size() == 3);
 #endif
         SimplexSet<TetrahedronKey> e_tids = get_tets(e_fids);
-        int label = get_label(e_tids[0]);
+        int label = get(e_tids[0]).label();
 #ifdef DEBUG
         assert(e_tids.size() == 3);
-        assert(label == get_label(e_tids[1]));
-        assert(label == get_label(e_tids[2]));
+        assert(label == get(e_tids[1]).label());
+        assert(label == get(e_tids[2]).label());
 #endif
 
         // Remove edge
@@ -846,7 +842,7 @@ namespace is_mesh{
         assert(get_tets(new_fid).size() == 2);
 #endif
         for (auto t : get_tets(new_fid)) {
-            set_label(t, label);
+            set_label(t,label);
         }
         return new_fid;
     }
@@ -861,9 +857,9 @@ namespace is_mesh{
         assert(f_eids.size() == 3);
 #endif
         SimplexSet<NodeKey> f_nids = get_nodes(f_eids);
-        int label = get_label(f_tids[0]);
+        int label = get(f_tids[0]).label();
 #ifdef DEBUG
-        assert(label == get_label(f_tids[1]));
+        assert(label == get(f_tids[1]).label());
 #endif
 
         // Create edge
@@ -916,7 +912,7 @@ namespace is_mesh{
         assert(get_tets(new_eid).size() == 3);
 #endif
         for (auto t : get_tets(new_eid)) {
-            set_label(t, label);
+            set_label(t,label);
         }
         return new_eid;
     }
@@ -1063,7 +1059,7 @@ namespace is_mesh{
             {
                 tets.push_back(indices[n]);
             }
-            tet_labels.push_back(get_label(tit.key()));
+            tet_labels.push_back(get(tit.key()).label());
         }
     }
 
