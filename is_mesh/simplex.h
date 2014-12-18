@@ -17,7 +17,7 @@
 #pragma once
 
 #include "simplex_set.h"
-#include "attributes.h"
+#include "util.h"
 
 namespace is_mesh
 {
@@ -107,11 +107,14 @@ namespace is_mesh
     ///////////////////////////////////////////////////////////////////////////////
     ///  N O D E
     ///////////////////////////////////////////////////////////////////////////////
-    class Node : public NodeAttributes, public Simplex<Key, EdgeKey>
+    class Node : public Simplex<Key, EdgeKey>
     {
+        vec3 p;
+        vec3 p_new;
+        std::bitset<3> flags;
     public:
         Node(ISMesh *owner);
-        Node(ISMesh *owner,const NodeAttributes & t);
+        Node(ISMesh *owner,vec3 _p);
 
         Node(Node&& other);
 
@@ -119,16 +122,72 @@ namespace is_mesh
 
         const SimplexSet<EdgeKey> & edge_keys() const;
 
+        /**
+        * Returns the position of the node.
+        */
+        const vec3& get_pos() const
+        {
+            return p;
+        }
+
+        /**
+        * Returns the destination of the node.
+        */
+        const vec3& get_destination() const
+        {
+            return p_new;
+        }
+
+        void set_pos(const vec3& p_)
+        {
+            p = p_;
+        }
+
+        void set_destination(const vec3& p_)
+        {
+            p_new = p_;
+        }
+
+        bool is_crossing() const
+        {
+            return flags[2];
+        }
+
+        bool is_boundary() const
+        {
+            return flags[1];
+        }
+
+        bool is_interface() const
+        {
+            return flags[0];
+        }
+    private:
+        void set_crossing(bool b)
+        {
+            flags[2] = b;
+        }
+
+        void set_boundary(bool b)
+        {
+            flags[1] = b;
+        }
+
+        void set_interface(bool b)
+        {
+            flags[0] = b;
+        }
+        friend class ISMesh;
     };
     
     ///////////////////////////////////////////////////////////////////////////////
     ///  E D G E
     ///////////////////////////////////////////////////////////////////////////////
-    class Edge : public EdgeAttributes, public Simplex<NodeKey, FaceKey>
+    class Edge : public Simplex<NodeKey, FaceKey>
     {
+        std::bitset<3> flags;
     public:
         Edge(ISMesh *owner);
-        Edge(ISMesh *owner,const EdgeAttributes & t);
 
         Edge(Edge&& other);
 
@@ -137,16 +196,47 @@ namespace is_mesh
         const SimplexSet<NodeKey> & node_keys()  const;
 
         const SimplexSet<FaceKey> & face_keys() const;
+
+        bool is_crossing()
+        {
+            return flags[2];
+        }
+
+        bool is_boundary()
+        {
+            return flags[1];
+        }
+
+        bool is_interface()
+        {
+            return flags[0];
+        }
+    private:
+        void set_crossing(bool b)
+        {
+            flags[2] = b;
+        }
+
+        void set_boundary(bool b)
+        {
+            flags[1] = b;
+        }
+
+        void set_interface(bool b)
+        {
+            flags[0] = b;
+        }
+        friend class ISMesh;
     };
     
     ///////////////////////////////////////////////////////////////////////////////
     //  F A C E
     ///////////////////////////////////////////////////////////////////////////////
-    class Face : public FaceAttributes, public Simplex<EdgeKey, TetrahedronKey>
+    class Face :  public Simplex<EdgeKey, TetrahedronKey>
     {
+        std::bitset<2> flags;
     public:
         Face(ISMesh *owner);
-        Face(ISMesh *owner, const FaceAttributes & t);
 
         Face(Face&& other);
 
@@ -155,21 +245,52 @@ namespace is_mesh
         const SimplexSet<EdgeKey> & edge_keys() const;
 
         const SimplexSet<TetrahedronKey> & tet_keys() const;
+
+        bool is_boundary()
+        {
+            return flags[1];
+        }
+
+        bool is_interface()
+        {
+            return flags[0];
+        }
+    private:
+        void set_boundary(bool b)
+        {
+            flags[1] = b;
+        }
+
+        void set_interface(bool b)
+        {
+            flags[0] = b;
+        }
+        friend class ISMesh;
     };
     
     ///////////////////////////////////////////////////////////////////////////////
     // T E T R A H E D R O N
     ///////////////////////////////////////////////////////////////////////////////
-    class Tetrahedron : public TetAttributes, public Simplex<FaceKey, Key>
+    class Tetrahedron : public Simplex<FaceKey, Key>
     {
+        unsigned int l = 0;
     public:
         Tetrahedron(ISMesh *owner);
-        Tetrahedron(ISMesh *owner,const TetAttributes & t);
 
         Tetrahedron(Tetrahedron&& other);
 
         Tetrahedron& operator=(Tetrahedron&& other);
 
         const SimplexSet<FaceKey> & face_keys() const;
+        int label()
+        {
+            return l;
+        }
+
+        void label(unsigned int _label)
+        {
+            l = _label;
+        }
+        friend class ISMesh;
     };
 }

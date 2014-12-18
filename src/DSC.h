@@ -17,7 +17,6 @@
 #pragma once
 
 #include "is_mesh.h"
-#include "attributes.h"
 #include "geometry.h"
 #include "mesh_io.h"
 #include "util.h"

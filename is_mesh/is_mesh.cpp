@@ -513,7 +513,7 @@ namespace is_mesh{
         vector<vec3> verts(nids.size());
         for (unsigned int i = 0; i < nids.size(); i++)
         {
-            verts[i] = get_pos(nids[i]);
+            verts[i] = get(nids[i]).get_pos();
         }
         return verts;
     }
@@ -558,9 +558,9 @@ namespace is_mesh{
             {
                 SimplexSet<NodeKey> nids = get_nodes(f);
                 SimplexSet<NodeKey> apices = get_nodes(tids) - nids;
-                auto normal = cross(get_pos(nids[0]) - get_pos(nids[2]), get_pos(nids[1]) - get_pos(nids[2]));
-                auto d1 = dot(get_pos(apices[0]) - get_pos(nids[2]), normal);
-                auto d2 = dot(get_pos(apices[1]) - get_pos(nids[2]), normal);
+                auto normal = cross(get(nids[0]).get_pos() - get(nids[2]).get_pos(), get(nids[1]).get_pos() - get(nids[2]).get_pos());
+                auto d1 = dot(get(apices[0]).get_pos() - get(nids[2]).get_pos(), normal);
+                auto d2 = dot(get(apices[1]).get_pos() - get(nids[2]).get_pos(), normal);
                 if((d1 < 0. && d2 < 0) || (d1 > 0. && d2 > 0.))
                 {
                     return true;
@@ -591,12 +591,12 @@ namespace is_mesh{
     }
 
     NodeKey ISMesh::insert_node(const vec3& p) {
-        auto node = m_node_kernel->create(NodeAttributes(p), this);
+        auto node = m_node_kernel->create(this,p);
         return node.key();
     }
 
     EdgeKey ISMesh::insert_edge(NodeKey node1, NodeKey node2) {
-        auto edge = m_edge_kernel->create(EdgeAttributes(), this);
+        auto edge = m_edge_kernel->create(this);
         //add the new simplex to the co-boundary relation of the boundary simplices
         get(node1).add_co_face(edge.key());
         get(node2).add_co_face(edge.key());
@@ -607,7 +607,7 @@ namespace is_mesh{
     }
 
     FaceKey ISMesh::insert_face(EdgeKey edge1, EdgeKey edge2, EdgeKey edge3) {
-        auto face = m_face_kernel->create(FaceAttributes(), this);
+        auto face = m_face_kernel->create(this);
         //update relations
         get(edge1).add_co_face(face.key());
         get(edge2).add_co_face(face.key());
@@ -619,7 +619,7 @@ namespace is_mesh{
     }
 
     TetrahedronKey ISMesh::insert_tetrahedron(FaceKey face1, FaceKey face2, FaceKey face3, FaceKey face4) {
-        auto tetrahedron = m_tetrahedron_kernel->create(TetAttributes(), this);
+        auto tetrahedron = m_tetrahedron_kernel->create(this);
         //update relations
         get(face1).add_co_face(tetrahedron.key());
         get(face2).add_co_face(tetrahedron.key());

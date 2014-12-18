@@ -164,8 +164,8 @@ namespace is_mesh
          *
          * @return      An iterator pointing to the element.
          */
-        template<typename attribute_type>
-        const_iterator create(const attribute_type& attributes, ISMesh* isMesh)
+        template<typename... Values>
+        const_iterator create(ISMesh* isMesh, Values... values)
         {
             unsigned int key;
             kernel_element& cur = get_next_free_cell(key);
@@ -173,7 +173,7 @@ namespace is_mesh
             assert(cur.state != kernel_element::VALID || !"Cannot create new element, duplicate key.");
             assert(cur.state != kernel_element::MARKED || !"Attempted to overwrite a marked element.");
             
-            cur.value = value_type{isMesh, attributes};
+            cur.value = value_type{isMesh, values...};
             cur.state = kernel_element::VALID;
             return iterator(this, key);
         }
