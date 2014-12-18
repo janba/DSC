@@ -34,9 +34,13 @@ namespace is_mesh
 
         const SimplexSet<TetrahedronKey> & tet_keys() const;
 
+        const SimplexSet<NodeKey> & node_keys() const;
+
         bool is_boundary();
 
         bool is_interface();
+
+        double area();
     private:
         void set_boundary(bool b);
 

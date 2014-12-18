@@ -606,7 +606,7 @@ namespace DSC {
         vector<EdgeKey> edges;
         for (auto eit = is_mesh.edges_begin(); eit != is_mesh.edges_end(); eit++)
         {
-            if ((eit->is_interface() || eit->is_boundary()) && length(eit.key()) > pars.MAX_LENGTH*AVG_LENGTH)
+            if ((eit->is_interface() || eit->is_boundary()) && eit->length() > pars.MAX_LENGTH*AVG_LENGTH)
             {
                 edges.push_back(eit.key());
             }
@@ -614,7 +614,7 @@ namespace DSC {
         int i = 0;
         for(auto &e : edges)
         {
-            if (is_mesh.exists(e) && length(e) > pars.MAX_LENGTH*AVG_LENGTH && !is_flat(is_mesh.get_faces(e)))
+            if (is_mesh.exists(e) && is_mesh.get(e).length() > pars.MAX_LENGTH*AVG_LENGTH && !is_flat(is_mesh.get_faces(e)))
             {
                 split(e);
                 i++;
@@ -662,7 +662,7 @@ namespace DSC {
         vector<EdgeKey> edges;
         for (auto eit = is_mesh.edges_begin(); eit != is_mesh.edges_end(); eit++)
         {
-            if ((eit->is_interface() || eit->is_boundary()) && length(eit.key()) < pars.MIN_LENGTH*AVG_LENGTH)
+            if ((eit->is_interface() || eit->is_boundary()) && eit->length() < pars.MIN_LENGTH*AVG_LENGTH)
             {
                 edges.push_back(eit.key());
             }
@@ -670,7 +670,7 @@ namespace DSC {
         int i = 0, j = 0;
         for(auto &e : edges)
         {
-            if (is_mesh.exists(e) && length(e) < pars.MIN_LENGTH*AVG_LENGTH)
+            if (is_mesh.exists(e) && is_mesh.get(e).length() < pars.MIN_LENGTH*AVG_LENGTH)
             {
                 if(collapse(e))
                 {
@@ -764,7 +764,7 @@ namespace DSC {
                 }
                 else {
                     EdgeKey e = longest_edge(is_mesh.get_edges(f));
-                    if(length(e) > AVG_LENGTH)
+                    if(is_mesh.get(e).length() > AVG_LENGTH)
                     {
                         split(e);
                     }
@@ -799,7 +799,7 @@ namespace DSC {
                 }
                 else {
                     EdgeKey e = longest_edge(is_mesh.get_edges(t));
-                    if(length(e) > AVG_LENGTH)
+                    if(is_mesh.get(e).length() > AVG_LENGTH)
                     {
                         split(e);
                     }
@@ -1328,18 +1328,15 @@ namespace DSC {
     }
 
     double DeformableSimplicialComplex::length(const EdgeKey& eid) {
-        SimplexSet<NodeKey> nids = is_mesh.get_nodes(eid);
-        return Util::length(is_mesh.get(nids[0]).get_pos() - is_mesh.get(nids[1]).get_pos());
+        return is_mesh.get(eid).length();
     }
 
     double DeformableSimplicialComplex::length_destination(const EdgeKey& eid) {
-        SimplexSet<NodeKey> nids = is_mesh.get_nodes(eid);
-        return Util::length(is_mesh.get(nids[0]).get_destination() - is_mesh.get(nids[1]).get_destination());
+        return is_mesh.get(eid).length_destination();
     }
 
     double DeformableSimplicialComplex::area(const FaceKey& fid) {
-        SimplexSet<NodeKey> nids = is_mesh.get_nodes(fid);
-        return Util::area(is_mesh.get(nids[0]).get_pos(), is_mesh.get(nids[1]).get_pos(), is_mesh.get(nids[2]).get_pos());
+        return is_mesh.get(fid).area();
     }
 
     double DeformableSimplicialComplex::area_destination(const FaceKey& fid) {
@@ -1402,7 +1399,7 @@ namespace DSC {
     }
 
     double DeformableSimplicialComplex::quality(const EdgeKey& eid) {
-        return length(eid)/AVG_LENGTH;
+        return is_mesh.get(eid).length()/AVG_LENGTH;
     }
 
     FaceKey DeformableSimplicialComplex::largest_face(const SimplexSet<FaceKey>& fids) {
@@ -1410,7 +1407,7 @@ namespace DSC {
         FaceKey max_f;
         for(auto f : fids)
         {
-            double a = area(f);
+            double a = is_mesh.get(f).area();
             if(a > max_a)
             {
                 max_a = a;
@@ -1425,7 +1422,7 @@ namespace DSC {
         EdgeKey min_e;
         for(auto e : eids)
         {
-            double l = length(e);
+            double l = is_mesh.get(e).length();
             if(l < min_l)
             {
                 min_l = l;
@@ -1440,7 +1437,7 @@ namespace DSC {
         EdgeKey max_e;
         for(auto e : eids)
         {
-            double l = length(e);
+            double l = is_mesh.get(e).length();
             if(l > max_l)
             {
                 max_l = l;
@@ -1526,7 +1523,7 @@ namespace DSC {
         for (auto eit = is_mesh.edges_begin(); eit != is_mesh.edges_end(); eit++) {
             if(eit->is_interface())
             {
-                avg_edge_length += length(eit.key());
+                avg_edge_length += eit->length();
                 N++;
             }
         }

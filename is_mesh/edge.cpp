@@ -15,6 +15,7 @@
 //  See licence.txt for a copy of the GNU General Public License.
 
 #include "edge.h"
+#include "is_mesh.h"
 
 namespace is_mesh
 {
@@ -64,5 +65,15 @@ namespace is_mesh
 
     void Edge::set_interface(bool b) {
         flags[0] = b;
+    }
+
+    double Edge::length() {
+        const SimplexSet<NodeKey> & nids = node_keys();
+        return Util::length(m_mesh->get(nids[0]).get_pos() - m_mesh->get(nids[1]).get_pos());
+    }
+
+    double Edge::length_destination() {
+        const SimplexSet<NodeKey> & nids = node_keys();
+        return Util::length(m_mesh->get(nids[0]).get_destination() - m_mesh->get(nids[1]).get_destination());
     }
 }

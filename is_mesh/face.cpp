@@ -16,6 +16,7 @@
 
 
 #include "face.h"
+#include "is_mesh.h"
 
 namespace is_mesh
 {
@@ -55,5 +56,17 @@ namespace is_mesh
 
     void Face::set_interface(bool b) {
         flags[0] = b;
+    }
+
+    double Face::area() {
+        const SimplexSet<NodeKey>& nids = node_keys();
+        return Util::area(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos());
+    }
+
+    const SimplexSet<NodeKey> & Face::node_keys() const{
+        const SimplexSet<EdgeKey>& eids = edge_keys();
+        SimplexSet<NodeKey> nids = m_mesh->get_nodes(eids[0]);
+        nids += m_mesh->get_nodes(eids[1]);
+        return nids;
     }
 }

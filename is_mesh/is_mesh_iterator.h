@@ -37,7 +37,7 @@ namespace is_mesh {
     };
 
     class EdgeIterator {
-        const kernel<EdgeKey, Edge>*                  m_edge_kernel;
+        const kernel<EdgeKey, Edge>* m_edge_kernel;
     public:
         EdgeIterator(const kernel<EdgeKey, Edge> *m_edge_kernel);
 
@@ -47,7 +47,7 @@ namespace is_mesh {
     };
 
     class FaceIterator {
-        const kernel<FaceKey, Face>*                  m_face_kernel;
+        const kernel<FaceKey, Face>* m_face_kernel;
     public:
         FaceIterator(const kernel<FaceKey, Face> *m_face_kernel);
 
@@ -58,7 +58,7 @@ namespace is_mesh {
     };
 
     class TetrahedronIterator {
-        const kernel<TetrahedronKey, Tetrahedron>*           m_tetrahedron_kernel;
+        const kernel<TetrahedronKey, Tetrahedron>* m_tetrahedron_kernel;
     public:
         TetrahedronIterator(const kernel<TetrahedronKey, Tetrahedron> *m_tetrahedron_kernel);
 

@@ -17,6 +17,7 @@
 #pragma once
 
 #include <vector>
+#include <cassert>
 #include "key.h"
 
 namespace is_mesh

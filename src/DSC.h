@@ -401,11 +401,13 @@ namespace DSC {
         ///////////////////////
         
     public:
-
+        DEPRECATED // use Edge::length()
         double length(const is_mesh::EdgeKey& eid);
 
+        DEPRECATED // use Edge::length_destination()
         double length_destination(const is_mesh::EdgeKey& eid);
 
+        DEPRECATED // use Face::area()
         double area(const is_mesh::FaceKey& fid);
 
         double area_destination(const is_mesh::FaceKey& fid);

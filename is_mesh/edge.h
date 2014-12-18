@@ -39,6 +39,10 @@ namespace is_mesh
         bool is_boundary();
 
         bool is_interface();
+
+        double length();
+
+        double length_destination();
     private:
         void set_crossing(bool b);
 
