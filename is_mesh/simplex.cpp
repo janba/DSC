@@ -14,14 +14,14 @@ namespace is_mesh
 
     }
 
-    Node::Node(Node&& other) : p (std::move(other.p)), p_new(std::move(other.p_new)),
+    Node::Node(Node&& other) : p (other.p), p_new(other.p_new),
                                flags(std::move(other.flags)),Simplex<Key, EdgeKey>(std::move(other)) {
     }
 
 
     Node &Node::operator=(Node&& other) {
         if (this != &other){
-            p = other.p;
+            p = std::move(other.p);
             p_new = std::move(other.p_new);
             flags = std::move(other.flags);
             ((Simplex<Key, EdgeKey>*)this)->operator=(std::move(other));
