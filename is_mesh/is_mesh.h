@@ -158,25 +158,6 @@ namespace is_mesh {
 
         virtual int get_label(const TetrahedronKey& t);
         
-    private:
-        template<typename key>
-        void set_interface(const key& k, bool b)
-        {
-            return get(k).set_interface(b);
-        }
-        
-        template<typename key>
-        void set_boundary(const key& k, bool b)
-        {
-            return get(k).set_boundary(b);
-        }
-        
-        template<typename key>
-        void set_crossing(const key& k, bool b)
-        {
-            return get(k).set_crossing(b);
-        }
-        
     public:
         virtual void set_label(const TetrahedronKey& tid, int label);
         

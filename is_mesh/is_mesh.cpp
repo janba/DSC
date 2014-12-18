@@ -193,17 +193,18 @@ namespace is_mesh{
     }
 
     void ISMesh::update_flag(const FaceKey & f) {
-        set_interface(f, false);
-        set_boundary(f, false);
+        Face & face = get(f);
+        face.set_interface(false);
+        face.set_boundary(false);
 
         SimplexSet<TetrahedronKey> tids = get_tets(f);
         if (tids.size() == 1)
         {
             // On the boundary
-            set_boundary(f, true);
+            face.set_boundary(true);
             if (get_label(tids.front()) != 0)
             {
-                set_interface(f, true);
+                face.set_interface(true);
             }
         }
         else if(tids.size() == 2)
@@ -211,15 +212,16 @@ namespace is_mesh{
             if (get_label(tids.front()) != get_label(tids.back()))
             {
                 // On the interface
-                set_interface(f, true);
+                face.set_interface(true);
             }
         }
     }
 
     void ISMesh::update_flag(const EdgeKey & e) {
-        set_boundary(e, false);
-        set_interface(e, false);
-        set_crossing(e, false);
+        Edge & edge = get(e);
+        edge.set_boundary(false);
+        edge.set_interface(false);
+        edge.set_crossing(false);
 
         int i = 0;
         for (auto f : get_faces(e))
@@ -228,18 +230,18 @@ namespace is_mesh{
             {
                 if (get(f).is_boundary())
                 {
-                    set_boundary(e, true);
+                    edge.set_boundary(true);
                 }
                 if (get(f).is_interface())
                 {
-                    set_interface(e, true);
+                    edge.set_interface(true);
                     i++;
                 }
             }
         }
         if(i > 2)
         {
-            set_crossing(e, true);
+            edge.set_crossing(true);
         }
     }
 
@@ -278,9 +280,10 @@ namespace is_mesh{
     }
 
     void ISMesh::update_flag(const NodeKey & n) {
-        set_interface(n, false);
-        set_boundary(n, false);
-        set_crossing(n, false);
+        Node & node = get(n);
+        node.set_interface(false);
+        node.set_boundary(false);
+        node.set_crossing(false);
 
         for (auto e : get_edges(n))
         {
@@ -288,21 +291,21 @@ namespace is_mesh{
             {
                 if (get(e).is_interface())
                 {
-                    set_interface(n, true);
+                    node.set_interface(true);
                 }
                 if (get(e).is_boundary())
                 {
-                    set_boundary(n, true);
+                    node.set_boundary(true);
                 }
                 if (get(e).is_crossing())
                 {
-                    set_crossing(n, true);
+                    node.set_crossing(true);
                 }
             }
         }
         if(!get(n).is_crossing() && get(n).is_interface() && crossing(n))
         {
-            set_crossing(n, true);
+            node.set_crossing(true);
         }
     }
 

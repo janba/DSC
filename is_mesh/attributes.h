@@ -95,7 +95,7 @@ namespace is_mesh {
         {
             return flags[0];
         }
-        
+    private:
         void set_crossing(bool b)
         {
             flags[2] = b;
@@ -110,6 +110,7 @@ namespace is_mesh {
         {
             flags[0] = b;
         }
+        friend class ISMesh;
     };
     
     class EdgeAttributes
@@ -135,7 +136,7 @@ namespace is_mesh {
             }
             return *this;
         }
-        
+
         bool is_crossing()
         {
             return flags[2];
@@ -150,7 +151,7 @@ namespace is_mesh {
         {
             return flags[0];
         }
-        
+    private:
         void set_crossing(bool b)
         {
             flags[2] = b;
@@ -165,6 +166,7 @@ namespace is_mesh {
         {
             flags[0] = b;
         }
+        friend class ISMesh;
     };
     
     class FaceAttributes
@@ -203,7 +205,7 @@ namespace is_mesh {
         {
             return flags[0];
         }
-        
+    private:
         void set_boundary(bool b)
         {
             flags[1] = b;
@@ -213,6 +215,7 @@ namespace is_mesh {
         {
             flags[0] = b;
         }
+        friend class ISMesh;
     };
     
     class TetAttributes
