@@ -273,37 +273,7 @@ namespace DSC {
         * Attempts to remove degenerate faces (faces with a minimum angle smaller than MIN_ANGLE).
         */
         void remove_faces();
-        /**
-        * Remove a degenerate tetrahedron of a type "sliver" by splitting the two longest edges
-        * and collapsing the newly created vertices together. Return true if successful.
-        */
-        bool remove_sliver(const is_mesh::TetrahedronKey& tid);
-        /**
-        * Remove a degenerate tetrahedron of a type "cap" by splitting the face opposite cap's apex and collapsing cap's apex with the newly created vertex.
-        * Return true if successful.
-        */
-        bool remove_cap(const is_mesh::TetrahedronKey& tid);
-        /**
-        * Remove a degenerate tetrahedron of a type "wedge" or "needle" by collapsing the shortest edge.
-        * Return true if successful.
-        */
-        bool remove_wedge(const is_mesh::TetrahedronKey& tid);
-        /**
-        * Remove a tetrahedron of a type "needle" by splitting the tetrahedron.
-        * Return true if successful.
-        */
-        bool remove_needle(const is_mesh::TetrahedronKey& tid);
-        /**
-        * Destroy degenerate (nearly flat) tetrahedron t by splits and collapses.
-        * This function detects what type of degeneracy tetrahedron t is (sliver, cap, needle or wedge)
-        * and selects appropriate degeneracy removal routine.
-        */
-        bool remove_tet(const is_mesh::TetrahedronKey& tid);
-        /**
-        * Attempt to remove tetrahedra with quality lower than MIN_TET_QUALITY.
-        */
-        void remove_tets();
-        
+
         ///////////////
         // SMOOTHING //
         ///////////////
