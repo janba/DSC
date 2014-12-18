@@ -267,17 +267,7 @@ namespace is_mesh
             assert(tmp.state == kernel_element::VALID);
             return tmp.value;
         }
-        
-        /**
-         * Returns a managed object.
-         *
-         * @param k     The handle to the object.
-         */
-        value_type const & find_const(key_type const & k)
-        {
-            return find(k);
-        }
-        
+
         /**
          * Returns the status of the cell given its key.
          *
