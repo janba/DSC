@@ -502,7 +502,7 @@ namespace is_mesh {
             return key1;
         }
         
-    protected:
+    public:
 
         virtual void update_split(const NodeKey& nid_new, const NodeKey& nid1, const NodeKey& nid2);
 

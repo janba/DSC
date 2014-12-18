@@ -136,7 +136,7 @@ void UI::load_model(const std::string& file_name, double discretization)
     dsc = std::unique_ptr<DeformableSimplicialComplex>(new DeformableSimplicialComplex(points, tets, tet_labels));
     
     vec3 p_min(INFINITY), p_max(-INFINITY);
-    for (auto nit = dsc->nodes_begin(); nit != dsc->nodes_end(); nit++) {
+    for (auto nit = dsc->get_is_mesh().nodes_begin(); nit != dsc->get_is_mesh().nodes_end(); nit++) {
         for (int i = 0; i < 3; i++) {
             p_min[i] = Util::min(nit->get_pos()[i], p_min[i]);
             p_max[i] = Util::max(nit->get_pos()[i], p_max[i]);
@@ -288,7 +288,7 @@ void UI::keyboard(unsigned char key, int x, int y) {
             std::vector<vec3> points;
             std::vector<int> tets;
             std::vector<int> tet_labels;
-            dsc->extract_tet_mesh(points, tets, tet_labels);
+            dsc->get_is_mesh().extract_tet_mesh(points, tets, tet_labels);
             is_mesh::export_tet_mesh(filename, points, tets, tet_labels);
         }
             break;
@@ -298,7 +298,7 @@ void UI::keyboard(unsigned char key, int x, int y) {
             std::string filename("data/mesh.obj");
             std::vector<vec3> points;
             std::vector<int> faces;
-            dsc->extract_surface_mesh(points, faces);
+            dsc->get_is_mesh().extract_surface_mesh(points, faces);
             is_mesh::export_surface_mesh(filename, points, faces);
         }
             break;
@@ -368,10 +368,10 @@ void UI::stop()
         std::vector<int> faces;
         std::vector<int> tets;
         std::vector<int> tet_labels;
-        dsc->extract_tet_mesh(points, tets, tet_labels);
+        dsc->get_is_mesh().extract_tet_mesh(points, tets, tet_labels);
         is_mesh::export_tet_mesh(basic_log->get_path() + std::string("/mesh.dsc"), points, tets, tet_labels);
         points.clear();
-        dsc->extract_surface_mesh(points, faces);
+        dsc->get_is_mesh().extract_surface_mesh(points, faces);
         is_mesh::export_surface_mesh(basic_log->get_path() + std::string("/mesh.obj"), points, faces);
         basic_log = nullptr;
     }

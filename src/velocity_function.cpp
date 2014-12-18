@@ -76,7 +76,7 @@ void DSC::VelocityFunc::deform(DeformableSimplicialComplex& dsc) {
 bool DSC::VelocityFunc::is_motion_finished(DeformableSimplicialComplex& dsc) {
     if(time_step < MAX_TIME_STEPS)
     {
-        for (auto nit = dsc.nodes_begin(); nit != dsc.nodes_end(); nit++)
+        for (auto nit = dsc.get_is_mesh().nodes_begin(); nit != dsc.get_is_mesh().nodes_end(); nit++)
         {
             if(dsc.is_movable(nit.key()))
             {
@@ -111,7 +111,7 @@ void DSC::VelocityFunc::take_time_step(DeformableSimplicialComplex& dsc) {
 }
 
 void DSC::VelocityFunc::test(DeformableSimplicialComplex& dsc) {
-    dsc.validity_check();
+    dsc.get_is_mesh().validity_check();
 
     dsc.test_flip23_flip32();
     dsc.test_split_collapse();

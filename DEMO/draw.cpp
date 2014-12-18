@@ -420,11 +420,11 @@ void Painter::update(DSC::DeformableSimplicialComplex& dsc)
 void Painter::update_interface(DSC::DeformableSimplicialComplex& dsc)
 {
     std::vector<vec3> data;
-    for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
+    for (auto fit = dsc.get_is_mesh().faces_begin(); fit != dsc.get_is_mesh().faces_end(); fit++)
     {
         if (fit->is_interface())
         {
-            auto verts = dsc.get_pos(dsc.get_sorted_nodes(fit.key()));
+            auto verts = dsc.get_is_mesh().get_pos(dsc.get_is_mesh().get_sorted_nodes(fit.key()));
             vec3 normal = Util::normal_direction(verts[0], verts[1], verts[2]);
             
             for(auto &p : verts)
@@ -440,11 +440,11 @@ void Painter::update_interface(DSC::DeformableSimplicialComplex& dsc)
 void Painter::update_wire_frame(DSC::DeformableSimplicialComplex& dsc)
 {
     std::vector<vec3> data;
-    for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
+    for (auto fit = dsc.get_is_mesh().faces_begin(); fit != dsc.get_is_mesh().faces_end(); fit++)
     {
         if (fit->is_interface())
         {
-            auto verts = dsc.get_pos(dsc.get_sorted_nodes(fit.key()));
+            auto verts = dsc.get_is_mesh().get_pos(dsc.get_is_mesh().get_sorted_nodes(fit.key()));
             vec3 normal = Util::normal_direction(verts[0], verts[1], verts[2]);
             
             for(auto &p : verts)
@@ -460,14 +460,14 @@ void Painter::update_wire_frame(DSC::DeformableSimplicialComplex& dsc)
 void Painter::update_edges(DSC::DeformableSimplicialComplex& dsc)
 {
     std::vector<vec3> data;
-    for (auto eit = dsc.edges_begin(); eit != dsc.edges_end(); eit++)
+    for (auto eit = dsc.get_is_mesh().edges_begin(); eit != dsc.get_is_mesh().edges_end(); eit++)
     {
-        auto nids = dsc.get_nodes(eit.key());
+        auto nids = dsc.get_is_mesh().get_nodes(eit.key());
         if(!eit->is_interface())
         {
-            vec3 vector = dsc.get_pos(nids[1]) - dsc.get_pos(nids[0]);
+            vec3 vector = dsc.get_is_mesh().get_pos(nids[1]) - dsc.get_is_mesh().get_pos(nids[0]);
             
-            data.push_back(dsc.get_pos(nids[0]));
+            data.push_back(dsc.get_is_mesh().get_pos(nids[0]));
             data.push_back(vector);
         }
     }
@@ -477,11 +477,11 @@ void Painter::update_edges(DSC::DeformableSimplicialComplex& dsc)
 void Painter::update_domain(DSC::DeformableSimplicialComplex& dsc)
 {
     std::vector<vec3> data;
-    for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
+    for (auto fit = dsc.get_is_mesh().faces_begin(); fit != dsc.get_is_mesh().faces_end(); fit++)
     {
         if(fit->is_boundary())
         {
-            auto verts = dsc.get_pos(dsc.get_sorted_nodes(fit.key()));
+            auto verts = dsc.get_is_mesh().get_pos(dsc.get_is_mesh().get_sorted_nodes(fit.key()));
             std::swap(verts[0], verts[2]);
             vec3 normal = Util::normal_direction(verts[0], verts[1], verts[2]);
             for (auto &p : verts) {
@@ -496,33 +496,33 @@ void Painter::update_domain(DSC::DeformableSimplicialComplex& dsc)
 void Painter::update_low_quality(DSC::DeformableSimplicialComplex& dsc)
 {
     std::vector<vec3> data;
-    for (auto tit = dsc.tetrahedra_begin(); tit != dsc.tetrahedra_end(); tit++)
+    for (auto tit = dsc.get_is_mesh().tetrahedra_begin(); tit != dsc.get_is_mesh().tetrahedra_end(); tit++)
     {
         if(dsc.quality(tit.key()) < dsc.get_min_tet_quality())
         {            
-            for (auto f : dsc.get_faces(tit.key()))
+            for (auto f : dsc.get_is_mesh().get_faces(tit.key()))
             {
-                auto nodes = dsc.get_sorted_nodes(f, tit.key());
+                auto nodes = dsc.get_is_mesh().get_sorted_nodes(f, tit.key());
                 vec3 normal = -dsc.get_normal(f);
                 
                 for(auto &n : nodes)
                 {
-                    data.push_back(dsc.get_pos(n));
+                    data.push_back(dsc.get_is_mesh().get_pos(n));
                     data.push_back(normal);
                 }
             }
         }
     }
-    for (auto fit = dsc.faces_begin(); fit != dsc.faces_end(); fit++)
+    for (auto fit = dsc.get_is_mesh().faces_begin(); fit != dsc.get_is_mesh().faces_end(); fit++)
     {
         if(dsc.quality(fit.key()) < dsc.get_min_face_quality())
         {
-            auto nodes = dsc.get_nodes(fit.key());
+            auto nodes = dsc.get_is_mesh().get_nodes(fit.key());
             vec3 normal = dsc.get_normal(fit.key());
             
             for(auto &n : nodes)
             {
-                data.push_back(dsc.get_pos(n));
+                data.push_back(dsc.get_is_mesh().get_pos(n));
                 data.push_back(normal);
             }
         }
@@ -539,7 +539,7 @@ void Painter::update_unmoved(DSC::DeformableSimplicialComplex& dsc) {
     data.push_back(vec3(0.));
     data.push_back(vec3(0., 0., 20.));
 
-    for (auto & nit : dsc.nodes())
+    for (auto & nit : dsc.get_is_mesh().nodes())
     {
         vec3 vector = nit.get_destination() - nit.get_pos();
         if(vector.length() > EPSILON)

@@ -52,7 +52,7 @@ struct parameters {
 namespace DSC {
     
 
-    class DeformableSimplicialComplex : public is_mesh::ISMesh
+    class DeformableSimplicialComplex
     {
     public:
 
@@ -66,6 +66,7 @@ namespace DSC {
         typedef is_mesh::TetrahedronKey       tet_key;
         
     protected:
+        is_mesh::ISMesh is_mesh;
         is_mesh::MultipleGeometry design_domain;
         
         // Input parameter
@@ -90,6 +91,8 @@ namespace DSC {
         virtual ~DeformableSimplicialComplex();
 
     public:
+
+        is_mesh::ISMesh & get_is_mesh();
 
         virtual void set_avg_edge_length(double avg_edge_length = 0.);
 
