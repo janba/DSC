@@ -38,7 +38,7 @@ namespace is_mesh
          * A struct to hold the actual data along with auxiliary informations, like
          * the state of af memory cell, and list pointers.
          */
-        template< typename value_t_ , typename key_t_>
+        template< typename key_t_, typename value_t_ >
         struct kernel_element
         {
             typedef value_t_            value_type;
@@ -76,12 +76,12 @@ namespace is_mesh
      *        must have the typedef type_traits.
      * @param key_type The type of the keys used in the kernel. Should be an integer type.
      */
-    template<typename value_type, typename key_type>
+    template<typename key_type, typename value_type>
     class kernel
     {
     public:
-        typedef          kernel<value_type, key_type>                   kernel_type;
-        typedef          util::kernel_element<value_type, key_type>     kernel_element;
+        typedef          kernel<key_type, value_type>                   kernel_type;
+        typedef          util::kernel_element<key_type, value_type>     kernel_element;
         typedef          kernel_iterator<kernel_type>                   iterator;
         typedef          iterator const                                 const_iterator;
 

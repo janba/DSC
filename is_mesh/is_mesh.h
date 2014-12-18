@@ -34,10 +34,10 @@ namespace is_mesh {
 
     class ISMesh
     {
-        kernel<Node, NodeKey>* m_node_kernel;
-        kernel<Edge, EdgeKey>* m_edge_kernel;
-        kernel<Face, FaceKey>* m_face_kernel;
-        kernel<Tetrahedron, TetrahedronKey>* m_tetrahedron_kernel;
+        kernel<NodeKey,Node>* m_node_kernel;
+        kernel<EdgeKey,Edge>* m_edge_kernel;
+        kernel<FaceKey,Face>* m_face_kernel;
+        kernel<TetrahedronKey,Tetrahedron>* m_tetrahedron_kernel;
 
         std::map<long,std::function<void(const GarbageCollectDeletions&)>> m_gc_listeners;
     public:
@@ -59,27 +59,27 @@ namespace is_mesh {
     public:
         NodeIterator nodes() const;
 
-        typename kernel<Node, NodeKey>::iterator nodes_begin();
+        typename kernel<NodeKey,Node>::iterator nodes_begin();
 
-        typename kernel<Node, NodeKey>::iterator nodes_end();
+        typename kernel<NodeKey,Node>::iterator nodes_end();
 
         EdgeIterator edges() const;
 
-        typename kernel<Edge, EdgeKey>::iterator edges_begin();
+        typename kernel<EdgeKey,Edge>::iterator edges_begin();
 
-        typename kernel<Edge, EdgeKey>::iterator edges_end();
+        typename kernel<EdgeKey,Edge>::iterator edges_end();
 
         FaceIterator faces() const;
 
-        typename kernel<Face, FaceKey>::iterator faces_begin();
+        typename kernel<FaceKey,Face>::iterator faces_begin();
 
-        typename kernel<Face, FaceKey>::iterator faces_end();
+        typename kernel<FaceKey,Face>::iterator faces_end();
 
         TetrahedronIterator tetrahedra() const;
 
-        typename kernel<Tetrahedron, TetrahedronKey>::iterator tetrahedra_begin();
+        typename kernel<TetrahedronKey,Tetrahedron>::iterator tetrahedra_begin();
 
-        typename kernel<Tetrahedron, TetrahedronKey>::iterator tetrahedra_end();
+        typename kernel<TetrahedronKey,Tetrahedron>::iterator tetrahedra_end();
         
         /////////////////////
         // LABEL FUNCTIONS //

@@ -18,48 +18,48 @@
 
 namespace is_mesh {
 
-    NodeIterator::NodeIterator(const kernel<Node, NodeKey> *m_node_kernel) : m_node_kernel(m_node_kernel) {
+    NodeIterator::NodeIterator(const kernel<NodeKey,Node> *m_node_kernel) : m_node_kernel(m_node_kernel) {
     }
 
-    typename kernel<Node, NodeKey>::iterator NodeIterator::begin() const {
+    typename kernel<NodeKey,Node>::iterator NodeIterator::begin() const {
         return m_node_kernel->begin();
     }
 
-    typename kernel<Node, NodeKey>::iterator NodeIterator::end() const {
+    typename kernel<NodeKey,Node>::iterator NodeIterator::end() const {
         return m_node_kernel->end();
     }
 
-    EdgeIterator::EdgeIterator(const kernel<Edge, EdgeKey> *m_edge_kernel) : m_edge_kernel(m_edge_kernel) {
+    EdgeIterator::EdgeIterator(const kernel<EdgeKey,Edge> *m_edge_kernel) : m_edge_kernel(m_edge_kernel) {
     }
 
-    typename kernel<Edge, EdgeKey>::iterator EdgeIterator::begin() const {
+    typename kernel<EdgeKey,Edge>::iterator EdgeIterator::begin() const {
         return m_edge_kernel->begin();
     }
 
-    typename kernel<Edge, EdgeKey>::iterator EdgeIterator::end() const {
+    typename kernel<EdgeKey,Edge>::iterator EdgeIterator::end() const {
         return m_edge_kernel->end();
     }
 
-    FaceIterator::FaceIterator(const kernel<Face, FaceKey> *m_face_kernel) : m_face_kernel(m_face_kernel) {
+    FaceIterator::FaceIterator(const kernel<FaceKey,Face> *m_face_kernel) : m_face_kernel(m_face_kernel) {
     }
 
-    typename kernel<Face, FaceKey>::iterator FaceIterator::begin() const {
+    typename kernel<FaceKey,Face>::iterator FaceIterator::begin() const {
         return m_face_kernel->begin();
     }
 
-    typename kernel<Face, FaceKey>::iterator FaceIterator::end() const {
+    typename kernel<FaceKey,Face>::iterator FaceIterator::end() const {
         return m_face_kernel->end();
     }
 
-    TetrahedronIterator::TetrahedronIterator(const kernel<Tetrahedron, TetrahedronKey> *m_tetrahedron_kernel)
+    TetrahedronIterator::TetrahedronIterator(const kernel<TetrahedronKey,Tetrahedron> *m_tetrahedron_kernel)
             : m_tetrahedron_kernel(m_tetrahedron_kernel) {
     }
 
-    typename kernel<Tetrahedron, TetrahedronKey>::iterator TetrahedronIterator::begin() const {
+    typename kernel<TetrahedronKey,Tetrahedron>::iterator TetrahedronIterator::begin() const {
         return m_tetrahedron_kernel->begin();
     }
 
-    typename kernel<Tetrahedron, TetrahedronKey>::iterator TetrahedronIterator::end() const {
+    typename kernel<TetrahedronKey,Tetrahedron>::iterator TetrahedronIterator::end() const {
         return m_tetrahedron_kernel->end();
     }
 }

@@ -6,10 +6,10 @@ using namespace std;
 
 namespace is_mesh{
     ISMesh::ISMesh(vector<vec3> & points, vector<int> & tets, const vector<int>& tet_labels) {
-        m_node_kernel = new kernel<Node, NodeKey>();
-        m_edge_kernel = new kernel<Edge, EdgeKey>();
-        m_face_kernel = new kernel<Face, FaceKey>();
-        m_tetrahedron_kernel = new kernel<Tetrahedron, TetrahedronKey>();
+        m_node_kernel = new kernel<NodeKey,Node>();
+        m_edge_kernel = new kernel<EdgeKey,Edge>();
+        m_face_kernel = new kernel<FaceKey,Face>();
+        m_tetrahedron_kernel = new kernel<TetrahedronKey,Tetrahedron>();
 
         create(points, tets);
         init_flags(tet_labels);
@@ -44,11 +44,11 @@ namespace is_mesh{
         return NodeIterator{m_node_kernel};
     }
 
-    typename kernel<Node, NodeKey>::iterator ISMesh::nodes_begin() {
+    typename kernel<NodeKey,Node>::iterator ISMesh::nodes_begin() {
         return m_node_kernel->begin();
     }
 
-    typename kernel<Node, NodeKey>::iterator ISMesh::nodes_end() {
+    typename kernel<NodeKey,Node>::iterator ISMesh::nodes_end() {
         return m_node_kernel->end();
     }
 
@@ -56,11 +56,11 @@ namespace is_mesh{
         return EdgeIterator{m_edge_kernel};
     }
 
-    typename kernel<Edge, EdgeKey>::iterator ISMesh::edges_begin() {
+    typename kernel<EdgeKey,Edge>::iterator ISMesh::edges_begin() {
         return m_edge_kernel->begin();
     }
 
-    typename kernel<Edge, EdgeKey>::iterator ISMesh::edges_end() {
+    typename kernel<EdgeKey,Edge>::iterator ISMesh::edges_end() {
         return m_edge_kernel->end();
     }
 
@@ -68,11 +68,11 @@ namespace is_mesh{
         return FaceIterator{m_face_kernel};
     }
 
-    typename kernel<Face, FaceKey>::iterator ISMesh::faces_begin() {
+    typename kernel<FaceKey,Face>::iterator ISMesh::faces_begin() {
         return m_face_kernel->begin();
     }
 
-    typename kernel<Face, FaceKey>::iterator ISMesh::faces_end() {
+    typename kernel<FaceKey,Face>::iterator ISMesh::faces_end() {
         return m_face_kernel->end();
     }
 
@@ -80,11 +80,11 @@ namespace is_mesh{
         return TetrahedronIterator{m_tetrahedron_kernel};
     }
 
-    typename kernel<Tetrahedron, TetrahedronKey>::iterator ISMesh::tetrahedra_begin() {
+    typename kernel<TetrahedronKey,Tetrahedron>::iterator ISMesh::tetrahedra_begin() {
         return m_tetrahedron_kernel->begin();
     }
 
-    typename kernel<Tetrahedron, TetrahedronKey>::iterator ISMesh::tetrahedra_end() {
+    typename kernel<TetrahedronKey,Tetrahedron>::iterator ISMesh::tetrahedra_end() {
         return m_tetrahedron_kernel->end();
     }
 
