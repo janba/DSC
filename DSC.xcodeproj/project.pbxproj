@@ -8,13 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		333AE0349A8E5E3503484A66 /* libDSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE27AD617675AE8000F8238 /* libDSC.a */; };
+		333AE135D61F29EC7C7FD44E /* node.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AEFE441A96AF891EF7688 /* node.h */; };
 		333AE157A5545C460FEE8947 /* simplex_set.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AE15025019E84F966ACA2 /* simplex_set.h */; };
+		333AE2364D2C08A4A2530C00 /* edge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AED1B18A5D5EADA15CC74 /* edge.cpp */; };
+		333AE239B8BD9322C9C80F5F /* tetrahedron.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AEB803656EE1BD851CB60 /* tetrahedron.h */; };
+		333AE2B35917D705B8BE8983 /* edge.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AE40462285E0CF156F893 /* edge.h */; };
 		333AE2BE73A0EB768FDCB56B /* simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AEA3D640D6474001E3637 /* simplex.h */; };
 		333AE336DB894CBE87DCED8D /* mesh_io.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE0BAAE7617F653EEF43C /* mesh_io.cpp */; };
 		333AE3A6F4A4793D6955C22B /* velocity_function.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE4D9108906877AEAB7BD /* velocity_function.cpp */; };
+		333AE46E000AB9C6962182E6 /* face.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AEA4A83A35FD24D9916F4 /* face.cpp */; };
+		333AE47964BE40025DE9F857 /* tetrahedron.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE4312D8F13633B339E13 /* tetrahedron.cpp */; };
 		333AE4D71610C5757EA5D6F9 /* tetralizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE1EBBC67D11132AE7932 /* tetralizer.cpp */; };
 		333AE52646F2A7EFD927EA1A /* libSOIL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0AB5A517D906AD0058910E /* libSOIL.a */; };
 		333AE695D49555CA4972CBBB /* kernel_iterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AECDC254783B574397B4C /* kernel_iterator.h */; };
+		333AE70733B608079900E495 /* face.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AE937E6631380D63A1183 /* face.h */; };
 		333AE7547F1935D8A72FFE48 /* DSC_Suite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AED17ACD8EBBDD488D61E /* DSC_Suite.cpp */; };
 		333AE9167BF1F0FB69CE9F36 /* is_mesh_iterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AEB4EC9AFDBFD1472B2FC /* is_mesh_iterator.h */; };
 		333AE9402FFA4B5BD244E818 /* is_mesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AEB9FDC8710743C9CF985 /* is_mesh.h */; };
@@ -24,6 +31,7 @@
 		333AEC31AAFB2539DC0CA593 /* geometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AE9D0F6BD66F3713E5C5B /* geometry.h */; };
 		333AEC3E9AFB5F24E30DA814 /* test.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AE5DE319BCEDA3BABE713 /* test.h */; };
 		333AEC6975EE6CEB58482956 /* geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AEC06E863C03D5FC8E477 /* geometry.cpp */; };
+		333AECCEAB9898A0BEA3C7FF /* node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AEA2D252EC75C789486A0 /* node.cpp */; };
 		333AED0BB67A22EC9D89FC8B /* tetralizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE1EBBC67D11132AE7932 /* tetralizer.cpp */; };
 		333AEDDE59E7DD542F4CEB15 /* libCGLA.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A9C205917DFB4CB0064171E /* libCGLA.a */; };
 		333AEDE396500E666E2A0A60 /* kernel.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AEB17A4AC266E9950A4F4 /* kernel.h */; };
@@ -126,7 +134,6 @@
 		7AF7E9BF176B4FE400F43714 /* DSC.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AF7E9BE176B4FE400F43714 /* DSC.h */; };
 		FE0E89561A23530F000E3B30 /* DSC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0E89551A23530F000E3B30 /* DSC.cpp */; };
 		FE0E89591A23531C000E3B30 /* is_mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0E89571A23531C000E3B30 /* is_mesh.cpp */; };
-		FE0E895A1A23531C000E3B30 /* simplex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0E89581A23531C000E3B30 /* simplex.cpp */; };
 		FEA860751A408C5100CCB2D8 /* attribute_vector.h in Headers */ = {isa = PBXBuildFile; fileRef = FEA860741A408C5100CCB2D8 /* attribute_vector.h */; };
 /* End PBXBuildFile section */
 
@@ -166,22 +173,30 @@
 		333AE1904606FBB5025645DA /* tetralizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tetralizer.h; sourceTree = "<group>"; };
 		333AE19898B1B66A337DACF8 /* UnitTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = UnitTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		333AE1EBBC67D11132AE7932 /* tetralizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tetralizer.cpp; sourceTree = "<group>"; };
+		333AE40462285E0CF156F893 /* edge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = edge.h; path = is_mesh/edge.h; sourceTree = "<group>"; };
+		333AE4312D8F13633B339E13 /* tetrahedron.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tetrahedron.cpp; path = is_mesh/tetrahedron.cpp; sourceTree = "<group>"; };
 		333AE4D9108906877AEAB7BD /* velocity_function.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = velocity_function.cpp; path = src/velocity_function.cpp; sourceTree = "<group>"; };
 		333AE5DE319BCEDA3BABE713 /* test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = test.h; path = is_mesh/test.h; sourceTree = "<group>"; };
 		333AE6BDE0F08B0B2E7878ED /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = is_mesh/util.h; sourceTree = "<group>"; };
+		333AE937E6631380D63A1183 /* face.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = face.h; path = is_mesh/face.h; sourceTree = "<group>"; };
 		333AE9D0F6BD66F3713E5C5B /* geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geometry.h; path = src/geometry.h; sourceTree = "<group>"; };
+		333AEA2D252EC75C789486A0 /* node.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = node.cpp; path = is_mesh/node.cpp; sourceTree = "<group>"; };
 		333AEA3D640D6474001E3637 /* simplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simplex.h; path = is_mesh/simplex.h; sourceTree = "<group>"; };
+		333AEA4A83A35FD24D9916F4 /* face.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = face.cpp; path = is_mesh/face.cpp; sourceTree = "<group>"; };
 		333AEB17A4AC266E9950A4F4 /* kernel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = kernel.h; path = is_mesh/kernel.h; sourceTree = "<group>"; };
 		333AEB341FB123630FD76FB2 /* DSC_Suite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DSC_Suite.h; sourceTree = "<group>"; };
 		333AEB4EC9AFDBFD1472B2FC /* is_mesh_iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh_iterator.h; path = is_mesh/is_mesh_iterator.h; sourceTree = "<group>"; };
+		333AEB803656EE1BD851CB60 /* tetrahedron.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tetrahedron.h; path = is_mesh/tetrahedron.h; sourceTree = "<group>"; };
 		333AEB9FDC8710743C9CF985 /* is_mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh.h; path = is_mesh/is_mesh.h; sourceTree = "<group>"; };
 		333AEC06E863C03D5FC8E477 /* geometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = geometry.cpp; path = src/geometry.cpp; sourceTree = "<group>"; };
 		333AECDC254783B574397B4C /* kernel_iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = kernel_iterator.h; path = is_mesh/kernel_iterator.h; sourceTree = "<group>"; };
 		333AED17ACD8EBBDD488D61E /* DSC_Suite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DSC_Suite.cpp; sourceTree = "<group>"; };
+		333AED1B18A5D5EADA15CC74 /* edge.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = edge.cpp; path = is_mesh/edge.cpp; sourceTree = "<group>"; };
 		333AED7A4DEF22621EDFA5FE /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		333AEEB6A7E5D2134112479B /* is_mesh_iterator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = is_mesh_iterator.cpp; path = is_mesh/is_mesh_iterator.cpp; sourceTree = "<group>"; };
 		333AEF915FE236382288972B /* mesh_io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mesh_io.h; path = is_mesh/mesh_io.h; sourceTree = "<group>"; };
 		333AEFD4824DB30E67D2DD5F /* key.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = key.h; path = is_mesh/key.h; sourceTree = "<group>"; };
+		333AEFE441A96AF891EF7688 /* node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node.h; path = is_mesh/node.h; sourceTree = "<group>"; };
 		7A0AB5A517D906AD0058910E /* libSOIL.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSOIL.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A0AB5C017D9082A0058910E /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		7A0B96D4182F29750004CAF3 /* wire.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = wire.frag; sourceTree = "<group>"; };
@@ -289,7 +304,6 @@
 		7AF7E9BE176B4FE400F43714 /* DSC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DSC.h; path = src/DSC.h; sourceTree = SOURCE_ROOT; };
 		FE0E89551A23530F000E3B30 /* DSC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DSC.cpp; path = src/DSC.cpp; sourceTree = SOURCE_ROOT; };
 		FE0E89571A23531C000E3B30 /* is_mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = is_mesh.cpp; path = is_mesh/is_mesh.cpp; sourceTree = "<group>"; };
-		FE0E89581A23531C000E3B30 /* simplex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = simplex.cpp; path = is_mesh/simplex.cpp; sourceTree = "<group>"; };
 		FEA860741A408C5100CCB2D8 /* attribute_vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = attribute_vector.h; path = src/attribute_vector.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -362,7 +376,6 @@
 			isa = PBXGroup;
 			children = (
 				FE0E89571A23531C000E3B30 /* is_mesh.cpp */,
-				FE0E89581A23531C000E3B30 /* simplex.cpp */,
 				333AE6BDE0F08B0B2E7878ED /* util.h */,
 				333AE9D0F6BD66F3713E5C5B /* geometry.h */,
 				333AEC06E863C03D5FC8E477 /* geometry.cpp */,
@@ -378,6 +391,14 @@
 				333AE4D9108906877AEAB7BD /* velocity_function.cpp */,
 				333AEEB6A7E5D2134112479B /* is_mesh_iterator.cpp */,
 				333AEB4EC9AFDBFD1472B2FC /* is_mesh_iterator.h */,
+				333AEA2D252EC75C789486A0 /* node.cpp */,
+				333AEFE441A96AF891EF7688 /* node.h */,
+				333AEA4A83A35FD24D9916F4 /* face.cpp */,
+				333AE937E6631380D63A1183 /* face.h */,
+				333AE4312D8F13633B339E13 /* tetrahedron.cpp */,
+				333AEB803656EE1BD851CB60 /* tetrahedron.h */,
+				333AED1B18A5D5EADA15CC74 /* edge.cpp */,
+				333AE40462285E0CF156F893 /* edge.h */,
 			);
 			name = ISMesh;
 			path = ../../DSC;
@@ -671,6 +692,10 @@
 				333AE9402FFA4B5BD244E818 /* is_mesh.h in Headers */,
 				333AEC3E9AFB5F24E30DA814 /* test.h in Headers */,
 				333AE9167BF1F0FB69CE9F36 /* is_mesh_iterator.h in Headers */,
+				333AE135D61F29EC7C7FD44E /* node.h in Headers */,
+				333AE70733B608079900E495 /* face.h in Headers */,
+				333AE239B8BD9322C9C80F5F /* tetrahedron.h in Headers */,
+				333AE2B35917D705B8BE8983 /* edge.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -900,11 +925,14 @@
 			files = (
 				FE0E89561A23530F000E3B30 /* DSC.cpp in Sources */,
 				FE0E89591A23531C000E3B30 /* is_mesh.cpp in Sources */,
-				FE0E895A1A23531C000E3B30 /* simplex.cpp in Sources */,
 				333AEC6975EE6CEB58482956 /* geometry.cpp in Sources */,
 				333AE336DB894CBE87DCED8D /* mesh_io.cpp in Sources */,
 				333AE3A6F4A4793D6955C22B /* velocity_function.cpp in Sources */,
 				333AEFA58C53D3263C8464E5 /* is_mesh_iterator.cpp in Sources */,
+				333AECCEAB9898A0BEA3C7FF /* node.cpp in Sources */,
+				333AE46E000AB9C6962182E6 /* face.cpp in Sources */,
+				333AE47964BE40025DE9F857 /* tetrahedron.cpp in Sources */,
+				333AE2364D2C08A4A2530C00 /* edge.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

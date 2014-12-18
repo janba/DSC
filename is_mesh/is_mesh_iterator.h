@@ -20,6 +20,10 @@
 #include "key.h"
 #include "simplex.h"
 #include "simplex_set.h"
+#include "node.h"
+#include "edge.h"
+#include "tetrahedron.h"
+#include "face.h"
 
 namespace is_mesh {
     class NodeIterator {
