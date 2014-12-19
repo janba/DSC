@@ -16,6 +16,7 @@
 
 
 #include "tetrahedron.h"
+#include "is_mesh.h"
 
 namespace is_mesh
 {
@@ -44,5 +45,38 @@ namespace is_mesh
 
     void Tetrahedron::label(unsigned int _label) {
         l = _label;
+    }
+
+    double Tetrahedron::volume() {
+        SimplexSet<NodeKey> nids = node_keys();
+        return Util::volume(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos(), m_mesh->get(nids[3]).get_pos());
+    }
+
+    const SimplexSet<NodeKey> Tetrahedron::node_keys() {
+        const SimplexSet<FaceKey>& fids = face_keys();
+        SimplexSet<NodeKey> nids = m_mesh->get_nodes(fids[0]);
+        nids += m_mesh->get_nodes(fids[1]);
+        return nids;
+
+    }
+
+    double Tetrahedron::volume_destination() {
+        SimplexSet<NodeKey> nids = node_keys();
+        return Util::volume(m_mesh->get(nids[0]).get_destination(), m_mesh->get(nids[1]).get_destination(), m_mesh->get(nids[2]).get_destination(), m_mesh->get(nids[3]).get_destination());
+    }
+
+    vec3 Tetrahedron::barycenter() {
+        SimplexSet<NodeKey> nids = node_keys();
+        return Util::barycenter(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos(), m_mesh->get(nids[3]).get_pos());
+    }
+
+    vec3 Tetrahedron::barycenter_destination() {
+        SimplexSet<NodeKey> nids = node_keys();
+        return Util::barycenter(m_mesh->get(nids[0]).get_destination(), m_mesh->get(nids[1]).get_destination(), m_mesh->get(nids[2]).get_destination(), m_mesh->get(nids[3]).get_destination());
+    }
+
+    double Tetrahedron::quality() {
+        SimplexSet<NodeKey> nids = node_keys();
+        return fabs(Util::quality(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos(), m_mesh->get(nids[3]).get_pos()));
     }
 }

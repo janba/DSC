@@ -18,6 +18,10 @@
 #include "face.h"
 #include "is_mesh.h"
 
+#include <algorithm>
+#include <utility>
+#include <cmath>
+
 namespace is_mesh
 {
     Face::Face(ISMesh *owner) : Simplex<EdgeKey, TetrahedronKey>(owner) {
@@ -63,10 +67,38 @@ namespace is_mesh
         return Util::area(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos());
     }
 
-    const SimplexSet<NodeKey> & Face::node_keys() const{
+    const SimplexSet<NodeKey> Face::node_keys() const{
         const SimplexSet<EdgeKey>& eids = edge_keys();
         SimplexSet<NodeKey> nids = m_mesh->get_nodes(eids[0]);
         nids += m_mesh->get_nodes(eids[1]);
         return nids;
     }
+
+    double Face::area_destination() {
+        const SimplexSet<NodeKey>& nids = node_keys();
+        return Util::area(m_mesh->get(nids[0]).get_destination(), m_mesh->get(nids[1]).get_destination(), m_mesh->get(nids[2]).get_destination());
+    }
+
+    double Face::min_angle() {
+        SimplexSet<NodeKey> nids = node_keys();
+        return Util::min_angle(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos());
+    }
+
+    double Face::max_angle() {
+        SimplexSet<NodeKey> nids = node_keys();
+        return Util::max_angle(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos());
+    }
+
+    double Face::quality() {
+        SimplexSet<NodeKey> nids = node_keys();
+        auto angles = Util::cos_angles(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos());
+        double worst_a = -INFINITY;
+        for(double a : angles)
+        {
+            worst_a = std::max(worst_a, fabs(a));
+        }
+        return 1. - worst_a;
+    }
+
+
 }

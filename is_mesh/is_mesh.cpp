@@ -997,6 +997,14 @@ namespace is_mesh{
         flip(eid[0], fid1, fid2);
     }
 
+    double ISMesh::volume_destination(const SimplexSet<NodeKey>& nids) {
+        return Util::volume(get(nids[0]).get_destination(), get(nids[1]).get_destination(), get(nids[2]).get_destination(), get(nids[3]).get_destination());
+    }
+
+    double ISMesh::signed_volume_destination(const SimplexSet<NodeKey>& nids) {
+        return Util::signed_volume(get(nids[0]).get_destination(), get(nids[1]).get_destination(), get(nids[2]).get_destination(), get(nids[3]).get_destination());
+    }
+
     void ISMesh::garbage_collect() {
         GarbageCollectDeletions res {
             m_node_kernel->garbage_collect(),

@@ -32,9 +32,20 @@ namespace is_mesh
 
         const SimplexSet<FaceKey> & face_keys() const;
 
+        const SimplexSet<NodeKey> node_keys();
+
         int label();
 
         void label(unsigned int _label);
+
+        double volume();
+
+        double volume_destination();
+
+        vec3 barycenter();
+        vec3 barycenter_destination();
+
+        double quality();
 
         friend class ISMesh;
     };

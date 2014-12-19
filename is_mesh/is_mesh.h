@@ -435,6 +435,10 @@ namespace is_mesh {
         ///////////////////////
     public:
 
+        double volume_destination(const is_mesh::SimplexSet<is_mesh::NodeKey>& nids);
+
+        double signed_volume_destination(const is_mesh::SimplexSet<is_mesh::NodeKey>& nids);
+
         void garbage_collect();
 
         virtual void scale(const vec3& s);

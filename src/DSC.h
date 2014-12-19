@@ -410,28 +410,40 @@ namespace DSC {
         DEPRECATED // use Face::area()
         double area(const is_mesh::FaceKey& fid);
 
+        DEPRECATED // use Face::area_destination()
         double area_destination(const is_mesh::FaceKey& fid);
 
+        DEPRECATED // use Tetrahedron::volume()
         double volume(const is_mesh::TetrahedronKey& tid);
 
+        DEPRECATED // use Tetrahedron::volume_destination()
         double volume_destination(const is_mesh::TetrahedronKey& tid);
 
+        DEPRECATED // use ISMesh::volume_destination(nids)
         double volume_destination(const is_mesh::SimplexSet<is_mesh::NodeKey>& nids);
 
+        DEPRECATED // use ISMesh::signed_volume_destination(nids)
         double signed_volume_destination(const is_mesh::SimplexSet<is_mesh::NodeKey>& nids);
 
+        DEPRECATED // use Tetrahedron::barycenter()
         vec3 barycenter(const is_mesh::TetrahedronKey& tid);
 
+        DEPRECATED // use Tetrahedron::barycenter_destination()
         vec3 barycenter_destination(const is_mesh::TetrahedronKey& tid);
 
+        DEPRECATED // use Tetrahedron::quality()
         double quality(const is_mesh::TetrahedronKey& tid);
 
+        DEPRECATED // use Face::min_angle()
         double min_angle(const is_mesh::FaceKey& fid);
 
+        DEPRECATED // use Face::max_angle()
         double max_angle(const is_mesh::FaceKey& fid);
 
+        DEPRECATED // use Face::quality()
         double quality(const is_mesh::FaceKey& fid);
 
+        DEPRECATED // use Face::quality()
         double quality(const is_mesh::EdgeKey& eid);
         /**
         * Returns the largest face in the simplex set.

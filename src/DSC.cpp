@@ -1340,62 +1340,47 @@ namespace DSC {
     }
 
     double DeformableSimplicialComplex::area_destination(const FaceKey& fid) {
-        SimplexSet<NodeKey> nids = is_mesh.get_nodes(fid);
-        return Util::area(is_mesh.get(nids[0]).get_destination(), is_mesh.get(nids[1]).get_destination(), is_mesh.get(nids[2]).get_destination());
+        return is_mesh.get(fid).area_destination();
     }
 
     double DeformableSimplicialComplex::volume(const TetrahedronKey& tid) {
-        SimplexSet<NodeKey> nids = is_mesh.get_nodes(tid);
-        return Util::volume(is_mesh.get(nids[0]).get_pos(), is_mesh.get(nids[1]).get_pos(), is_mesh.get(nids[2]).get_pos(), is_mesh.get(nids[3]).get_pos());
+        return is_mesh.get(tid).volume();
     }
 
     double DeformableSimplicialComplex::volume_destination(const TetrahedronKey& tid) {
-        SimplexSet<NodeKey> nids = is_mesh.get_nodes(tid);
-        return Util::volume(is_mesh.get(nids[0]).get_destination(), is_mesh.get(nids[1]).get_destination(), is_mesh.get(nids[2]).get_destination(), is_mesh.get(nids[3]).get_destination());
+        return is_mesh.get(tid).volume_destination();
     }
 
     double DeformableSimplicialComplex::volume_destination(const SimplexSet<NodeKey>& nids) {
-        return Util::volume(is_mesh.get(nids[0]).get_destination(), is_mesh.get(nids[1]).get_destination(), is_mesh.get(nids[2]).get_destination(), is_mesh.get(nids[3]).get_destination());
+        return is_mesh.volume_destination(nids);
     }
 
     double DeformableSimplicialComplex::signed_volume_destination(const SimplexSet<NodeKey>& nids) {
-        return Util::signed_volume(is_mesh.get(nids[0]).get_destination(), is_mesh.get(nids[1]).get_destination(), is_mesh.get(nids[2]).get_destination(), is_mesh.get(nids[3]).get_destination());
+        return is_mesh.signed_volume_destination(nids);
     }
 
     vec3 DeformableSimplicialComplex::barycenter(const TetrahedronKey& tid) {
-        SimplexSet<NodeKey> nids = is_mesh.get_nodes(tid);
-        return Util::barycenter(is_mesh.get(nids[0]).get_pos(), is_mesh.get(nids[1]).get_pos(), is_mesh.get(nids[2]).get_pos(), is_mesh.get(nids[3]).get_pos());
+        return is_mesh.get(tid).barycenter();
     }
 
     vec3 DeformableSimplicialComplex::barycenter_destination(const TetrahedronKey& tid) {
-        SimplexSet<NodeKey> nids = is_mesh.get_nodes(tid);
-        return Util::barycenter(is_mesh.get(nids[0]).get_destination(), is_mesh.get(nids[1]).get_destination(), is_mesh.get(nids[2]).get_destination(), is_mesh.get(nids[3]).get_destination());
+        return is_mesh.get(tid).barycenter_destination();
     }
 
     double DeformableSimplicialComplex::quality(const TetrahedronKey& tid) {
-        SimplexSet<NodeKey> nids = is_mesh.get_nodes(tid);
-        return abs(Util::quality(is_mesh.get(nids[0]).get_pos(), is_mesh.get(nids[1]).get_pos(), is_mesh.get(nids[2]).get_pos(), is_mesh.get(nids[3]).get_pos()));
+        return is_mesh.get(tid).quality();
     }
 
     double DeformableSimplicialComplex::min_angle(const FaceKey& fid) {
-        SimplexSet<NodeKey> nids = is_mesh.get_nodes(fid);
-        return Util::min_angle(is_mesh.get(nids[0]).get_pos(), is_mesh.get(nids[1]).get_pos(), is_mesh.get(nids[2]).get_pos());
+        return is_mesh.get(fid).min_angle();
     }
 
     double DeformableSimplicialComplex::max_angle(const FaceKey& fid) {
-        SimplexSet<NodeKey> nids = is_mesh.get_nodes(fid);
-        return Util::max_angle(is_mesh.get(nids[0]).get_pos(), is_mesh.get(nids[1]).get_pos(), is_mesh.get(nids[2]).get_pos());
+        return is_mesh.get(fid).max_angle();
     }
 
     double DeformableSimplicialComplex::quality(const FaceKey& fid) {
-        SimplexSet<NodeKey> nids = is_mesh.get_nodes(fid);
-        auto angles = Util::cos_angles(is_mesh.get(nids[0]).get_pos(), is_mesh.get(nids[1]).get_pos(), is_mesh.get(nids[2]).get_pos());
-        double worst_a = -INFINITY;
-        for(auto a : angles)
-        {
-            worst_a = max(worst_a, abs(a));
-        }
-        return 1. - worst_a;
+        return is_mesh.get(fid).quality();
     }
 
     double DeformableSimplicialComplex::quality(const EdgeKey& eid) {
