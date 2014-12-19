@@ -422,7 +422,7 @@ namespace DSC {
         vector<TetrahedronKey> tets;
         for (auto tit = is_mesh.tetrahedra_begin(); tit != is_mesh.tetrahedra_end(); tit++)
         {
-            if (quality(tit.key()) < pars.MIN_TET_QUALITY)
+            if (tit->quality() < pars.MIN_TET_QUALITY)
             {
                 tets.push_back(tit.key());
             }
@@ -432,7 +432,7 @@ namespace DSC {
         int i = 0, j = 0, k = 0;
         for (auto &t : tets)
         {
-            if (is_unsafe_editable(t) && quality(t) < pars.MIN_TET_QUALITY)
+            if (is_unsafe_editable(t) && is_mesh.get(t).quality() < pars.MIN_TET_QUALITY)
             {
                 for (auto e : is_mesh.get_edges(t))
                 {
@@ -562,7 +562,7 @@ namespace DSC {
         vector<TetrahedronKey> tets;
         for (auto tit = is_mesh.tetrahedra_begin(); tit != is_mesh.tetrahedra_end(); tit++)
         {
-            if (quality(tit.key()) < pars.MIN_TET_QUALITY)
+            if (tit->quality() < pars.MIN_TET_QUALITY)
             {
                 tets.push_back(tit.key());
             }
@@ -573,7 +573,7 @@ namespace DSC {
         int i = 0, j = 0;
         for (auto &t : tets)
         {
-            if (is_unsafe_editable(t) && quality(t) < pars.MIN_TET_QUALITY)
+            if (is_unsafe_editable(t) && is_mesh.get(t).quality() < pars.MIN_TET_QUALITY)
             {
                 for (auto f : is_mesh.get_faces(t))
                 {
@@ -634,7 +634,7 @@ namespace DSC {
         vector<TetrahedronKey> tetrahedra;
         for (auto tit = is_mesh.tetrahedra_begin(); tit != is_mesh.tetrahedra_end(); tit++)
         {
-            if (volume(tit.key()) > pars.MAX_VOLUME*AVG_VOLUME)
+            if (tit->volume() > pars.MAX_VOLUME*AVG_VOLUME)
             {
                 tetrahedra.push_back(tit.key());
             }
@@ -642,7 +642,7 @@ namespace DSC {
         int i = 0;
         for(auto &t : tetrahedra)
         {
-            if (is_unsafe_editable(t) && volume(t) > pars.MAX_VOLUME*AVG_VOLUME)
+            if (is_unsafe_editable(t) && is_mesh.get(t).volume() > pars.MAX_VOLUME*AVG_VOLUME)
             {
                 split(t);
                 i++;
@@ -693,7 +693,7 @@ namespace DSC {
         vector<TetrahedronKey> tetrahedra;
         for (auto tit = is_mesh.tetrahedra_begin(); tit != is_mesh.tetrahedra_end(); tit++)
         {
-            if (volume(tit.key()) < pars.MIN_VOLUME*AVG_VOLUME)
+            if (tit->volume() < pars.MIN_VOLUME*AVG_VOLUME)
             {
                 tetrahedra.push_back(tit.key());
             }
@@ -701,7 +701,7 @@ namespace DSC {
         int i = 0, j = 0;
         for(auto &t : tetrahedra)
         {
-            if (is_unsafe_editable(t) && volume(t) < pars.MIN_VOLUME*AVG_VOLUME)
+            if (is_unsafe_editable(t) && is_mesh.get(t).volume() < pars.MIN_VOLUME*AVG_VOLUME)
             {
                 if(collapse(t))
                 {
@@ -747,7 +747,7 @@ namespace DSC {
 
         for (auto fit = is_mesh.faces_begin(); fit != is_mesh.faces_end(); fit++)
         {
-            if(quality(fit.key()) < pars.DEG_FACE_QUALITY)
+            if(fit->quality() < pars.DEG_FACE_QUALITY)
             {
                 faces.push_back(fit.key());
             }
@@ -756,7 +756,7 @@ namespace DSC {
         int i = 0, j = 0;
         for (auto &f : faces)
         {
-            if (is_mesh.exists(f) && quality(f) < pars.DEG_FACE_QUALITY && !collapse(f))
+            if (is_mesh.exists(f) && is_mesh.get(f).quality() < pars.DEG_FACE_QUALITY && !collapse(f))
             {
                 if(collapse(f, false))
                 {
@@ -783,7 +783,7 @@ namespace DSC {
 
         for (auto tit = is_mesh.tetrahedra_begin(); tit != is_mesh.tetrahedra_end(); tit++)
         {
-            if (quality(tit.key()) < pars.DEG_TET_QUALITY)
+            if (tit->quality() < pars.DEG_TET_QUALITY)
             {
                 tets.push_back(tit.key());
             }
@@ -791,7 +791,7 @@ namespace DSC {
         int i = 0, j = 0;
         for (auto &t : tets)
         {
-            if (is_mesh.exists(t) && quality(t) < pars.DEG_TET_QUALITY && !collapse(t))
+            if (is_mesh.exists(t) && is_mesh.get(t).quality() < pars.DEG_TET_QUALITY && !collapse(t))
             {
                 if(collapse(t, false))
                 {
@@ -813,7 +813,7 @@ namespace DSC {
         is_mesh.garbage_collect();
     }
 
-    void DeformableSimplicialComplex::remove_edges() {
+    void DeformableSimplicialComplex::remove_low_quality_edges() {
         list<EdgeKey> edges;
         for (auto eit = is_mesh.edges_begin(); eit != is_mesh.edges_end(); eit++)
         {
@@ -842,7 +842,7 @@ namespace DSC {
 
     bool DeformableSimplicialComplex::remove_cap(const FaceKey& fid) {
         // Find longest edge
-        EdgeKey eid = longest_edge(is_mesh.get_edges(fid));
+        EdgeKey eid = is_mesh.get(fid).longest_edge();
 
         // Find apex
         NodeKey apex = (is_mesh.get_nodes(fid) - is_mesh.get_nodes(eid)).front();
@@ -856,7 +856,6 @@ namespace DSC {
         // Collapse new edge
         EdgeKey e_rem = is_mesh.get_edge(apex, n);
         return collapse(e_rem);
-
     }
 
     bool DeformableSimplicialComplex::remove_needle(const FaceKey& fid) {
@@ -868,19 +867,19 @@ namespace DSC {
     }
 
     bool DeformableSimplicialComplex::remove_face(const FaceKey& f) {
-        if(max_angle(f) > 0.9*M_PI)
+        if(is_mesh.get(f).max_angle() > 0.9*M_PI)
         {
             return remove_cap(f);
         }
         return remove_needle(f);
     }
 
-    void DeformableSimplicialComplex::remove_faces() {
+    void DeformableSimplicialComplex::remove_low_quality_faces() {
         list<FaceKey> faces;
 
         for (auto fit = is_mesh.faces_begin(); fit != is_mesh.faces_end(); fit++)
         {
-            if(quality(fit.key()) < pars.MIN_FACE_QUALITY)
+            if(fit->quality() < pars.MIN_FACE_QUALITY)
             {
                 faces.push_back(fit.key());
             }
@@ -889,7 +888,7 @@ namespace DSC {
         int i = 0, j = 0;
         for (auto &f : faces)
         {
-            if (is_unsafe_editable(f) && quality(f) < pars.MIN_FACE_QUALITY)
+            if (is_unsafe_editable(f) && is_mesh.get(f).quality() < pars.MIN_FACE_QUALITY)
             {
                 if(remove_face(f))
                 {
@@ -947,8 +946,8 @@ namespace DSC {
         topological_face_removal();
 
         //            remove_tets();
-        //            remove_faces();
-        //            remove_edges();
+        //            remove_low_quality_faces();
+        //            remove_low_quality_edges();
 
         remove_degenerate_tets();
         remove_degenerate_faces();
@@ -1436,7 +1435,7 @@ namespace DSC {
         double q_min = INFINITY;
         for (auto t : tids)
         {
-            q_min = Util::min(quality(t), q_min);
+            q_min = Util::min(is_mesh.get(t).quality(), q_min);
         }
         return q_min;
     }
@@ -1578,7 +1577,7 @@ namespace DSC {
 
         for (auto tit = is_mesh.tetrahedra_begin(); tit != is_mesh.tetrahedra_end(); tit++)
         {
-            double q = quality(tit.key());
+            double q = tit->quality();
             min_quality = Util::min(min_quality, q);
             int index = static_cast<int>(floor(q*100.));
 #ifdef DEBUG
@@ -1614,7 +1613,7 @@ namespace DSC {
         double min_q = INFINITY;
         for (auto tit = is_mesh.tetrahedra_begin(); tit != is_mesh.tetrahedra_end(); tit++)
         {
-            min_q = Util::min(min_q, quality(tit.key()));
+            min_q = Util::min(min_q, tit->quality());
         }
         return min_q;
     }

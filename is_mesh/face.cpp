@@ -101,4 +101,18 @@ namespace is_mesh
     }
 
 
+    EdgeKey Face::longest_edge() {
+        double max_l = -INFINITY;
+        EdgeKey max_e;
+        for(auto e : edge_keys())
+        {
+            double l = m_mesh->get(e).length();
+            if(l > max_l)
+            {
+                max_l = l;
+                max_e = e;
+            }
+        }
+        return max_e;
+    }
 }

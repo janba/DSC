@@ -258,7 +258,7 @@ namespace DSC {
         /**
         * Attempt to remove edges with worse quality than MIN_EDGE_QUALITY by safely collapsing them.
         */
-        void remove_edges();
+        void remove_low_quality_edges();
         /**
         * Attempt to remove the cap f by splitting the longest edge and collapsing it with cap's apex.
         */
@@ -274,7 +274,7 @@ namespace DSC {
         /**
         * Attempts to remove degenerate faces (faces with a minimum angle smaller than MIN_ANGLE).
         */
-        void remove_faces();
+        void remove_low_quality_faces();
 
         ///////////////
         // SMOOTHING //
@@ -443,7 +443,6 @@ namespace DSC {
         DEPRECATED // use Face::quality()
         double quality(const is_mesh::FaceKey& fid);
 
-        DEPRECATED // use Face::quality()
         double quality(const is_mesh::EdgeKey& eid);
         /**
         * Returns the largest face in the simplex set.

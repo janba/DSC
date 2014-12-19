@@ -49,6 +49,8 @@ namespace is_mesh
         double max_angle();
 
         double quality();
+
+        EdgeKey longest_edge();
     private:
         void set_boundary(bool b);
 

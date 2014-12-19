@@ -429,7 +429,7 @@ namespace is_mesh {
         void flip_22(const FaceKey& fid1, const FaceKey& fid2);
 
         void flip_44(const FaceKey& fid1, const FaceKey& fid2);
-        
+
         ///////////////////////
         // UTILITY FUNCTIONS //
         ///////////////////////
