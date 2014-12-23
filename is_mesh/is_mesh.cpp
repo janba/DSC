@@ -88,10 +88,15 @@ namespace is_mesh{
         return m_tetrahedron_kernel->end();
     }
 
-    void ISMesh::set_label(const TetrahedronKey& tid, int label) {
-        get(tid).label(label);
+    void ISMesh::set_label(const TetrahedronKey& tid, int newLabel) {
+        int oldLabel = get(tid).label();
+        get(tid).label(newLabel);
         SimplexSet<TetrahedronKey> tids = {tid};
         update(tids);
+
+        for (auto & l : m_set_label_listeners){
+            l.second(tid, oldLabel);
+        }
     }
 
     bool ISMesh::create(const vector<vec3>& points, const vector<int>& tets) {
@@ -1155,5 +1160,16 @@ namespace is_mesh{
 
     bool ISMesh::remove_gc_listener(long id) {
         return m_gc_listeners.erase(id)>0;
+    }
+
+    long ISMesh::add_label_listener(std::function<void(const TetrahedronKey &tid, unsigned int oldValue)> fn) {
+        static long globalId = 0;
+        globalId++;
+        m_set_label_listeners[globalId] = fn;
+        return globalId;
+    }
+
+    bool ISMesh::remove_label_listener(long id) {
+        return m_set_label_listeners.erase(id) > 0;
     }
 }

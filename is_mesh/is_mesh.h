@@ -40,6 +40,7 @@ namespace is_mesh {
         kernel<TetrahedronKey,Tetrahedron>* m_tetrahedron_kernel;
 
         std::map<long,std::function<void(const GarbageCollectDeletions&)>> m_gc_listeners;
+        std::map<long,std::function<void(const TetrahedronKey& tid, unsigned int oldValue)>> m_set_label_listeners;
     public:
         ISMesh(std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels);
 
@@ -455,6 +456,10 @@ namespace is_mesh {
 
         // remove listener by id
         bool remove_gc_listener(long id);
+
+        long add_label_listener(std::function<void(const TetrahedronKey& tid, unsigned int oldValue)> fn);
+
+        bool remove_label_listener(long id);
 
         friend class Node;
         friend class Edge;
