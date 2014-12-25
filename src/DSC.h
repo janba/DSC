@@ -93,7 +93,7 @@ namespace DSC {
 
         is_mesh::ISMesh & get_is_mesh();
 
-        virtual void set_avg_edge_length(double avg_edge_length = 0.);
+        void set_avg_edge_length(double avg_edge_length = 0.);
 
         void set_parameters(parameters pars_);
 
@@ -175,7 +175,6 @@ namespace DSC {
         */
         double build_table(const is_mesh::EdgeKey& e, const is_mesh::SimplexSet<is_mesh::NodeKey>& polygon, std::vector<std::vector<int>>& K);
 
-
         is_mesh::NodeKey get_next(const is_mesh::NodeKey& nid, is_mesh::SimplexSet<is_mesh::EdgeKey>& eids);
 
         is_mesh::SimplexSet<is_mesh::NodeKey> get_polygon(is_mesh::SimplexSet<is_mesh::EdgeKey>& eids);
@@ -194,7 +193,6 @@ namespace DSC {
         void topological_boundary_edge_removal(const is_mesh::SimplexSet<is_mesh::NodeKey>& polygon1, const is_mesh::SimplexSet<is_mesh::NodeKey>& polygon2, const is_mesh::EdgeKey& eid, std::vector<std::vector<int>>& K1, std::vector<std::vector<int>>& K2);
 
         bool topological_boundary_edge_removal(const is_mesh::EdgeKey& eid);
-
 
         void topological_edge_removal();
         

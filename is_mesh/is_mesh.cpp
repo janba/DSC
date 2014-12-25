@@ -688,7 +688,9 @@ namespace is_mesh{
     }
 
     void ISMesh::update_split(const NodeKey& nid_new, const NodeKey& nid1, const NodeKey& nid2) {
-        // default behavior is to do nothing
+        for (auto & sl : m_split_listeners){
+            sl.second(nid_new, nid1, nid2);
+        }
     }
 
     NodeKey ISMesh::split(const EdgeKey& eid, const vec3& pos, const vec3& destination) {
@@ -752,6 +754,10 @@ namespace is_mesh{
         Node& node_removed = get(nid_removed);
         node.set_pos((1.-weight) * node.get_pos() + weight * node_removed.get_pos());
         node.set_destination((1.-weight) * node.get_destination() + weight * node_removed.get_destination());
+
+        for (auto & c : m_collapse_listeners){
+            c.second(nid, nid_removed, weight);
+        }
     }
 
     void ISMesh::collapse(const EdgeKey& eid, const NodeKey& nid, double weight) {
@@ -1171,5 +1177,27 @@ namespace is_mesh{
 
     bool ISMesh::remove_label_listener(long id) {
         return m_set_label_listeners.erase(id) > 0;
+    }
+
+    long ISMesh::add_split_listener(std::function<void(const NodeKey &nid_new, const NodeKey &nid1, const NodeKey &nid2)> fn) {
+        static long globalId = 0;
+        globalId++;
+        m_split_listeners[globalId] = fn;
+        return globalId;
+    }
+
+    bool ISMesh::remove_split_listener(long id) {
+        return m_split_listeners.erase(id) > 0;
+    }
+
+    long ISMesh::add_collapse_listener(std::function<void(const NodeKey &nid, const NodeKey &nid_removed, double weight)> fn) {
+        static long globalId = 0;
+        globalId++;
+        m_collapse_listeners[globalId] = fn;
+        return globalId;
+    }
+
+    bool ISMesh::remove_collapse_listener(long id) {
+        return m_collapse_listeners.erase(id) > 0;
     }
 }

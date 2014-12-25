@@ -41,6 +41,8 @@ namespace is_mesh {
 
         std::map<long,std::function<void(const GarbageCollectDeletions&)>> m_gc_listeners;
         std::map<long,std::function<void(const TetrahedronKey& tid, unsigned int oldValue)>> m_set_label_listeners;
+        std::map<long,std::function<void(const NodeKey& nid_new, const NodeKey& nid1, const NodeKey& nid2)>> m_split_listeners;
+        std::map<long,std::function<void(const NodeKey& nid, const NodeKey& nid_removed, double weight)>> m_collapse_listeners;
     public:
         ISMesh(std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels);
 
@@ -83,7 +85,7 @@ namespace is_mesh {
         typename kernel<TetrahedronKey,Tetrahedron>::iterator tetrahedra_end();
 
     public:
-        virtual void set_label(const TetrahedronKey& tid, int label);
+        void set_label(const TetrahedronKey& tid, int label);
 
     private:
 
@@ -410,11 +412,11 @@ namespace is_mesh {
         
     public:
 
-        virtual void update_split(const NodeKey& nid_new, const NodeKey& nid1, const NodeKey& nid2);
+        void update_split(const NodeKey& nid_new, const NodeKey& nid1, const NodeKey& nid2);
 
         NodeKey split(const EdgeKey& eid, const vec3& pos, const vec3& destination);
 
-        virtual void update_collapse(const NodeKey& nid, const NodeKey& nid_removed, double weight);
+        void update_collapse(const NodeKey& nid, const NodeKey& nid_removed, double weight);
         /**
         *  Collapses the edge eid. The node nid must be adjacent to eid before the collapse. The node nid survives, while the other is removed. The weight parameter specifies how the attributes of the old nodes are weighted in the surviving node. For example the position of the surviving node is given by (1.-weight)*get(nid).get_pos() + weight*get(nid_remove).get_pos(). This means that if weight is 0, the surviving node retain its attributes.
         */
@@ -460,6 +462,14 @@ namespace is_mesh {
         long add_label_listener(std::function<void(const TetrahedronKey& tid, unsigned int oldValue)> fn);
 
         bool remove_label_listener(long id);
+
+        long add_split_listener(std::function<void(const NodeKey& nid_new, const NodeKey& nid1, const NodeKey& nid2)> fn);
+
+        bool remove_split_listener(long id);
+
+        long add_collapse_listener(std::function<void(const NodeKey& nid, const NodeKey& nid_removed, double weight)> fn);
+
+        bool remove_collapse_listener(long id);
 
         friend class Node;
         friend class Edge;
