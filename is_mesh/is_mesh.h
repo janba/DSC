@@ -45,7 +45,7 @@ namespace is_mesh {
         std::map<long,std::function<void(const NodeKey& nid, const NodeKey& nid_removed, double weight)>> m_collapse_listeners;
     public:
         ISMesh(std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels);
-
+        ISMesh(const ISMesh&) = delete;
         ~ISMesh();
 
         unsigned int get_no_nodes() const;
