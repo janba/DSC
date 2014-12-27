@@ -110,21 +110,37 @@ namespace DSC {
         /////////////////////////
         
     protected:
-
+        /**
+        * key exists and is non boundary
+        */
         virtual bool is_unsafe_editable(const is_mesh::NodeKey& nid);
-
+        /**
+        * key exists and is non boundary
+        */
         virtual bool is_unsafe_editable(const is_mesh::EdgeKey& eid);
-
+        /**
+        * key exists and is non boundary
+        */
         virtual bool is_unsafe_editable(const is_mesh::FaceKey& fid);
-
+        /**
+        * key exists
+        */
         virtual bool is_unsafe_editable(const is_mesh::TetrahedronKey& tid);
-
+        /**
+        * key exists and is non interface
+        */
         virtual bool is_safe_editable(const is_mesh::NodeKey& nid);
-
+        /**
+        * key exists and is non interface
+        */
         virtual bool is_safe_editable(const is_mesh::EdgeKey& eid);
-
+        /**
+        * key exists and is non interface
+        */
         virtual bool is_safe_editable(const is_mesh::FaceKey& fid);
-
+        /**
+        * key exists
+        */
         virtual bool is_safe_editable(const is_mesh::TetrahedronKey& tid);
 
     public:
@@ -283,6 +299,9 @@ namespace DSC {
         */
         bool smart_laplacian(const is_mesh::NodeKey& nid, double alpha = 1.);
 
+        /**
+        * Performs smart_laplacian smoothing on all editable nodes
+        */
         void smooth();
         
         ///////////////////

@@ -144,10 +144,11 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::set_pos(const NodeKey& nid, const vec3& p) {
-        is_mesh.get(nid).set_pos(p);
+        auto & n = is_mesh.get(nid);
+        n.set_pos(p);
         if(!is_movable(nid))
         {
-            is_mesh.get(nid).set_destination(p);
+            n.set_destination(p);
         }
     }
 
@@ -1011,7 +1012,7 @@ namespace DSC {
     bool DeformableSimplicialComplex::move_vertex(const NodeKey & n) {
         Node & node = is_mesh.get(n);
         vec3 pos = node.get_pos();
-        vec3 destination = node .get_destination();
+        vec3 destination = node.get_destination();
         double l = Util::length(destination - pos);
 
         if (l < 1e-4*AVG_LENGTH) // The vertex is not moved
@@ -1075,12 +1076,13 @@ namespace DSC {
         SimplexSet<FaceKey> fids;
         for(auto f : is_mesh.get_faces(eid))
         {
-            if (is_mesh.get(f).is_interface() || is_mesh.get(f).is_boundary())
+            auto & ff = is_mesh.get(f);
+            if (ff.is_interface() || ff.is_boundary())
             {
                 fids += f;
             }
         }
-        if(fids.size() != 2)
+        if (fids.size() != 2)
         {
             return false;
         }
