@@ -62,27 +62,27 @@ namespace is_mesh {
     public:
         NodeIterator nodes() const;
 
-        typename kernel<NodeKey,Node>::iterator nodes_begin();
+        kernel<NodeKey,Node>::iterator nodes_begin();
 
-        typename kernel<NodeKey,Node>::iterator nodes_end();
+        kernel<NodeKey,Node>::iterator nodes_end();
 
         EdgeIterator edges() const;
 
-        typename kernel<EdgeKey,Edge>::iterator edges_begin();
+        kernel<EdgeKey,Edge>::iterator edges_begin();
 
-        typename kernel<EdgeKey,Edge>::iterator edges_end();
+        kernel<EdgeKey,Edge>::iterator edges_end();
 
         FaceIterator faces() const;
 
-        typename kernel<FaceKey,Face>::iterator faces_begin();
+        kernel<FaceKey,Face>::iterator faces_begin();
 
-        typename kernel<FaceKey,Face>::iterator faces_end();
+        kernel<FaceKey,Face>::iterator faces_end();
 
         TetrahedronIterator tetrahedra() const;
 
-        typename kernel<TetrahedronKey,Tetrahedron>::iterator tetrahedra_begin();
+        kernel<TetrahedronKey,Tetrahedron>::iterator tetrahedra_begin();
 
-        typename kernel<TetrahedronKey,Tetrahedron>::iterator tetrahedra_end();
+        kernel<TetrahedronKey,Tetrahedron>::iterator tetrahedra_end();
 
     public:
         void set_label(const TetrahedronKey& tid, int label);
