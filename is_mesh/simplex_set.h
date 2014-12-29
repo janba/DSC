@@ -120,16 +120,19 @@ namespace is_mesh
         
         void push_front(const key_type& k)
         {
+            assert(!contains(k));
             set.insert(set.begin(), k);
         }
         
         void push_back(const key_type& k)
         {
+            assert(!contains(k));
             set.push_back(k);
         }
         
         void push_back(key_type&& k)
         {
+            assert(!contains(k));
             set.push_back(std::move(k));
         }
         
@@ -190,6 +193,20 @@ namespace is_mesh
                 set.erase(iter);
             }
             return *this;
+        }
+
+        bool operator==(const key_type& key)
+        {
+            if (set.size() != key.set.size()){
+                return false;
+            }
+            for (auto k : set){
+                if (!key.contains(k)){
+                    return false;
+                }
+            }
+
+            return true;
         }
     };
     

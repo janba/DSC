@@ -75,7 +75,8 @@ namespace DSC {
         
         // Should be eliminated
         double FLIP_EDGE_INTERFACE_FLATNESS = 0.995;
-        
+
+
         parameters pars;
         
         //////////////////////////
@@ -97,7 +98,10 @@ namespace DSC {
 
         void set_parameters(parameters pars_);
 
-        void set_design_domain(is_mesh::Geometry *geometry);
+        DEPRECATED // Use add_design_domain
+        void set_design_domain(is_mesh::Geometry *geometry) { add_design_domain(geometry); }
+
+        void add_design_domain(is_mesh::Geometry *geometry);
 
         virtual void set_labels(const is_mesh::Geometry& geometry, int label);
 

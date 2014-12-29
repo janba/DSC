@@ -7,14 +7,13 @@ using namespace std;
 namespace DSC {
 
     DeformableSimplicialComplex::DeformableSimplicialComplex(vector<vec3> & points, vector<int> & tets, const vector<int>& tet_labels)
-            : is_mesh(points, tets, tet_labels) {
-                pars = {0.1, 0.5, 0.0005, 0.015, 0.02, 0.3, 0., 2., 0.2, 5., 0.2, INFINITY};
-                set_avg_edge_length();
-            }
-
+            : is_mesh(points, tets, tet_labels)
+    {
+        pars = {0.1, 0.5, 0.0005, 0.015, 0.02, 0.3, 0., 2., 0.2, 5., 0.2, INFINITY};
+        set_avg_edge_length();
+    }
 
     DeformableSimplicialComplex::~DeformableSimplicialComplex() {
-
     }
 
     void DeformableSimplicialComplex::set_avg_edge_length(double avg_edge_length) {
@@ -34,7 +33,7 @@ namespace DSC {
         pars = pars_;
     }
 
-    void DeformableSimplicialComplex::set_design_domain(Geometry *geometry) {
+    void DeformableSimplicialComplex::add_design_domain(Geometry *geometry) {
         design_domain.add_geometry(geometry);
     }
 
@@ -1874,4 +1873,6 @@ namespace DSC {
     is_mesh::ISMesh &DeformableSimplicialComplex::get_is_mesh() {
         return is_mesh;
     }
+
+
 }
