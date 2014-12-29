@@ -51,6 +51,8 @@ namespace is_mesh
         double quality();
 
         EdgeKey longest_edge();
+
+        vec3 barycenter();
     private:
         void set_boundary(bool b);
 

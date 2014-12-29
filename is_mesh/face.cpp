@@ -115,4 +115,9 @@ namespace is_mesh
         }
         return max_e;
     }
+
+    vec3 Face::barycenter() {
+        auto nids = node_keys();
+        return Util::barycenter(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos());
+    }
 }

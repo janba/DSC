@@ -86,7 +86,8 @@ namespace is_mesh
         typedef          iterator const                                 const_iterator;
 
         friend class kernel_iterator<kernel_type>;
-        
+        friend class kernel_iterator_value<kernel_type>;
+
     private:
         std::vector<kernel_element> m_data;
         std::vector<key_type> m_data_freelist;

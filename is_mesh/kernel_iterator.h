@@ -3,6 +3,39 @@
 
 namespace is_mesh
 {
+    template <class kernel_t_>
+    class kernel_iterator_value {
+        typedef typename kernel_t_::kernel_element element_type;
+        typedef typename element_type::value_type value_type;
+        typedef typename element_type::key_type key_type;
+        key_type     m_key;
+        kernel_t_*     m_kernel;
+    public:
+        kernel_iterator_value(key_type m_key, kernel_t_ *m_kernel) : m_key(m_key), m_kernel(m_kernel) {
+        }
+
+        key_type key() const {
+            return m_key;
+        }
+
+        value_type * get()
+        {
+            assert(m_kernel->lookup(key_type{m_key}).state == element_type::VALID);
+            return &m_kernel->m_data[m_key].value;
+        }
+
+        /**
+        * The member access operator.
+        *
+        * @return Pointer to the element contained within the kernel cell.
+        */
+        value_type * operator->()
+        {
+            assert(m_kernel->lookup(key_type{m_key}).state == element_type::VALID);
+            return &m_kernel->m_data[m_key].value;
+        }
+    };
+
     /**
      * An iterator class used by the is_mesh::kernel.
      * The kernel wraps a kernel handle and uses indirect access to the kernel.
@@ -18,17 +51,17 @@ namespace is_mesh
      *
      * @see kernel.
      */
-    template <class key_t_>
+    template <class kernel_t_>
     class kernel_iterator
     {
     private:
-        typedef typename key_t_::kernel_element    element_type;
+        typedef typename kernel_t_::kernel_element element_type;
     public:
-        typedef          key_t_                                       kernel_type;
-        typedef          kernel_iterator<kernel_type>                 iterator;
-        typedef typename kernel_type::kernel_element                  kernel_element;
-        typedef typename element_type::value_type                     value_type;
-        typedef typename element_type::key_type                       key_type;
+        typedef          kernel_t_ kernel_type;
+        typedef          kernel_iterator<kernel_type> iterator;
+        typedef typename kernel_type::kernel_element kernel_element;
+        typedef typename element_type::value_type value_type;
+        typedef typename element_type::key_type key_type;
         
     private:
         
@@ -86,10 +119,9 @@ namespace is_mesh
          *
          * @return The element that is contained within the kernel cell.
          */
-        value_type& operator*()
+        kernel_iterator_value<kernel_t_> operator*()
         {
-            assert(m_kernel->lookup(key_type{m_key}).state == element_type::VALID);
-            return m_kernel->m_data[m_key].value;
+            return kernel_iterator_value<kernel_t_>(key_type{m_key}, m_kernel);
         }
         
         /**

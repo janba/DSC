@@ -420,7 +420,7 @@ void Painter::update(DSC::DeformableSimplicialComplex& dsc)
 void Painter::update_interface(DSC::DeformableSimplicialComplex& dsc)
 {
     std::vector<vec3> data;
-    for (auto fit = dsc.get_is_mesh().faces_begin(); fit != dsc.get_is_mesh().faces_end(); fit++)
+    for (auto fit : dsc.get_is_mesh().faces())
     {
         if (fit->is_interface())
         {
@@ -440,7 +440,7 @@ void Painter::update_interface(DSC::DeformableSimplicialComplex& dsc)
 void Painter::update_wire_frame(DSC::DeformableSimplicialComplex& dsc)
 {
     std::vector<vec3> data;
-    for (auto fit = dsc.get_is_mesh().faces_begin(); fit != dsc.get_is_mesh().faces_end(); fit++)
+    for (auto fit : dsc.get_is_mesh().faces())
     {
         if (fit->is_interface())
         {
@@ -460,14 +460,14 @@ void Painter::update_wire_frame(DSC::DeformableSimplicialComplex& dsc)
 void Painter::update_edges(DSC::DeformableSimplicialComplex& dsc)
 {
     std::vector<vec3> data;
-    for (auto eit = dsc.get_is_mesh().edges_begin(); eit != dsc.get_is_mesh().edges_end(); eit++)
+    for (auto eit : dsc.get_is_mesh().edges())
     {
         auto nids = dsc.get_is_mesh().get_nodes(eit.key());
         if(!eit->is_interface())
         {
-            vec3 vector = dsc.get_is_mesh().get_pos(nids[1]) - dsc.get_is_mesh().get_pos(nids[0]);
+            vec3 vector = dsc.get_is_mesh().get(nids[1]).get_pos() - dsc.get_is_mesh().get(nids[0]).get_pos();
             
-            data.push_back(dsc.get_is_mesh().get_pos(nids[0]));
+            data.push_back(dsc.get_is_mesh().get(nids[0]).get_pos());
             data.push_back(vector);
         }
     }
@@ -477,7 +477,7 @@ void Painter::update_edges(DSC::DeformableSimplicialComplex& dsc)
 void Painter::update_domain(DSC::DeformableSimplicialComplex& dsc)
 {
     std::vector<vec3> data;
-    for (auto fit = dsc.get_is_mesh().faces_begin(); fit != dsc.get_is_mesh().faces_end(); fit++)
+    for (auto fit : dsc.get_is_mesh().faces())
     {
         if(fit->is_boundary())
         {
@@ -496,9 +496,9 @@ void Painter::update_domain(DSC::DeformableSimplicialComplex& dsc)
 void Painter::update_low_quality(DSC::DeformableSimplicialComplex& dsc)
 {
     std::vector<vec3> data;
-    for (auto tit = dsc.get_is_mesh().tetrahedra_begin(); tit != dsc.get_is_mesh().tetrahedra_end(); tit++)
+    for (auto tit : dsc.get_is_mesh().tetrahedra())
     {
-        if(dsc.quality(tit.key()) < dsc.get_min_tet_quality())
+        if(tit->quality() < dsc.get_min_tet_quality())
         {            
             for (auto f : dsc.get_is_mesh().get_faces(tit.key()))
             {
@@ -507,22 +507,22 @@ void Painter::update_low_quality(DSC::DeformableSimplicialComplex& dsc)
                 
                 for(auto &n : nodes)
                 {
-                    data.push_back(dsc.get_is_mesh().get_pos(n));
+                    data.push_back(dsc.get_is_mesh().get(n).get_pos());
                     data.push_back(normal);
                 }
             }
         }
     }
-    for (auto fit = dsc.get_is_mesh().faces_begin(); fit != dsc.get_is_mesh().faces_end(); fit++)
+    for (auto fit : dsc.get_is_mesh().faces())
     {
-        if(dsc.quality(fit.key()) < dsc.get_min_face_quality())
+        if(fit->quality() < dsc.get_min_face_quality())
         {
             auto nodes = dsc.get_is_mesh().get_nodes(fit.key());
             vec3 normal = dsc.get_normal(fit.key());
             
             for(auto &n : nodes)
             {
-                data.push_back(dsc.get_is_mesh().get_pos(n));
+                data.push_back(dsc.get_is_mesh().get(n).get_pos());
                 data.push_back(normal);
             }
         }
@@ -539,12 +539,12 @@ void Painter::update_unmoved(DSC::DeformableSimplicialComplex& dsc) {
     data.push_back(vec3(0.));
     data.push_back(vec3(0., 0., 20.));
 
-    for (auto & nit : dsc.get_is_mesh().nodes())
+    for (auto nit : dsc.get_is_mesh().nodes())
     {
-        vec3 vector = nit.get_destination() - nit.get_pos();
+        vec3 vector = nit->get_destination() - nit->get_pos();
         if(vector.length() > EPSILON)
         {
-            data.push_back(nit.get_pos());
+            data.push_back(nit->get_pos());
             data.push_back(vector);
         }
     }

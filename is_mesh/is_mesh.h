@@ -62,26 +62,34 @@ namespace is_mesh {
     public:
         NodeIterator nodes() const;
 
-        kernel<NodeKey,Node>::iterator nodes_begin();
-
-        kernel<NodeKey,Node>::iterator nodes_end();
-
         EdgeIterator edges() const;
-
-        kernel<EdgeKey,Edge>::iterator edges_begin();
-
-        kernel<EdgeKey,Edge>::iterator edges_end();
 
         FaceIterator faces() const;
 
-        kernel<FaceKey,Face>::iterator faces_begin();
-
-        kernel<FaceKey,Face>::iterator faces_end();
-
         TetrahedronIterator tetrahedra() const;
 
+        DEPRECATED // use nodes() instead
+        kernel<NodeKey,Node>::iterator nodes_begin();
+
+        DEPRECATED // use nodes() instead
+        kernel<NodeKey,Node>::iterator nodes_end();
+
+        DEPRECATED // use nodes() instead
+        kernel<EdgeKey,Edge>::iterator edges_begin();
+
+        DEPRECATED // use nodes() instead
+        kernel<EdgeKey,Edge>::iterator edges_end();
+
+        DEPRECATED // use nodes() instead
+        kernel<FaceKey,Face>::iterator faces_begin();
+
+        DEPRECATED // use nodes() instead
+        kernel<FaceKey,Face>::iterator faces_end();
+
+        DEPRECATED // use nodes() instead
         kernel<TetrahedronKey,Tetrahedron>::iterator tetrahedra_begin();
 
+        DEPRECATED // use nodes() instead
         kernel<TetrahedronKey,Tetrahedron>::iterator tetrahedra_end();
 
     public:
