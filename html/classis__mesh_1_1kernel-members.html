@@ -8,13 +8,6 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
-<link href="navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="resize.js"></script>
-<script type="text/javascript" src="navtree.js"></script>
-<script type="text/javascript">
-  $(document).ready(initResizable);
-  $(window).load(resizeHeight);
-</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
 <script type="text/javascript">
@@ -44,7 +37,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -74,27 +66,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
-</div><!-- top -->
-<div id="side-nav" class="ui-resizable side-nav-resizable">
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
-<script type="text/javascript">
-$(document).ready(function(){initNavTree('classis__mesh_1_1kernel.html','');});
-</script>
-<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -103,44 +80,46 @@ $(document).ready(function(){initNavTree('classis__mesh_1_1kernel.html','');});
 </iframe>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceis__mesh.html">is_mesh</a></li><li class="navelem"><a class="el" href="classis__mesh_1_1kernel.html">kernel</a></li>  </ul>
+</div>
+</div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">is_mesh::kernel&lt; value_type, key_type &gt; Member List</div>  </div>
+<div class="title">is_mesh::kernel&lt; key_type, value_type &gt; Member List</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>This is the complete list of members for <a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a>, including all inherited members.</p>
+<p>This is the complete list of members for <a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a>, including all inherited members.</p>
 <table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#addfc3dac3bf0b12bb1cc1d005920f441">begin</a>() const </td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#ae1e6527677785158d9f517ae45e35c3e">clear</a>()</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#afaa431097017a39d8dc911cf92164c42">commit_all</a>()</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>const_iterator</b> typedef (defined in <a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a>)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#a78cabcff0edbf22e8169fb03f653e4e0">create</a>(const type_traits &amp;attributes)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#a4e77486e164a41607d3bafc5d8ebaf43">empty</a>()</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#a03d634b7cf7a2ae39ab31018b1237ad8">end</a>() const </td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#a6b3c5b7162ad46f2cde9eba642d20bc0">erase</a>(key_type const &amp;k)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#a996464b475e2c7cde9bbf467dc977f91">erase</a>(const iterator &amp;it)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#a6dadc781431849cf70a165d50c1f8862">find</a>(key_type const &amp;k)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#a00024979c08345d40aaa79d53e448bea">find_const</a>(key_type const &amp;k)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#a6af05ca3a5e9576fd2f0a16f24fc6aad">find_iterator</a>(key_type const &amp;k)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#a4fad75142caa9a600c24b2a46e4b603a">garbage_collect</a>()</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#ac74f7dc08cb87c594b91fc233a0ca494">is_valid</a>(key_type const &amp;k)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>iterator</b> typedef (defined in <a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a>)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#af13eb0b3d7f588aaeb96aa0254b91b83">kernel</a>(size_t size=64)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>kernel_element</b> typedef (defined in <a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a>)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>kernel_iterator&lt; kernel_type &gt;</b> (defined in <a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a>)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"><span class="mlabel">friend</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>kernel_type</b> typedef (defined in <a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a>)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#a1a42c489c59e8ae35feb4f4ab161ca46">size</a>() const </td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#aff3a819b1bc20e8d296addf7f99f7377">~kernel</a>()</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; value_type, key_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#a4fe214678015d8d2e6437f40cb4f2e3c">begin</a>() const </td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#a55f05d427a9b43c91c29c445c1620049">clear</a>()</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#ab394c97bafc8ae98142a7b4cfb9751bb">commit_all</a>()</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>const_iterator</b> typedef (defined in <a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a>)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#a5624473694853b30985caa3726dca0e8">create</a>(ISMesh *isMesh, Values...values)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#aeea67d7b1e5b621b1ef948def35c59da">empty</a>()</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#a4d01d9497f43a0f4791e46f7050044c9">end</a>() const </td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#a3a893551dbfe41de3765d1695fb1f5dc">erase</a>(key_type const &amp;k)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#a265113af5bd553f8cd566a0f0109eb01">erase</a>(const iterator &amp;it)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#aa97166a31c0188e24e21f8e5398b3166">find</a>(key_type const &amp;k)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#a77669d4720c8ec2c273f087ff4223cba">find_iterator</a>(key_type const &amp;k)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#aac3276c2ab5a2b92ac6ec726bd4cecf4">garbage_collect</a>()</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#a0807fed05950749cb8527e9ceec2924f">is_valid</a>(key_type const &amp;k)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>iterator</b> typedef (defined in <a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a>)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#adb3fd3cfb409cadd425dc4904897526c">kernel</a>(size_t reservedSize=64)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>kernel_element</b> typedef (defined in <a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a>)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>kernel_iterator&lt; kernel_type &gt;</b> (defined in <a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a>)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"><span class="mlabel">friend</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>kernel_iterator_value&lt; kernel_type &gt;</b> (defined in <a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a>)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"><span class="mlabel">friend</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>kernel_type</b> typedef (defined in <a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a>)</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#a2c53e3725f14691c74523ccfe7b90c68">size</a>() const </td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html#a98ae27465017d54e3dbea02abadc0ae6">~kernel</a>()</td><td class="entry"><a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel&lt; key_type, value_type &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
 </table></div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="footer">Generated on Wed Nov 12 2014 13:29:27 for DSC by
-    <a href="http://www.doxygen.org/index.html">
-    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated on Fri Jan 2 2015 15:32:52 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.6
+</small></address>
 </body>
 </html>

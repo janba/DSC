@@ -8,13 +8,6 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
-<link href="navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="resize.js"></script>
-<script type="text/javascript" src="navtree.js"></script>
-<script type="text/javascript">
-  $(document).ready(initResizable);
-  $(window).load(resizeHeight);
-</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
 <script type="text/javascript">
@@ -44,7 +37,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -109,26 +101,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     </ul>
   </div>
 </div><!-- top -->
-<div id="side-nav" class="ui-resizable side-nav-resizable">
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
-<script type="text/javascript">
-$(document).ready(function(){initNavTree('functions_s.html','');});
-</script>
-<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -154,33 +132,30 @@ $(document).ready(function(){initNavTree('functions_s.html','');});
 , <a class="el" href="class_c_g_l_a_1_1_arith_vec.html#a8166baddb91f23827b2b56a98cbfedf1">CGLA::ArithVec&lt; T, V, N &gt;</a>
 </li>
 <li>set_destination()
-: <a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#a3e848496532c9e9f25f2db7e766db431">DSC::DeformableSimplicialComplex&lt; node_att, edge_att, face_att, tet_att &gt;</a>
+: <a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#a349458ffd4160f71922984b999f739cc">DSC::DeformableSimplicialComplex</a>
 </li>
 <li>set_pos()
-: <a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#afbdd524eda8067feac8146858efe824d">DSC::DeformableSimplicialComplex&lt; node_att, edge_att, face_att, tet_att &gt;</a>
+: <a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#ad50160c91db9cd10fa642ad2cb23284c">DSC::DeformableSimplicialComplex</a>
 </li>
 <li>set_spherical()
 : <a class="el" href="class_c_g_l_a_1_1_arith_vec3_float.html#a54d5d4793c99bab381b5a378a5f05a4f">CGLA::ArithVec3Float&lt; T, V &gt;</a>
 </li>
 <li>shortest_edge()
-: <a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#a05acbd76ae81049465c67c7fe5b2a916">DSC::DeformableSimplicialComplex&lt; node_att, edge_att, face_att, tet_att &gt;</a>
+: <a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#aa83b073ede298c156323d592b0273a9d">DSC::DeformableSimplicialComplex</a>
 </li>
 <li>size()
-: <a class="el" href="classis__mesh_1_1kernel.html#a1a42c489c59e8ae35feb4f4ab161ca46">is_mesh::kernel&lt; value_type, key_type &gt;</a>
+: <a class="el" href="classis__mesh_1_1kernel.html#a2c53e3725f14691c74523ccfe7b90c68">is_mesh::kernel&lt; key_type, value_type &gt;</a>
 </li>
 <li>split()
-: <a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#a01147a49f8112737e6064e14ec4bb1f4">DSC::DeformableSimplicialComplex&lt; node_att, edge_att, face_att, tet_att &gt;</a>
+: <a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#ae85c489431c138c2fc09150314f6ecb2">DSC::DeformableSimplicialComplex</a>
 </li>
 </ul>
 </div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="footer">Generated on Wed Nov 12 2014 13:29:28 for DSC by
-    <a href="http://www.doxygen.org/index.html">
-    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated on Fri Jan 2 2015 15:32:53 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.6
+</small></address>
 </body>
 </html>

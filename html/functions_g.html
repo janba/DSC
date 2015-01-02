@@ -8,13 +8,6 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
-<link href="navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="resize.js"></script>
-<script type="text/javascript" src="navtree.js"></script>
-<script type="text/javascript">
-  $(document).ready(initResizable);
-  $(window).load(resizeHeight);
-</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
 <script type="text/javascript">
@@ -44,7 +37,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -109,26 +101,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     </ul>
   </div>
 </div><!-- top -->
-<div id="side-nav" class="ui-resizable side-nav-resizable">
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
-<script type="text/javascript">
-$(document).ready(function(){initNavTree('functions_g.html','');});
-</script>
-<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -142,39 +120,37 @@ $(document).ready(function(){initNavTree('functions_g.html','');});
 
 <h3><a class="anchor" id="index_g"></a>- g -</h3><ul>
 <li>garbage_collect()
-: <a class="el" href="classis__mesh_1_1kernel.html#a4fad75142caa9a600c24b2a46e4b603a">is_mesh::kernel&lt; value_type, key_type &gt;</a>
+: <a class="el" href="classis__mesh_1_1kernel.html#aac3276c2ab5a2b92ac6ec726bd4cecf4">is_mesh::kernel&lt; key_type, value_type &gt;</a>
 </li>
 <li>get()
 : <a class="el" href="class_c_g_l_a_1_1_arith_mat_float.html#a0ec78d4e21bc492238571115d52ee2ce">CGLA::ArithMatFloat&lt; VVT, HVT, MT, ROWS &gt;</a>
 , <a class="el" href="class_c_g_l_a_1_1_arith_quat.html#a49128b0262851cb1ea4cb82a33536a9c">CGLA::ArithQuat&lt; T, V, Q &gt;</a>
-, <a class="el" href="class_c_g_l_a_1_1_arith_vec.html#ac463e1d1d9b858891f7fdb3dcad50341">CGLA::ArithVec&lt; T, V, N &gt;</a>
+, <a class="el" href="class_c_g_l_a_1_1_arith_vec.html#a3513cba9e616b31a5852036f5ba8e07e">CGLA::ArithVec&lt; T, V, N &gt;</a>
+, <a class="el" href="class_d_s_c_1_1_attribute_vector.html#a110014dfa28c911dbf84cc93e7f1fec5">DSC::AttributeVector&lt; ITEMID, ITEM &gt;</a>
 </li>
 <li>get_accuracy()
-: <a class="el" href="class_d_s_c_1_1_velocity_func.html#abd252125053a1737ebfa27f5924122f5">DSC::VelocityFunc&lt; DeformableSimplicialComplex &gt;</a>
+: <a class="el" href="class_d_s_c_1_1_velocity_func.html#af54ffea074de5905c80282a031aaf6b6">DSC::VelocityFunc</a>
 </li>
 <li>get_barycenter()
-: <a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#a9d50b033a84577c6dcd3fb81af314741">DSC::DeformableSimplicialComplex&lt; node_att, edge_att, face_att, tet_att &gt;</a>
+: <a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#a53446962ad2b4b5f92fc65f0a3b269a1">DSC::DeformableSimplicialComplex</a>
 </li>
 <li>get_compute_time()
-: <a class="el" href="class_d_s_c_1_1_velocity_func.html#a0e317ed7e7d0d7f19272dd27d5cdc9be">DSC::VelocityFunc&lt; DeformableSimplicialComplex &gt;</a>
+: <a class="el" href="class_d_s_c_1_1_velocity_func.html#ad947320ba5f11227f17820ecd822fd90">DSC::VelocityFunc</a>
 </li>
 <li>get_deform_time()
-: <a class="el" href="class_d_s_c_1_1_velocity_func.html#aa18ce9986aac196f79d0a66b5068e6ba">DSC::VelocityFunc&lt; DeformableSimplicialComplex &gt;</a>
-</li>
-<li>get_destination()
-: <a class="el" href="classis__mesh_1_1_node_attributes.html#a2fcce7dda018f9273a63c10d747d89b5">is_mesh::NodeAttributes</a>
+: <a class="el" href="class_d_s_c_1_1_velocity_func.html#a1aceebd9f274e40434afc983d4dad172">DSC::VelocityFunc</a>
 </li>
 <li>get_dihedral_angles()
-: <a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#accf171ab1177ad52de79f3009977e765">DSC::DeformableSimplicialComplex&lt; node_att, edge_att, face_att, tet_att &gt;</a>
+: <a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#a79975dacf7973a494492a8e4b5682b12">DSC::DeformableSimplicialComplex</a>
 </li>
 <li>get_dim()
 : <a class="el" href="class_c_g_l_a_1_1_arith_vec.html#ab486060cf5c38a15fc0d123071129c3c">CGLA::ArithVec&lt; T, V, N &gt;</a>
 </li>
 <li>get_edge()
-: <a class="el" href="classis__mesh_1_1_i_s_mesh.html#a4e8a4ac2b5d14679a2c2bc935f5a4105">is_mesh::ISMesh&lt; node_traits, edge_traits, face_traits, tet_traits &gt;</a>
+: <a class="el" href="classis__mesh_1_1_i_s_mesh.html#a16600c8597fc1428549bfe1148d26261">is_mesh::ISMesh</a>
 </li>
 <li>get_face()
-: <a class="el" href="classis__mesh_1_1_i_s_mesh.html#acb03658a1915a26576337c149f34abb4">is_mesh::ISMesh&lt; node_traits, edge_traits, face_traits, tet_traits &gt;</a>
+: <a class="el" href="classis__mesh_1_1_i_s_mesh.html#a0b8e630cac82c9dd43b519ee70eb1050">is_mesh::ISMesh</a>
 </li>
 <li>get_h_dim()
 : <a class="el" href="class_c_g_l_a_1_1_arith_mat_float.html#ad2fc450a408d7be96de00f49ad0de57c">CGLA::ArithMatFloat&lt; VVT, HVT, MT, ROWS &gt;</a>
@@ -195,17 +171,16 @@ $(document).ready(function(){initNavTree('functions_g.html','');});
 : <a class="el" href="class_c_g_l_a_1_1_quatf.html#a20e9ea62d1922e7bc3bc6825d133befb">CGLA::Quatf</a>
 </li>
 <li>get_name()
-: <a class="el" href="class_d_s_c_1_1_velocity_func.html#ab830501237ee8dd507156912419ba5c1">DSC::VelocityFunc&lt; DeformableSimplicialComplex &gt;</a>
+: <a class="el" href="class_d_s_c_1_1_velocity_func.html#ad038aee0b71acec12e65a9c8db11fbca">DSC::VelocityFunc</a>
 </li>
 <li>get_node()
-: <a class="el" href="classis__mesh_1_1_i_s_mesh.html#ac293dcf0c41511d868ccdf44fd22abb2">is_mesh::ISMesh&lt; node_traits, edge_traits, face_traits, tet_traits &gt;</a>
+: <a class="el" href="classis__mesh_1_1_i_s_mesh.html#a574ba746c99475af0e50a3a5b8eb986f">is_mesh::ISMesh</a>
 </li>
 <li>get_normal()
-: <a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#ad4913142acc38ad7ca25495eaee825c5">DSC::DeformableSimplicialComplex&lt; node_att, edge_att, face_att, tet_att &gt;</a>
+: <a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#a87a822c3c7ee0350d03c946cb5932076">DSC::DeformableSimplicialComplex</a>
 </li>
 <li>get_pos()
-: <a class="el" href="classis__mesh_1_1_i_s_mesh.html#af156d1cdac2f7358086b48fdf9add20f">is_mesh::ISMesh&lt; node_traits, edge_traits, face_traits, tet_traits &gt;</a>
-, <a class="el" href="classis__mesh_1_1_node_attributes.html#a74b133a0b691c2c63c8b90ed0d54606c">is_mesh::NodeAttributes</a>
+: <a class="el" href="classis__mesh_1_1_i_s_mesh.html#a9a172209ac63899eb3420a2e052bf110">is_mesh::ISMesh</a>
 </li>
 <li>get_real_part()
 : <a class="el" href="class_c_g_l_a_1_1_arith_quat.html#af6ccafef509598e8905bc42e0763ee8b">CGLA::ArithQuat&lt; T, V, Q &gt;</a>
@@ -217,33 +192,30 @@ $(document).ready(function(){initNavTree('functions_g.html','');});
 : <a class="el" href="class_c_g_l_a_1_1_arith_vec3_float.html#a70f9d69d380161027d32c34414557c9a">CGLA::ArithVec3Float&lt; T, V &gt;</a>
 </li>
 <li>get_tet()
-: <a class="el" href="classis__mesh_1_1_i_s_mesh.html#a702fd40f488bac5c2f0c80bf65800f76">is_mesh::ISMesh&lt; node_traits, edge_traits, face_traits, tet_traits &gt;</a>
+: <a class="el" href="classis__mesh_1_1_i_s_mesh.html#a7fe9fe1edf3b58741df0aed1a48148c2">is_mesh::ISMesh</a>
 </li>
 <li>get_time_step()
-: <a class="el" href="class_d_s_c_1_1_velocity_func.html#a1033c9ff8004764bb271118da7370d42">DSC::VelocityFunc&lt; DeformableSimplicialComplex &gt;</a>
+: <a class="el" href="class_d_s_c_1_1_velocity_func.html#aac6aa5071882bc4f5bd1f64c2aa0ca73">DSC::VelocityFunc</a>
 </li>
 <li>get_total_compute_time()
-: <a class="el" href="class_d_s_c_1_1_velocity_func.html#a1fcd8c13afde63252c9642d72d0846d1">DSC::VelocityFunc&lt; DeformableSimplicialComplex &gt;</a>
+: <a class="el" href="class_d_s_c_1_1_velocity_func.html#ad7c6bcd7200f336fe79ad4ea388e304b">DSC::VelocityFunc</a>
 </li>
 <li>get_total_deform_time()
-: <a class="el" href="class_d_s_c_1_1_velocity_func.html#a4831d361812997b0f3b30ff0b218ce99">DSC::VelocityFunc&lt; DeformableSimplicialComplex &gt;</a>
+: <a class="el" href="class_d_s_c_1_1_velocity_func.html#a618e1116e068334a18402ea05695b047">DSC::VelocityFunc</a>
 </li>
 <li>get_v_dim()
 : <a class="el" href="class_c_g_l_a_1_1_arith_mat_float.html#afeda070caeb3424c73d272327d455231">CGLA::ArithMatFloat&lt; VVT, HVT, MT, ROWS &gt;</a>
 </li>
 <li>get_velocity()
-: <a class="el" href="class_d_s_c_1_1_velocity_func.html#a7cfb5d4824f3e00b531a520e6a4c1088">DSC::VelocityFunc&lt; DeformableSimplicialComplex &gt;</a>
+: <a class="el" href="class_d_s_c_1_1_velocity_func.html#a0dbe708843dc416bc89fc6504fd7f262">DSC::VelocityFunc</a>
 </li>
 </ul>
 </div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="footer">Generated on Wed Nov 12 2014 13:29:28 for DSC by
-    <a href="http://www.doxygen.org/index.html">
-    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated on Fri Jan 2 2015 15:32:53 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.6
+</small></address>
 </body>
 </html>

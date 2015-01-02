@@ -7,16 +7,15 @@
 
 var indexSectionsWithContent =
 {
-  0: "abcdefghiklmnopqstuv~",
-  1: "abcdefgikmnpqstuv",
+  0: "abcdefghiklmnopqrstuv~",
+  1: "abcdefgikmnpqrstuv",
   2: "i",
   3: "abcemqstuv",
   4: "abcdefgiklmnopqstuv~",
   5: "dq",
   6: "hsv",
   7: "o",
-  8: "c",
-  9: "d"
+  8: "c"
 };
 
 var indexSectionNames =
@@ -29,8 +28,7 @@ var indexSectionNames =
   5: "variables",
   6: "typedefs",
   7: "related",
-  8: "defines",
-  9: "pages"
+  8: "defines"
 };
 
 function convertToId(search)
