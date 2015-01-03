@@ -38,7 +38,7 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::set_labels(const Geometry& geometry, int label) {
-        for (auto tit : is_mesh.tetrahedra()) {
+        for (auto tit : is_mesh.tetrahedra(sub_domain_tet)) {
             SimplexSet<NodeKey> nids = is_mesh.get_nodes(tit.key());
             if(geometry.is_inside(Util::barycenter(is_mesh.get(nids[0]).get_pos(), is_mesh.get(nids[1]).get_pos(), is_mesh.get(nids[2]).get_pos(), is_mesh.get(nids[3]).get_pos())))
             {
@@ -420,7 +420,7 @@ namespace DSC {
 
     void DeformableSimplicialComplex::topological_edge_removal() {
         vector<TetrahedronKey> tets;
-        for (auto tit : is_mesh.tetrahedra())
+        for (auto tit : is_mesh.tetrahedra(sub_domain_tet))
         {
             if (tit->quality() < pars.MIN_TET_QUALITY)
             {
@@ -560,7 +560,7 @@ namespace DSC {
 
     void DeformableSimplicialComplex::topological_face_removal() {
         vector<TetrahedronKey> tets;
-        for (auto tit : is_mesh.tetrahedra())
+        for (auto tit : is_mesh.tetrahedra(sub_domain_tet))
         {
             if (tit->quality() < pars.MIN_TET_QUALITY)
             {
@@ -604,7 +604,7 @@ namespace DSC {
         }
 
         vector<EdgeKey> edges;
-        for (auto eit : is_mesh.edges())
+        for (auto eit : is_mesh.edges(sub_domain_edge))
         {
             if ((eit->is_interface() || eit->is_boundary()) && eit->length() > pars.MAX_LENGTH*AVG_LENGTH)
             {
@@ -632,7 +632,7 @@ namespace DSC {
         }
 
         vector<TetrahedronKey> tetrahedra;
-        for (auto tit : is_mesh.tetrahedra())
+        for (auto tit : is_mesh.tetrahedra(sub_domain_tet))
         {
             if (tit->volume() > pars.MAX_VOLUME*AVG_VOLUME)
             {
@@ -660,7 +660,7 @@ namespace DSC {
         }
 
         vector<EdgeKey> edges;
-        for (auto eit : is_mesh.edges())
+        for (auto eit : is_mesh.edges(sub_domain_edge))
         {
             if ((eit->is_interface() || eit->is_boundary()) && eit->length() < pars.MIN_LENGTH*AVG_LENGTH)
             {
@@ -691,7 +691,7 @@ namespace DSC {
         }
 
         vector<TetrahedronKey> tetrahedra;
-        for (auto tit : is_mesh.tetrahedra())
+        for (auto tit : is_mesh.tetrahedra(sub_domain_tet))
         {
             if (tit->volume() < pars.MIN_VOLUME*AVG_VOLUME)
             {
@@ -717,7 +717,7 @@ namespace DSC {
 
     void DeformableSimplicialComplex::remove_degenerate_edges() {
         list<EdgeKey> edges;
-        for (auto eit : is_mesh.edges())
+        for (auto eit : is_mesh.edges(sub_domain_edge))
         {
             if (quality(eit.key()) < pars.DEG_EDGE_QUALITY)
             {
@@ -745,7 +745,7 @@ namespace DSC {
     void DeformableSimplicialComplex::remove_degenerate_faces() {
         list<FaceKey> faces;
 
-        for (auto fit : is_mesh.faces())
+        for (auto fit : is_mesh.faces(sub_domain_face))
         {
             if(fit->quality() < pars.DEG_FACE_QUALITY)
             {
@@ -781,7 +781,7 @@ namespace DSC {
     void DeformableSimplicialComplex::remove_degenerate_tets() {
         vector<TetrahedronKey> tets;
 
-        for (auto tit : is_mesh.tetrahedra())
+        for (auto tit : is_mesh.tetrahedra(sub_domain_tet))
         {
             if (tit->quality() < pars.DEG_TET_QUALITY)
             {
@@ -815,7 +815,7 @@ namespace DSC {
 
     void DeformableSimplicialComplex::remove_low_quality_edges() {
         list<EdgeKey> edges;
-        for (auto eit : is_mesh.edges())
+        for (auto eit : is_mesh.edges(sub_domain_edge))
         {
             if (quality(eit.key()) < pars.MIN_EDGE_QUALITY)
             {
@@ -877,7 +877,7 @@ namespace DSC {
     void DeformableSimplicialComplex::remove_low_quality_faces() {
         list<FaceKey> faces;
 
-        for (auto fit : is_mesh.faces())
+        for (auto fit : is_mesh.faces(sub_domain_face))
         {
             if(fit->quality() < pars.MIN_FACE_QUALITY)
             {
@@ -923,7 +923,8 @@ namespace DSC {
 
     void DeformableSimplicialComplex::smooth() {
         int i = 0, j = 0;
-        for (auto nit : is_mesh.nodes())
+
+        for (auto nit : is_mesh.nodes(sub_domain_node))
         {
             if (is_safe_editable(nit.key()))
             {
@@ -977,7 +978,7 @@ namespace DSC {
             cout << "\n\tMove vertices step " << step << endl;
             missing = 0;
             int movable = 0;
-            for (auto nit : is_mesh.nodes())
+            for (auto nit : is_mesh.nodes(sub_domain_node))
             {
                 if (is_movable(nit.key()))
                 {
@@ -999,7 +1000,7 @@ namespace DSC {
         resize_complex();
 
         is_mesh.garbage_collect();
-        for (auto nit : is_mesh.nodes())
+        for (auto nit : is_mesh.nodes(sub_domain_node))
         {
             nit->set_destination(nit->get_pos());
         }
@@ -1265,7 +1266,7 @@ namespace DSC {
 
     vector<vec3> DeformableSimplicialComplex::get_interface_face_positions() {
         vector<vec3> verts;
-        for (auto fit : is_mesh.faces()) {
+        for (auto fit : is_mesh.faces(sub_domain_face)) {
             if(fit->is_interface())
             {
                 for(auto n : is_mesh.get_nodes(fit.key()))
@@ -1505,7 +1506,7 @@ namespace DSC {
     double DeformableSimplicialComplex::compute_avg_edge_length() {
         double avg_edge_length = 0.;
         int N = 0;
-        for (auto eit : is_mesh.edges()) {
+        for (auto eit : is_mesh.edges(sub_domain_edge)) {
             if(eit->is_interface())
             {
                 avg_edge_length += eit->length();
@@ -1576,7 +1577,7 @@ namespace DSC {
             histogram[i] = 0;
         }
 
-        for (auto tit : is_mesh.tetrahedra())
+        for (auto tit : is_mesh.tetrahedra(sub_domain_tet))
         {
             double q = tit->quality();
             min_quality = Util::min(min_quality, q);
@@ -1597,7 +1598,7 @@ namespace DSC {
             histogram[i] = 0;
         }
 
-        for (auto tit : is_mesh.tetrahedra())
+        for (auto tit : is_mesh.tetrahedra(sub_domain_tet))
         {
             vector<double> angles = cos_dihedral_angles(tit.key());
             for(auto cos_a : angles)
@@ -1612,7 +1613,7 @@ namespace DSC {
 
     double DeformableSimplicialComplex::min_quality() {
         double min_q = INFINITY;
-        for (auto tit : is_mesh.tetrahedra())
+        for (auto tit : is_mesh.tetrahedra(sub_domain_tet))
         {
             min_q = Util::min(min_q, tit->quality());
         }
@@ -1621,7 +1622,7 @@ namespace DSC {
 
     void DeformableSimplicialComplex::count_nodes(int & total, int & object) {
         total = 0, object = 0;
-        for (auto nit : is_mesh.nodes())
+        for (auto nit : is_mesh.nodes(sub_domain_node))
         {
             total++;
             if (nit->is_interface())
@@ -1633,7 +1634,7 @@ namespace DSC {
 
     void DeformableSimplicialComplex::count_edges(int & total, int & object) {
         total = 0, object = 0;
-        for (auto e : is_mesh.edges()){
+        for (auto e : is_mesh.edges(sub_domain_edge)){
             total++;
             if (e->is_interface()){
                 object++;
@@ -1643,7 +1644,7 @@ namespace DSC {
 
     void DeformableSimplicialComplex::count_faces(int & total, int & object) {
         total = 0, object = 0;
-        for (auto f : is_mesh.faces()){
+        for (auto f : is_mesh.faces(sub_domain_face)){
             total++;
             if (f->is_interface())
             {
@@ -1654,7 +1655,7 @@ namespace DSC {
 
     void DeformableSimplicialComplex::count_tetrahedra(int & total, int & object) {
         total = 0, object = 0;
-        for (auto t : is_mesh.tetrahedra()){
+        for (auto t : is_mesh.tetrahedra(sub_domain_tet)){
             total++;
             if (t->label() != 0)
             {
@@ -1665,7 +1666,7 @@ namespace DSC {
 
     void DeformableSimplicialComplex::test_split_collapse() {
         SimplexSet<EdgeKey> eids;
-        for (auto eit : is_mesh.edges())
+        for (auto eit : is_mesh.edges(sub_domain_edge))
         {
             auto neighbours = is_mesh.get_edges(is_mesh.get_faces(eit.key()));
             bool ok = true;
@@ -1689,7 +1690,7 @@ namespace DSC {
 
     void DeformableSimplicialComplex::test_flip23_flip32() {
         SimplexSet<FaceKey> fids;
-        for (auto fit : is_mesh.faces())
+        for (auto fit : is_mesh.faces(sub_domain_face))
         {
             if(is_safe_editable(fit.key()))
             {
@@ -1749,7 +1750,7 @@ namespace DSC {
 
     void DeformableSimplicialComplex::test_flip44() {
         SimplexSet<EdgeKey> eids;
-        for (auto eit : is_mesh.edges())
+        for (auto eit : is_mesh.edges(sub_domain_edge))
         {
             if(is_unsafe_editable(eit.key()) && eit->is_interface() && is_mesh.get_faces(eit.key()).size() == 4)
             {
@@ -1809,7 +1810,7 @@ namespace DSC {
 
     void DeformableSimplicialComplex::test_flip22() {
         SimplexSet<EdgeKey> eids;
-        for (auto eit : is_mesh.edges())
+        for (auto eit : is_mesh.edges(sub_domain_edge))
         {
             if(eit->is_boundary() && is_mesh.get_faces(eit.key()).size() == 3)
             {
@@ -1874,5 +1875,17 @@ namespace DSC {
         return is_mesh;
     }
 
+    void DeformableSimplicialComplex::set_sub_domain(std::vector<is_mesh::NodeKey> *sub_domain_node,
+            std::vector<is_mesh::FaceKey> *sub_domain_face,
+            std::vector<is_mesh::TetrahedronKey> *sub_domain_tet,
+            std::vector<is_mesh::EdgeKey> *sub_domain_edge) {
+        this->sub_domain_node = sub_domain_node;
+        this->sub_domain_face = sub_domain_face;
+        this->sub_domain_tet = sub_domain_tet;
+        this->sub_domain_edge = sub_domain_edge;
+    }
 
+    bool DeformableSimplicialComplex::has_sub_domain() {
+        return sub_domain_node || sub_domain_face || sub_domain_tet || sub_domain_edge;
+    }
 }

@@ -64,7 +64,7 @@ namespace is_mesh
         typedef typename element_type::key_type key_type;
         
     private:
-        
+        std::vector<key_type> *m_keys;
         unsigned int     m_key;
         kernel_type*     m_kernel;
         
@@ -73,7 +73,16 @@ namespace is_mesh
          * The only constructor.
          * Creates a kernel iterator. Should only be created from the kernel.
          */
-        kernel_iterator(kernel_type const * const kernel, unsigned int const & key) : m_key(key)
+        kernel_iterator(kernel_type const * const kernel, unsigned int const & key) : m_key(key), m_keys(nullptr)
+        {
+            m_kernel = const_cast<kernel_type*>(kernel);
+        }
+
+        /**
+        * The only constructor.
+        * Creates a kernel iterator. Should only be created from the kernel.
+        */
+        kernel_iterator(kernel_type const * const kernel, std::vector<key_type> *keys) : m_key(0), m_keys(keys)
         {
             m_kernel = const_cast<kernel_type*>(kernel);
         }
@@ -82,7 +91,12 @@ namespace is_mesh
         /**
          * Converts the iterator to a handle or key.
          */
-        key_type     key()    const { return key_type{m_key}; }
+        key_type     key()    const {
+            if (m_keys){
+                return m_keys->at(m_key);
+            }
+            return key_type{m_key};
+        }
         /**
          * Returns a pointer to the kernel that the iterator is bound to.
          */
@@ -93,14 +107,14 @@ namespace is_mesh
          */
         friend bool operator==(const iterator& i, const iterator& j)
         {
-            return (i.m_key == j.m_key) && (i.m_kernel == j.m_kernel);
+            return (i.m_key == j.m_key) && (i.m_kernel == j.m_kernel) && (i.m_keys == j.m_keys);
         }
         /**
          * Compares two iterators for inequality.
          */
         friend bool operator!=(const iterator& i, const iterator& j)
         {
-            return (i.m_key != j.m_key) || (i.m_kernel != j.m_kernel);
+            return (i.m_key != j.m_key) || (i.m_kernel != j.m_kernel) || (i.m_keys != j.m_keys);
         }
         
         /**
@@ -110,6 +124,9 @@ namespace is_mesh
          */
         value_type* operator->()
         {
+            if (m_keys){
+                return &m_kernel->m_data[(int)m_keys->at(m_key)].value;
+            }
             assert(m_kernel->lookup(key_type{m_key}).state == element_type::VALID);
             return &m_kernel->m_data[m_key].value;
         }
@@ -121,6 +138,9 @@ namespace is_mesh
          */
         kernel_iterator_value<kernel_t_> operator*()
         {
+            if (m_keys){
+                return kernel_iterator_value<kernel_t_>(m_keys->at(m_key), m_kernel);
+            }
             return kernel_iterator_value<kernel_t_>(key_type{m_key}, m_kernel);
         }
         
@@ -131,6 +151,13 @@ namespace is_mesh
          */
         iterator& operator++()
         {
+            if (m_keys){
+                m_key++;
+                if (m_key>= m_keys->size()){
+                    m_key = m_kernel->m_data.size();
+                }
+                return *this;
+            }
             do {
                 m_key++;
             } while (m_key < m_kernel->m_data.size() && m_kernel->m_data[m_key].state != element_type::VALID);

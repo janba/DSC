@@ -18,10 +18,14 @@
 
 namespace is_mesh {
 
-    NodeIterator::NodeIterator(const kernel<NodeKey,Node> *m_node_kernel) : m_node_kernel(m_node_kernel) {
+    NodeIterator::NodeIterator(const kernel<NodeKey,Node> *m_node_kernel, std::vector<NodeKey> *subset)
+            : m_node_kernel(m_node_kernel),subset(subset) {
     }
 
     typename kernel<NodeKey,Node>::iterator NodeIterator::begin() const {
+        if (subset){
+            return kernel<NodeKey,Node>::iterator(m_node_kernel, subset);
+        }
         return m_node_kernel->begin();
     }
 
@@ -29,10 +33,14 @@ namespace is_mesh {
         return m_node_kernel->end();
     }
 
-    EdgeIterator::EdgeIterator(const kernel<EdgeKey,Edge> *m_edge_kernel) : m_edge_kernel(m_edge_kernel) {
+    EdgeIterator::EdgeIterator(const kernel<EdgeKey,Edge> *m_edge_kernel, std::vector<EdgeKey> *subset)
+            : m_edge_kernel(m_edge_kernel),subset(subset) {
     }
 
     typename kernel<EdgeKey,Edge>::iterator EdgeIterator::begin() const {
+        if (subset){
+            return kernel<EdgeKey,Edge>::iterator(m_edge_kernel, subset);
+        }
         return m_edge_kernel->begin();
     }
 
@@ -40,10 +48,14 @@ namespace is_mesh {
         return m_edge_kernel->end();
     }
 
-    FaceIterator::FaceIterator(const kernel<FaceKey,Face> *m_face_kernel) : m_face_kernel(m_face_kernel) {
+    FaceIterator::FaceIterator(const kernel<FaceKey,Face> *m_face_kernel, std::vector<FaceKey> *subset)
+            : m_face_kernel(m_face_kernel),subset(subset) {
     }
 
     typename kernel<FaceKey,Face>::iterator FaceIterator::begin() const {
+        if (subset){
+            return kernel<FaceKey,Face>::iterator(m_face_kernel, subset);
+        }
         return m_face_kernel->begin();
     }
 
@@ -51,11 +63,14 @@ namespace is_mesh {
         return m_face_kernel->end();
     }
 
-    TetrahedronIterator::TetrahedronIterator(const kernel<TetrahedronKey,Tetrahedron> *m_tetrahedron_kernel)
-            : m_tetrahedron_kernel(m_tetrahedron_kernel) {
+    TetrahedronIterator::TetrahedronIterator(const kernel<TetrahedronKey,Tetrahedron> *m_tetrahedron_kernel,std::vector<TetrahedronKey> *subset)
+            : m_tetrahedron_kernel(m_tetrahedron_kernel),subset(subset) {
     }
 
     typename kernel<TetrahedronKey,Tetrahedron>::iterator TetrahedronIterator::begin() const {
+        if (subset){
+            return kernel<TetrahedronKey,Tetrahedron>::iterator(m_tetrahedron_kernel, subset);
+        }
         return m_tetrahedron_kernel->begin();
     }
 

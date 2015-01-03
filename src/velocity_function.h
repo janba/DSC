@@ -36,7 +36,8 @@ namespace DSC {
     protected:
         int time_step = 0;
         int MAX_TIME_STEPS;
-        
+        int deform_time_steps = 10;
+
         double VELOCITY; // Determines the distance each interface vertex moves at each iteration.
         double ACCURACY; // Determines the accuracy of the final result.
         

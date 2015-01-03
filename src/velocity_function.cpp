@@ -68,7 +68,7 @@ void DSC::VelocityFunc::update_deform_time(const std::chrono::time_point<std::ch
 void DSC::VelocityFunc::deform(DeformableSimplicialComplex& dsc) {
     auto init_time = std::chrono::system_clock::now();
 
-    dsc.deform();
+    dsc.deform(deform_time_steps);
 
     update_deform_time(init_time);
 }

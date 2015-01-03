@@ -60,13 +60,14 @@ namespace is_mesh {
         // ITERATORS //
         ///////////////
     public:
-        NodeIterator nodes() const;
+        NodeIterator nodes(std::vector<NodeKey> *subset = nullptr) const;
 
-        EdgeIterator edges() const;
+        EdgeIterator edges(std::vector<EdgeKey> *subset = nullptr) const;
 
-        FaceIterator faces() const;
+        FaceIterator faces(std::vector<FaceKey> *subset = nullptr) const;
 
-        TetrahedronIterator tetrahedra() const;
+        TetrahedronIterator tetrahedra(std::vector<TetrahedronKey> *subset = nullptr) const;
+
 
         DEPRECATED // use nodes() instead
         kernel<NodeKey,Node>::iterator nodes_begin();

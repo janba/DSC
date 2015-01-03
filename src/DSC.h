@@ -78,11 +78,15 @@ namespace DSC {
 
 
         parameters pars;
-        
+
+        std::vector<is_mesh::NodeKey> *sub_domain_node = nullptr;
+        std::vector<is_mesh::FaceKey> *sub_domain_face = nullptr;
+        std::vector<is_mesh::TetrahedronKey> *sub_domain_tet = nullptr;
+        std::vector<is_mesh::EdgeKey> *sub_domain_edge = nullptr;
+
         //////////////////////////
         // INITIALIZE FUNCTIONS //
         //////////////////////////
-        
     public:
         
         /// SimplicialComplex constructor.
@@ -102,6 +106,14 @@ namespace DSC {
         void set_design_domain(is_mesh::Geometry *geometry) { add_design_domain(geometry); }
 
         void add_design_domain(is_mesh::Geometry *geometry);
+
+        // set sub domain elements which are modified
+        void set_sub_domain(std::vector<is_mesh::NodeKey> *sub_domain_node,
+                        std::vector<is_mesh::FaceKey> *sub_domain_face,
+                        std::vector<is_mesh::TetrahedronKey> *sub_domain_tet,
+                        std::vector<is_mesh::EdgeKey> *sub_domain_edge);
+
+        bool has_sub_domain();
 
         virtual void set_labels(const is_mesh::Geometry& geometry, int label);
 
@@ -180,10 +192,11 @@ namespace DSC {
         double get_avg_edge_length() const;
 
         const is_mesh::MultipleGeometry & get_design_domain() const;
-        
-        ////////////////////////
-        // FIX MESH FUNCTIONS //
-        ////////////////////////
+
+        /////////////
+        // GETTERS //
+        /////////////
+
     private:
         
         //////////////////////////////

@@ -28,8 +28,9 @@
 namespace is_mesh {
     class NodeIterator {
         const kernel<NodeKey, Node> *m_node_kernel;
+        std::vector<NodeKey> *subset;
     public:
-        NodeIterator(const kernel<NodeKey, Node> *m_node_kernel);
+        NodeIterator(const kernel<NodeKey, Node> *m_node_kernel, std::vector<NodeKey> *subset);
 
         typename kernel<NodeKey, Node>::iterator begin() const;
 
@@ -38,8 +39,9 @@ namespace is_mesh {
 
     class EdgeIterator {
         const kernel<EdgeKey, Edge>* m_edge_kernel;
+        std::vector<EdgeKey> *subset;
     public:
-        EdgeIterator(const kernel<EdgeKey, Edge> *m_edge_kernel);
+        EdgeIterator(const kernel<EdgeKey, Edge> *m_edge_kernel, std::vector<EdgeKey> *subset);
 
         typename kernel<EdgeKey, Edge>::iterator begin() const;
 
@@ -48,8 +50,9 @@ namespace is_mesh {
 
     class FaceIterator {
         const kernel<FaceKey, Face>* m_face_kernel;
+        std::vector<FaceKey> *subset;
     public:
-        FaceIterator(const kernel<FaceKey, Face> *m_face_kernel);
+        FaceIterator(const kernel<FaceKey, Face> *m_face_kernel, std::vector<FaceKey> *subset);
 
         typename kernel<FaceKey, Face>::iterator begin() const;
 
@@ -59,8 +62,9 @@ namespace is_mesh {
 
     class TetrahedronIterator {
         const kernel<TetrahedronKey, Tetrahedron>* m_tetrahedron_kernel;
+        std::vector<TetrahedronKey> *subset;
     public:
-        TetrahedronIterator(const kernel<TetrahedronKey, Tetrahedron> *m_tetrahedron_kernel);
+        TetrahedronIterator(const kernel<TetrahedronKey, Tetrahedron> *m_tetrahedron_kernel, std::vector<TetrahedronKey> *subset);
 
         typename kernel<TetrahedronKey, Tetrahedron>::iterator begin() const;
 

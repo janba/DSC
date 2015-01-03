@@ -40,8 +40,20 @@ namespace is_mesh{
         return static_cast<unsigned int>(m_tetrahedron_kernel->size());
     }
 
-    NodeIterator ISMesh::nodes() const {
-        return NodeIterator{m_node_kernel};
+    NodeIterator ISMesh::nodes(std::vector<NodeKey> *subset) const {
+        return NodeIterator{m_node_kernel,subset};
+    }
+
+    EdgeIterator ISMesh::edges(std::vector<EdgeKey> *subset) const {
+        return EdgeIterator{m_edge_kernel,subset};
+    }
+
+    FaceIterator ISMesh::faces(std::vector<FaceKey> *subset) const {
+        return FaceIterator{m_face_kernel,subset};
+    }
+
+    TetrahedronIterator ISMesh::tetrahedra(std::vector<TetrahedronKey> *subset) const {
+        return TetrahedronIterator{m_tetrahedron_kernel,subset};
     }
 
     typename kernel<NodeKey,Node>::iterator ISMesh::nodes_begin() {
@@ -52,10 +64,6 @@ namespace is_mesh{
         return m_node_kernel->end();
     }
 
-    EdgeIterator ISMesh::edges() const {
-        return EdgeIterator{m_edge_kernel};
-    }
-
     typename kernel<EdgeKey,Edge>::iterator ISMesh::edges_begin() {
         return m_edge_kernel->begin();
     }
@@ -64,20 +72,12 @@ namespace is_mesh{
         return m_edge_kernel->end();
     }
 
-    FaceIterator ISMesh::faces() const {
-        return FaceIterator{m_face_kernel};
-    }
-
     typename kernel<FaceKey,Face>::iterator ISMesh::faces_begin() {
         return m_face_kernel->begin();
     }
 
     typename kernel<FaceKey,Face>::iterator ISMesh::faces_end() {
         return m_face_kernel->end();
-    }
-
-    TetrahedronIterator ISMesh::tetrahedra() const {
-        return TetrahedronIterator{m_tetrahedron_kernel};
     }
 
     typename kernel<TetrahedronKey,Tetrahedron>::iterator ISMesh::tetrahedra_begin() {
