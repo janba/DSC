@@ -49,7 +49,7 @@ namespace is_mesh {
         QueryType query_type;
         is_mesh::ISMesh *mesh;
     public:
-        QueryResult(){}
+        QueryResult():mesh(nullptr){}
         QueryResult(is_mesh::FaceKey const &first_intersection, double dist, CGLA::Ray const &ray, QueryType const &query_type, is_mesh::ISMesh *mesh);
 
         QueryResultIterator begin();
