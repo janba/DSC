@@ -93,7 +93,7 @@ namespace is_mesh
          */
         key_type     key()    const {
             if (m_keys){
-                return m_keys->at(m_key);
+                return m_keys->operator[](m_key);
             }
             return key_type{m_key};
         }
@@ -125,7 +125,7 @@ namespace is_mesh
         value_type* operator->()
         {
             if (m_keys){
-                return &m_kernel->m_data[(int)m_keys->at(m_key)].value;
+                return &m_kernel->m_data[(int)m_keys->operator[](m_key)].value;
             }
             assert(m_kernel->lookup(key_type{m_key}).state == element_type::VALID);
             return &m_kernel->m_data[m_key].value;
@@ -139,7 +139,7 @@ namespace is_mesh
         kernel_iterator_value<kernel_t_> operator*()
         {
             if (m_keys){
-                return kernel_iterator_value<kernel_t_>(m_keys->at(m_key), m_kernel);
+                return kernel_iterator_value<kernel_t_>(m_keys->operator[](m_key), m_kernel);
             }
             return kernel_iterator_value<kernel_t_>(key_type{m_key}, m_kernel);
         }
