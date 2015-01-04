@@ -154,7 +154,7 @@ namespace is_mesh
             if (m_keys){
                 m_key++;
                 if (m_key>= m_keys->size()){
-                    m_key = m_kernel->m_data.size();
+                    m_key = (unsigned int)m_kernel->m_data.size();
                 }
                 return *this;
             }

@@ -184,16 +184,22 @@ namespace is_mesh {
 
         Tetrahedron & get(const TetrahedronKey& tid);
 
+        DEPRECATED // use get(eid).get_boundary()
         const SimplexSet<NodeKey> & get_nodes(const EdgeKey& eid);
 
+        DEPRECATED // use get(nid).get_co_boundary()
         const SimplexSet<EdgeKey> & get_edges(const NodeKey& nid);
 
+        DEPRECATED // use get(fid).get_boundary()
         const SimplexSet<EdgeKey> & get_edges(const FaceKey& fid);
 
+        DEPRECATED // use get(eid).get_co_boundary()
         const SimplexSet<FaceKey> & get_faces(const EdgeKey& eid);
 
+        DEPRECATED // use get(tid).get_boundary()
         const SimplexSet<FaceKey> & get_faces(const TetrahedronKey& tid);
 
+        DEPRECATED // get(fid).get_co_boundary()
         const SimplexSet<TetrahedronKey> & get_tets(const FaceKey& fid);
         
         // Getters for getting the boundary of a boundary etc.
@@ -213,7 +219,7 @@ namespace is_mesh {
         SimplexSet<TetrahedronKey> get_tets(const NodeKey& nid);
 
         SimplexSet<TetrahedronKey> get_tets(const EdgeKey& eid);
-        
+
         // Getters which have a SimplexSet as input
         template<typename key_type>
         SimplexSet<NodeKey> get_nodes(const SimplexSet<key_type>& keys)
@@ -225,7 +231,7 @@ namespace is_mesh {
             }
             return nids;
         }
-        
+
         template<typename key_type>
         SimplexSet<EdgeKey> get_edges(const SimplexSet<key_type>& keys)
         {
@@ -236,7 +242,8 @@ namespace is_mesh {
             }
             return eids;
         }
-        
+
+
         template<typename key_type>
         SimplexSet<FaceKey> get_faces(const SimplexSet<key_type>& keys)
         {
@@ -247,7 +254,7 @@ namespace is_mesh {
             }
             return fids;
         }
-        
+
         template<typename key_type>
         SimplexSet<TetrahedronKey> get_tets(const SimplexSet<key_type>& keys)
         {

@@ -136,7 +136,7 @@ void UI::load_model(const std::string& file_name, double discretization)
     dsc = std::unique_ptr<DeformableSimplicialComplex>(new DeformableSimplicialComplex(points, tets, tet_labels));
     
     vec3 p_min(INFINITY), p_max(-INFINITY);
-    for (auto nit = dsc->get_is_mesh().nodes_begin(); nit != dsc->get_is_mesh().nodes_end(); nit++) {
+    for (auto nit : dsc->get_is_mesh().nodes()) {
         for (int i = 0; i < 3; i++) {
             p_min[i] = Util::min(nit->get_pos()[i], p_min[i]);
             p_max[i] = Util::max(nit->get_pos()[i], p_max[i]);

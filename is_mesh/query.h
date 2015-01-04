@@ -23,49 +23,56 @@ namespace is_mesh {
     };
 
     class QueryResultIterator {
-        is_mesh::FaceKey first_intersection;
+        FaceKey first_intersection;
         double dist;
         CGLA::Ray ray;
         QueryType query_type;
-        is_mesh::SimplexSet<is_mesh::TetrahedronKey> tetrahedron_key;
-        is_mesh::FaceKey face_key;
-        is_mesh::ISMesh *mesh;
+        SimplexSet<TetrahedronKey> tetrahedron_key;
+        FaceKey face_key;
+        ISMesh *mesh;
         void next();
     public:
 
         QueryResultIterator();
-        QueryResultIterator(is_mesh::FaceKey const &first_intersection, double dist, CGLA::Ray const &ray, QueryType const &query_type, is_mesh::ISMesh *mesh);
+        QueryResultIterator(FaceKey const &first_intersection, double dist, CGLA::Ray const &ray, QueryType const &query_type, ISMesh *mesh);
         QueryResultIterator(const QueryResultIterator& iter);
 
-        is_mesh::FaceKey operator*();
+        FaceKey operator*();
         QueryResultIterator &operator++();
         bool operator!=(const QueryResultIterator & other);
     };
 
     class QueryResult {
-        is_mesh::FaceKey first_intersection;
+        FaceKey first_intersection;
         double dist;
         CGLA::Ray ray;
         QueryType query_type;
-        is_mesh::ISMesh *mesh;
+        ISMesh *mesh;
     public:
         QueryResult():mesh(nullptr){}
-        QueryResult(is_mesh::FaceKey const &first_intersection, double dist, CGLA::Ray const &ray, QueryType const &query_type, is_mesh::ISMesh *mesh);
+        QueryResult(FaceKey const &first_intersection, double dist, CGLA::Ray const &ray, QueryType const &query_type, ISMesh *mesh);
 
         QueryResultIterator begin();
         QueryResultIterator end();
     };
 
     class Query {
-        is_mesh::ISMesh *mesh;
-        std::vector<is_mesh::FaceKey> boundary_faces;
+        ISMesh *mesh;
+        std::vector<FaceKey> *boundary_faces = nullptr;
 
     public:
-        Query(is_mesh::ISMesh *mesh);
+        Query(ISMesh *mesh);
+        ~Query();
         QueryResult raycast_faces(CGLA::Ray ray, QueryType queryType = QueryType::All);
 
         // Must be called explicit prior to raycasting if the boundary triangles of the ISMesh has changed
         void rebuild_boundary_cache();
+
+        // returns the nodes within max distance to a given from_node
+        // includes the from_node in the result
+        std::vector<NodeKey> neighborhood(NodeKey from_node, double max_distance);
+
+
     };
 }
 

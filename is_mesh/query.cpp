@@ -7,7 +7,6 @@
 #include "is_mesh/is_mesh.h"
 #include <limits>
 
-using namespace is_mesh;
 using namespace CGLA;
 
 /**
@@ -20,28 +19,34 @@ using namespace CGLA;
 */
 namespace is_mesh {
 
-    Query::Query(is_mesh::ISMesh *mesh)
+    Query::Query(ISMesh *mesh)
             : mesh(mesh) {
-        rebuild_boundary_cache();
+
+    }
+
+    Query::~Query() {
+        delete boundary_faces;
     }
 
     QueryResult Query::raycast_faces(Ray ray, QueryType queryType) {
-
-        is_mesh::FaceKey firstIntersection((unsigned int) -1);
+        if (!boundary_faces){
+            rebuild_boundary_cache();
+        }
+        FaceKey firstIntersection((unsigned int) -1);
         double dist = std::numeric_limits<double>::max();
 
-        for (auto faceIter = boundary_faces.begin();faceIter != boundary_faces.end();faceIter++){
-            auto & face = mesh->get(*faceIter);
+        for (auto faceIter : *boundary_faces){
+            Face & face = mesh->get(faceIter);
             auto nodePos = mesh->get_pos(face.node_keys());
             double newDist;
             if (ray.intersect_triangle(nodePos[0], nodePos[1], nodePos[2], newDist)){
                 if (dist != std::numeric_limits<double>::max()){
                     if (newDist  < dist){
-                        firstIntersection = *faceIter;
+                        firstIntersection = faceIter;
                     }
                     break;
                 }
-                firstIntersection = *faceIter;
+                firstIntersection = faceIter;
                 dist = newDist;
             }
         }
@@ -53,11 +58,15 @@ namespace is_mesh {
     }
 
     void Query::rebuild_boundary_cache() {
-        boundary_faces.clear();
+        if (!boundary_faces){
+            boundary_faces = new std::vector<FaceKey>();
+        } else {
+            boundary_faces->clear();
+        }
 
-        for (auto faceiter = mesh->faces_begin();faceiter != mesh->faces_end();faceiter++){
+        for (auto faceiter : mesh->faces()){
             if (faceiter->is_boundary()){
-                boundary_faces.push_back(faceiter.key());
+                boundary_faces->push_back(faceiter.key());
             }
         }
     }
@@ -66,11 +75,11 @@ namespace is_mesh {
         face_key = FaceKey((unsigned int) -1);
     }
 
-    QueryResultIterator::QueryResultIterator(is_mesh::FaceKey const &first_intersection, double dist, Ray const &ray, QueryType const &query_type, is_mesh::ISMesh *mesh)
+    QueryResultIterator::QueryResultIterator(FaceKey const &first_intersection, double dist, Ray const &ray, QueryType const &query_type, ISMesh *mesh)
             : first_intersection(first_intersection), dist(dist), ray(ray), query_type(query_type), mesh(mesh) {
         FaceKey lastFace = first_intersection;
         tetrahedron_key = mesh->get(first_intersection).tet_keys(); // since boundary always only one
-        std::vector<is_mesh::FaceKey> res;
+        std::vector<FaceKey> res;
         if (dist >= 0 && query_type != QueryType::Interface){
             face_key = lastFace;
         } else {
@@ -103,13 +112,13 @@ namespace is_mesh {
         face_key = FaceKey((unsigned int) -1);
     }
 
-    is_mesh::FaceKey QueryResultIterator::operator*() { return face_key; }
+    FaceKey QueryResultIterator::operator*() { return face_key; }
 
     bool QueryResultIterator::operator!=(const QueryResultIterator & other) {
         return !(face_key == other.face_key);
     }
 
-    QueryResult::QueryResult(is_mesh::FaceKey const &first_intersection, double dist, Ray const &ray, QueryType const &query_type, is_mesh::ISMesh *mesh)
+    QueryResult::QueryResult(FaceKey const &first_intersection, double dist, Ray const &ray, QueryType const &query_type, ISMesh *mesh)
             : first_intersection(first_intersection), dist(dist), ray(ray), query_type(query_type), mesh(mesh) {
     }
 
@@ -138,5 +147,21 @@ namespace is_mesh {
         face_key(other.face_key),
         mesh(other.mesh)
     {
+    }
+
+
+    std::vector<NodeKey> Query::neighborhood(NodeKey from_node, double max_distance) {
+        // naive implementation - todo implement graph centric version
+        vec3 from_pos = mesh->get(from_node).get_pos();
+        std::vector<NodeKey> res;
+        double max_distanceSqr = max_distance * max_distance;
+        for (auto nodeiter : mesh->nodes()){
+            vec3 to_pos = nodeiter->get_pos();
+            double lengthSqr = sqr_length(from_pos - to_pos);
+            if (lengthSqr < max_distanceSqr){
+                res.push_back(nodeiter.key());
+            }
+        }
+        return res;
     }
 }

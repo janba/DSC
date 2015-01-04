@@ -39,7 +39,7 @@ namespace is_mesh
         {
             
         }
-        
+
         SimplexSet(const SimplexSet& ss) : set(ss.set)
         {
             
