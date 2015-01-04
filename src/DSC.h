@@ -113,6 +113,11 @@ namespace DSC {
                         std::vector<is_mesh::TetrahedronKey> *sub_domain_tet,
                         std::vector<is_mesh::EdgeKey> *sub_domain_edge);
 
+        std::vector<is_mesh::NodeKey> * get_sub_domain_node();
+        std::vector<is_mesh::FaceKey> * get_sub_domain_face();
+        std::vector<is_mesh::TetrahedronKey> * get_sub_domain_tet();
+        std::vector<is_mesh::EdgeKey> * get_sub_domain_edge();
+
         bool has_sub_domain();
 
         virtual void set_labels(const is_mesh::Geometry& geometry, int label);

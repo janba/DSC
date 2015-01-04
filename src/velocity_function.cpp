@@ -76,7 +76,7 @@ void DSC::VelocityFunc::deform(DeformableSimplicialComplex& dsc) {
 bool DSC::VelocityFunc::is_motion_finished(DeformableSimplicialComplex& dsc) {
     if(time_step < MAX_TIME_STEPS)
     {
-        for (auto nit : dsc.get_is_mesh().nodes())
+        for (auto nit : dsc.get_is_mesh().nodes(dsc.get_sub_domain_node()))
         {
             if(dsc.is_movable(nit.key()))
             {
