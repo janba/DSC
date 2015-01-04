@@ -164,4 +164,52 @@ namespace is_mesh {
         }
         return res;
     }
+
+    std::vector<EdgeKey> Query::edges(std::vector<NodeKey> nodeKeys) {
+        std::vector<bool> fastLookup(mesh->get_max_node_key(), false);
+        for (NodeKey k : nodeKeys){
+            fastLookup[(int)k] = true;
+        }
+        std::vector<EdgeKey> res;
+        for (auto edgeIter : mesh->edges()){
+            const auto & nodes = edgeIter->node_keys();
+            if (fastLookup[(int)nodes[0]] && fastLookup[(int)nodes[1]]){
+                res.push_back(edgeIter.key());
+            }
+        }
+
+        return res;
+    }
+
+    std::vector<FaceKey> Query::faces(std::vector<EdgeKey> edgeKeys) {
+        std::vector<bool> fastLookup(mesh->get_max_edge_key(), false);
+        for (EdgeKey k : edgeKeys){
+            fastLookup[(int)k] = true;
+        }
+        std::vector<FaceKey> res;
+        for (auto faceIter : mesh->faces()){
+            const auto &edges = faceIter->edge_keys();
+            if (fastLookup[(int) edges[0]] && fastLookup[(int) edges[1]] && fastLookup[(int) edges[2]]){
+                res.push_back(faceIter.key());
+            }
+        }
+
+        return res;
+    }
+
+    std::vector<TetrahedronKey> Query::tetrahedra(std::vector<FaceKey> faceKeys){
+        std::vector<bool> fastLookup(mesh->get_max_face_key(), false);
+        for (FaceKey k : faceKeys){
+            fastLookup[(int)k] = true;
+        }
+        std::vector<TetrahedronKey> res;
+        for (auto tetIter : mesh->tetrahedra()){
+            const auto &edges = tetIter->face_keys();
+            if (fastLookup[(int) edges[0]] && fastLookup[(int) edges[1]] && fastLookup[(int) edges[2]] && fastLookup[(int) edges[3]]){
+                res.push_back(tetIter.key());
+            }
+        }
+
+        return res;
+    }
 }

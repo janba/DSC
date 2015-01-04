@@ -72,7 +72,12 @@ namespace is_mesh {
         // includes the from_node in the result
         std::vector<NodeKey> neighborhood(NodeKey from_node, double max_distance);
 
+        // return the list of edges where both nodes are contained in the nodeKeys
+        std::vector<EdgeKey> edges(std::vector<NodeKey> nodeKeys);
 
+        std::vector<FaceKey> faces(std::vector<EdgeKey> edgeKeys);
+
+        std::vector<TetrahedronKey> tetrahedra(std::vector<FaceKey> faceKeys);
     };
 }
 

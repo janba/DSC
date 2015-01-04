@@ -55,6 +55,14 @@ namespace is_mesh {
         unsigned int get_no_faces() const;
 
         unsigned int get_no_tets() const;
+
+        unsigned int get_max_node_key() const;
+
+        unsigned int get_max_edge_key() const;
+
+        unsigned int get_max_face_key() const;
+
+        unsigned int get_max_tet_key() const;
         
         ///////////////
         // ITERATORS //

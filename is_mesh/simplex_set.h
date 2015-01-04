@@ -104,11 +104,14 @@ namespace is_mesh
         
         bool contains(const key_type& k) const
         {
+            assert(size() < 1000); // this indicates a performance issue (not an actual bug)
             return std::find(set.begin(), set.end(), k) != end();
         }
         
         int index(const key_type& k) const
         {
+            assert(size() < 1000); // this indicates a performance issue (not an actual bug)
+
             for (int i = 0; i < set.size(); i++) {
                 if(set[i] == k)
                 {

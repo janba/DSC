@@ -1203,4 +1203,12 @@ namespace is_mesh{
     bool ISMesh::remove_collapse_listener(long id) {
         return m_collapse_listeners.erase(id) > 0;
     }
+
+    unsigned int ISMesh::get_max_node_key() const { return m_node_kernel->capacity(); }
+
+    unsigned int ISMesh::get_max_edge_key() const { return m_edge_kernel->capacity(); }
+
+    unsigned int ISMesh::get_max_face_key() const { return m_face_kernel->capacity(); }
+
+    unsigned int ISMesh::get_max_tet_key() const { return m_tetrahedron_kernel->capacity(); }
 }
