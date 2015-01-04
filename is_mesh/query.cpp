@@ -100,6 +100,7 @@ namespace is_mesh {
                 }
             }
         }
+        face_key = FaceKey((unsigned int) -1);
     }
 
     is_mesh::FaceKey QueryResultIterator::operator*() { return face_key; }
