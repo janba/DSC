@@ -23,7 +23,6 @@ namespace is_mesh {
     };
 
     class QueryResultIterator {
-        FaceKey first_intersection;
         double dist;
         CGLA::Ray ray;
         QueryType query_type;
@@ -34,7 +33,7 @@ namespace is_mesh {
     public:
 
         QueryResultIterator();
-        QueryResultIterator(FaceKey const &first_intersection, double dist, CGLA::Ray const &ray, QueryType const &query_type, ISMesh *mesh);
+        QueryResultIterator(FaceKey const &first_boundary_intersection, double dist, CGLA::Ray const &ray, QueryType const &query_type, ISMesh *mesh);
         QueryResultIterator(const QueryResultIterator& iter);
 
         FaceKey operator*();

@@ -40,14 +40,17 @@ namespace is_mesh {
             auto nodePos = mesh->get_pos(face.node_keys());
             double newDist;
             if (ray.intersect_triangle(nodePos[0], nodePos[1], nodePos[2], newDist)){
-                if (dist != std::numeric_limits<double>::max()){
-                    if (newDist  < dist){
+                bool isFirstFoundTriangle = dist == std::numeric_limits<double>::max();
+                if (isFirstFoundTriangle){
+                    firstIntersection = faceIter;
+                    dist = newDist;
+                } else {
+                    if (newDist < dist){
                         firstIntersection = faceIter;
+                        dist = newDist;
                     }
                     break;
                 }
-                firstIntersection = faceIter;
-                dist = newDist;
             }
         }
         if ((unsigned int)firstIntersection == (unsigned int)-1){
@@ -75,14 +78,10 @@ namespace is_mesh {
         face_key = FaceKey((unsigned int) -1);
     }
 
-    QueryResultIterator::QueryResultIterator(FaceKey const &first_intersection, double dist, Ray const &ray, QueryType const &query_type, ISMesh *mesh)
-            : first_intersection(first_intersection), dist(dist), ray(ray), query_type(query_type), mesh(mesh) {
-        FaceKey lastFace = first_intersection;
-        tetrahedron_key = mesh->get(first_intersection).tet_keys(); // since boundary always only one
-        std::vector<FaceKey> res;
-        if (dist >= 0 && query_type != QueryType::Interface){
-            face_key = lastFace;
-        } else {
+    QueryResultIterator::QueryResultIterator(FaceKey const &first_boundary_intersection, double dist, Ray const &ray, QueryType const &query_type, ISMesh *mesh)
+            : face_key(first_boundary_intersection), dist(dist), ray(ray), query_type(query_type), mesh(mesh) {
+        tetrahedron_key = mesh->get(first_boundary_intersection).tet_keys(); // since boundary always only one
+        if (dist < 0 || query_type == QueryType::Interface){
             next();
         }
     }
@@ -90,22 +89,23 @@ namespace is_mesh {
     void QueryResultIterator::next() {
         if (tetrahedron_key.size()==0){
             face_key = FaceKey((unsigned int) -1);
-        }
-        while (tetrahedron_key.size()>0){
-            SimplexSet<FaceKey> faces = mesh->get(tetrahedron_key.front()).face_keys() - face_key;
-            double newDist = std::numeric_limits<double>::max();
-            for (FaceKey current_face_key : faces) {
-                auto & face = mesh->get(current_face_key);
-                auto nodePos = mesh->get_pos(face.node_keys());
-                if (ray.intersect_triangle(nodePos[0], nodePos[1], nodePos[2], newDist)) {
-                    face_key = current_face_key;
-                    tetrahedron_key = face.get_co_boundary() - tetrahedron_key;
-                    if (newDist >=0 && (query_type == QueryType::All ||
-                            (query_type == QueryType::Interface && face.is_interface()) ||
-                            (query_type == QueryType::Boundary && face.is_boundary()))){
-                        return;
+        } else {
+            while (tetrahedron_key.size()>0){
+                SimplexSet<FaceKey> faces = mesh->get(tetrahedron_key.front()).face_keys() - face_key;
+                double newDist = std::numeric_limits<double>::max();
+                for (FaceKey current_face_key : faces) {
+                    auto & face = mesh->get(current_face_key);
+                    auto nodePos = mesh->get_pos(face.node_keys());
+                    if (ray.intersect_triangle(nodePos[0], nodePos[1], nodePos[2], newDist)) {
+                        face_key = current_face_key;
+                        tetrahedron_key = face.get_co_boundary() - tetrahedron_key;
+                        if (newDist >=0 && (query_type == QueryType::All ||
+                                (query_type == QueryType::Interface && face.is_interface()) ||
+                                (query_type == QueryType::Boundary && face.is_boundary()))){
+                            return;
+                        }
+                        break;
                     }
-                    break;
                 }
             }
         }
@@ -139,8 +139,7 @@ namespace is_mesh {
     }
 
     QueryResultIterator::QueryResultIterator(const QueryResultIterator &other)
-        :first_intersection(other.first_intersection),
-        dist(other.dist),
+        :dist(other.dist),
         ray(other.ray),
         query_type(other.query_type),
         tetrahedron_key(other.tetrahedron_key),
@@ -209,7 +208,6 @@ namespace is_mesh {
                 res.push_back(tetIter.key());
             }
         }
-
         return res;
     }
 }
