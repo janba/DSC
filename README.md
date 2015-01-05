@@ -57,8 +57,8 @@ Finally, the [TetGen library](http://wias-berlin.de/software/tetgen/) is used fo
 ---
 ### Contact information
 
-    Asger Nyman Christiansen
-    Matematiktorvet, Building 324, room 130
+    J. Andreas Bærentzen
+    Matematiktorvet, Building 324, room 110
     Technical University of Denmark
     2800 Kgs. Lyngby, Denmark
-    e-mail: asny@dtu.dk
+    e-mail: janba@dtu.dk
