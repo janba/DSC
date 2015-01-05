@@ -1876,10 +1876,7 @@ namespace DSC {
         return is_mesh;
     }
 
-    void DeformableSimplicialComplex::set_sub_domain(std::vector<is_mesh::NodeKey> *sub_domain_node,
-            std::vector<is_mesh::FaceKey> *sub_domain_face,
-            std::vector<is_mesh::TetrahedronKey> *sub_domain_tet,
-            std::vector<is_mesh::EdgeKey> *sub_domain_edge) {
+    void DeformableSimplicialComplex::set_sub_domain(std::vector<is_mesh::NodeKey> *sub_domain_node, std::vector<is_mesh::EdgeKey> *sub_domain_edge, std::vector<is_mesh::FaceKey> *sub_domain_face, std::vector<is_mesh::TetrahedronKey> *sub_domain_tet) {
         this->sub_domain_node = sub_domain_node;
         this->sub_domain_face = sub_domain_face;
         this->sub_domain_tet = sub_domain_tet;

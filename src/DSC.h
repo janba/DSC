@@ -108,10 +108,7 @@ namespace DSC {
         void add_design_domain(is_mesh::Geometry *geometry);
 
         // set sub domain elements which are modified
-        void set_sub_domain(std::vector<is_mesh::NodeKey> *sub_domain_node,
-                        std::vector<is_mesh::FaceKey> *sub_domain_face,
-                        std::vector<is_mesh::TetrahedronKey> *sub_domain_tet,
-                        std::vector<is_mesh::EdgeKey> *sub_domain_edge);
+        void set_sub_domain(std::vector<is_mesh::NodeKey> *sub_domain_node, std::vector<is_mesh::EdgeKey> *sub_domain_edge, std::vector<is_mesh::FaceKey> *sub_domain_face, std::vector<is_mesh::TetrahedronKey> *sub_domain_tet);
 
         std::vector<is_mesh::NodeKey> * get_sub_domain_node();
         std::vector<is_mesh::FaceKey> * get_sub_domain_face();
