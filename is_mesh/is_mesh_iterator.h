@@ -28,9 +28,9 @@
 namespace is_mesh {
     class NodeIterator {
         const kernel<NodeKey, Node> *m_node_kernel;
-        std::vector<NodeKey> *subset;
+        const std::vector<NodeKey> *subset;
     public:
-        NodeIterator(const kernel<NodeKey, Node> *m_node_kernel, std::vector<NodeKey> *subset);
+        NodeIterator(const kernel<NodeKey, Node> *m_node_kernel, const std::vector<NodeKey> *subset);
 
         typename kernel<NodeKey, Node>::iterator begin() const;
 
@@ -39,9 +39,9 @@ namespace is_mesh {
 
     class EdgeIterator {
         const kernel<EdgeKey, Edge>* m_edge_kernel;
-        std::vector<EdgeKey> *subset;
+        const std::vector<EdgeKey> *subset;
     public:
-        EdgeIterator(const kernel<EdgeKey, Edge> *m_edge_kernel, std::vector<EdgeKey> *subset);
+        EdgeIterator(const kernel<EdgeKey, Edge> *m_edge_kernel, const std::vector<EdgeKey> *subset);
 
         typename kernel<EdgeKey, Edge>::iterator begin() const;
 
@@ -50,9 +50,9 @@ namespace is_mesh {
 
     class FaceIterator {
         const kernel<FaceKey, Face>* m_face_kernel;
-        std::vector<FaceKey> *subset;
+        const std::vector<FaceKey> *subset;
     public:
-        FaceIterator(const kernel<FaceKey, Face> *m_face_kernel, std::vector<FaceKey> *subset);
+        FaceIterator(const kernel<FaceKey, Face> *m_face_kernel, const std::vector<FaceKey> *subset);
 
         typename kernel<FaceKey, Face>::iterator begin() const;
 
@@ -62,9 +62,9 @@ namespace is_mesh {
 
     class TetrahedronIterator {
         const kernel<TetrahedronKey, Tetrahedron>* m_tetrahedron_kernel;
-        std::vector<TetrahedronKey> *subset;
+        const std::vector<TetrahedronKey> *subset;
     public:
-        TetrahedronIterator(const kernel<TetrahedronKey, Tetrahedron> *m_tetrahedron_kernel, std::vector<TetrahedronKey> *subset);
+        TetrahedronIterator(const kernel<TetrahedronKey, Tetrahedron> *m_tetrahedron_kernel, const std::vector<TetrahedronKey> *subset);
 
         typename kernel<TetrahedronKey, Tetrahedron>::iterator begin() const;
 

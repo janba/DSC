@@ -71,6 +71,9 @@ namespace is_mesh {
         // includes the from_node in the result
         std::vector<NodeKey> neighborhood(NodeKey from_node, double max_distance);
 
+        // returns the nodes within max distance to a given point
+        std::vector<NodeKey> neighborhood(vec3 from, double max_distance);
+
         // return the list of edges where both nodes are contained in the nodeKeys
         std::vector<EdgeKey> edges(std::vector<NodeKey> nodeKeys);
 

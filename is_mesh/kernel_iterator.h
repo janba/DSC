@@ -64,7 +64,7 @@ namespace is_mesh
         typedef typename element_type::key_type key_type;
         
     private:
-        std::vector<key_type> *m_keys;
+        const std::vector<key_type> *m_keys;
         unsigned int     m_key;
         kernel_type*     m_kernel;
         
@@ -82,7 +82,7 @@ namespace is_mesh
         * The only constructor.
         * Creates a kernel iterator. Should only be created from the kernel.
         */
-        kernel_iterator(kernel_type const * const kernel, std::vector<key_type> *keys) : m_key(0), m_keys(keys)
+        kernel_iterator(kernel_type const * const kernel, const std::vector<key_type> *keys) : m_key(0), m_keys(keys)
         {
             m_kernel = const_cast<kernel_type*>(kernel);
         }
@@ -152,7 +152,9 @@ namespace is_mesh
         iterator& operator++()
         {
             if (m_keys){
-                m_key++;
+                do{
+                    m_key++;
+                } while (m_key < m_keys->size() && m_kernel->m_data[(*m_keys)[m_key]].state != element_type::VALID);
                 if (m_key>= m_keys->size()){
                     m_key = (unsigned int)m_kernel->m_data.size();
                 }

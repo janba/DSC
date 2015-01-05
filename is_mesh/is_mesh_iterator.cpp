@@ -18,7 +18,7 @@
 
 namespace is_mesh {
 
-    NodeIterator::NodeIterator(const kernel<NodeKey,Node> *m_node_kernel, std::vector<NodeKey> *subset)
+    NodeIterator::NodeIterator(const kernel<NodeKey,Node> *m_node_kernel, const std::vector<NodeKey> *subset)
             : m_node_kernel(m_node_kernel),subset(subset) {
     }
 
@@ -33,7 +33,7 @@ namespace is_mesh {
         return m_node_kernel->end();
     }
 
-    EdgeIterator::EdgeIterator(const kernel<EdgeKey,Edge> *m_edge_kernel, std::vector<EdgeKey> *subset)
+    EdgeIterator::EdgeIterator(const kernel<EdgeKey,Edge> *m_edge_kernel, const std::vector<EdgeKey> *subset)
             : m_edge_kernel(m_edge_kernel),subset(subset) {
     }
 
@@ -48,7 +48,7 @@ namespace is_mesh {
         return m_edge_kernel->end();
     }
 
-    FaceIterator::FaceIterator(const kernel<FaceKey,Face> *m_face_kernel, std::vector<FaceKey> *subset)
+    FaceIterator::FaceIterator(const kernel<FaceKey,Face> *m_face_kernel,const std::vector<FaceKey> *subset)
             : m_face_kernel(m_face_kernel),subset(subset) {
     }
 
@@ -63,7 +63,7 @@ namespace is_mesh {
         return m_face_kernel->end();
     }
 
-    TetrahedronIterator::TetrahedronIterator(const kernel<TetrahedronKey,Tetrahedron> *m_tetrahedron_kernel,std::vector<TetrahedronKey> *subset)
+    TetrahedronIterator::TetrahedronIterator(const kernel<TetrahedronKey,Tetrahedron> *m_tetrahedron_kernel,const std::vector<TetrahedronKey> *subset)
             : m_tetrahedron_kernel(m_tetrahedron_kernel),subset(subset) {
     }
 

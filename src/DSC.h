@@ -49,7 +49,15 @@ struct parameters {
 };
 
 namespace DSC {
-    
+    class Subdomain {
+    public:
+        virtual void rebuild() = 0;
+
+        virtual const std::vector<is_mesh::NodeKey> &nodes() = 0;
+        virtual const std::vector<is_mesh::EdgeKey> &edges() = 0;
+        virtual const std::vector<is_mesh::FaceKey> &faces() = 0;
+        virtual const std::vector<is_mesh::TetrahedronKey> &tetrahedra() = 0;
+    };
 
     class DeformableSimplicialComplex
     {
@@ -79,10 +87,7 @@ namespace DSC {
 
         parameters pars;
 
-        std::vector<is_mesh::NodeKey> *sub_domain_node = nullptr;
-        std::vector<is_mesh::FaceKey> *sub_domain_face = nullptr;
-        std::vector<is_mesh::TetrahedronKey> *sub_domain_tet = nullptr;
-        std::vector<is_mesh::EdgeKey> *sub_domain_edge = nullptr;
+        Subdomain *subdomain = nullptr;
 
         //////////////////////////
         // INITIALIZE FUNCTIONS //
@@ -108,14 +113,11 @@ namespace DSC {
         void add_design_domain(is_mesh::Geometry *geometry);
 
         // set sub domain elements which are modified
-        void set_sub_domain(std::vector<is_mesh::NodeKey> *sub_domain_node, std::vector<is_mesh::EdgeKey> *sub_domain_edge, std::vector<is_mesh::FaceKey> *sub_domain_face, std::vector<is_mesh::TetrahedronKey> *sub_domain_tet);
+        void set_subdomain(Subdomain *subdomain);
 
-        std::vector<is_mesh::NodeKey> * get_sub_domain_node();
-        std::vector<is_mesh::FaceKey> * get_sub_domain_face();
-        std::vector<is_mesh::TetrahedronKey> * get_sub_domain_tet();
-        std::vector<is_mesh::EdgeKey> * get_sub_domain_edge();
+        Subdomain* get_subdomain();
 
-        bool has_sub_domain();
+        void clear_subdomain();
 
         virtual void set_labels(const is_mesh::Geometry& geometry, int label);
 
@@ -169,7 +171,9 @@ namespace DSC {
         * Sets the position of node n.
         */
         void set_pos(const is_mesh::NodeKey& nid, const vec3& p);
-        
+
+        virtual void on_gc(const is_mesh::GarbageCollectDeletions& gc);
+
     public:
         /**
         * Sets the destination where the node n is moved to when deform() is called.
@@ -180,6 +184,17 @@ namespace DSC {
         // GETTERS //
         /////////////
     public:
+        // Returns nodes. If subdomain is specified only nodes in subdomain.
+        is_mesh::NodeIterator nodes() const;
+
+        // Returns edges. If subdomain is specified only edges in subdomain.
+        is_mesh::EdgeIterator edges() const;
+
+        // Returns faces. If subdomain is specified only faces in subdomain.
+        is_mesh::FaceIterator faces() const;
+
+        // Returns tetrahedra. If subdomain is specified only tetrahedra in subdomain.
+        is_mesh::TetrahedronIterator tetrahedra() const;
 
         vec3 get_center() const;
 
@@ -480,6 +495,7 @@ namespace DSC {
         double quality(const is_mesh::FaceKey& fid);
 
         double quality(const is_mesh::EdgeKey& eid);
+
         /**
         * Returns the largest face in the simplex set.
         */
@@ -543,6 +559,7 @@ namespace DSC {
         double min_dihedral_angle(const is_mesh::TetrahedronKey& t);
 
         void get_qualities(std::vector<int>& histogram, double& min_quality);
+
         /**
         * Calculates the dihedral angles in the SimplicialComplex and returns these in a histogram,
         * along with the minimum and maximum dihedral angles.
@@ -567,7 +584,6 @@ namespace DSC {
         void test_flip44();
 
         void test_flip22();
-        
     };
     
 }

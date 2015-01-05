@@ -149,19 +149,22 @@ namespace is_mesh {
     }
 
 
-    std::vector<NodeKey> Query::neighborhood(NodeKey from_node, double max_distance) {
-        // naive implementation - todo implement graph centric version
-        vec3 from_pos = mesh->get(from_node).get_pos();
+    std::vector<NodeKey> Query::neighborhood(vec3 from, double max_distance) {
         std::vector<NodeKey> res;
         double max_distanceSqr = max_distance * max_distance;
         for (auto nodeiter : mesh->nodes()){
             vec3 to_pos = nodeiter->get_pos();
-            double lengthSqr = sqr_length(from_pos - to_pos);
+            double lengthSqr = sqr_length(from - to_pos);
             if (lengthSqr < max_distanceSqr){
                 res.push_back(nodeiter.key());
             }
         }
         return res;
+    }
+
+    std::vector<NodeKey> Query::neighborhood(NodeKey from_node, double max_distance) {
+        vec3 from_pos = mesh->get(from_node).get_pos();
+        return neighborhood(from_pos, max_distance);
     }
 
     std::vector<EdgeKey> Query::edges(std::vector<NodeKey> nodeKeys) {

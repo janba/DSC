@@ -40,19 +40,19 @@ namespace is_mesh{
         return static_cast<unsigned int>(m_tetrahedron_kernel->size());
     }
 
-    NodeIterator ISMesh::nodes(std::vector<NodeKey> *subset) const {
+    NodeIterator ISMesh::nodes(const std::vector<NodeKey> *subset) const {
         return NodeIterator{m_node_kernel,subset};
     }
 
-    EdgeIterator ISMesh::edges(std::vector<EdgeKey> *subset) const {
+    EdgeIterator ISMesh::edges(const std::vector<EdgeKey> *subset) const {
         return EdgeIterator{m_edge_kernel,subset};
     }
 
-    FaceIterator ISMesh::faces(std::vector<FaceKey> *subset) const {
+    FaceIterator ISMesh::faces(const std::vector<FaceKey> *subset) const {
         return FaceIterator{m_face_kernel,subset};
     }
 
-    TetrahedronIterator ISMesh::tetrahedra(std::vector<TetrahedronKey> *subset) const {
+    TetrahedronIterator ISMesh::tetrahedra(const std::vector<TetrahedronKey> *subset) const {
         return TetrahedronIterator{m_tetrahedron_kernel,subset};
     }
 
