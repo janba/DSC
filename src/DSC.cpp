@@ -199,6 +199,8 @@ namespace DSC {
     double DeformableSimplicialComplex::build_table(const EdgeKey& e, const SimplexSet<NodeKey>& polygon, vector<vector<int>>& K) {
         SimplexSet<NodeKey> nids = is_mesh.get(e).node_keys();
 
+        vector<vec3> poly_pos = is_mesh.get_pos(polygon);
+
         const int m = (int) polygon.size();
 
         auto Q = vector<vector<double>>(m-1, vector<double>(m, 0.));
@@ -213,13 +215,13 @@ namespace DSC {
         auto polyn1 = is_mesh.get(nids[1]).get_pos();
         for (int i = m-3; i >= 0; i--)
         {
-            auto polyi = is_mesh.get(polygon[i]).get_pos();
+            auto polyi = poly_pos[i];
             for (int j = i+2; j < m; j++)
             {
-                auto polyj = is_mesh.get(polygon[j]).get_pos();
+                auto polyj = poly_pos[j];
                 for (int k = i+1; k < j; k++)
                 {
-                    auto polyk = is_mesh.get(polygon[k]).get_pos();
+                    auto polyk = poly_pos[k];
                     double q2 = Util::quality(polyi, polyk, polyn0, polyj);
                     double q1 = Util::quality(polyk, polyi, polyn1, polyj);
                     double q = Util::min(q1, q2);
@@ -1016,7 +1018,9 @@ namespace DSC {
         Node & node = is_mesh.get(n);
         vec3 pos = node.get_pos();
         vec3 destination = node.get_destination();
-        double l = Util::length(destination - pos);
+        vec3 move_direction = destination - pos;
+        double l = Util::length(move_direction);
+        move_direction = move_direction * (1.0/l);
 
         if (l < 1e-4*AVG_LENGTH) // The vertex is not moved
         {
@@ -1025,9 +1029,9 @@ namespace DSC {
 
         double max_l = l*intersection_with_link(n, destination) - 1e-4 * AVG_LENGTH;
         l = Util::max(Util::min(0.5*max_l, l), 0.);
-        set_pos(n, pos + l*Util::normalize(destination - pos));
+        set_pos(n, pos + l*move_direction);
 
-        if (Util::length(destination - is_mesh.get(n).get_pos()) < 1e-4*AVG_LENGTH)
+        if (Util::length(destination - node.get_pos()) < 1e-4*AVG_LENGTH)
         {
             return true;
         }
@@ -1056,12 +1060,13 @@ namespace DSC {
     }
 
     bool DeformableSimplicialComplex::is_flat(const SimplexSet<FaceKey>& fids) {
-        for (const FaceKey& f1 : fids) {
-            if (is_mesh.get(f1).is_interface() || is_mesh.get(f1).is_boundary())
+        for (const FaceKey& fk1 : fids) {
+            Face& f1 = is_mesh.get(fk1);
+            if (f1.is_interface() || f1.is_boundary())
             {
-                vec3 normal1 = get_normal(f1);
+                vec3 normal1 = get_normal(fk1);
                 for (const FaceKey& f2 : fids) {
-                    if (f1 != f2 && (is_mesh.get(f2).is_interface() || is_mesh.get(f2).is_boundary()))
+                    if (fk1 != f2 && (is_mesh.get(f2).is_interface() || is_mesh.get(f2).is_boundary()))
                     {
                         vec3 normal2 = get_normal(f2);
                         if(abs(dot(normal1, normal2)) < FLIP_EDGE_INTERFACE_FLATNESS)
@@ -1460,12 +1465,13 @@ namespace DSC {
         for (auto f : fids)
         {
             SimplexSet<NodeKey> nids = is_mesh.get_nodes(f);
-            if(Util::sign(Util::signed_volume(is_mesh.get(nids[0]).get_pos(), is_mesh.get(nids[1]).get_pos(), is_mesh.get(nids[2]).get_pos(), pos_old)) !=
-                    Util::sign(Util::signed_volume(is_mesh.get(nids[0]).get_pos(), is_mesh.get(nids[1]).get_pos(), is_mesh.get(nids[2]).get_pos(), pos_new)))
+            vector<vec3> pos = is_mesh.get_pos(nids);
+            if(Util::sign(Util::signed_volume(pos[0], pos[1], pos[2], pos_old)) !=
+                    Util::sign(Util::signed_volume(pos[0], pos[1], pos[2], pos_new)))
             {
                 return -INFINITY;
             }
-            min_q = Util::min(min_q, abs(Util::quality(is_mesh.get(nids[0]).get_pos(), is_mesh.get(nids[1]).get_pos(), is_mesh.get(nids[2]).get_pos(), pos_new)));
+            min_q = Util::min(min_q, abs(Util::quality(pos[0], pos[1], pos[2], pos_new)));
         }
         return min_q;
     }
@@ -1476,25 +1482,27 @@ namespace DSC {
         for (auto f : fids)
         {
             SimplexSet<NodeKey> nids = is_mesh.get_nodes(f);
-            if(Util::sign(Util::signed_volume(is_mesh.get(nids[0]).get_pos(), is_mesh.get(nids[1]).get_pos(), is_mesh.get(nids[2]).get_pos(), pos_old)) !=
-                    Util::sign(Util::signed_volume(is_mesh.get(nids[0]).get_pos(), is_mesh.get(nids[1]).get_pos(), is_mesh.get(nids[2]).get_pos(), pos_new)))
+            vector<vec3> pos = is_mesh.get_pos(nids);
+            if(Util::sign(Util::signed_volume(pos[0], pos[1], pos[2], pos_old)) !=
+                    Util::sign(Util::signed_volume(pos[0], pos[1], pos[2], pos_new)))
             {
                 min_q_old = INFINITY;
                 min_q_new = -INFINITY;
                 break;
             }
-            min_q_old = Util::min(min_q_old, abs(Util::quality(is_mesh.get(nids[0]).get_pos(), is_mesh.get(nids[1]).get_pos(), is_mesh.get(nids[2]).get_pos(), pos_old)));
-            min_q_new = Util::min(min_q_new, abs(Util::quality(is_mesh.get(nids[0]).get_pos(), is_mesh.get(nids[1]).get_pos(), is_mesh.get(nids[2]).get_pos(), pos_new)));
+            min_q_old = Util::min(min_q_old, abs(Util::quality(pos[0], pos[1], pos[2], pos_old)));
+            min_q_new = Util::min(min_q_new, abs(Util::quality(pos[0], pos[1], pos[2], pos_new)));
         }
     }
 
     void DeformableSimplicialComplex::check_consistency(const SimplexSet<NodeKey>& nids, SimplexSet<NodeKey>& polygon) {
         unsigned int n = static_cast<unsigned int>(polygon.size());
-
+        vector<vec3> pos = is_mesh.get_pos(nids);
+        vector<vec3> poly_pos = is_mesh.get_pos(polygon);
         double sum = 0;
         for (unsigned int i = 0; i < n; ++i)
         {
-            sum += Util::signed_volume(is_mesh.get(nids[0]).get_pos(), is_mesh.get(nids[1]).get_pos(), is_mesh.get(polygon[i]).get_pos(), is_mesh.get(polygon[(i+1)%n]).get_pos());
+            sum += Util::signed_volume(pos[0], pos[1], poly_pos[i], poly_pos[(i+1)%n]);
         }
 
         if (sum < 0.)
@@ -1675,7 +1683,7 @@ namespace DSC {
             bool ok = true;
             for(auto e : neighbours)
             {
-                if(eids.contains(e))
+                if (eids.contains(e))
                 {
                     ok = false;
                 }
@@ -1695,7 +1703,7 @@ namespace DSC {
         SimplexSet<FaceKey> fids;
         for (auto fit : faces())
         {
-            if(is_safe_editable(fit.key()))
+            if (is_safe_editable(fit.key()))
             {
                 auto nids = is_mesh.get_nodes(fit.key());
                 nids += is_mesh.get_nodes(fit->tet_keys());
@@ -1888,7 +1896,9 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::on_gc(const is_mesh::GarbageCollectDeletions& gc){
-        subdomain->rebuild();
+        if (subdomain){
+            subdomain->rebuild();
+        }
     }
 
     Subdomain *DeformableSimplicialComplex::get_subdomain() {

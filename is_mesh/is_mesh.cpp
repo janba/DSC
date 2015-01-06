@@ -358,11 +358,12 @@ namespace is_mesh{
     }
 
     SimplexSet<NodeKey> ISMesh::get_sorted_nodes(const FaceKey& fid) {
-        if (get(fid).is_interface())
+        Face& f = get(fid);
+        if (f.is_interface())
         {
             int label = -100;
             TetrahedronKey tid;
-            for (auto t : get(fid).tet_keys())
+            for (auto t : f.tet_keys())
             {
                 int tl = get(t).label();
                 if (tl > label)
@@ -373,9 +374,9 @@ namespace is_mesh{
             }
             return get_sorted_nodes(fid, tid);
         }
-        else if (get(fid).is_boundary())
+        else if (f.is_boundary())
         {
-            TetrahedronKey tid = get(fid).tet_keys().front();
+            TetrahedronKey tid = f.tet_keys().front();
             return get_sorted_nodes(fid, tid);
         }
         return get_nodes(fid);
