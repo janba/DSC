@@ -35,7 +35,7 @@ namespace is_mesh {
         QueryResultIterator();
         QueryResultIterator(FaceKey const &first_boundary_intersection, double dist, CGLA::Ray const &ray, QueryType const &query_type, ISMesh *mesh);
         QueryResultIterator(const QueryResultIterator& iter);
-
+        CGLA::Vec3d collision_point();
         FaceKey operator*();
         QueryResultIterator &operator++();
         bool operator!=(const QueryResultIterator & other);

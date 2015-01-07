@@ -102,6 +102,7 @@ namespace is_mesh {
                         if (newDist >=0 && (query_type == QueryType::All ||
                                 (query_type == QueryType::Interface && face.is_interface()) ||
                                 (query_type == QueryType::Boundary && face.is_boundary()))){
+                            dist = newDist;
                             return;
                         }
                         break;
@@ -110,6 +111,10 @@ namespace is_mesh {
             }
         }
         face_key = FaceKey((unsigned int) -1);
+    }
+
+    CGLA::Vec3d QueryResultIterator::collision_point() {
+        return ray.origin + ray.direction * dist;
     }
 
     FaceKey QueryResultIterator::operator*() { return face_key; }
@@ -213,4 +218,5 @@ namespace is_mesh {
         }
         return res;
     }
+
 }
