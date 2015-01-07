@@ -124,6 +124,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a98ae27465017d54e3dbea02abadc0ae6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c53e3725f14691c74523ccfe7b90c68"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel.html#a2c53e3725f14691c74523ccfe7b90c68">size</a> () const </td></tr>
 <tr class="separator:a2c53e3725f14691c74523ccfe7b90c68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe71f021cdbe04632586e5c1114f8d49"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel.html#abe71f021cdbe04632586e5c1114f8d49">capacity</a> () const </td></tr>
+<tr class="separator:abe71f021cdbe04632586e5c1114f8d49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeea67d7b1e5b621b1ef948def35c59da"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel.html#aeea67d7b1e5b621b1ef948def35c59da">empty</a> ()</td></tr>
 <tr class="separator:aeea67d7b1e5b621b1ef948def35c59da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5624473694853b30985caa3726dca0e8"><td class="memTemplParams" colspan="2">template&lt;typename... Values&gt; </td></tr>
@@ -143,6 +145,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a77669d4720c8ec2c273f087ff4223cba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa97166a31c0188e24e21f8e5398b3166"><td class="memItemLeft" align="right" valign="top">value_type &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel.html#aa97166a31c0188e24e21f8e5398b3166">find</a> (key_type const &amp;k)</td></tr>
 <tr class="separator:aa97166a31c0188e24e21f8e5398b3166"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae634f8e76235f99ec9e547fdf9d92ccd"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel.html#ae634f8e76235f99ec9e547fdf9d92ccd">data</a> ()</td></tr>
+<tr class="separator:ae634f8e76235f99ec9e547fdf9d92ccd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0807fed05950749cb8527e9ceec2924f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel.html#a0807fed05950749cb8527e9ceec2924f">is_valid</a> (key_type const &amp;k)</td></tr>
 <tr class="separator:a0807fed05950749cb8527e9ceec2924f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab394c97bafc8ae98142a7b4cfb9751bb"><td class="memItemLeft" align="right" valign="top">std::vector&lt; key_type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel.html#ab394c97bafc8ae98142a7b4cfb9751bb">commit_all</a> ()</td></tr>
@@ -155,9 +159,6 @@ Friends</h2></td></tr>
 <tr class="memitem:a19ce70f2bcfe34395efc6257821e5439"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a19ce70f2bcfe34395efc6257821e5439"></a>
 class&#160;</td><td class="memItemRight" valign="bottom"><b>kernel_iterator&lt; kernel_type &gt;</b></td></tr>
 <tr class="separator:a19ce70f2bcfe34395efc6257821e5439"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9277f48dccb071ead1306ddf41b853e9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9277f48dccb071ead1306ddf41b853e9"></a>
-class&#160;</td><td class="memItemRight" valign="bottom"><b>kernel_iterator_value&lt; kernel_type &gt;</b></td></tr>
-<tr class="separator:a9277f48dccb071ead1306ddf41b853e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename key_type, typename value_type&gt;<br/>
@@ -258,6 +259,32 @@ template&lt;typename key_type, typename value_type&gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="abe71f021cdbe04632586e5c1114f8d49"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename key_type, typename value_type&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t <a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel</a>&lt; key_type, value_type &gt;::capacity </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The capacity of the kernel. Note not all elements may in use. </p>
+
+</div>
+</div>
 <a class="anchor" id="a55f05d427a9b43c91c29c445c1620049"></a>
 <div class="memitem">
 <div class="memproto">
@@ -353,6 +380,32 @@ template&lt;typename... Values&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An iterator pointing to the element. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ae634f8e76235f99ec9e547fdf9d92ccd"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename key_type, typename value_type&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* <a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel</a>&lt; key_type, value_type &gt;::data </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Returns pointer to the underlying array serving as element storage. </p>
 
 </div>
 </div>
@@ -632,7 +685,7 @@ template&lt;typename key_type, typename value_type&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jan 2 2015 15:32:52 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jan 7 2015 15:33:44 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

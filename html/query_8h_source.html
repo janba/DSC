@@ -108,65 +108,81 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    };</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
 <div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="classis__mesh_1_1_query_result_iterator.html">   25</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classis__mesh_1_1_query_result_iterator.html">QueryResultIterator</a> {</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <a class="code" href="classis__mesh_1_1_face_key.html">is_mesh::FaceKey</a> first_intersection;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keywordtype">double</span> dist;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <a class="code" href="class_c_g_l_a_1_1_ray.html">CGLA::Ray</a> ray;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        QueryType query_type;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <a class="code" href="classis__mesh_1_1_simplex_set.html">is_mesh::SimplexSet&lt;is_mesh::TetrahedronKey&gt;</a> tetrahedron_key;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <a class="code" href="classis__mesh_1_1_face_key.html">is_mesh::FaceKey</a> face_key;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <a class="code" href="classis__mesh_1_1_i_s_mesh.html">is_mesh::ISMesh</a> *mesh;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="keywordtype">void</span> next();</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <a class="code" href="classis__mesh_1_1_query_result_iterator.html">QueryResultIterator</a>();</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <a class="code" href="classis__mesh_1_1_query_result_iterator.html">QueryResultIterator</a>(<a class="code" href="classis__mesh_1_1_face_key.html">is_mesh::FaceKey</a> <span class="keyword">const</span> &amp;first_intersection, <span class="keywordtype">double</span> dist, <a class="code" href="class_c_g_l_a_1_1_ray.html">CGLA::Ray</a> <span class="keyword">const</span> &amp;ray, QueryType <span class="keyword">const</span> &amp;query_type, <a class="code" href="classis__mesh_1_1_i_s_mesh.html">is_mesh::ISMesh</a> *mesh);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <a class="code" href="classis__mesh_1_1_query_result_iterator.html">QueryResultIterator</a>(<span class="keyword">const</span> <a class="code" href="classis__mesh_1_1_query_result_iterator.html">QueryResultIterator</a>&amp; iter);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <a class="code" href="classis__mesh_1_1_face_key.html">is_mesh::FaceKey</a> operator*();</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="classis__mesh_1_1_query_result_iterator.html">QueryResultIterator</a> &amp;operator++();</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> <a class="code" href="classis__mesh_1_1_query_result_iterator.html">QueryResultIterator</a> &amp; other);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    };</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="classis__mesh_1_1_query_result.html">   45</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classis__mesh_1_1_query_result.html">QueryResult</a> {</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <a class="code" href="classis__mesh_1_1_face_key.html">is_mesh::FaceKey</a> first_intersection;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordtype">double</span> dist;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <a class="code" href="class_c_g_l_a_1_1_ray.html">CGLA::Ray</a> ray;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        QueryType query_type;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <a class="code" href="classis__mesh_1_1_i_s_mesh.html">is_mesh::ISMesh</a> *mesh;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <a class="code" href="classis__mesh_1_1_query_result.html">QueryResult</a>(){}</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <a class="code" href="classis__mesh_1_1_query_result.html">QueryResult</a>(<a class="code" href="classis__mesh_1_1_face_key.html">is_mesh::FaceKey</a> <span class="keyword">const</span> &amp;first_intersection, <span class="keywordtype">double</span> dist, <a class="code" href="class_c_g_l_a_1_1_ray.html">CGLA::Ray</a> <span class="keyword">const</span> &amp;ray, QueryType <span class="keyword">const</span> &amp;query_type, <a class="code" href="classis__mesh_1_1_i_s_mesh.html">is_mesh::ISMesh</a> *mesh);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <a class="code" href="classis__mesh_1_1_query_result_iterator.html">QueryResultIterator</a> begin();</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <a class="code" href="classis__mesh_1_1_query_result_iterator.html">QueryResultIterator</a> end();</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    };</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="classis__mesh_1_1_query.html">   59</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classis__mesh_1_1_query.html">Query</a> {</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <a class="code" href="classis__mesh_1_1_i_s_mesh.html">is_mesh::ISMesh</a> *mesh;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        std::vector&lt;is_mesh::FaceKey&gt; boundary_faces;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <a class="code" href="classis__mesh_1_1_query.html">Query</a>(<a class="code" href="classis__mesh_1_1_i_s_mesh.html">is_mesh::ISMesh</a> *mesh);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keywordtype">double</span> dist;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <a class="code" href="class_c_g_l_a_1_1_ray.html">CGLA::Ray</a> ray;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        QueryType query_type;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <a class="code" href="classis__mesh_1_1_simplex_set.html">SimplexSet&lt;TetrahedronKey&gt;</a> tetrahedron_key;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <a class="code" href="classis__mesh_1_1_face_key.html">FaceKey</a> face_key;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <a class="code" href="classis__mesh_1_1_i_s_mesh.html">ISMesh</a> *mesh;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordtype">void</span> next();</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <a class="code" href="classis__mesh_1_1_query_result_iterator.html">QueryResultIterator</a>();</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <a class="code" href="classis__mesh_1_1_query_result_iterator.html">QueryResultIterator</a>(<a class="code" href="classis__mesh_1_1_face_key.html">FaceKey</a> <span class="keyword">const</span> &amp;first_boundary_intersection, <span class="keywordtype">double</span> dist, <a class="code" href="class_c_g_l_a_1_1_ray.html">CGLA::Ray</a> <span class="keyword">const</span> &amp;ray, QueryType <span class="keyword">const</span> &amp;query_type, <a class="code" href="classis__mesh_1_1_i_s_mesh.html">ISMesh</a> *mesh);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <a class="code" href="classis__mesh_1_1_query_result_iterator.html">QueryResultIterator</a>(<span class="keyword">const</span> <a class="code" href="classis__mesh_1_1_query_result_iterator.html">QueryResultIterator</a>&amp; iter);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <a class="code" href="class_c_g_l_a_1_1_vec3d.html">CGLA::Vec3d</a> collision_point();</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <a class="code" href="classis__mesh_1_1_face_key.html">FaceKey</a> operator*();</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <a class="code" href="classis__mesh_1_1_query_result_iterator.html">QueryResultIterator</a> &amp;operator++();</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> <a class="code" href="classis__mesh_1_1_query_result_iterator.html">QueryResultIterator</a> &amp; other);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    };</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="classis__mesh_1_1_query_result.html">   44</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classis__mesh_1_1_query_result.html">QueryResult</a> {</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <a class="code" href="classis__mesh_1_1_face_key.html">FaceKey</a> first_intersection;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordtype">double</span> dist;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <a class="code" href="class_c_g_l_a_1_1_ray.html">CGLA::Ray</a> ray;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        QueryType query_type;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <a class="code" href="classis__mesh_1_1_i_s_mesh.html">ISMesh</a> *mesh;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <a class="code" href="classis__mesh_1_1_query_result.html">QueryResult</a>():mesh(<span class="keyword">nullptr</span>){}</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <a class="code" href="classis__mesh_1_1_query_result.html">QueryResult</a>(<a class="code" href="classis__mesh_1_1_face_key.html">FaceKey</a> <span class="keyword">const</span> &amp;first_intersection, <span class="keywordtype">double</span> dist, <a class="code" href="class_c_g_l_a_1_1_ray.html">CGLA::Ray</a> <span class="keyword">const</span> &amp;ray, QueryType <span class="keyword">const</span> &amp;query_type, <a class="code" href="classis__mesh_1_1_i_s_mesh.html">ISMesh</a> *mesh);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <a class="code" href="classis__mesh_1_1_query_result_iterator.html">QueryResultIterator</a> begin();</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <a class="code" href="classis__mesh_1_1_query_result_iterator.html">QueryResultIterator</a> end();</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    };</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="classis__mesh_1_1_query.html">   58</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classis__mesh_1_1_query.html">Query</a> {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <a class="code" href="classis__mesh_1_1_i_s_mesh.html">ISMesh</a> *mesh;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        std::vector&lt;FaceKey&gt; *boundary_faces = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <a class="code" href="classis__mesh_1_1_query.html">Query</a>(<a class="code" href="classis__mesh_1_1_i_s_mesh.html">ISMesh</a> *mesh);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        ~<a class="code" href="classis__mesh_1_1_query.html">Query</a>();</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <a class="code" href="classis__mesh_1_1_query_result.html">QueryResult</a> raycast_faces(<a class="code" href="class_c_g_l_a_1_1_ray.html">CGLA::Ray</a> ray, QueryType queryType = QueryType::All);</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="comment">// Must be called explicit prior to raycasting if the boundary triangles of the ISMesh has changed</span></div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordtype">void</span> rebuild_boundary_cache();</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    };</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;}</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="comment">// returns the nodes within max distance to a given from_node</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="comment">// includes the from_node in the result</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        std::vector&lt;NodeKey&gt; neighborhood(<a class="code" href="classis__mesh_1_1_node_key.html">NodeKey</a> from_node, <span class="keywordtype">double</span> max_distance);</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="ttc" id="classis__mesh_1_1_query_result_html"><div class="ttname"><a href="classis__mesh_1_1_query_result.html">is_mesh::QueryResult</a></div><div class="ttdef"><b>Definition:</b> query.h:45</div></div>
-<div class="ttc" id="classis__mesh_1_1_simplex_set_html"><div class="ttname"><a href="classis__mesh_1_1_simplex_set.html">is_mesh::SimplexSet</a></div><div class="ttdef"><b>Definition:</b> simplex_set.h:27</div></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="comment">// returns the nodes within max distance to a given point</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        std::vector&lt;NodeKey&gt; neighborhood(<a class="code" href="class_c_g_l_a_1_1_vec3d.html">vec3</a> from, <span class="keywordtype">double</span> max_distance);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="comment">// return the list of edges where both nodes are contained in the nodeKeys</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        std::vector&lt;EdgeKey&gt; edges(std::vector&lt;NodeKey&gt; nodeKeys);</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        std::vector&lt;FaceKey&gt; faces(std::vector&lt;EdgeKey&gt; edgeKeys);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        std::vector&lt;TetrahedronKey&gt; tetrahedra(std::vector&lt;FaceKey&gt; faceKeys);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    };</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;}</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="ttc" id="classis__mesh_1_1_query_result_html"><div class="ttname"><a href="classis__mesh_1_1_query_result.html">is_mesh::QueryResult</a></div><div class="ttdef"><b>Definition:</b> query.h:44</div></div>
+<div class="ttc" id="classis__mesh_1_1_simplex_set_html"><div class="ttname"><a href="classis__mesh_1_1_simplex_set.html">is_mesh::SimplexSet&lt; TetrahedronKey &gt;</a></div></div>
+<div class="ttc" id="class_c_g_l_a_1_1_vec3d_html"><div class="ttname"><a href="class_c_g_l_a_1_1_vec3d.html">CGLA::Vec3d</a></div><div class="ttdoc">A 3D double vector. </div><div class="ttdef"><b>Definition:</b> Vec3d.h:26</div></div>
 <div class="ttc" id="classis__mesh_1_1_query_result_iterator_html"><div class="ttname"><a href="classis__mesh_1_1_query_result_iterator.html">is_mesh::QueryResultIterator</a></div><div class="ttdef"><b>Definition:</b> query.h:25</div></div>
 <div class="ttc" id="class_c_g_l_a_1_1_ray_html"><div class="ttname"><a href="class_c_g_l_a_1_1_ray.html">CGLA::Ray</a></div><div class="ttdef"><b>Definition:</b> Ray.h:12</div></div>
-<div class="ttc" id="classis__mesh_1_1_query_html"><div class="ttname"><a href="classis__mesh_1_1_query.html">is_mesh::Query</a></div><div class="ttdef"><b>Definition:</b> query.h:59</div></div>
+<div class="ttc" id="classis__mesh_1_1_query_html"><div class="ttname"><a href="classis__mesh_1_1_query.html">is_mesh::Query</a></div><div class="ttdef"><b>Definition:</b> query.h:58</div></div>
+<div class="ttc" id="classis__mesh_1_1_node_key_html"><div class="ttname"><a href="classis__mesh_1_1_node_key.html">is_mesh::NodeKey</a></div><div class="ttdef"><b>Definition:</b> key.h:67</div></div>
 <div class="ttc" id="classis__mesh_1_1_i_s_mesh_html"><div class="ttname"><a href="classis__mesh_1_1_i_s_mesh.html">is_mesh::ISMesh</a></div><div class="ttdef"><b>Definition:</b> is_mesh.h:35</div></div>
 <div class="ttc" id="classis__mesh_1_1_face_key_html"><div class="ttname"><a href="classis__mesh_1_1_face_key.html">is_mesh::FaceKey</a></div><div class="ttdef"><b>Definition:</b> key.h:81</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jan 2 2015 15:32:50 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jan 7 2015 15:33:42 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

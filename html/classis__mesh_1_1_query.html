@@ -96,15 +96,30 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad03c6cf08abdbf071fb30c07843b6ea5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad03c6cf08abdbf071fb30c07843b6ea5"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Query</b> (<a class="el" href="classis__mesh_1_1_i_s_mesh.html">is_mesh::ISMesh</a> *mesh)</td></tr>
-<tr class="separator:ad03c6cf08abdbf071fb30c07843b6ea5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f30d4d8e7e826baa22e6db816215044"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2f30d4d8e7e826baa22e6db816215044"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Query</b> (<a class="el" href="classis__mesh_1_1_i_s_mesh.html">ISMesh</a> *mesh)</td></tr>
+<tr class="separator:a2f30d4d8e7e826baa22e6db816215044"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8df67f5b522a499e08a56594a0eb97af"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8df67f5b522a499e08a56594a0eb97af"></a>
 <a class="el" href="classis__mesh_1_1_query_result.html">QueryResult</a>&#160;</td><td class="memItemRight" valign="bottom"><b>raycast_faces</b> (<a class="el" href="class_c_g_l_a_1_1_ray.html">CGLA::Ray</a> ray, QueryType queryType=QueryType::All)</td></tr>
 <tr class="separator:a8df67f5b522a499e08a56594a0eb97af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac3aaafa6b017e15a0f05c56d284ca9d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aac3aaafa6b017e15a0f05c56d284ca9d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>rebuild_boundary_cache</b> ()</td></tr>
 <tr class="separator:aac3aaafa6b017e15a0f05c56d284ca9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacc4dae13b8e5ccf3a765d50f382c94d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aacc4dae13b8e5ccf3a765d50f382c94d"></a>
+std::vector&lt; <a class="el" href="classis__mesh_1_1_node_key.html">NodeKey</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>neighborhood</b> (<a class="el" href="classis__mesh_1_1_node_key.html">NodeKey</a> from_node, double max_distance)</td></tr>
+<tr class="separator:aacc4dae13b8e5ccf3a765d50f382c94d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ebf979469b199f18d71d93f0ceedc7a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9ebf979469b199f18d71d93f0ceedc7a"></a>
+std::vector&lt; <a class="el" href="classis__mesh_1_1_node_key.html">NodeKey</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>neighborhood</b> (<a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a> from, double max_distance)</td></tr>
+<tr class="separator:a9ebf979469b199f18d71d93f0ceedc7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4c5031acec01d7bf94218d02744abfb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab4c5031acec01d7bf94218d02744abfb"></a>
+std::vector&lt; <a class="el" href="classis__mesh_1_1_edge_key.html">EdgeKey</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>edges</b> (std::vector&lt; <a class="el" href="classis__mesh_1_1_node_key.html">NodeKey</a> &gt; nodeKeys)</td></tr>
+<tr class="separator:ab4c5031acec01d7bf94218d02744abfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e8e8de009e131c2ca9c6c30c555a606"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8e8e8de009e131c2ca9c6c30c555a606"></a>
+std::vector&lt; <a class="el" href="classis__mesh_1_1_face_key.html">FaceKey</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>faces</b> (std::vector&lt; <a class="el" href="classis__mesh_1_1_edge_key.html">EdgeKey</a> &gt; edgeKeys)</td></tr>
+<tr class="separator:a8e8e8de009e131c2ca9c6c30c555a606"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9619fda1558dc984ec842c921e66a91"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af9619fda1558dc984ec842c921e66a91"></a>
+std::vector&lt; <a class="el" href="classis__mesh_1_1_tetrahedron_key.html">TetrahedronKey</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>tetrahedra</b> (std::vector&lt; <a class="el" href="classis__mesh_1_1_face_key.html">FaceKey</a> &gt; faceKeys)</td></tr>
+<tr class="separator:af9619fda1558dc984ec842c921e66a91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>is_mesh/<a class="el" href="query_8h_source.html">query.h</a></li>
@@ -113,7 +128,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>rebuild_boundary_cach
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jan 2 2015 15:32:53 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jan 7 2015 15:33:44 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

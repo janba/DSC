@@ -123,59 +123,60 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">protected</span>:</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordtype">int</span> time_step = 0;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keywordtype">int</span> MAX_TIME_STEPS;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordtype">double</span> VELOCITY; <span class="comment">// Determines the distance each interface vertex moves at each iteration.</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordtype">double</span> ACCURACY; <span class="comment">// Determines the accuracy of the final result.</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        std::vector&lt;vec3&gt; pos_old;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <a class="code" href="class_d_s_c_1_1_velocity_func.html#a23b04c68a9956954eb62cba6d0484940">VelocityFunc</a>(<span class="keywordtype">double</span> velocity, <span class="keywordtype">double</span> accuracy, <span class="keywordtype">int</span> max_time_steps);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keyword">virtual</span> ~<a class="code" href="class_d_s_c_1_1_velocity_func.html">VelocityFunc</a>();</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keyword">virtual</span> std::string <a class="code" href="class_d_s_c_1_1_velocity_func.html#ad038aee0b71acec12e65a9c8db11fbca">get_name</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordtype">int</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#aac6aa5071882bc4f5bd1f64c2aa0ca73">get_time_step</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> set_max_time_steps(<span class="keywordtype">int</span> max_time_steps);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordtype">double</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#a0dbe708843dc416bc89fc6504fd7f262">get_velocity</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> set_velocity(<span class="keywordtype">double</span> vel);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="keywordtype">double</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#af54ffea074de5905c80282a031aaf6b6">get_accuracy</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> set_accuracy(<span class="keywordtype">double</span> acc);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keywordtype">double</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#a1aceebd9f274e40434afc983d4dad172">get_deform_time</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="keywordtype">double</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#ad947320ba5f11227f17820ecd822fd90">get_compute_time</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="keywordtype">double</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#a618e1116e068334a18402ea05695b047">get_total_deform_time</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keywordtype">double</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#ad7c6bcd7200f336fe79ad4ea388e304b">get_total_compute_time</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#a3888fcbf7d37f0cee3dd8b8ba76b6d0d">update_compute_time</a>(<span class="keyword">const</span> std::chrono::time_point&lt;std::chrono::system_clock&gt;&amp; start_time);</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#adb549c3ad73a33e1e2324da7489c4d55">update_deform_time</a>(<span class="keyword">const</span> std::chrono::time_point&lt;std::chrono::system_clock&gt;&amp; start_time);</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        </div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#a8d6510e28cb4d51bbac8d766771181e6">deform</a>(<a class="code" href="class_d_s_c_1_1_deformable_simplicial_complex.html">DeformableSimplicialComplex</a>&amp; dsc);</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#ae55ac05da9cd237b7ef78937de5b21c4">is_motion_finished</a>(<a class="code" href="class_d_s_c_1_1_deformable_simplicial_complex.html">DeformableSimplicialComplex</a>&amp; dsc);</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#aee20cf503128164223b59b345ea96617">take_time_step</a>(<a class="code" href="class_d_s_c_1_1_deformable_simplicial_complex.html">DeformableSimplicialComplex</a>&amp; dsc);</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        </div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#a8323c84f6a45dfa34d54e9a7077bc648">test</a>(<a class="code" href="class_d_s_c_1_1_deformable_simplicial_complex.html">DeformableSimplicialComplex</a>&amp; dsc);</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        </div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    };</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    </div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;}</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="keywordtype">int</span> deform_time_steps = 10;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordtype">double</span> VELOCITY; <span class="comment">// Determines the distance each interface vertex moves at each iteration.</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keywordtype">double</span> ACCURACY; <span class="comment">// Determines the accuracy of the final result.</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        std::vector&lt;vec3&gt; pos_old;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <a class="code" href="class_d_s_c_1_1_velocity_func.html#a23b04c68a9956954eb62cba6d0484940">VelocityFunc</a>(<span class="keywordtype">double</span> velocity, <span class="keywordtype">double</span> accuracy, <span class="keywordtype">int</span> max_time_steps);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keyword">virtual</span> ~<a class="code" href="class_d_s_c_1_1_velocity_func.html">VelocityFunc</a>();</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keyword">virtual</span> std::string <a class="code" href="class_d_s_c_1_1_velocity_func.html#ad038aee0b71acec12e65a9c8db11fbca">get_name</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keywordtype">int</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#aac6aa5071882bc4f5bd1f64c2aa0ca73">get_time_step</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> set_max_time_steps(<span class="keywordtype">int</span> max_time_steps);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keywordtype">double</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#a0dbe708843dc416bc89fc6504fd7f262">get_velocity</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> set_velocity(<span class="keywordtype">double</span> vel);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keywordtype">double</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#af54ffea074de5905c80282a031aaf6b6">get_accuracy</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> set_accuracy(<span class="keywordtype">double</span> acc);</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keywordtype">double</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#a1aceebd9f274e40434afc983d4dad172">get_deform_time</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keywordtype">double</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#ad947320ba5f11227f17820ecd822fd90">get_compute_time</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="keywordtype">double</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#a618e1116e068334a18402ea05695b047">get_total_deform_time</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keywordtype">double</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#ad7c6bcd7200f336fe79ad4ea388e304b">get_total_compute_time</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        </div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#a3888fcbf7d37f0cee3dd8b8ba76b6d0d">update_compute_time</a>(<span class="keyword">const</span> std::chrono::time_point&lt;std::chrono::system_clock&gt;&amp; start_time);</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#adb549c3ad73a33e1e2324da7489c4d55">update_deform_time</a>(<span class="keyword">const</span> std::chrono::time_point&lt;std::chrono::system_clock&gt;&amp; start_time);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#a8d6510e28cb4d51bbac8d766771181e6">deform</a>(<a class="code" href="class_d_s_c_1_1_deformable_simplicial_complex.html">DeformableSimplicialComplex</a>&amp; dsc);</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        </div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#ae55ac05da9cd237b7ef78937de5b21c4">is_motion_finished</a>(<a class="code" href="class_d_s_c_1_1_deformable_simplicial_complex.html">DeformableSimplicialComplex</a>&amp; dsc);</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        </div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#aee20cf503128164223b59b345ea96617">take_time_step</a>(<a class="code" href="class_d_s_c_1_1_deformable_simplicial_complex.html">DeformableSimplicialComplex</a>&amp; dsc);</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        </div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_d_s_c_1_1_velocity_func.html#a8323c84f6a45dfa34d54e9a7077bc648">test</a>(<a class="code" href="class_d_s_c_1_1_deformable_simplicial_complex.html">DeformableSimplicialComplex</a>&amp; dsc);</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        </div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    };</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    </div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;}</div>
 <div class="ttc" id="class_d_s_c_1_1_velocity_func_html_ad038aee0b71acec12e65a9c8db11fbca"><div class="ttname"><a href="class_d_s_c_1_1_velocity_func.html#ad038aee0b71acec12e65a9c8db11fbca">DSC::VelocityFunc::get_name</a></div><div class="ttdeci">virtual std::string get_name() const </div><div class="ttdef"><b>Definition:</b> velocity_function.cpp:12</div></div>
 <div class="ttc" id="class_d_s_c_1_1_velocity_func_html_aee20cf503128164223b59b345ea96617"><div class="ttname"><a href="class_d_s_c_1_1_velocity_func.html#aee20cf503128164223b59b345ea96617">DSC::VelocityFunc::take_time_step</a></div><div class="ttdeci">void take_time_step(DeformableSimplicialComplex &amp;dsc)</div><div class="ttdef"><b>Definition:</b> velocity_function.cpp:104</div></div>
-<div class="ttc" id="class_d_s_c_1_1_deformable_simplicial_complex_html"><div class="ttname"><a href="class_d_s_c_1_1_deformable_simplicial_complex.html">DSC::DeformableSimplicialComplex</a></div><div class="ttdef"><b>Definition:</b> DSC.h:54</div></div>
+<div class="ttc" id="class_d_s_c_1_1_deformable_simplicial_complex_html"><div class="ttname"><a href="class_d_s_c_1_1_deformable_simplicial_complex.html">DSC::DeformableSimplicialComplex</a></div><div class="ttdef"><b>Definition:</b> DSC.h:62</div></div>
 <div class="ttc" id="class_d_s_c_1_1_velocity_func_html"><div class="ttname"><a href="class_d_s_c_1_1_velocity_func.html">DSC::VelocityFunc</a></div><div class="ttdef"><b>Definition:</b> velocity_function.h:28</div></div>
 <div class="ttc" id="class_d_s_c_1_1_velocity_func_html_adb549c3ad73a33e1e2324da7489c4d55"><div class="ttname"><a href="class_d_s_c_1_1_velocity_func.html#adb549c3ad73a33e1e2324da7489c4d55">DSC::VelocityFunc::update_deform_time</a></div><div class="ttdeci">void update_deform_time(const std::chrono::time_point&lt; std::chrono::system_clock &gt; &amp;start_time)</div><div class="ttdef"><b>Definition:</b> velocity_function.cpp:62</div></div>
 <div class="ttc" id="class_d_s_c_1_1_velocity_func_html_aac6aa5071882bc4f5bd1f64c2aa0ca73"><div class="ttname"><a href="class_d_s_c_1_1_velocity_func.html#aac6aa5071882bc4f5bd1f64c2aa0ca73">DSC::VelocityFunc::get_time_step</a></div><div class="ttdeci">int get_time_step() const </div><div class="ttdef"><b>Definition:</b> velocity_function.cpp:16</div></div>
@@ -193,7 +194,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jan 2 2015 15:32:50 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jan 7 2015 15:33:42 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

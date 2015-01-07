@@ -121,14 +121,16 @@ typedef element_type::key_type&#160;</td><td class="memItemRight" valign="bottom
 Public Member Functions</h2></td></tr>
 <tr class="memitem:adc4f5387f328512164f432f00b402a82"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel__iterator.html#adc4f5387f328512164f432f00b402a82">kernel_iterator</a> (kernel_type const *const <a class="el" href="classis__mesh_1_1kernel.html">kernel</a>, unsigned int const &amp;<a class="el" href="classis__mesh_1_1kernel__iterator.html#a53663b0006b2efa438e92425cef0b188">key</a>)</td></tr>
 <tr class="separator:adc4f5387f328512164f432f00b402a82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a677f323e3de915721f923386b33dca15"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel__iterator.html#a677f323e3de915721f923386b33dca15">kernel_iterator</a> (kernel_type const *const <a class="el" href="classis__mesh_1_1kernel.html">kernel</a>, const std::vector&lt; key_type &gt; *keys)</td></tr>
+<tr class="separator:a677f323e3de915721f923386b33dca15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53663b0006b2efa438e92425cef0b188"><td class="memItemLeft" align="right" valign="top">key_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel__iterator.html#a53663b0006b2efa438e92425cef0b188">key</a> () const </td></tr>
 <tr class="separator:a53663b0006b2efa438e92425cef0b188"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0702d165d4caada95dbf6e4931a1c3f"><td class="memItemLeft" align="right" valign="top">kernel_type *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel__iterator.html#aa0702d165d4caada95dbf6e4931a1c3f">kernel</a> () const </td></tr>
 <tr class="separator:aa0702d165d4caada95dbf6e4931a1c3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6b6149d1a788bfce9c6acef49db0aa8"><td class="memItemLeft" align="right" valign="top">value_type *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel__iterator.html#ac6b6149d1a788bfce9c6acef49db0aa8">operator-&gt;</a> ()</td></tr>
 <tr class="separator:ac6b6149d1a788bfce9c6acef49db0aa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf50229229fdaf9e3faf6e7836a70679"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classis__mesh_1_1kernel__iterator__value.html">kernel_iterator_value</a>&lt; kernel_t_ &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel__iterator.html#adf50229229fdaf9e3faf6e7836a70679">operator*</a> ()</td></tr>
-<tr class="separator:adf50229229fdaf9e3faf6e7836a70679"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6e3b3b6620b527c1e6592ae20613e50"><td class="memItemLeft" align="right" valign="top">value_type &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel__iterator.html#ae6e3b3b6620b527c1e6592ae20613e50">operator*</a> ()</td></tr>
+<tr class="separator:ae6e3b3b6620b527c1e6592ae20613e50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b497eef0d0438c7a4b15e4c4c71ec50"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classis__mesh_1_1kernel__iterator.html">iterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel__iterator.html#a0b497eef0d0438c7a4b15e4c4c71ec50">operator++</a> ()</td></tr>
 <tr class="separator:a0b497eef0d0438c7a4b15e4c4c71ec50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9dffd93d9455c32c0acdcc872e7855d6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classis__mesh_1_1kernel__iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel__iterator.html#a9dffd93d9455c32c0acdcc872e7855d6">operator++</a> (int)</td></tr>
@@ -169,6 +171,43 @@ template&lt;class kernel_t_ &gt; </div>
           <td></td>
           <td class="paramtype">unsigned int const &amp;&#160;</td>
           <td class="paramname"><em>key</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The only constructor. Creates a kernel iterator. Should only be created from the kernel. </p>
+
+</div>
+</div>
+<a class="anchor" id="a677f323e3de915721f923386b33dca15"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class kernel_t_ &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classis__mesh_1_1kernel__iterator.html">is_mesh::kernel_iterator</a>&lt; kernel_t_ &gt;::<a class="el" href="classis__mesh_1_1kernel__iterator.html">kernel_iterator</a> </td>
+          <td>(</td>
+          <td class="paramtype">kernel_type const *const&#160;</td>
+          <td class="paramname"><em>kernel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; key_type &gt; *&#160;</td>
+          <td class="paramname"><em>keys</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -239,7 +278,7 @@ template&lt;class kernel_t_ &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="adf50229229fdaf9e3faf6e7836a70679"></a>
+<a class="anchor" id="ae6e3b3b6620b527c1e6592ae20613e50"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -249,7 +288,7 @@ template&lt;class kernel_t_ &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classis__mesh_1_1kernel__iterator__value.html">kernel_iterator_value</a>&lt;kernel_t_&gt; <a class="el" href="classis__mesh_1_1kernel__iterator.html">is_mesh::kernel_iterator</a>&lt; kernel_t_ &gt;::operator* </td>
+          <td class="memname">value_type&amp; <a class="el" href="classis__mesh_1_1kernel__iterator.html">is_mesh::kernel_iterator</a>&lt; kernel_t_ &gt;::operator* </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -429,7 +468,7 @@ template&lt;class kernel_t_ &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jan 2 2015 15:32:52 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jan 7 2015 15:33:44 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

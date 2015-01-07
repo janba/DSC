@@ -7,9 +7,8 @@ var searchData=
   ['kernel_3c_20is_5fmesh_3a_3anodekey_2c_20is_5fmesh_3a_3anode_20_3e',['kernel&lt; is_mesh::NodeKey, is_mesh::Node &gt;',['../classis__mesh_1_1kernel.html',1,'is_mesh']]],
   ['kernel_3c_20is_5fmesh_3a_3atetrahedronkey_2c_20is_5fmesh_3a_3atetrahedron_20_3e',['kernel&lt; is_mesh::TetrahedronKey, is_mesh::Tetrahedron &gt;',['../classis__mesh_1_1kernel.html',1,'is_mesh']]],
   ['kernel_5felement',['kernel_element',['../structis__mesh_1_1util_1_1kernel__element.html',1,'is_mesh::util']]],
-  ['kernel_5fiterator',['kernel_iterator',['../classis__mesh_1_1kernel__iterator.html#adc4f5387f328512164f432f00b402a82',1,'is_mesh::kernel_iterator']]],
   ['kernel_5fiterator',['kernel_iterator',['../classis__mesh_1_1kernel__iterator.html',1,'is_mesh']]],
-  ['kernel_5fiterator_5fvalue',['kernel_iterator_value',['../classis__mesh_1_1kernel__iterator__value.html',1,'is_mesh']]],
-  ['key',['Key',['../classis__mesh_1_1_key.html',1,'is_mesh']]],
-  ['key',['key',['../classis__mesh_1_1kernel__iterator.html#a53663b0006b2efa438e92425cef0b188',1,'is_mesh::kernel_iterator']]]
+  ['kernel_5fiterator',['kernel_iterator',['../classis__mesh_1_1kernel__iterator.html#adc4f5387f328512164f432f00b402a82',1,'is_mesh::kernel_iterator::kernel_iterator(kernel_type const *const kernel, unsigned int const &amp;key)'],['../classis__mesh_1_1kernel__iterator.html#a677f323e3de915721f923386b33dca15',1,'is_mesh::kernel_iterator::kernel_iterator(kernel_type const *const kernel, const std::vector&lt; key_type &gt; *keys)']]],
+  ['key',['key',['../classis__mesh_1_1kernel__iterator.html#a53663b0006b2efa438e92425cef0b188',1,'is_mesh::kernel_iterator']]],
+  ['key',['Key',['../classis__mesh_1_1_key.html',1,'is_mesh']]]
 ];

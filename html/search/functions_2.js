@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['capacity',['capacity',['../classis__mesh_1_1kernel.html#abe71f021cdbe04632586e5c1114f8d49',1,'is_mesh::kernel']]],
   ['clear',['clear',['../classis__mesh_1_1kernel.html#a55f05d427a9b43c91c29c445c1620049',1,'is_mesh::kernel']]],
   ['collapse',['collapse',['../classis__mesh_1_1_i_s_mesh.html#a61883424e01d606895dac3ad184363c8',1,'is_mesh::ISMesh']]],
   ['commit_5fall',['commit_all',['../classis__mesh_1_1kernel.html#ab394c97bafc8ae98142a7b4cfb9751bb',1,'is_mesh::kernel']]],
