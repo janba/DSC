@@ -139,23 +139,23 @@ namespace is_mesh{
     void ISMesh::init_flags(const vector<int>& tet_labels) {
         if(tet_labels.size() > 0)
         {
-            for (auto tit : tetrahedra())
+            for (auto & tit : tetrahedra())
             {
-                tit->label(tet_labels[tit.key()]);
+                tit.label(tet_labels[tit.key()]);
             }
         }
 
-        for (auto fit : faces())
+        for (auto & fit : faces())
         {
             update_flag(fit.key());
         }
 
-        for (auto eit : edges())
+        for (auto & eit : edges())
         {
             update_flag(eit.key());
         }
 
-        for (auto nit : nodes())
+        for (auto & nit : nodes())
         {
             update_flag(nit.key());
         }
@@ -1032,9 +1032,9 @@ namespace is_mesh{
     }
 
     void ISMesh::scale(const vec3& s) {
-        for (auto nit : nodes()) {
-            nit->set_pos(s*nit->get_pos());
-            nit->set_destination(s*nit->get_destination());
+        for (auto & nit : nodes()) {
+            nit.set_pos(s * nit.get_pos());
+            nit.set_destination(s * nit.get_destination());
         }
     }
 
@@ -1043,19 +1043,19 @@ namespace is_mesh{
 
         map<NodeKey, int> indices;
         // Extract vertices
-        for (auto nit : nodes())
+        for (auto & nit : nodes())
         {
-            if (nit->is_interface())
+            if (nit.is_interface())
             {
-                points.push_back(nit->get_pos());
+                points.push_back(nit.get_pos());
                 indices[nit.key()] = static_cast<int>(points.size());
             }
         }
 
         // Extract faces
-        for (auto fit : ISMesh::faces())
+        for (auto & fit : ISMesh::faces())
         {
-            if (fit->is_interface())
+            if (fit.is_interface())
             {
                 for (auto &n : get_sorted_nodes(fit.key()))
                 {
@@ -1070,13 +1070,13 @@ namespace is_mesh{
 
         map<NodeKey, int> indices;
         // Extract vertices
-        for (auto nit : nodes())
+        for (auto & nit : nodes())
         {
             indices[nit.key()] = static_cast<int>(points.size());
-            points.push_back(nit->get_pos());
+            points.push_back(nit.get_pos());
         }
 
-        for (auto tit : tetrahedra())
+        for (auto & tit : tetrahedra())
         {
             for (auto n : get_nodes(tit.key()))
             {
@@ -1088,11 +1088,11 @@ namespace is_mesh{
 
     void ISMesh::validity_check() {
         cout << "Testing connectivity of simplicial complex: ";
-        for(auto tit : tetrahedra())
+        for(auto & tit : tetrahedra())
         {
             assert(exists(tit.key()));
             // Check faces:
-            auto faces = tit->face_keys();
+            auto faces = tit.face_keys();
             assert(faces.size() == 4);
             for (auto f : faces) {
                 assert(exists(f));
@@ -1134,18 +1134,18 @@ namespace is_mesh{
         cout << "PASSED" << endl;
 
         cout << "Testing for inverted tetrahedra: ";
-        for (auto tit : tetrahedra())
+        for (auto & tit : tetrahedra())
         {
             assert(!is_inverted(tit.key()));
         }
         cout << "PASSED" << endl;
 
         cout << "Testing for corrupted interface or boundary: ";
-        for (auto eit : edges())
+        for (auto & eit : edges())
         {
             int boundary = 0;
             int interface = 0;
-            for (auto f : eit->face_keys()) {
+            for (auto f : eit.face_keys()) {
                 if(get(f).is_boundary())
                 {
                     boundary++;
@@ -1155,8 +1155,8 @@ namespace is_mesh{
                     interface++;
                 }
             }
-            assert((eit->is_interface() && interface >= 2) || (!eit->is_interface() && interface == 0)); // Check that the interface is not corrupted
-            assert((eit->is_boundary() && boundary == 2) || (!eit->is_boundary() && boundary == 0)); // Check that the boundary is not corrupted
+            assert((eit.is_interface() && interface >= 2) || (!eit.is_interface() && interface == 0)); // Check that the interface is not corrupted
+            assert((eit.is_boundary() && boundary == 2) || (!eit.is_boundary() && boundary == 0)); // Check that the boundary is not corrupted
         }
         cout << "PASSED" << endl;
     }

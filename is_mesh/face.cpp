@@ -120,4 +120,11 @@ namespace is_mesh
         auto nids = node_keys();
         return Util::barycenter(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos());
     }
+
+    FaceKey Face::key() {
+        long index = ((char*)this - m_mesh->m_face_kernel->data())/sizeof(util::kernel_element<FaceKey, Face>);
+        assert(index >= 0);
+        assert(index < m_mesh->m_face_kernel->capacity());
+        return FaceKey((unsigned int) index);
+    }
 }

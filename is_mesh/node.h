@@ -48,6 +48,8 @@ namespace is_mesh
         bool is_boundary() const;
 
         bool is_interface() const;
+
+        NodeKey key();
     private:
         void set_crossing(bool b);
 

@@ -53,6 +53,8 @@ namespace is_mesh
         EdgeKey longest_edge();
 
         vec3 barycenter();
+
+        FaceKey key();
     private:
         void set_boundary(bool b);
 

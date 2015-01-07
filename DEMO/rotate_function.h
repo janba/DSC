@@ -54,11 +54,11 @@ public:
         vec3 center = dsc.get_center();
         mat3 mrot = Util::rotation_matrix(2, M_PI*VELOCITY/(5.*180.));
         vec3 new_pos;
-        for(auto nit : dsc.get_is_mesh().nodes())
+        for(auto & nit : dsc.get_is_mesh().nodes())
         {
             if(dsc.is_movable(nit.key()))
             {
-                vec3 new_pos = center + mrot * (nit->get_pos() - center);
+                vec3 new_pos = center + mrot * (nit.get_pos() - center);
                 dsc.set_destination(nit.key(), new_pos);
             }
         }

@@ -16,6 +16,7 @@
 
 
 #include "node.h"
+#include "is_mesh.h"
 
 namespace is_mesh
 {
@@ -84,5 +85,12 @@ namespace is_mesh
 
     void Node::set_interface(bool b) {
         flags[0] = b;
+    }
+
+    NodeKey Node::key() {
+        long index = ((char*)this - m_mesh->m_node_kernel->data())/sizeof(util::kernel_element<NodeKey, Node> );
+        assert(index >= 0);
+        assert(index < m_mesh->m_node_kernel->capacity());
+        return NodeKey((unsigned int) index);
     }
 }

@@ -43,6 +43,8 @@ namespace is_mesh
         double length();
 
         double length_destination();
+
+        EdgeKey key();
     private:
         void set_crossing(bool b);
 

@@ -67,8 +67,8 @@ namespace is_mesh {
             boundary_faces->clear();
         }
 
-        for (auto faceiter : mesh->faces()){
-            if (faceiter->is_boundary()){
+        for (auto & faceiter : mesh->faces()){
+            if (faceiter.is_boundary()){
                 boundary_faces->push_back(faceiter.key());
             }
         }
@@ -157,8 +157,8 @@ namespace is_mesh {
     std::vector<NodeKey> Query::neighborhood(vec3 from, double max_distance) {
         std::vector<NodeKey> res;
         double max_distanceSqr = max_distance * max_distance;
-        for (auto nodeiter : mesh->nodes()){
-            vec3 to_pos = nodeiter->get_pos();
+        for (auto & nodeiter : mesh->nodes()){
+            vec3 to_pos = nodeiter.get_pos();
             double lengthSqr = sqr_length(from - to_pos);
             if (lengthSqr < max_distanceSqr){
                 res.push_back(nodeiter.key());
@@ -178,8 +178,8 @@ namespace is_mesh {
             fastLookup[(int)k] = true;
         }
         std::vector<EdgeKey> res;
-        for (auto edgeIter : mesh->edges()){
-            const auto & nodes = edgeIter->node_keys();
+        for (auto & edgeIter : mesh->edges()){
+            const auto & nodes = edgeIter.node_keys();
             if (fastLookup[(int)nodes[0]] && fastLookup[(int)nodes[1]]){
                 res.push_back(edgeIter.key());
             }
@@ -194,8 +194,8 @@ namespace is_mesh {
             fastLookup[(int)k] = true;
         }
         std::vector<FaceKey> res;
-        for (auto faceIter : mesh->faces()){
-            const auto &edges = faceIter->edge_keys();
+        for (auto & faceIter : mesh->faces()){
+            const auto &edges = faceIter.edge_keys();
             if (fastLookup[(int) edges[0]] && fastLookup[(int) edges[1]] && fastLookup[(int) edges[2]]){
                 res.push_back(faceIter.key());
             }
@@ -210,8 +210,8 @@ namespace is_mesh {
             fastLookup[(int)k] = true;
         }
         std::vector<TetrahedronKey> res;
-        for (auto tetIter : mesh->tetrahedra()){
-            const auto &edges = tetIter->face_keys();
+        for (auto & tetIter : mesh->tetrahedra()){
+            const auto &edges = tetIter.face_keys();
             if (fastLookup[(int) edges[0]] && fastLookup[(int) edges[1]] && fastLookup[(int) edges[2]] && fastLookup[(int) edges[3]]){
                 res.push_back(tetIter.key());
             }

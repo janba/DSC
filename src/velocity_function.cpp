@@ -76,21 +76,21 @@ void DSC::VelocityFunc::deform(DeformableSimplicialComplex& dsc) {
 bool DSC::VelocityFunc::is_motion_finished(DeformableSimplicialComplex& dsc) {
     if(time_step < MAX_TIME_STEPS)
     {
-        for (auto nit : dsc.nodes())
+        for (auto & nit : dsc.nodes())
         {
             if(dsc.is_movable(nit.key()))
             {
                 bool match = false;
                 for (int i = 0; i+2 < pos_old.size(); i += 3)
                 {
-                    if (Util::distance_point_triangle(nit->get_pos(), pos_old[i], pos_old[i+1], pos_old[i+2]) < ACCURACY)
+                    if (Util::distance_point_triangle(nit.get_pos(), pos_old[i], pos_old[i+1], pos_old[i+2]) < ACCURACY)
                     {
                         match = true;
                         break;
                     }
                 }
                 if (!match) {
-                    std::cout << "Stopping criteria: Position " << nit->get_pos() << " has moved." << std::endl;
+                    std::cout << "Stopping criteria: Position " << nit.get_pos() << " has moved." << std::endl;
                     pos_old = dsc.get_interface_face_positions();
                     return false;
                 }

@@ -86,7 +86,6 @@ namespace is_mesh
         typedef          iterator const                                 const_iterator;
 
         friend class kernel_iterator<kernel_type>;
-        friend class kernel_iterator_value<kernel_type>;
 
     private:
         std::vector<kernel_element> m_data;
@@ -162,7 +161,7 @@ namespace is_mesh
          * Returns a boolean value indicating if the size is zero.
          */
         bool      empty()    { return size() == 0; }
-        
+
         /**
          * Creates (or inserts) a new element into the kernel. From this point forward the
          * memory management of the element is controlled by the kernel.
@@ -273,6 +272,13 @@ namespace is_mesh
             kernel_element& tmp = lookup(k);
             assert(tmp.state == kernel_element::VALID);
             return tmp.value;
+        }
+
+        /**
+        *  Returns pointer to the underlying array serving as element storage.
+        */
+        char * data(){
+            return (char*)m_data.data();
         }
 
         /**

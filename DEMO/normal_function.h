@@ -49,11 +49,11 @@ public:
     {
         auto init_time = std::chrono::system_clock::now();
         vec3 new_pos;
-        for(auto nit : dsc.get_is_mesh().nodes())
+        for(auto & nit : dsc.get_is_mesh().nodes())
         {
             if(dsc.is_movable(nit.key()))
             {
-                new_pos = nit->get_pos() + 0.1*VELOCITY * dsc.get_normal(nit.key());
+                new_pos = nit.get_pos() + 0.1*VELOCITY * dsc.get_normal(nit.key());
                 dsc.set_destination(nit.key(), new_pos);
             }
         }

@@ -47,6 +47,8 @@ namespace is_mesh
 
         double quality();
 
+        TetrahedronKey key();
+
         friend class ISMesh;
     };
 }
