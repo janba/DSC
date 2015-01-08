@@ -35,15 +35,13 @@ namespace is_mesh
         
         /**
          * Kernel Element struct
-         * A struct to hold the actual data along with auxiliary informations, like
-         * the state of af memory cell, and list pointers.
+         * A struct to hold the actual data along with the state of the memory cell.
          */
         template< typename key_t_, typename value_t_ >
         struct kernel_element
         {
             typedef value_t_            value_type;
-            typedef key_t_              key_type;
-            
+
             enum state_type { VALID, MARKED, EMPTY };
             
             kernel_element() : value(nullptr) { }
@@ -81,6 +79,7 @@ namespace is_mesh
     {
     public:
         typedef          kernel<key_type, value_type>                   kernel_type;
+        typedef          key_type                                       kernel_key_type;
         typedef          util::kernel_element<key_type, value_type>     kernel_element;
         typedef          kernel_iterator<kernel_type>                   iterator;
         typedef          iterator const                                 const_iterator;

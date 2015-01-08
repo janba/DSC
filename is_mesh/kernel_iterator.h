@@ -28,7 +28,7 @@ namespace is_mesh
         typedef          kernel_iterator<kernel_type> iterator;
         typedef typename kernel_type::kernel_element kernel_element;
         typedef typename element_type::value_type value_type;
-        typedef typename element_type::key_type key_type;
+        typedef typename kernel_t_::kernel_key_type key_type;
         
     private:
         const std::vector<key_type> *m_keys;
