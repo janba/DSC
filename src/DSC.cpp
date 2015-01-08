@@ -980,7 +980,9 @@ namespace DSC {
         int missing;
         int step = 0;
         do {
+#ifdef DEBUG
             cout << "\n\tMove vertices step " << step << endl;
+#endif
             missing = 0;
             int movable = 0;
             for (auto & nit : nodes())
@@ -994,7 +996,9 @@ namespace DSC {
                     movable++;
                 }
             }
+#ifdef DEBUG
             cout << "\tVertices missing to be moved: " << missing <<"/" << movable << endl;
+#endif
             fix_complex();
 #ifdef DEBUG
             is_mesh.validity_check();

@@ -90,7 +90,9 @@ bool DSC::VelocityFunc::is_motion_finished(DeformableSimplicialComplex& dsc) {
                     }
                 }
                 if (!match) {
+#ifdef DEBUG
                     std::cout << "Stopping criteria: Position " << nit.get_pos() << " has moved." << std::endl;
+#endif
                     pos_old = dsc.get_interface_face_positions();
                     return false;
                 }
