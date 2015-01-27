@@ -19,7 +19,7 @@
 
 namespace is_mesh
 {
-    Edge::Edge(ISMesh *owner) : Simplex<NodeKey, FaceKey>(owner) {
+    Edge::Edge(ISMesh *owner) noexcept : Simplex<NodeKey, FaceKey>(owner) {
 
     }
 

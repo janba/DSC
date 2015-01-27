@@ -20,12 +20,14 @@
 
 namespace is_mesh
 {
-    Node::Node(ISMesh *owner) : Simplex<Key, EdgeKey>(owner) {
-
+    Node::Node(ISMesh *owner) noexcept
+            : Simplex<Key, EdgeKey>(owner)
+    {
     }
 
-    Node::Node(ISMesh *owner,vec3 _p) : p(_p), p_new(_p), Simplex<Key, EdgeKey>(owner) {
-
+    Node::Node(ISMesh *owner,vec3 _p) noexcept
+            : p(_p), p_new(_p), Simplex<Key, EdgeKey>(owner)
+    {
     }
 
 

@@ -38,12 +38,15 @@ namespace is_mesh
         ISMesh *m_mesh = nullptr;
     public:
 
-        Simplex(ISMesh * owner) : m_mesh {owner} {
+        Simplex(ISMesh * owner) noexcept
+                : m_mesh {owner}
+        {
             m_boundary = new SimplexSet<boundary_key_type>();
             m_co_boundary = new SimplexSet<co_boundary_key_type>();
         }
         
-        Simplex(const Simplex& s):m_mesh {s.m_mesh }
+        Simplex(const Simplex& s) noexcept
+                :m_mesh {s.m_mesh }
         {
             m_boundary = new SimplexSet<boundary_key_type>(*s.m_boundary);
             m_co_boundary = new SimplexSet<co_boundary_key_type>(*s.m_co_boundary);

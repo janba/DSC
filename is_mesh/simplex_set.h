@@ -30,22 +30,22 @@ namespace is_mesh
         
     public:
         
-        SimplexSet() : set()
+        SimplexSet() noexcept : set()
         {
             
         }
         
-        SimplexSet(std::initializer_list<key_type> il) : set(il)
+        SimplexSet(std::initializer_list<key_type> il) noexcept : set(il)
         {
             
         }
 
-        SimplexSet(const SimplexSet& ss) : set(ss.set)
+        SimplexSet(const SimplexSet& ss) noexcept : set(ss.set)
         {
             
         }
         
-        SimplexSet& operator=(const SimplexSet& ss)
+        SimplexSet& operator=(const SimplexSet& ss) noexcept
         {
             set = std::vector<key_type>(ss.set);
             return *this;
@@ -54,14 +54,11 @@ namespace is_mesh
         SimplexSet(SimplexSet&& ss) noexcept
                 : set(std::move(ss.set))
         {
-            
         }
         
         SimplexSet& operator=(SimplexSet&& ss) noexcept
         {
-            if (this != &ss){
-                set = std::move(ss.set);
-            }
+            std::swap(set, ss.set);
             return *this;
         }
         

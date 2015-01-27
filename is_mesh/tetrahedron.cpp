@@ -20,8 +20,9 @@
 
 namespace is_mesh
 {
-    Tetrahedron::Tetrahedron(ISMesh *owner) : Simplex<FaceKey, Key>(owner) {
-
+    Tetrahedron::Tetrahedron(ISMesh *owner) noexcept
+            : Simplex<FaceKey, Key>(owner)
+    {
     }
 
     Tetrahedron::Tetrahedron(Tetrahedron&& other) noexcept

@@ -24,7 +24,7 @@ namespace is_mesh
     {
         std::bitset<3> flags;
     public:
-        Edge(ISMesh *owner);
+        Edge(ISMesh *owner) noexcept;
 
         Edge(Edge&& other) noexcept;
 

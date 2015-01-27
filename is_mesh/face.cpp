@@ -24,7 +24,7 @@
 
 namespace is_mesh
 {
-    Face::Face(ISMesh *owner) : Simplex<EdgeKey, TetrahedronKey>(owner) {
+    Face::Face(ISMesh *owner) noexcept : Simplex<EdgeKey, TetrahedronKey>(owner) {
 
     }
 

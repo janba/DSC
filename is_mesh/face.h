@@ -24,7 +24,7 @@ namespace is_mesh
     {
         std::bitset<2> flags;
     public:
-        Face(ISMesh *owner);
+        Face(ISMesh *owner) noexcept;
 
         Face(Face&& other) noexcept;
 

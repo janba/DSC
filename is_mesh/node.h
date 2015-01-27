@@ -26,8 +26,8 @@ namespace is_mesh
         vec3 p_new;
         std::bitset<3> flags;
     public:
-        Node(ISMesh *owner);
-        Node(ISMesh *owner, vec3 _p);
+        Node(ISMesh *owner) noexcept;
+        Node(ISMesh *owner, vec3 _p) noexcept;
 
         Node(Node&& other) noexcept;
 
