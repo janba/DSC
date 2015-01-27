@@ -29,21 +29,23 @@ namespace is_mesh
     }
 
 
-    Node::Node(Node&& other) : p (other.p), p_new(other.p_new),
-                               flags(std::move(other.flags)),Simplex<Key, EdgeKey>(std::move(other)) {
+    Node::Node(Node&& other) noexcept
+            : p (other.p), p_new(other.p_new),
+                               flags(std::move(other.flags)),Simplex<Key, EdgeKey>(std::move(other))
+    {
     }
 
-    Node &Node::operator=(Node&& other) {
+    Node &Node::operator=(Node&& other) noexcept {
         if (this != &other){
-            p = std::move(other.p);
-            p_new = std::move(other.p_new);
-            flags = std::move(other.flags);
+            std::swap(p, other.p);
+            std::swap(p_new, other.p_new);
+            std::swap(flags, other.flags);
             ((Simplex<Key, EdgeKey>*)this)->operator=(std::move(other));
         }
         return *this;
     }
 
-    const SimplexSet<EdgeKey> &Node::edge_keys() const {
+    const SimplexSet<EdgeKey> &Node::edge_keys() const noexcept{
         return get_co_boundary();
     }
 
@@ -63,15 +65,15 @@ namespace is_mesh
         p_new = p_;
     }
 
-    bool Node::is_crossing() const {
+    bool Node::is_crossing() const noexcept {
         return flags[2];
     }
 
-    bool Node::is_boundary() const {
+    bool Node::is_boundary() const noexcept {
         return flags[1];
     }
 
-    bool Node::is_interface() const {
+    bool Node::is_interface() const noexcept {
         return flags[0];
     }
 

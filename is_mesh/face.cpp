@@ -28,29 +28,30 @@ namespace is_mesh
 
     }
 
-    Face::Face(Face&& other) : flags(std::move(other.flags)), Simplex<EdgeKey, TetrahedronKey>(std::move(other)) {}
+    Face::Face(Face&& other) noexcept
+            : flags(std::move(other.flags)), Simplex<EdgeKey, TetrahedronKey>(std::move(other)) {}
 
-    Face &Face::operator=(Face&& other) {
+    Face &Face::operator=(Face&& other) noexcept {
         if (this != &other){
-            flags = std::move(other.flags);
+            std::swap(flags, other.flags);
             ((Simplex<EdgeKey, TetrahedronKey>*)this)->operator=(std::move(other));
         }
         return *this;
     }
 
-    const SimplexSet<EdgeKey> &Face::edge_keys()  const {
+    const SimplexSet<EdgeKey> &Face::edge_keys()  const noexcept{
         return get_boundary();
     }
 
-    const SimplexSet<TetrahedronKey> &Face::tet_keys()  const {
+    const SimplexSet<TetrahedronKey> &Face::tet_keys()  const noexcept{
         return get_co_boundary();
     }
 
-    bool Face::is_boundary() {
+    bool Face::is_boundary() noexcept {
         return flags[1];
     }
 
-    bool Face::is_interface() {
+    bool Face::is_interface() noexcept {
         return flags[0];
     }
 
@@ -67,7 +68,7 @@ namespace is_mesh
         return Util::area(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos());
     }
 
-    const SimplexSet<NodeKey> Face::node_keys() const{
+    const SimplexSet<NodeKey> Face::node_keys() const noexcept{
         const SimplexSet<EdgeKey>& eids = edge_keys();
         SimplexSet<NodeKey> nids = m_mesh->get_nodes(eids[0]);
         nids += m_mesh->get_nodes(eids[1]);

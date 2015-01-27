@@ -29,11 +29,11 @@ namespace is_mesh
         Node(ISMesh *owner);
         Node(ISMesh *owner, vec3 _p);
 
-        Node(Node&& other);
+        Node(Node&& other) noexcept;
 
-        Node& operator=(Node&& other);
+        Node& operator=(Node&& other) noexcept;
 
-        const SimplexSet<EdgeKey> & edge_keys() const;
+        const SimplexSet<EdgeKey> & edge_keys() const noexcept;
 
         const vec3 & get_pos() const;
 
@@ -43,11 +43,11 @@ namespace is_mesh
 
         void set_destination(const vec3& p_);
 
-        bool is_crossing() const;
+        bool is_crossing() const noexcept;
 
-        bool is_boundary() const;
+        bool is_boundary() const noexcept;
 
-        bool is_interface() const;
+        bool is_interface() const noexcept;
 
         NodeKey key();
     private:

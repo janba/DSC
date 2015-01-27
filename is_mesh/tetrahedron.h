@@ -26,13 +26,13 @@ namespace is_mesh
     public:
         Tetrahedron(ISMesh *owner);
 
-        Tetrahedron(Tetrahedron&& other);
+        Tetrahedron(Tetrahedron&& other) noexcept;
 
-        Tetrahedron& operator=(Tetrahedron&& other);
+        Tetrahedron& operator=(Tetrahedron&& other) noexcept;
 
-        const SimplexSet<FaceKey> & face_keys() const;
+        const SimplexSet<FaceKey> & face_keys() const noexcept;
 
-        const SimplexSet<NodeKey> node_keys();
+        const SimplexSet<NodeKey> node_keys() const noexcept;
 
         int label();
 

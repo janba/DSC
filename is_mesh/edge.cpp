@@ -23,35 +23,36 @@ namespace is_mesh
 
     }
 
-    Edge::Edge(Edge&& other) : flags(std::move(other.flags)), Simplex<NodeKey, FaceKey>(std::move(other)) {
-
+    Edge::Edge(Edge&& other) noexcept
+            : flags(std::move(other.flags)), Simplex<NodeKey, FaceKey>(std::move(other))
+    {
     }
 
-    Edge &Edge::operator=(Edge&& other) {
+    Edge &Edge::operator=(Edge&& other) noexcept {
         if (this != &other){
-            flags = std::move(other.flags);
+            std::swap(flags, other.flags);
             ((Simplex<NodeKey, FaceKey>*)this)->operator=(std::move(other));
         }
         return *this;
     }
 
-    const SimplexSet<NodeKey> &Edge::node_keys()  const {
+    const SimplexSet<NodeKey> &Edge::node_keys()  const noexcept {
         return get_boundary();
     }
 
-    const SimplexSet<FaceKey> &Edge::face_keys()  const {
+    const SimplexSet<FaceKey> &Edge::face_keys()  const noexcept {
         return get_co_boundary();
     }
 
-    bool Edge::is_crossing() {
+    bool Edge::is_crossing() noexcept {
         return flags[2];
     }
 
-    bool Edge::is_boundary() {
+    bool Edge::is_boundary() noexcept {
         return flags[1];
     }
 
-    bool Edge::is_interface() {
+    bool Edge::is_interface() noexcept {
         return flags[0];
     }
 

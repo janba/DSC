@@ -25,24 +25,24 @@ namespace is_mesh
     protected:
         unsigned int key;
         
-        Key() : Key(static_cast<unsigned int>(-1))
+        Key() noexcept : Key(static_cast<unsigned int>(-1))
         {
             
         }
         
-        Key(unsigned int _key) : key(_key)
+        Key(unsigned int _key) noexcept : key(_key)
         {
             
         }
         
     public:
-        bool is_valid() const
+        bool is_valid() const noexcept
         {
             return key != static_cast<unsigned int>(-1);
         }
         
         //conversion to int
-        operator unsigned int() const
+        operator unsigned int() const noexcept
         {
             return key;
         }
@@ -67,29 +67,29 @@ namespace is_mesh
     class NodeKey : public Key
     {
     public:
-        NodeKey() : Key() {}
-        NodeKey(unsigned int k) : Key(k) {}
+        NodeKey() noexcept : Key() {}
+        NodeKey(unsigned int k) noexcept : Key(k) {}
     };
     
     class EdgeKey : public Key
     {
     public:
-        EdgeKey() : Key() {}
-        EdgeKey(unsigned int k) : Key(k) {}
+        EdgeKey() noexcept : Key() {}
+        EdgeKey(unsigned int k) noexcept : Key(k) {}
     };
     
     class FaceKey : public Key
     {
     public:
-        FaceKey() : Key() {}
-        FaceKey(unsigned int k) : Key(k) {}
+        FaceKey() noexcept  : Key() {}
+        FaceKey(unsigned int k) noexcept : Key(k) {}
     };
     
     class TetrahedronKey : public Key
     {
     public:
-        TetrahedronKey() : Key() {}
-        TetrahedronKey(unsigned int k) : Key(k) {}
+        TetrahedronKey() noexcept : Key() {}
+        TetrahedronKey(unsigned int k) noexcept : Key(k) {}
     };
     
 }

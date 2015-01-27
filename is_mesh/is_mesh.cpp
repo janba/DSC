@@ -1205,11 +1205,11 @@ namespace is_mesh{
         return m_collapse_listeners.erase(id) > 0;
     }
 
-    unsigned int ISMesh::get_max_node_key() const { return m_node_kernel->capacity(); }
+    unsigned int ISMesh::get_max_node_key() const { return (unsigned int)m_node_kernel->capacity(); }
 
-    unsigned int ISMesh::get_max_edge_key() const { return m_edge_kernel->capacity(); }
+    unsigned int ISMesh::get_max_edge_key() const { return (unsigned int)m_edge_kernel->capacity(); }
 
-    unsigned int ISMesh::get_max_face_key() const { return m_face_kernel->capacity(); }
+    unsigned int ISMesh::get_max_face_key() const { return (unsigned int)m_face_kernel->capacity(); }
 
-    unsigned int ISMesh::get_max_tet_key() const { return m_tetrahedron_kernel->capacity(); }
+    unsigned int ISMesh::get_max_tet_key() const { return (unsigned int)m_tetrahedron_kernel->capacity(); }
 }

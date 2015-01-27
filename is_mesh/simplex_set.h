@@ -51,12 +51,13 @@ namespace is_mesh
             return *this;
         }
         
-        SimplexSet(SimplexSet&& ss) : set(std::move(ss.set))
+        SimplexSet(SimplexSet&& ss) noexcept
+                : set(std::move(ss.set))
         {
             
         }
         
-        SimplexSet& operator=(SimplexSet&& ss)
+        SimplexSet& operator=(SimplexSet&& ss) noexcept
         {
             if (this != &ss){
                 set = std::move(ss.set);
@@ -102,12 +103,12 @@ namespace is_mesh
             return set[i];
         }
         
-        bool contains(const key_type& k) const
+        bool contains(const key_type& k) const noexcept
         {
             return std::find(set.begin(), set.end(), k) != end();
         }
         
-        int index(const key_type& k) const
+        int index(const key_type& k) const noexcept
         {
             for (int i = 0; i < set.size(); i++) {
                 if(set[i] == k)
@@ -195,7 +196,7 @@ namespace is_mesh
             return *this;
         }
 
-        bool operator==(const key_type& key)
+        bool operator==(const key_type& key) noexcept
         {
             if (set.size() != key.set.size()){
                 return false;
@@ -211,7 +212,7 @@ namespace is_mesh
     };
     
     template<typename key_type>
-    bool operator==(const SimplexSet<key_type>& A, const SimplexSet<key_type>& B)
+    bool operator==(const SimplexSet<key_type>& A, const SimplexSet<key_type>& B) noexcept
     {
         if(A.size() == B.size())
         {

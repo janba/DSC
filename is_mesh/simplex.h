@@ -49,14 +49,15 @@ namespace is_mesh
             m_co_boundary = new SimplexSet<co_boundary_key_type>(*s.m_co_boundary);
         }
         
-        Simplex(Simplex&& s)
+        Simplex(Simplex&& s) noexcept
         {
             std::swap(m_boundary, s.m_boundary);
             std::swap(m_co_boundary, s.m_co_boundary);
-            std::swap(m_mesh , s.m_mesh );
+            std::swap(m_mesh, s.m_mesh );
         }
 
-        Simplex<boundary_key_type, co_boundary_key_type>& operator=(Simplex<boundary_key_type, co_boundary_key_type>&& other){
+        Simplex<boundary_key_type, co_boundary_key_type>& operator=(Simplex<boundary_key_type, co_boundary_key_type>&& other) noexcept
+        {
             if (this != &other){
                 std::swap(m_boundary, other.m_boundary);
                 std::swap(m_co_boundary, other.m_co_boundary);
@@ -73,11 +74,11 @@ namespace is_mesh
         
     public:
         
-        const SimplexSet<co_boundary_key_type>& get_co_boundary() const
+        const SimplexSet<co_boundary_key_type>& get_co_boundary() const noexcept
         {
             return *m_co_boundary;
         }
-        const SimplexSet<boundary_key_type>& get_boundary() const
+        const SimplexSet<boundary_key_type>& get_boundary() const noexcept
         {
             return *m_boundary;
         }

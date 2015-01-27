@@ -24,10 +24,10 @@ namespace is_mesh
 
     }
 
-    Tetrahedron::Tetrahedron(Tetrahedron&& other)
+    Tetrahedron::Tetrahedron(Tetrahedron&& other) noexcept
             : l(other.l), Simplex<FaceKey, Key>(std::move(other)) {}
 
-    Tetrahedron &Tetrahedron::operator=(Tetrahedron&& other) {
+    Tetrahedron &Tetrahedron::operator=(Tetrahedron&& other) noexcept {
         if (this != &other){
             l = other.l;
             ((Simplex<FaceKey, Key>*)this)->operator=(std::move(other));
@@ -35,7 +35,7 @@ namespace is_mesh
         return *this;
     }
 
-    const SimplexSet<FaceKey> &Tetrahedron::face_keys()  const {
+    const SimplexSet<FaceKey> &Tetrahedron::face_keys() const noexcept{
         return get_boundary();
     }
 
@@ -52,7 +52,7 @@ namespace is_mesh
         return Util::volume(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos(), m_mesh->get(nids[3]).get_pos());
     }
 
-    const SimplexSet<NodeKey> Tetrahedron::node_keys() {
+    const SimplexSet<NodeKey> Tetrahedron::node_keys() const noexcept{
         const SimplexSet<FaceKey>& fids = face_keys();
         SimplexSet<NodeKey> nids = m_mesh->get_nodes(fids[0]);
         nids += m_mesh->get_nodes(fids[1]);

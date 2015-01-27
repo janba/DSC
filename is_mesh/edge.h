@@ -26,19 +26,19 @@ namespace is_mesh
     public:
         Edge(ISMesh *owner);
 
-        Edge(Edge&& other);
+        Edge(Edge&& other) noexcept;
 
-        Edge& operator=(Edge&& other);
+        Edge& operator=(Edge&& other) noexcept;
 
-        const SimplexSet<NodeKey> & node_keys()  const;
+        const SimplexSet<NodeKey> & node_keys()  const noexcept;
 
-        const SimplexSet<FaceKey> & face_keys() const;
+        const SimplexSet<FaceKey> & face_keys() const noexcept;
 
-        bool is_crossing();
+        bool is_crossing() noexcept;
 
-        bool is_boundary();
+        bool is_boundary() noexcept;
 
-        bool is_interface();
+        bool is_interface() noexcept;
 
         double length();
 

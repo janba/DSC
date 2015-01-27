@@ -26,19 +26,19 @@ namespace is_mesh
     public:
         Face(ISMesh *owner);
 
-        Face(Face&& other);
+        Face(Face&& other) noexcept;
 
-        Face& operator=(Face&& other);
+        Face& operator=(Face&& other) noexcept;
 
-        const SimplexSet<EdgeKey> & edge_keys() const;
+        const SimplexSet<EdgeKey> & edge_keys() const noexcept;
 
-        const SimplexSet<TetrahedronKey> & tet_keys() const;
+        const SimplexSet<TetrahedronKey> & tet_keys() const noexcept;
 
-        const SimplexSet<NodeKey> node_keys() const;
+        const SimplexSet<NodeKey> node_keys() const noexcept;
 
-        bool is_boundary();
+        bool is_boundary() noexcept;
 
-        bool is_interface();
+        bool is_interface() noexcept;
 
         double area();
 
