@@ -27,28 +27,28 @@ namespace CGLA {
 	public:
   
 		/// Construct a (0,0,0,0) homogenous Vector
-		Vec4d(): ArithVec4Float<double,Vec4d>(0.0,0.0,0.0,0.0) {}
+		Vec4d() noexcept: ArithVec4Float<double,Vec4d>(0.0,0.0,0.0,0.0) {}
 
 		/// Construct a (0,0,0,0) homogenous Vector
-		explicit Vec4d(double _a): ArithVec4Float<double,Vec4d>(_a,_a,_a,_a) {}
+		explicit Vec4d(double _a) noexcept: ArithVec4Float<double,Vec4d>(_a,_a,_a,_a) {}
 
 		/// Construct a 4D vector
-		Vec4d(double _a, double _b, double _c, double _d): 
+		Vec4d(double _a, double _b, double _c, double _d) noexcept:
 			ArithVec4Float<double,Vec4d>(_a,_b,_c,_d) {}
 
 		/// Construct a homogenous vector (a,b,c,1)
-		Vec4d(double _a, double _b, double _c): 
+		Vec4d(double _a, double _b, double _c) noexcept:
 			ArithVec4Float<double,Vec4d>(_a,_b,_c,1.0) {}
 
 		/// Construct a homogenous vector from a non-homogenous.
-		explicit Vec4d(const Vec3d& v): 
+		explicit Vec4d(const Vec3d& v) noexcept:
 			ArithVec4Float<double,Vec4d>(v[0],v[1],v[2],1.0) {}
 
 		/// Construct a homogenous vector from a non-homogenous.
-		explicit Vec4d(const Vec3d& v,double _d): 
+		explicit Vec4d(const Vec3d& v,double _d) noexcept:
 			ArithVec4Float<double,Vec4d>(v[0],v[1],v[2],_d) {}
 
-		operator Vec3d() const
+		operator Vec3d()  const noexcept
 		{
 			double k = 1.0/(*this)[3];
 			return Vec3d((*this)[0]*k,(*this)[1]*k,(*this)[2]*k);

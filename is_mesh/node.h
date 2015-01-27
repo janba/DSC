@@ -49,7 +49,7 @@ namespace is_mesh
 
         bool is_interface() const noexcept;
 
-        NodeKey key();
+        NodeKey key() const noexcept;
     private:
         void set_crossing(bool b);
 

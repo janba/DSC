@@ -78,7 +78,7 @@ namespace is_mesh
         return Util::length(m_mesh->get(nids[0]).get_destination() - m_mesh->get(nids[1]).get_destination());
     }
 
-    EdgeKey Edge::key() {
+    EdgeKey Edge::key() const noexcept {
         long index = ((char*)this - m_mesh->m_edge_kernel->data())/sizeof(util::kernel_element<EdgeKey, Edge>);
         assert(index >= 0);
         assert(index < m_mesh->m_edge_kernel->capacity());

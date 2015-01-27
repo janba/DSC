@@ -81,7 +81,7 @@ namespace is_mesh
         return fabs(Util::quality(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos(), m_mesh->get(nids[3]).get_pos()));
     }
 
-    TetrahedronKey Tetrahedron::key() {
+    TetrahedronKey Tetrahedron::key() const noexcept {
         long index = ((char*)this - m_mesh->m_tetrahedron_kernel->data())/sizeof(util::kernel_element<TetrahedronKey, Tetrahedron>);
         assert(index >= 0);
         assert(index < m_mesh->m_tetrahedron_kernel->capacity());

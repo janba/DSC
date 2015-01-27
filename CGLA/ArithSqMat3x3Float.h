@@ -40,14 +40,14 @@ namespace CGLA
     public:
 
       /// Construct matrix from 3 Vec3f vectors.
-      ArithSqMat3x3Float(V _a, V _b, V _c): 
+      ArithSqMat3x3Float(V _a, V _b, V _c) noexcept:
 	ArithSqMatFloat<V, M, 3> (_a,_b,_c) {}
   
       /// Construct the 0 matrix
-      ArithSqMat3x3Float() {}
+      ArithSqMat3x3Float() noexcept {}
 
       /// Construct a matrix from a single scalar value.
-      explicit ArithSqMat3x3Float(ScalarType a): 
+      explicit ArithSqMat3x3Float(ScalarType a) noexcept :
 	ArithSqMatFloat<V, M, 3>(a) {}
 
     };

@@ -28,25 +28,25 @@ namespace CGLA {
 	public:
 
 		/// Construct 0 vector
-		Vec3d(){}
+		Vec3d() noexcept {}
 
 		/// Construct vector
-		Vec3d(double a, double b, double c): ArithVec3Float<double,Vec3d>(a,b,c) {}
+		Vec3d(double a, double b, double c) noexcept: ArithVec3Float<double,Vec3d>(a,b,c) {}
 
 		/// Construct vector where all coords = a 
-		explicit Vec3d(double a):
+		explicit Vec3d(double a) noexcept:
 			ArithVec3Float<double,Vec3d>(a,a,a) {}
 
 		/// Convert from int vector
-		explicit Vec3d(const Vec3i& v): 
+		explicit Vec3d(const Vec3i& v) noexcept:
 			ArithVec3Float<double,Vec3d>(v[0],v[1],v[2]) {}
 
 		/// Construct from a 3D unsigned int vector.
-		explicit Vec3d(const Vec3usi& v): 
+		explicit Vec3d(const Vec3usi& v) noexcept:
 			ArithVec3Float<double,Vec3d>(v[0],v[1],v[2]) {}
 
 		/// Convert from float vector
-		explicit Vec3d(const Vec3f& v): 
+		explicit Vec3d(const Vec3f& v) noexcept:
 			ArithVec3Float<double,Vec3d>(v[0],v[1],v[2]) {}
 	};
 

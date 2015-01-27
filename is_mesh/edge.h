@@ -44,7 +44,7 @@ namespace is_mesh
 
         double length_destination();
 
-        EdgeKey key();
+        EdgeKey key() const noexcept;
     private:
         void set_crossing(bool b);
 

@@ -22,10 +22,10 @@ namespace CGLA {
 	public:
 
 		/// Construct a 3D float vector.
-		ArithVec3Float(T a, T b, T c): ArithVecFloat<T,V,3>(a,b,c) {}
+		ArithVec3Float(T a, T b, T c) noexcept: ArithVecFloat<T,V,3>(a,b,c) {}
 
 		/// Construct a 3D float vector.
-		ArithVec3Float() {}
+		ArithVec3Float() noexcept {}
 
 		/** Get the vector in spherical coordinates.
 				The first argument (theta) is inclination from the vertical axis.

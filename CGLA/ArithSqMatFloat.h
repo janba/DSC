@@ -39,22 +39,22 @@ namespace CGLA
     protected:
 
       /// Construct 0 matrix
-      ArithSqMatFloat() {}
+      ArithSqMatFloat() noexcept {}
 
       /// Construct matrix where all values are equal to constructor argument.
-      explicit ArithSqMatFloat(ScalarType _a):
+      explicit ArithSqMatFloat(ScalarType _a) noexcept :
 	ArithMatFloat<VT,VT,MT,ROWS>(_a) {}
 
       /// Construct 2x2 Matrix from two vectors
-      ArithSqMatFloat(VT _a, VT _b): 
+      ArithSqMatFloat(VT _a, VT _b) noexcept:
 	ArithMatFloat<VT,VT,MT,ROWS>(_a,_b) {}
 
       /// Construct 3x3 Matrix from three vectors
-      ArithSqMatFloat(VT _a, VT _b, VT _c): 
+      ArithSqMatFloat(VT _a, VT _b, VT _c) noexcept:
 	ArithMatFloat<VT,VT,MT,ROWS>(_a,_b,_c) {}
 
       /// Construct 4x4 Matrix from four vectors
-      ArithSqMatFloat(VT _a, VT _b, VT _c, VT _d): 
+      ArithSqMatFloat(VT _a, VT _b, VT _c, VT _d) noexcept:
 	ArithMatFloat<VT,VT,MT,ROWS>(_a,_b,_c,_d) {}
 		
     public:
@@ -62,13 +62,13 @@ namespace CGLA
       /** Assignment multiplication of matrices. 
 	  This function is not very efficient. This because we need a temporary
 	  matrix anyway, so it can't really be made efficient. */
-      const MT& operator*=(const MT& m2)
+      const MT& operator*=(const MT& m2) noexcept
 	{
 	  (*this) = (*this) * m2;
 	  return static_cast<const MT&>(*this);
 	}
 		
-      const MT& operator *=(ScalarType k) 
+      const MT& operator *=(ScalarType k) noexcept
 	{
 	  return ArithMatFloat<VT,VT,MT,ROWS>::operator*=(k);
 	}

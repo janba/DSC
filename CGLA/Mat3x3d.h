@@ -26,14 +26,14 @@ namespace CGLA {
 	public:
 
 		/// Construct matrix from 3 Vec3d vectors.
-		Mat3x3d(Vec3d _a, Vec3d _b, Vec3d _c): 
+		Mat3x3d(Vec3d _a, Vec3d _b, Vec3d _c) noexcept:
 			ArithSqMat3x3Float<Vec3d, Mat3x3d> (_a,_b,_c) {}
   
 		/// Construct the 0 matrix
-		Mat3x3d() {}
+		Mat3x3d() noexcept {}
 
 		/// Construct a matrix from a single scalar value.
-		explicit Mat3x3d(float a): ArithSqMat3x3Float<Vec3d, Mat3x3d>(a) {}
+		explicit Mat3x3d(float a) noexcept: ArithSqMat3x3Float<Vec3d, Mat3x3d>(a) {}
 
 	};
 

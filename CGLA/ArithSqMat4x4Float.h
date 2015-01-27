@@ -44,14 +44,14 @@ namespace CGLA
   public:
     
     /// Construct a Mat4x4f from four V vectors
-    ArithSqMat4x4Float(VT a, VT b, VT c, VT d): 
+    ArithSqMat4x4Float(VT a, VT b, VT c, VT d) noexcept :
       ArithSqMatFloat<VT, M, 4> (a,b,c,d) {}
   
     /// Construct the NAN matrix
-    ArithSqMat4x4Float() {}
+    ArithSqMat4x4Float() noexcept {}
 
     /// Construct matrix where all values are equal to constructor argument.
-    explicit ArithSqMat4x4Float(ScalarType  _a):
+    explicit ArithSqMat4x4Float(ScalarType  _a) noexcept:
       ArithSqMatFloat<VT,M,4>(_a) {}
 
     /** Multiply vector onto matrix. Here the fourth coordinate 

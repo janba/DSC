@@ -20,23 +20,23 @@ namespace CGLA {
     {
     public:
         
-        ArithVecFloat() 
+        ArithVecFloat() noexcept
         {
 #ifndef NDEBUG
             std::fill_n(this->data, N, CGLA_INIT_VALUE);
 #endif
         }
         
-        ArithVecFloat(T a): 
+        ArithVecFloat(T a) noexcept:
         ArithVec<T,V,N>(a) {}
         
-        ArithVecFloat(T a, T b): 
+        ArithVecFloat(T a, T b) noexcept:
         ArithVec<T,V,N>(a,b) {}
         
-        ArithVecFloat(T a, T b, T c): 
+        ArithVecFloat(T a, T b, T c) noexcept:
         ArithVec<T,V,N>(a,b,c) {}
         
-        ArithVecFloat(T a, T b, T c, T d): 
+        ArithVecFloat(T a, T b, T c, T d) noexcept:
         ArithVec<T,V,N>(a,b,c,d) {}
         
         /// Compute Euclidean length.

@@ -54,7 +54,7 @@ namespace is_mesh
 
         vec3 barycenter();
 
-        FaceKey key();
+        FaceKey key() const noexcept;
     private:
         void set_boundary(bool b);
 

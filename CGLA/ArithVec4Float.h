@@ -27,10 +27,10 @@ namespace CGLA {
 	public:
   
 		/// Construct a (0,0,0,0) homogenous Vector
-		ArithVec4Float() {}
+		ArithVec4Float() noexcept {}
 
 		/// Construct a 4D vector
-		ArithVec4Float(T a, T b, T c, T d): 
+		ArithVec4Float(T a, T b, T c, T d) noexcept:
 			ArithVecFloat<T,V,4>(a,b,c,d) {}
 
 		/// Divide all coordinates by the fourth coordinate

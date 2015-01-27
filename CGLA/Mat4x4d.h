@@ -31,14 +31,14 @@ namespace CGLA {
     public:
   
       /// Construct a Mat4x4d from four Vec4d vectors
-      Mat4x4d(Vec4d _a, Vec4d _b, Vec4d _c, Vec4d _d): 
+      Mat4x4d(Vec4d _a, Vec4d _b, Vec4d _c, Vec4d _d) noexcept:
 	ArithSqMat4x4Float<Vec4d, Mat4x4d> (_a,_b,_c,_d) {}
   
       /// Construct the nan matrix
-      Mat4x4d() {}
+      Mat4x4d() noexcept {}
 
       /// Construct a matrix with identical elements.
-      explicit Mat4x4d(double a): ArithSqMat4x4Float<Vec4d, Mat4x4d> (a) {}
+      explicit Mat4x4d(double a) noexcept : ArithSqMat4x4Float<Vec4d, Mat4x4d> (a) {}
     };
 
   /// Create a rotation _matrix. Rotates about one of the major axes.
