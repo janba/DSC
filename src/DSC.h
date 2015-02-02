@@ -61,6 +61,7 @@ namespace DSC {
 
     class DeformableSimplicialComplex
     {
+        long gcListenerId;
     public:
 
         DEPRECATED
@@ -73,7 +74,8 @@ namespace DSC {
         typedef is_mesh::TetrahedronKey       tet_key;
         
     protected:
-        is_mesh::ISMesh is_mesh;
+        std::shared_ptr<is_mesh::ISMesh> is_mesh_ptr;
+        is_mesh::ISMesh& is_mesh;
         is_mesh::MultipleGeometry design_domain;
         
         // Input parameter

@@ -7,16 +7,17 @@ using namespace std;
 namespace DSC {
 
     DeformableSimplicialComplex::DeformableSimplicialComplex(vector<vec3> & points, vector<int> & tets, const vector<int>& tet_labels)
-            : is_mesh(points, tets, tet_labels)
+            : is_mesh_ptr(std::make_shared<ISMesh>(points, tets, tet_labels)), is_mesh(*is_mesh_ptr)
     {
         pars = {0.1, 0.5, 0.0005, 0.015, 0.02, 0.3, 0., 2., 0.2, 5., 0.2, INFINITY};
         set_avg_edge_length();
-        is_mesh.add_gc_listener([&](const GarbageCollectDeletions& gc){
+        gcListenerId = is_mesh.add_gc_listener([&](const GarbageCollectDeletions& gc){
             on_gc(gc);
         });
     }
 
     DeformableSimplicialComplex::~DeformableSimplicialComplex() {
+        is_mesh.remove_gc_listener(gcListenerId);
     }
 
     void DeformableSimplicialComplex::set_avg_edge_length(double avg_edge_length) {
