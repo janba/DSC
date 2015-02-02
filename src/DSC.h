@@ -133,6 +133,8 @@ namespace DSC {
 
         void set_parameters(parameters pars_);
 
+        parameters get_parameters();
+
         DEPRECATED // Use add_design_domain
         void set_design_domain(is_mesh::Geometry *geometry) { add_design_domain(std::shared_ptr<is_mesh::Geometry>(geometry)); }
 

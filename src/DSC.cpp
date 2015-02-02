@@ -1939,4 +1939,8 @@ namespace DSC {
     shared_ptr<ISMesh> DeformableSimplicialComplex::get_shared_is_mesh() {
         return is_mesh_ptr;
     }
+
+    parameters DeformableSimplicialComplex::get_parameters() {
+        return pars;
+    }
 }
