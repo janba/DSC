@@ -177,8 +177,8 @@ namespace is_mesh {
             }
         }
     }
-    
-    Geometry* load_geometry(std::ifstream& file)
+
+    std::shared_ptr<Geometry> load_geometry(std::ifstream& file)
     {
         std::string tok;
         file >> tok;
@@ -193,7 +193,7 @@ namespace is_mesh {
             file >> y;
             file >> z;
             vec3 size(x,y,z);
-            return new Cube(center, size);
+            return std::make_shared<Cube>(center, size);
         }
         else if(tok == "circle")
         {
@@ -208,7 +208,7 @@ namespace is_mesh {
             file >> y;
             file >> z;
             vec3 normal(x,y,z);
-            return new Circle(center, radius, normal);
+            return std::make_shared<Circle>(center, radius, normal);
         }
         else if(tok == "cylinder")
         {
@@ -223,7 +223,7 @@ namespace is_mesh {
             file >> y;
             file >> z;
             vec3 up(x,y,z);
-            return new Cylinder(center, radius, up);
+            return std::make_shared<Cylinder>(center, radius, up);
         }
         else if(tok == "plane")
         {
@@ -236,7 +236,7 @@ namespace is_mesh {
             file >> y;
             file >> z;
             vec3 normal(x,y,z);
-            return new Plane(point, normal);
+            return std::make_shared<Plane>(point, normal);
         }
         else if(tok == "square")
         {
@@ -253,12 +253,12 @@ namespace is_mesh {
             file >> y;
             file >> z;
             vec3 height(x,y,z);
-            return new Square(center, width, height);
+            return std::make_shared<Square>(center, width, height);
         }
-        return new Geometry();
+        return std::make_shared<Geometry>();
     }
     
-    void import_geometry(const std::string& filename, vec3& origin, vec3& size, double& discretization, std::vector<unsigned int>& labels, std::vector<Geometry*>& geometries)
+    void import_geometry(const std::string& filename, vec3& origin, vec3& size, double& discretization, std::vector<unsigned int>& labels, std::vector<std::shared_ptr<Geometry>>& geometries)
     {
         std::ifstream file(filename.data());
         if (!file.is_open()){

@@ -123,9 +123,9 @@ namespace is_mesh
     }
 
     FaceKey Face::key()  const noexcept {
-        long index = ((char*)this - m_mesh->m_face_kernel->data())/sizeof(util::kernel_element<FaceKey, Face>);
+        long index = ((char*)this - m_mesh->m_face_kernel.data())/sizeof(util::kernel_element<FaceKey, Face>);
         assert(index >= 0);
-        assert(index < m_mesh->m_face_kernel->capacity());
+        assert(index < m_mesh->m_face_kernel.capacity());
         return FaceKey((unsigned int) index);
     }
 }

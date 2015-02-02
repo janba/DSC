@@ -6,11 +6,6 @@ using namespace std;
 
 namespace is_mesh{
     ISMesh::ISMesh(vector<vec3> & points, vector<int> & tets, const vector<int>& tet_labels) {
-        m_node_kernel = new kernel<NodeKey,Node>();
-        m_edge_kernel = new kernel<EdgeKey,Edge>();
-        m_face_kernel = new kernel<FaceKey,Face>();
-        m_tetrahedron_kernel = new kernel<TetrahedronKey,Tetrahedron>();
-
         create(points, tets);
         init_flags(tet_labels);
         validity_check();
@@ -18,74 +13,70 @@ namespace is_mesh{
 
 
     ISMesh::~ISMesh() {
-        delete m_tetrahedron_kernel;
-        delete m_face_kernel;
-        delete m_edge_kernel;
-        delete m_node_kernel;
     }
 
     unsigned int ISMesh::get_no_nodes() const {
-        return static_cast<unsigned int>(m_node_kernel->size());
+        return static_cast<unsigned int>(m_node_kernel.size());
     }
 
     unsigned int ISMesh::get_no_edges() const {
-        return static_cast<unsigned int>(m_edge_kernel->size());
+        return static_cast<unsigned int>(m_edge_kernel.size());
     }
 
     unsigned int ISMesh::get_no_faces() const {
-        return static_cast<unsigned int>(m_face_kernel->size());
+        return static_cast<unsigned int>(m_face_kernel.size());
     }
 
     unsigned int ISMesh::get_no_tets() const {
-        return static_cast<unsigned int>(m_tetrahedron_kernel->size());
+        return static_cast<unsigned int>(m_tetrahedron_kernel.size());
     }
 
     NodeIterator ISMesh::nodes(const std::vector<NodeKey> *subset) const {
-        return NodeIterator{m_node_kernel,subset};
+        return NodeIterator{&m_node_kernel,subset};
     }
 
     EdgeIterator ISMesh::edges(const std::vector<EdgeKey> *subset) const {
-        return EdgeIterator{m_edge_kernel,subset};
+        return EdgeIterator{&m_edge_kernel,subset};
     }
 
     FaceIterator ISMesh::faces(const std::vector<FaceKey> *subset) const {
-        return FaceIterator{m_face_kernel,subset};
+        return FaceIterator{&m_face_kernel,subset};
     }
 
     TetrahedronIterator ISMesh::tetrahedra(const std::vector<TetrahedronKey> *subset) const {
-        return TetrahedronIterator{m_tetrahedron_kernel,subset};
+        return TetrahedronIterator{&m_tetrahedron_kernel,subset};
     }
 
     typename kernel<NodeKey,Node>::iterator ISMesh::nodes_begin() {
-        return m_node_kernel->begin();
+        return m_node_kernel.begin();
     }
 
     typename kernel<NodeKey,Node>::iterator ISMesh::nodes_end() {
-        return m_node_kernel->end();
+        return m_node_kernel.end();
     }
 
     typename kernel<EdgeKey,Edge>::iterator ISMesh::edges_begin() {
-        return m_edge_kernel->begin();
+        return m_edge_kernel.begin();
     }
 
     typename kernel<EdgeKey,Edge>::iterator ISMesh::edges_end() {
-        return m_edge_kernel->end();
+        return m_edge_kernel.end();
     }
 
     typename kernel<FaceKey,Face>::iterator ISMesh::faces_begin() {
-        return m_face_kernel->begin();
+        return m_face_kernel.begin();
     }
 
     typename kernel<FaceKey,Face>::iterator ISMesh::faces_end() {
-        return m_face_kernel->end();
+        return m_face_kernel.end();
     }
 
     typename kernel<TetrahedronKey,Tetrahedron>::iterator ISMesh::tetrahedra_begin() {
-        return m_tetrahedron_kernel->begin();
+        return m_tetrahedron_kernel.begin();
     }
 
     typename kernel<TetrahedronKey,Tetrahedron>::iterator ISMesh::tetrahedra_end() {
-        return m_tetrahedron_kernel->end();
+        return m_tetrahedron_kernel.end();
     }
 
     void ISMesh::set_label(const TetrahedronKey& tid, int newLabel) {
@@ -311,19 +302,19 @@ namespace is_mesh{
     }
 
     is_mesh::Node &ISMesh::get(const NodeKey& nid) {
-        return m_node_kernel->find(nid);
+        return m_node_kernel.find(nid);
     }
 
     is_mesh::Edge &ISMesh::get(const EdgeKey& eid) {
-        return m_edge_kernel->find(eid);
+        return m_edge_kernel.find(eid);
     }
 
     is_mesh::Face &ISMesh::get(const FaceKey& fid) {
-        return m_face_kernel->find(fid);
+        return m_face_kernel.find(fid);
     }
 
     is_mesh::Tetrahedron &ISMesh::get(const TetrahedronKey& tid) {
-        return m_tetrahedron_kernel->find(tid);
+        return m_tetrahedron_kernel.find(tid);
     }
 
     const SimplexSet<NodeKey> &ISMesh::get_nodes(const EdgeKey& eid) {
@@ -525,19 +516,19 @@ namespace is_mesh{
     }
 
     bool ISMesh::exists(const TetrahedronKey& t) {
-        return m_tetrahedron_kernel->is_valid(t);
+        return m_tetrahedron_kernel.is_valid(t);
     }
 
     bool ISMesh::exists(const FaceKey& f) {
-        return m_face_kernel->is_valid(f);
+        return m_face_kernel.is_valid(f);
     }
 
     bool ISMesh::exists(const EdgeKey& e) {
-        return m_edge_kernel->is_valid(e);
+        return m_edge_kernel.is_valid(e);
     }
 
     bool ISMesh::exists(const NodeKey& n) {
-        return m_node_kernel->is_valid(n);
+        return m_node_kernel.is_valid(n);
     }
 
     bool ISMesh::is_clockwise_order(const NodeKey& nid, SimplexSet<NodeKey>& nids) {
@@ -597,12 +588,12 @@ namespace is_mesh{
     }
 
     NodeKey ISMesh::insert_node(const vec3& p) {
-        auto node = m_node_kernel->create(this,p);
+        auto node = m_node_kernel.create(this,p);
         return node.key();
     }
 
     EdgeKey ISMesh::insert_edge(NodeKey node1, NodeKey node2) {
-        auto edge = m_edge_kernel->create(this);
+        auto edge = m_edge_kernel.create(this);
         //add the new simplex to the co-boundary relation of the boundary simplices
         get(node1).add_co_face(edge.key());
         get(node2).add_co_face(edge.key());
@@ -613,7 +604,7 @@ namespace is_mesh{
     }
 
     FaceKey ISMesh::insert_face(EdgeKey edge1, EdgeKey edge2, EdgeKey edge3) {
-        auto face = m_face_kernel->create(this);
+        auto face = m_face_kernel.create(this);
         //update relations
         get(edge1).add_co_face(face.key());
         get(edge2).add_co_face(face.key());
@@ -625,7 +616,7 @@ namespace is_mesh{
     }
 
     TetrahedronKey ISMesh::insert_tetrahedron(FaceKey face1, FaceKey face2, FaceKey face3, FaceKey face4) {
-        auto tetrahedron = m_tetrahedron_kernel->create(this);
+        auto tetrahedron = m_tetrahedron_kernel.create(this);
         //update relations
         get(face1).add_co_face(tetrahedron.key());
         get(face2).add_co_face(tetrahedron.key());
@@ -644,7 +635,7 @@ namespace is_mesh{
         {
             get(e).remove_face(nid);
         }
-        m_node_kernel->erase(nid);
+        m_node_kernel.erase(nid);
     }
 
     void ISMesh::remove(const EdgeKey& eid) {
@@ -656,7 +647,7 @@ namespace is_mesh{
         {
             get(n).remove_co_face(eid);
         }
-        m_edge_kernel->erase(eid);
+        m_edge_kernel.erase(eid);
     }
 
     void ISMesh::remove(const FaceKey& fid) {
@@ -668,7 +659,7 @@ namespace is_mesh{
         {
             get(e).remove_co_face(fid);
         }
-        m_face_kernel->erase(fid);
+        m_face_kernel.erase(fid);
     }
 
     void ISMesh::remove(const TetrahedronKey& tid) {
@@ -676,7 +667,7 @@ namespace is_mesh{
         {
             get(f).remove_co_face(tid);
         }
-        m_tetrahedron_kernel->erase(tid);
+        m_tetrahedron_kernel.erase(tid);
     }
 
     NodeKey ISMesh::merge(const NodeKey& key1, const NodeKey& key2) {
@@ -1022,10 +1013,10 @@ namespace is_mesh{
 
     void ISMesh::garbage_collect() {
         GarbageCollectDeletions res {
-            m_node_kernel->garbage_collect(),
-            m_edge_kernel->garbage_collect(),
-            m_face_kernel->garbage_collect(),
-            m_tetrahedron_kernel->garbage_collect()};
+            m_node_kernel.garbage_collect(),
+            m_edge_kernel.garbage_collect(),
+            m_face_kernel.garbage_collect(),
+            m_tetrahedron_kernel.garbage_collect()};
         for (auto & fn : m_gc_listeners){
             fn.second(res);
         }
@@ -1205,11 +1196,11 @@ namespace is_mesh{
         return m_collapse_listeners.erase(id) > 0;
     }
 
-    unsigned int ISMesh::get_max_node_key() const { return (unsigned int)m_node_kernel->capacity(); }
+    unsigned int ISMesh::get_max_node_key() const { return (unsigned int)m_node_kernel.capacity(); }
 
-    unsigned int ISMesh::get_max_edge_key() const { return (unsigned int)m_edge_kernel->capacity(); }
+    unsigned int ISMesh::get_max_edge_key() const { return (unsigned int)m_edge_kernel.capacity(); }
 
-    unsigned int ISMesh::get_max_face_key() const { return (unsigned int)m_face_kernel->capacity(); }
+    unsigned int ISMesh::get_max_face_key() const { return (unsigned int)m_face_kernel.capacity(); }
 
-    unsigned int ISMesh::get_max_tet_key() const { return (unsigned int)m_tetrahedron_kernel->capacity(); }
+    unsigned int ISMesh::get_max_tet_key() const { return (unsigned int)m_tetrahedron_kernel.capacity(); }
 }

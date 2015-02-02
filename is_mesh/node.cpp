@@ -92,9 +92,9 @@ namespace is_mesh
     }
 
     NodeKey Node::key() const noexcept {
-        long index = ((char*)this - m_mesh->m_node_kernel->data())/sizeof(util::kernel_element<NodeKey, Node> );
+        long index = ((char*)this - m_mesh->m_node_kernel.data())/sizeof(util::kernel_element<NodeKey, Node> );
         assert(index >= 0);
-        assert(index < m_mesh->m_node_kernel->capacity());
+        assert(index < m_mesh->m_node_kernel.capacity());
         return NodeKey((unsigned int) index);
     }
 }

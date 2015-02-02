@@ -34,10 +34,10 @@ namespace is_mesh {
 
     class ISMesh
     {
-        kernel<NodeKey,Node>* m_node_kernel;
-        kernel<EdgeKey,Edge>* m_edge_kernel;
-        kernel<FaceKey,Face>* m_face_kernel;
-        kernel<TetrahedronKey,Tetrahedron>* m_tetrahedron_kernel;
+        kernel<NodeKey,Node> m_node_kernel;
+        kernel<EdgeKey,Edge> m_edge_kernel;
+        kernel<FaceKey,Face> m_face_kernel;
+        kernel<TetrahedronKey,Tetrahedron> m_tetrahedron_kernel;
 
         std::map<long,std::function<void(const GarbageCollectDeletions&)>> m_gc_listeners;
         std::map<long,std::function<void(const TetrahedronKey& tid, unsigned int oldValue)>> m_set_label_listeners;

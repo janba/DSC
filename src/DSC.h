@@ -89,7 +89,7 @@ namespace DSC {
 
         parameters pars;
 
-        Subdomain *subdomain = nullptr;
+        std::shared_ptr<Subdomain> subdomain;
 
         //////////////////////////
         // INITIALIZE FUNCTIONS //
@@ -110,14 +110,14 @@ namespace DSC {
         void set_parameters(parameters pars_);
 
         DEPRECATED // Use add_design_domain
-        void set_design_domain(is_mesh::Geometry *geometry) { add_design_domain(geometry); }
+        void set_design_domain(is_mesh::Geometry *geometry) { add_design_domain(std::shared_ptr<is_mesh::Geometry>(geometry)); }
 
-        void add_design_domain(is_mesh::Geometry *geometry);
+        void add_design_domain(std::shared_ptr<is_mesh::Geometry> geometry);
 
         // set sub domain elements which are modified
-        void set_subdomain(Subdomain *subdomain);
+        void set_subdomain(std::shared_ptr<Subdomain> subdomain);
 
-        Subdomain* get_subdomain();
+        std::shared_ptr<Subdomain> get_subdomain();
 
         void clear_subdomain();
 

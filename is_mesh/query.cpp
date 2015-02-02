@@ -108,6 +108,19 @@ namespace is_mesh {
                         break;
                     }
                 }
+                bool notFound = newDist == std::numeric_limits<double>::max() ;
+                if (notFound){
+#ifdef DEBUG
+                    auto & face = mesh->get(face_key);
+                    auto node_pos = mesh->get_pos(face.node_keys());
+                    for(auto n : node_pos){
+                        std::cerr << n <<" dist to ray "<< ray.distance(n) << std::endl;
+                    }
+                    assert(false);
+#endif
+                    face_key = FaceKey((unsigned int) -1);
+                    return;
+                }
             }
         }
         face_key = FaceKey((unsigned int) -1);

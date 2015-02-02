@@ -82,9 +82,9 @@ namespace is_mesh
     }
 
     TetrahedronKey Tetrahedron::key() const noexcept {
-        long index = ((char*)this - m_mesh->m_tetrahedron_kernel->data())/sizeof(util::kernel_element<TetrahedronKey, Tetrahedron>);
+        long index = ((char*)this - m_mesh->m_tetrahedron_kernel.data())/sizeof(util::kernel_element<TetrahedronKey, Tetrahedron>);
         assert(index >= 0);
-        assert(index < m_mesh->m_tetrahedron_kernel->capacity());
+        assert(index < m_mesh->m_tetrahedron_kernel.capacity());
         return TetrahedronKey((unsigned int) index);
     }
 }

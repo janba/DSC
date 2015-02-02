@@ -37,7 +37,7 @@ namespace DSC {
         pars = pars_;
     }
 
-    void DeformableSimplicialComplex::add_design_domain(Geometry *geometry) {
+    void DeformableSimplicialComplex::add_design_domain(std::shared_ptr<Geometry> geometry) {
         design_domain.add_geometry(geometry);
     }
 
@@ -1892,7 +1892,7 @@ namespace DSC {
         return is_mesh;
     }
 
-    void DeformableSimplicialComplex::set_subdomain(Subdomain *subdomain) {
+    void DeformableSimplicialComplex::set_subdomain(std::shared_ptr<Subdomain> subdomain) {
         this->subdomain = subdomain;
     }
 
@@ -1906,7 +1906,7 @@ namespace DSC {
         }
     }
 
-    Subdomain *DeformableSimplicialComplex::get_subdomain() {
+    std::shared_ptr<Subdomain> DeformableSimplicialComplex::get_subdomain() {
         return subdomain;
     }
 

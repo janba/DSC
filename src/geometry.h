@@ -65,7 +65,7 @@ namespace is_mesh {
     
     class MultipleGeometry : public Geometry
     {
-        std::vector<Geometry*> geometries;
+        std::vector<std::shared_ptr<Geometry>> geometries;
         
     public:
         MultipleGeometry()
@@ -75,19 +75,16 @@ namespace is_mesh {
         
         ~MultipleGeometry()
         {
-            for (Geometry* g : geometries) {
-                delete g;
-            }
         }
         
-        void add_geometry(Geometry* geometry)
+        void add_geometry(std::shared_ptr<Geometry> geometry)
         {
             geometries.push_back(geometry);
         }
         
         virtual bool is_inside(vec3 p) const
         {
-            for (Geometry* geometry : geometries)
+            for (auto geometry : geometries)
             {
                 if(!geometry->is_inside(p))
                 {
@@ -99,7 +96,7 @@ namespace is_mesh {
         
         virtual void clamp_vector(const vec3& p, vec3& v) const
         {
-            for (Geometry* geometry : geometries)
+            for (auto geometry : geometries)
             {
                 geometry->clamp_vector(p, v);
             }
@@ -109,7 +106,7 @@ namespace is_mesh {
         {
             vec3 proj_p;
             double dist = INFINITY;
-            for (Geometry* geometry : geometries)
+            for (auto geometry : geometries)
             {
                 vec3 pp = geometry->project(p);
                 if(sqr_length(pp - p) < dist)

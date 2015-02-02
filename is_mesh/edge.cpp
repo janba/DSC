@@ -79,9 +79,9 @@ namespace is_mesh
     }
 
     EdgeKey Edge::key() const noexcept {
-        long index = ((char*)this - m_mesh->m_edge_kernel->data())/sizeof(util::kernel_element<EdgeKey, Edge>);
+        long index = ((char*)this - m_mesh->m_edge_kernel.data())/sizeof(util::kernel_element<EdgeKey, Edge>);
         assert(index >= 0);
-        assert(index < m_mesh->m_edge_kernel->capacity());
+        assert(index < m_mesh->m_edge_kernel.capacity());
         return EdgeKey((unsigned int) index);
     }
 }
