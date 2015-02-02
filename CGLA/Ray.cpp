@@ -18,6 +18,10 @@ namespace CGLA {
         assert(std::abs(length(direction) - 1.0) < FLT_EPSILON*10);
     }
 
+    double Ray::distance(Vec3d v){
+        return length(origin + dot((v-origin), direction) / dot(direction, direction) * direction);
+    }
+
     bool Ray::intersect_triangle(Vec3d v0, Vec3d v1, Vec3d v2, double &dist) const {
         // based on RTR 3ed page 750
         Vec3d e1 = v1 - v0;

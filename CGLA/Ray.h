@@ -17,6 +17,7 @@ namespace CGLA {
         Vec3d origin = Vec3d{0};
         Vec3d direction = Vec3d{0};
 
+        double distance(Vec3d v);
         // returns negative value if no intersection
         bool intersect_triangle(Vec3d v1, Vec3d v2, Vec3d v3, double &dist) const;
     };
