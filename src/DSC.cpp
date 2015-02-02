@@ -9,7 +9,13 @@ namespace DSC {
     DeformableSimplicialComplex::DeformableSimplicialComplex(vector<vec3> & points, vector<int> & tets, const vector<int>& tet_labels)
             : is_mesh_ptr(std::make_shared<ISMesh>(points, tets, tet_labels)), is_mesh(*is_mesh_ptr)
     {
-        pars = {0.1, 0.5, 0.0005, 0.015, 0.02, 0.3, 0., 2., 0.2, 5., 0.2, INFINITY};
+        set_avg_edge_length();
+        gcListenerId = is_mesh.add_gc_listener([&](const GarbageCollectDeletions& gc){
+            on_gc(gc);
+        });
+    }
+    DeformableSimplicialComplex::DeformableSimplicialComplex(shared_ptr<ISMesh> ptr)
+    :is_mesh_ptr(ptr),  is_mesh(*is_mesh_ptr){
         set_avg_edge_length();
         gcListenerId = is_mesh.add_gc_listener([&](const GarbageCollectDeletions& gc){
             on_gc(gc);
@@ -27,6 +33,10 @@ namespace DSC {
         }
         else {
             AVG_LENGTH = avg_edge_length;
+        }
+
+        if (AVG_LENGTH < pars.MIN_LENGTH || AVG_LENGTH > pars.MAX_LENGTH){
+            cout << "Warning: AVG_LENGTH is "<<AVG_LENGTH<<" which is outside min and max edge length ("<<pars.MIN_LENGTH<<" - "<<pars.MAX_LENGTH<<")\n";
         }
 
         AVG_AREA = 0.5*sqrt(3./4.)*AVG_LENGTH*AVG_LENGTH;
@@ -170,7 +180,7 @@ namespace DSC {
     }
 
     vec3 DeformableSimplicialComplex::get_center() const {
-        return vec3(0.);
+        return vec3(0.); // todo fix
     }
 
     double DeformableSimplicialComplex::get_min_tet_quality() const {
@@ -1924,5 +1934,9 @@ namespace DSC {
 
     is_mesh::TetrahedronIterator DeformableSimplicialComplex::tetrahedra() const {
         return is_mesh.tetrahedra(subdomain?&subdomain->tetrahedra(): nullptr);
+    }
+
+    shared_ptr<ISMesh> DeformableSimplicialComplex::get_shared_is_mesh() {
+        return is_mesh_ptr;
     }
 }

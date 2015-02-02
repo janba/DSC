@@ -21,31 +21,51 @@
 #include "mesh_io.h"
 #include "util.h"
 
+
 struct parameters {
     
     // Thresholds on the quality of edges
-    double DEG_EDGE_QUALITY;
-    double MIN_EDGE_QUALITY;
+    double DEG_EDGE_QUALITY = 0.1;
+    double MIN_EDGE_QUALITY = 0.5;
     
     // Thresholds on the quality of faces.
-    double DEG_FACE_QUALITY;
-    double MIN_FACE_QUALITY;
+    double DEG_FACE_QUALITY = 0.0005;
+    double MIN_FACE_QUALITY = 0.015;
     
     // Thresholds on the quality of tetrahedra.
-    double DEG_TET_QUALITY;
-    double MIN_TET_QUALITY;
+    double DEG_TET_QUALITY = 0.02;
+    double MIN_TET_QUALITY = 0.3;
     
     // Thresholds on the length of edges.
-    double MIN_LENGTH;
-    double MAX_LENGTH;
+    double MIN_LENGTH = 0.0;
+    double MAX_LENGTH = 2.;
     
     // Thresholds on the area of faces.
-    double MIN_AREA;
-    double MAX_AREA;
+    double MIN_AREA = 0.2;
+    double MAX_AREA = 5.;
     
     // Thresholds on the volume of tetrahedra.
-    double MIN_VOLUME;
-    double MAX_VOLUME;
+    double MIN_VOLUME = 0.2;
+    double MAX_VOLUME = INFINITY;
+
+
+    parameters() {
+    }
+
+    parameters(double DEG_EDGE_QUALITY, double MIN_EDGE_QUALITY, double DEG_FACE_QUALITY, double MIN_FACE_QUALITY, double DEG_TET_QUALITY, double MIN_TET_QUALITY, double MIN_LENGTH, double MAX_LENGTH, double MIN_AREA, double MAX_AREA, double MIN_VOLUME, double MAX_VOLUME)
+            : DEG_EDGE_QUALITY(DEG_EDGE_QUALITY),
+              MIN_EDGE_QUALITY(MIN_EDGE_QUALITY),
+              DEG_FACE_QUALITY(DEG_FACE_QUALITY),
+              MIN_FACE_QUALITY(MIN_FACE_QUALITY),
+              DEG_TET_QUALITY(DEG_TET_QUALITY),
+              MIN_TET_QUALITY(MIN_TET_QUALITY),
+              MIN_LENGTH(MIN_LENGTH),
+              MAX_LENGTH(MAX_LENGTH),
+              MIN_AREA(MIN_AREA),
+              MAX_AREA(MAX_AREA),
+              MIN_VOLUME(MIN_VOLUME),
+              MAX_VOLUME(MAX_VOLUME) {
+    }
 };
 
 namespace DSC {
@@ -86,7 +106,6 @@ namespace DSC {
         // Should be eliminated
         double FLIP_EDGE_INTERFACE_FLATNESS = 0.995;
 
-
         parameters pars;
 
         std::shared_ptr<Subdomain> subdomain;
@@ -99,9 +118,14 @@ namespace DSC {
         /// SimplicialComplex constructor.
         DeformableSimplicialComplex(std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels);
 
+        /// SimplicialComplex constructor.
+        DeformableSimplicialComplex(std::shared_ptr<is_mesh::ISMesh> ismesh);
+
         virtual ~DeformableSimplicialComplex();
 
     public:
+
+        std::shared_ptr<is_mesh::ISMesh> get_shared_is_mesh();
 
         is_mesh::ISMesh & get_is_mesh();
 
