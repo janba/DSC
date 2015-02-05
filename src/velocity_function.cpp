@@ -6,7 +6,6 @@ DSC::VelocityFunc::VelocityFunc(double velocity, double accuracy, int max_time_s
 }
 
 DSC::VelocityFunc::~VelocityFunc() {
-    pos_old.clear();
 }
 
 std::string DSC::VelocityFunc::get_name() const {
