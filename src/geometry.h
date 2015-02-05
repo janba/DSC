@@ -135,7 +135,28 @@ namespace is_mesh {
             return sqr_length(p - point) < EPSILON;
         }
     };
-    
+
+    class Sphere : public Geometry {
+    protected:
+        vec3 point;
+        double radius2;
+
+    public:
+        Sphere(vec3 c, double radius) : Geometry(), point(c),radius2(radius*radius)
+        {
+
+        }
+
+        virtual bool is_inside(vec3 p) const override
+        {
+            bool res = sqr_length(p - point) < radius2;
+            if (inverse){
+                res = !res;
+            }
+            return res;
+        }
+    };
+
     class Cube : public Point {
     protected:
         vec3 size;
