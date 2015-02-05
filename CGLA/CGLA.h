@@ -33,10 +33,9 @@
 
 namespace CGLA 
 {
-		inline float cgla_nan() 
+        constexpr float cgla_nan()
 		{
-				static const float cgla_nan_value = log(-1.0f);
-				return cgla_nan_value;
+				return FP_NAN;
 		}
 		
   /** Procedural definition of NAN */  
@@ -74,7 +73,7 @@ namespace CGLA
 
 #define SQRT3 sqrt3()
 
-  /// Useful enum that represents coordiante axes.
+  /// Useful enum that represents coordinate axes.
   enum Axis {XAXIS=0,YAXIS=1,ZAXIS=2};
 
   inline bool isnan(double x) { return x != x; }
