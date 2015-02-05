@@ -35,10 +35,6 @@ namespace DSC {
             AVG_LENGTH = avg_edge_length;
         }
 
-        if (AVG_LENGTH < pars.MIN_LENGTH || AVG_LENGTH > pars.MAX_LENGTH){
-            cout << "Warning: AVG_LENGTH is "<<AVG_LENGTH<<" which is outside min and max edge length ("<<pars.MIN_LENGTH<<" - "<<pars.MAX_LENGTH<<")\n";
-        }
-
         AVG_AREA = 0.5*sqrt(3./4.)*AVG_LENGTH*AVG_LENGTH;
         AVG_VOLUME = (sqrt(2.)/12.)*AVG_LENGTH*AVG_LENGTH*AVG_LENGTH;
     }

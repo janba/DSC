@@ -36,7 +36,7 @@ struct parameters {
     double DEG_TET_QUALITY = 0.02;
     double MIN_TET_QUALITY = 0.3;
     
-    // Thresholds on the length of edges.
+    // Thresholds on the length of edges relative to average edge length.
     double MIN_LENGTH = 0.0;
     double MAX_LENGTH = 2.;
     
