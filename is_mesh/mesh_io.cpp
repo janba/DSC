@@ -225,6 +225,23 @@ namespace is_mesh {
             vec3 up(x,y,z);
             return std::make_shared<Cylinder>(center, radius, up);
         }
+        else if(tok == "sphere")
+        {
+            double x, y, z;
+            file >> x;
+            file >> y;
+            file >> z;
+            vec3 center(x,y,z);
+            double radius;
+            file >> radius;
+            bool inverted;
+            file >> inverted;
+            auto res = std::make_shared<Sphere>(center, radius);
+            if (inverted){
+                res->invert();
+            }
+            return res;
+        }
         else if(tok == "plane")
         {
             double x, y, z;
@@ -254,6 +271,8 @@ namespace is_mesh {
             file >> z;
             vec3 height(x,y,z);
             return std::make_shared<Square>(center, width, height);
+        } else {
+            std::cout << "Warning unknown token "<<tok<<std::endl;
         }
         return std::make_shared<Geometry>();
     }
