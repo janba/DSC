@@ -77,8 +77,10 @@ namespace is_mesh {
         // return the list of edges where both nodes are contained in the nodeKeys
         std::vector<EdgeKey> edges(std::vector<NodeKey> nodeKeys);
 
+        // return the list of faces where both nodes are contained in the edgeKeys
         std::vector<FaceKey> faces(std::vector<EdgeKey> edgeKeys);
 
+        // return the list of tets where both nodes are contained in the faceKeys
         std::vector<TetrahedronKey> tetrahedra(std::vector<FaceKey> faceKeys);
     };
 }
