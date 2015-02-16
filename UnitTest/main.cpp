@@ -15,6 +15,7 @@ using namespace std;
 TINYTEST_START_SUITE(DSCSuite);
     TINYTEST_ADD_TEST(build_boundary_mesh_test);
     TINYTEST_ADD_TEST(tetGenTest);
+    TINYTEST_ADD_TEST(connectedTest);
 TINYTEST_END_SUITE();
 
 TINYTEST_MAIN_SINGLE_SUITE(DSCSuite);

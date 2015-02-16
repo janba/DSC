@@ -8,6 +8,7 @@
 
 #include "DSC.h"
 #include "CGLA/Ray.h"
+#include "attribute_vector.h"
 #include <vector>
 
 /**
@@ -82,7 +83,46 @@ namespace is_mesh {
 
         // return the list of tets where both nodes are contained in the faceKeys
         std::vector<TetrahedronKey> tetrahedra(std::vector<FaceKey> faceKeys);
+
+
+        template <typename K>
+        SimplexSet<K> connected(K initialKey, std::function<bool(K k)> includeKey);
+
     };
+
+    template <typename K>
+    inline SimplexSet<K> Query::connected(K initialKey, std::function<bool(K k)> includeKey) {
+        AttributeVector<K, char> explored;
+        SimplexSet<K> res;
+        std::vector<K> q{initialKey};
+        while (!q.empty()){
+            K qKey = q.back();
+            q.pop_back();
+
+            if (explored[qKey]){
+                continue;
+            }
+            explored[qKey] = true;
+
+            if (includeKey(qKey)){
+                res.push_back(qKey);
+
+                const auto & simplex = mesh->get(qKey);
+                auto boundary = simplex.get_boundary();
+                for (auto b : boundary){
+                    for (auto bb : mesh->get(b).get_co_boundary()){
+                        if (explored[bb]){
+                            continue;
+                        }
+                        q.push_back(bb);
+                    }
+                }
+            }
+        }
+
+        return res;
+    }
+
 }
 
 

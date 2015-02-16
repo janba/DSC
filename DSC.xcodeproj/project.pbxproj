@@ -26,6 +26,7 @@
 		333AE7547F1935D8A72FFE48 /* DSC_Suite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AED17ACD8EBBDD488D61E /* DSC_Suite.cpp */; };
 		333AE9167BF1F0FB69CE9F36 /* is_mesh_iterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AEB4EC9AFDBFD1472B2FC /* is_mesh_iterator.h */; };
 		333AE9402FFA4B5BD244E818 /* is_mesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AEB9FDC8710743C9CF985 /* is_mesh.h */; };
+		333AE9AB290B6A0F3B467312 /* attribute_vector.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AEDE2F14D9DB0DD502692 /* attribute_vector.h */; };
 		333AE9EE21BE28220E9C35BE /* query.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 333AE610C0381E3C513BCA41 /* query.cpp */; };
 		333AEB72D047513E5E90FF36 /* mesh_io.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AEF915FE236382288972B /* mesh_io.h */; };
 		333AEB82DE7A69BBE3FD712F /* Ray.h in Headers */ = {isa = PBXBuildFile; fileRef = 333AE1511878B84E1FBE6124 /* Ray.h */; };
@@ -138,7 +139,6 @@
 		7AF7E9BF176B4FE400F43714 /* DSC.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AF7E9BE176B4FE400F43714 /* DSC.h */; };
 		FE0E89561A23530F000E3B30 /* DSC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0E89551A23530F000E3B30 /* DSC.cpp */; };
 		FE0E89591A23531C000E3B30 /* is_mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0E89571A23531C000E3B30 /* is_mesh.cpp */; };
-		FEA860751A408C5100CCB2D8 /* attribute_vector.h in Headers */ = {isa = PBXBuildFile; fileRef = FEA860741A408C5100CCB2D8 /* attribute_vector.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -201,6 +201,7 @@
 		333AED17ACD8EBBDD488D61E /* DSC_Suite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DSC_Suite.cpp; sourceTree = "<group>"; };
 		333AED1B18A5D5EADA15CC74 /* edge.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = edge.cpp; path = is_mesh/edge.cpp; sourceTree = "<group>"; };
 		333AED7A4DEF22621EDFA5FE /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		333AEDE2F14D9DB0DD502692 /* attribute_vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = attribute_vector.h; path = is_mesh/attribute_vector.h; sourceTree = "<group>"; };
 		333AEEB6A7E5D2134112479B /* is_mesh_iterator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = is_mesh_iterator.cpp; path = is_mesh/is_mesh_iterator.cpp; sourceTree = "<group>"; };
 		333AEF915FE236382288972B /* mesh_io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mesh_io.h; path = is_mesh/mesh_io.h; sourceTree = "<group>"; };
 		333AEFD4824DB30E67D2DD5F /* key.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = key.h; path = is_mesh/key.h; sourceTree = "<group>"; };
@@ -312,7 +313,6 @@
 		7AF7E9BE176B4FE400F43714 /* DSC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DSC.h; path = src/DSC.h; sourceTree = SOURCE_ROOT; };
 		FE0E89551A23530F000E3B30 /* DSC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DSC.cpp; path = src/DSC.cpp; sourceTree = SOURCE_ROOT; };
 		FE0E89571A23531C000E3B30 /* is_mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = is_mesh.cpp; path = is_mesh/is_mesh.cpp; sourceTree = "<group>"; };
-		FEA860741A408C5100CCB2D8 /* attribute_vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = attribute_vector.h; path = src/attribute_vector.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -409,6 +409,7 @@
 				333AE40462285E0CF156F893 /* edge.h */,
 				333AE610C0381E3C513BCA41 /* query.cpp */,
 				333AEAE8C202713A91BDE094 /* query.h */,
+				333AEDE2F14D9DB0DD502692 /* attribute_vector.h */,
 			);
 			name = ISMesh;
 			path = ../../DSC;
@@ -582,7 +583,6 @@
 		7AE27AB917675A1E000F8238 /* DSC */ = {
 			isa = PBXGroup;
 			children = (
-				FEA860741A408C5100CCB2D8 /* attribute_vector.h */,
 				FE0E89551A23530F000E3B30 /* DSC.cpp */,
 				7AE27AE917675B04000F8238 /* velocity_function.h */,
 				7AF7E9BE176B4FE400F43714 /* DSC.h */,
@@ -695,7 +695,6 @@
 				7AF7E9BF176B4FE400F43714 /* DSC.h in Headers */,
 				333AEC2B6E956CD9BE9F941B /* util.h in Headers */,
 				333AEC31AAFB2539DC0CA593 /* geometry.h in Headers */,
-				FEA860751A408C5100CCB2D8 /* attribute_vector.h in Headers */,
 				333AEB72D047513E5E90FF36 /* mesh_io.h in Headers */,
 				333AEBF9E35AB77707B24910 /* key.h in Headers */,
 				333AE2BE73A0EB768FDCB56B /* simplex.h in Headers */,
@@ -710,6 +709,7 @@
 				333AE239B8BD9322C9C80F5F /* tetrahedron.h in Headers */,
 				333AE2B35917D705B8BE8983 /* edge.h in Headers */,
 				333AE1DBC99AF5F59A567490 /* query.h in Headers */,
+				333AE9AB290B6A0F3B467312 /* attribute_vector.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

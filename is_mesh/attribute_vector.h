@@ -9,7 +9,7 @@
 #include <vector>
 #include <cassert>
 
-namespace DSC {
+namespace is_mesh {
 
 template<typename ITEMID, typename ITEM>
 class AttributeVector

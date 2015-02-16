@@ -6,6 +6,8 @@
 #include "DSC_Suite.h"
 #include "mesh_io.h"
 #include "tetralizer.h"
+#include "is_mesh.h"
+#include "query.h"
 #include <vector>
 
 bool equal(vec3 v1, vec3 v2){
@@ -69,11 +71,38 @@ int tetGenTest(void) {
     for (int i=0;i<tets.size();i++){
         TINYTEST_ASSERT(tets[i] == tets2[i]);
         TINYTEST_ASSERT(tets[i] < points.size());
-
     }
     for (int i=0;i<tet_labels.size();i++){
         TINYTEST_ASSERT(tet_labels[i] == tet_labels2[i]);
     }
 
     return 1; // Always return a value different than 0 at test end.
+}
+
+int connectedTest() {
+    using namespace is_mesh;
+    vector<vec3> points2;
+    vector<int> tets2;
+    vector<int> tet_labels2;
+    import_tet_mesh( "data/blob-test.dsc", points2, tets2, tet_labels2);
+
+    ISMesh mesh(points2, tets2, tet_labels2);
+
+    int count = 0;
+    int total = 0;
+    TetrahedronKey someKey;
+    for (auto & t : mesh.tetrahedra()) {
+        if (t.label()){
+            someKey = t.key();
+            count++;
+        }
+        total++;
+    }
+    Query q{&mesh};
+    auto res = q.connected<TetrahedronKey>(someKey, [&](TetrahedronKey k){return mesh.get(k).label()==1;});
+    cout << "Finished "<< count<<"/"<<total<<endl;
+    TINYTEST_ASSERT(res.size() == count);
+
+
+    return 1;
 }
