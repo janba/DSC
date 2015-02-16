@@ -199,8 +199,9 @@ namespace is_mesh{
                 face.set_interface(true);
             }
         }
-        else if(tids.size() == 2)
+        else
         {
+            assert(tids.size() == 2);
             if (get(tids.front()).label() != get(tids.back()).label())
             {
                 // On the interface
