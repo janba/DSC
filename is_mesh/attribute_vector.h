@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Morten Nobel-Jørgensen. All rights reserved.
 //
 
+#pragma once
+
 #include <vector>
 #include <cassert>
 
