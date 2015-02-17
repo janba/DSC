@@ -79,13 +79,13 @@ namespace is_mesh {
         // ITERATORS //
         ///////////////
     public:
-        NodeIterator nodes(const std::vector<NodeKey> *subset = nullptr) const;
+        NodeIterator nodes() const;
 
-        EdgeIterator edges(const std::vector<EdgeKey> *subset = nullptr) const;
+        EdgeIterator edges() const;
 
-        FaceIterator faces(const std::vector<FaceKey> *subset = nullptr) const;
+        FaceIterator faces() const;
 
-        TetrahedronIterator tetrahedra(const std::vector<TetrahedronKey> *subset = nullptr) const;
+        TetrahedronIterator tetrahedra() const;
 
 
         DEPRECATED // use nodes() instead

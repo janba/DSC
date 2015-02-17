@@ -69,19 +69,8 @@ struct parameters {
 };
 
 namespace DSC {
-    class Subdomain {
-    public:
-        virtual void rebuild() = 0;
-
-        virtual const std::vector<is_mesh::NodeKey> &nodes() = 0;
-        virtual const std::vector<is_mesh::EdgeKey> &edges() = 0;
-        virtual const std::vector<is_mesh::FaceKey> &faces() = 0;
-        virtual const std::vector<is_mesh::TetrahedronKey> &tetrahedra() = 0;
-    };
-
     class DeformableSimplicialComplex
     {
-        long gcListenerId;
     public:
 
         DEPRECATED
@@ -107,8 +96,6 @@ namespace DSC {
         double FLIP_EDGE_INTERFACE_FLATNESS = 0.995;
 
         parameters pars;
-
-        std::shared_ptr<Subdomain> subdomain;
 
         //////////////////////////
         // INITIALIZE FUNCTIONS //
@@ -142,13 +129,10 @@ namespace DSC {
 
         // set sub domain elements which are modified
         void set_subdomain(std::shared_ptr<is_mesh::Geometry> subdomain);
-        DEPRECATED
-        void set_subdomain(std::shared_ptr<Subdomain> subdomain);
-
-        DEPRECATED
-        std::shared_ptr<Subdomain> get_subdomain();
 
         void clear_subdomain();
+
+        std::shared_ptr<is_mesh::Geometry> get_subdomain();
 
         virtual void set_labels(const is_mesh::Geometry& geometry, int label);
 
@@ -202,8 +186,6 @@ namespace DSC {
         * Sets the position of node n.
         */
         void set_pos(const is_mesh::NodeKey& nid, const vec3& p);
-
-        virtual void on_gc(const is_mesh::GarbageCollectDeletions& gc);
 
     public:
         /**

@@ -10,20 +10,15 @@ namespace DSC {
             : is_mesh_ptr(std::make_shared<ISMesh>(points, tets, tet_labels)), is_mesh(*is_mesh_ptr)
     {
         set_avg_edge_length();
-        gcListenerId = is_mesh.add_gc_listener([&](const GarbageCollectDeletions& gc){
-            on_gc(gc);
-        });
+
     }
     DeformableSimplicialComplex::DeformableSimplicialComplex(shared_ptr<ISMesh> ptr)
     :is_mesh_ptr(ptr),  is_mesh(*is_mesh_ptr){
         set_avg_edge_length();
-        gcListenerId = is_mesh.add_gc_listener([&](const GarbageCollectDeletions& gc){
-            on_gc(gc);
-        });
+
     }
 
     DeformableSimplicialComplex::~DeformableSimplicialComplex() {
-        is_mesh.remove_gc_listener(gcListenerId);
     }
 
     void DeformableSimplicialComplex::set_avg_edge_length(double avg_edge_length) {
@@ -1904,43 +1899,31 @@ namespace DSC {
         add_design_domain(subdomain); // restrict the design domain with subdomain
     }
 
-    void DeformableSimplicialComplex::set_subdomain(std::shared_ptr<Subdomain> subdomain) {
-        this->subdomain = subdomain;
-    }
-
     void DeformableSimplicialComplex::clear_subdomain() {
-        set_subdomain((std::shared_ptr<Subdomain>)nullptr);
         if (is_mesh.get_subdomain()){
             design_domain.remove_geometry(is_mesh.get_subdomain());
             is_mesh.clear_subdomain();
         }
-
     }
 
-    void DeformableSimplicialComplex::on_gc(const is_mesh::GarbageCollectDeletions& gc){
-        if (subdomain){
-            subdomain->rebuild();
-        }
-    }
-
-    std::shared_ptr<Subdomain> DeformableSimplicialComplex::get_subdomain() {
-        return subdomain;
+    std::shared_ptr<is_mesh::Geometry> DeformableSimplicialComplex::get_subdomain() {
+        return is_mesh.get_subdomain();
     }
 
     is_mesh::NodeIterator DeformableSimplicialComplex::nodes() const {
-        return is_mesh.nodes(subdomain?&(subdomain->nodes()): nullptr);
+        return is_mesh.nodes();
     }
 
     is_mesh::EdgeIterator DeformableSimplicialComplex::edges() const {
-        return is_mesh.edges(subdomain?&subdomain->edges(): nullptr);
+        return is_mesh.edges();
     }
 
     is_mesh::FaceIterator DeformableSimplicialComplex::faces() const {
-        return is_mesh.faces(subdomain?&subdomain->faces(): nullptr);
+        return is_mesh.faces();
     }
 
     is_mesh::TetrahedronIterator DeformableSimplicialComplex::tetrahedra() const {
-        return is_mesh.tetrahedra(subdomain?&subdomain->tetrahedra(): nullptr);
+        return is_mesh.tetrahedra();
     }
 
     shared_ptr<ISMesh> DeformableSimplicialComplex::get_shared_is_mesh() {
@@ -1950,4 +1933,6 @@ namespace DSC {
     parameters DeformableSimplicialComplex::get_parameters() {
         return pars;
     }
+
+
 }

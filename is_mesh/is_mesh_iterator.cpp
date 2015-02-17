@@ -21,27 +21,12 @@ using namespace std;
 
 namespace is_mesh {
 
-    NodeIterator::NodeIterator(const kernel<NodeKey,Node> *m_node_kernel, const std::vector<NodeKey> *subset)
-            : m_node_kernel(m_node_kernel),subset(subset)
-#ifdef DEBUG
-            , first_end_iter( m_node_kernel->end())
-#endif
+    NodeIterator::NodeIterator(const kernel<NodeKey,Node> *m_node_kernel)
+            : m_node_kernel(m_node_kernel)
     {
     }
 
-    NodeIterator::~NodeIterator() {
-#ifdef DEBUG
-        if (subset == nullptr && end() != first_end_iter){
-            cerr << "Warning kernel modified during (new element inserted) iteration. Use safe iterator instead."<<endl;
-            assert(false);
-        }
-#endif
-    }
-
     typename kernel<NodeKey,Node>::iterator NodeIterator::begin() const {
-        if (subset){
-            return kernel<NodeKey,Node>::iterator(m_node_kernel, subset);
-        }
         return m_node_kernel->begin();
     }
 
@@ -49,27 +34,12 @@ namespace is_mesh {
         return m_node_kernel->end();
     }
 
-    EdgeIterator::EdgeIterator(const kernel<EdgeKey,Edge> *m_edge_kernel, const std::vector<EdgeKey> *subset)
-            : m_edge_kernel(m_edge_kernel),subset(subset)
-#ifdef DEBUG
-            , first_end_iter( m_edge_kernel->end())
-#endif
+    EdgeIterator::EdgeIterator(const kernel<EdgeKey,Edge> *m_edge_kernel)
+            : m_edge_kernel(m_edge_kernel)
     {
     }
 
-    EdgeIterator::~EdgeIterator() {
-#ifdef DEBUG
-        if (subset == nullptr && end() != first_end_iter){
-            cerr << "Warning kernel modified during (new element inserted) iteration. Use safe iterator instead."<<endl;
-            assert(false);
-        }
-#endif
-    }
-
     typename kernel<EdgeKey,Edge>::iterator EdgeIterator::begin() const {
-        if (subset){
-            return kernel<EdgeKey,Edge>::iterator(m_edge_kernel, subset);
-        }
         return m_edge_kernel->begin();
     }
 
@@ -77,27 +47,12 @@ namespace is_mesh {
         return m_edge_kernel->end();
     }
 
-    FaceIterator::FaceIterator(const kernel<FaceKey,Face> *m_face_kernel,const std::vector<FaceKey> *subset)
-            : m_face_kernel(m_face_kernel),subset(subset)
-#ifdef DEBUG
-            , first_end_iter( m_face_kernel->end())
-#endif
+    FaceIterator::FaceIterator(const kernel<FaceKey,Face> *m_face_kernel)
+            : m_face_kernel(m_face_kernel)
     {
     }
 
-    FaceIterator::~FaceIterator() {
-#ifdef DEBUG
-        if (subset == nullptr && end() != first_end_iter){
-            cerr << "Warning kernel modified (new element inserted) during iteration. Use safe iterator instead."<<endl;
-            assert(false);
-        }
-#endif
-    }
-
     typename kernel<FaceKey,Face>::iterator FaceIterator::begin() const {
-        if (subset){
-            return kernel<FaceKey,Face>::iterator(m_face_kernel, subset);
-        }
         return m_face_kernel->begin();
     }
 
@@ -105,27 +60,12 @@ namespace is_mesh {
         return m_face_kernel->end();
     }
 
-    TetrahedronIterator::TetrahedronIterator(const kernel<TetrahedronKey,Tetrahedron> *m_tetrahedron_kernel,const std::vector<TetrahedronKey> *subset)
-            : m_tetrahedron_kernel(m_tetrahedron_kernel),subset(subset)
-#ifdef DEBUG
-            , first_end_iter( m_tetrahedron_kernel->end())
-#endif
+    TetrahedronIterator::TetrahedronIterator(const kernel<TetrahedronKey,Tetrahedron> *m_tetrahedron_kernel)
+            : m_tetrahedron_kernel(m_tetrahedron_kernel)
     {
     }
 
-    TetrahedronIterator::~TetrahedronIterator() {
-#ifdef DEBUG
-        if (subset == nullptr && end() != first_end_iter){
-            cerr << "Warning kernel modified (new element inserted) during iteration. Use safe iterator instead."<<endl;
-            assert(false);
-        }
-#endif
-    }
-
     typename kernel<TetrahedronKey,Tetrahedron>::iterator TetrahedronIterator::begin() const {
-        if (subset){
-            return kernel<TetrahedronKey,Tetrahedron>::iterator(m_tetrahedron_kernel, subset);
-        }
         return m_tetrahedron_kernel->begin();
     }
 

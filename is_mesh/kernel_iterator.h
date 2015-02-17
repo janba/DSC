@@ -31,7 +31,6 @@ namespace is_mesh
         typedef typename kernel_t_::kernel_key_type key_type;
         
     private:
-        const std::vector<key_type> *m_keys;
         unsigned int     m_key;
         kernel_type*     m_kernel;
         
@@ -40,28 +39,17 @@ namespace is_mesh
          * The only constructor.
          * Creates a kernel iterator. Should only be created from the kernel.
          */
-        kernel_iterator(kernel_type const * const kernel, unsigned int const & key) : m_key(key), m_keys(nullptr)
+        kernel_iterator(kernel_type const * const kernel, unsigned int const & key) : m_key(key)
         {
             m_kernel = const_cast<kernel_type*>(kernel);
         }
 
-        /**
-        * The only constructor.
-        * Creates a kernel iterator. Should only be created from the kernel.
-        */
-        kernel_iterator(kernel_type const * const kernel, const std::vector<key_type> *keys) : m_key(0), m_keys(keys)
-        {
-            m_kernel = const_cast<kernel_type*>(kernel);
-        }
         
     public:
         /**
          * Converts the iterator to a handle or key.
          */
         key_type     key()    const {
-            if (m_keys){
-                return (*m_keys)[m_key];
-            }
             return key_type{m_key};
         }
         /**
@@ -91,9 +79,6 @@ namespace is_mesh
          */
         value_type* operator->()
         {
-            if (m_keys){
-                return &m_kernel->m_data[(*m_keys)[m_key]].value;
-            }
             assert(m_kernel->lookup(key_type{m_key}).state == element_type::VALID);
             return &m_kernel->m_data[m_key].value;
         }
@@ -105,9 +90,6 @@ namespace is_mesh
          */
         value_type& operator*()
         {
-            if (m_keys){
-                return m_kernel->m_data[(*m_keys)[m_key]].value;
-            }
             assert(m_kernel->lookup(key_type{m_key}).state == element_type::VALID);
             return m_kernel->m_data[m_key].value;
         }
@@ -119,15 +101,6 @@ namespace is_mesh
          */
         iterator& operator++()
         {
-            if (m_keys){
-                do{
-                    m_key++;
-                } while (m_key < m_keys->size() && m_kernel->m_data[(*m_keys)[m_key]].state != element_type::VALID);
-                if (m_key>= m_keys->size()){
-                    m_key = (unsigned int)m_kernel->m_data.size();
-                }
-                return *this;
-            }
             do {
                 m_key++;
             } while (m_key < m_kernel->m_data.size() && m_kernel->m_data[m_key].state != element_type::VALID);
