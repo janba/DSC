@@ -32,24 +32,22 @@ namespace is_mesh
     template<typename boundary_key_type, typename co_boundary_key_type>
     class Simplex
     {
-        SimplexSet<boundary_key_type>* m_boundary = nullptr;
-        SimplexSet<co_boundary_key_type>* m_co_boundary = nullptr;
+        SimplexSet<boundary_key_type> m_boundary;
+        SimplexSet<co_boundary_key_type> m_co_boundary;
     protected:
         ISMesh *m_mesh = nullptr;
     public:
 
+        friend class ISMesh;
+
         Simplex(ISMesh * owner) noexcept
                 : m_mesh {owner}
         {
-            m_boundary = new SimplexSet<boundary_key_type>();
-            m_co_boundary = new SimplexSet<co_boundary_key_type>();
         }
         
         Simplex(const Simplex& s) noexcept
-                :m_mesh {s.m_mesh }
+                :m_mesh {s.m_mesh }, m_boundary(s.m_boundary), m_co_boundary(s.m_co_boundary)
         {
-            m_boundary = new SimplexSet<boundary_key_type>(*s.m_boundary);
-            m_co_boundary = new SimplexSet<co_boundary_key_type>(*s.m_co_boundary);
         }
         
         Simplex(Simplex&& s) noexcept
@@ -71,39 +69,37 @@ namespace is_mesh
         
         ~Simplex()
         {
-            delete m_boundary;
-            delete m_co_boundary;
         }
         
     public:
         
         const SimplexSet<co_boundary_key_type>& get_co_boundary() const noexcept
         {
-            return *m_co_boundary;
+            return m_co_boundary;
         }
         const SimplexSet<boundary_key_type>& get_boundary() const noexcept
         {
-            return *m_boundary;
+            return m_boundary;
         }
         
         void add_co_face(const co_boundary_key_type& key)
         {
-            *m_co_boundary += key;
+            m_co_boundary += key;
         }
         
         void add_face(const boundary_key_type& key)
         {
-            *m_boundary += key;
+            m_boundary += key;
         }
         
         void remove_co_face(const co_boundary_key_type& key)
         {
-            *m_co_boundary -= key;
+            m_co_boundary -= key;
         }
         
         void remove_face(const boundary_key_type& key)
         {
-            *m_boundary -= key;
+            m_boundary -= key;
         }
     };
 }

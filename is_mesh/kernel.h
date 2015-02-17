@@ -19,6 +19,7 @@
 #include <cassert>
 #include <iostream>
 #include <vector>
+#include <set>
 
 #include "kernel_iterator.h"
 
@@ -42,7 +43,7 @@ namespace is_mesh
         {
             typedef value_t_            value_type;
 
-            enum state_type { VALID, MARKED, EMPTY };
+            enum state_type { VALID, MARKED, EMPTY, EXCLUDED };
             
             kernel_element() : value(nullptr) { }
             
@@ -308,6 +309,26 @@ namespace is_mesh
             }
             m_data_marked_for_deletion.clear();
             return deletedKeys;
+        }
+
+        void revert_excluded(){
+            for (auto &e : m_data){
+                if (e.state == kernel_element::state_type::EXCLUDED){
+                    e.state = kernel_element::state_type::VALID;
+                }
+            }
+        }
+
+        void exclude_using_include_set(std::set<key_type> include_set){
+            for (unsigned int i=0;i<m_data.size();i++){
+                auto& e= m_data[i];
+                key_type k{i};
+                if (e.state == kernel_element::state_type::VALID){
+                    if (include_set.find(k) == include_set.end()) {
+                        e.state = kernel_element::state_type::EXCLUDED;
+                    }
+                }
+            };
         }
         
         /**

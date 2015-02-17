@@ -167,69 +167,89 @@ namespace is_mesh {
     }
 
 
-    std::vector<NodeKey> Query::neighborhood(vec3 from, double max_distance) {
-        std::vector<NodeKey> res;
+    std::set<NodeKey> Query::neighborhood(vec3 from, double max_distance) {
+        std::set<NodeKey> res;
         double max_distanceSqr = max_distance * max_distance;
         for (auto & nodeiter : mesh->nodes()){
             vec3 to_pos = nodeiter.get_pos();
             double lengthSqr = sqr_length(from - to_pos);
             if (lengthSqr < max_distanceSqr){
-                res.push_back(nodeiter.key());
+                res.insert(nodeiter.key());
             }
         }
         return res;
     }
 
-    std::vector<NodeKey> Query::neighborhood(NodeKey from_node, double max_distance) {
+    std::set<NodeKey> Query::neighborhood(NodeKey from_node, double max_distance) {
         vec3 from_pos = mesh->get(from_node).get_pos();
         return neighborhood(from_pos, max_distance);
     }
 
-    std::vector<EdgeKey> Query::edges(std::vector<NodeKey> nodeKeys) {
-        std::vector<bool> fastLookup(mesh->get_max_node_key(), false);
-        for (NodeKey k : nodeKeys){
-            fastLookup[(int)k] = true;
-        }
-        std::vector<EdgeKey> res;
+    std::set<EdgeKey> Query::edges(const std::set<NodeKey> nodeKeys) {
+        std::set<EdgeKey> res;
         for (auto & edgeIter : mesh->edges()){
             const auto & nodes = edgeIter.node_keys();
-            if (fastLookup[(int)nodes[0]] && fastLookup[(int)nodes[1]]){
-                res.push_back(edgeIter.key());
+
+            if (nodeKeys.find(nodes[0]) != nodeKeys.end()  && nodeKeys.find(nodes[1]) != nodeKeys.end() ){
+                res.insert(edgeIter.key());
             }
         }
 
         return res;
     }
 
-    std::vector<FaceKey> Query::faces(std::vector<EdgeKey> edgeKeys) {
-        std::vector<bool> fastLookup(mesh->get_max_edge_key(), false);
-        for (EdgeKey k : edgeKeys){
-            fastLookup[(int)k] = true;
-        }
-        std::vector<FaceKey> res;
+    std::set<FaceKey> Query::faces(const std::set<EdgeKey> edgeKeys) {
+        std::set<FaceKey> res;
         for (auto & faceIter : mesh->faces()){
             const auto &edges = faceIter.edge_keys();
-            if (fastLookup[(int) edges[0]] && fastLookup[(int) edges[1]] && fastLookup[(int) edges[2]]){
-                res.push_back(faceIter.key());
+            if (edgeKeys.find(edges[0]) != edgeKeys.end() && edgeKeys.find(edges[1]) != edgeKeys.end() && edgeKeys.find(edges[2]) != edgeKeys.end()){
+                res.insert(faceIter.key());
             }
         }
 
         return res;
     }
 
-    std::vector<TetrahedronKey> Query::tetrahedra(std::vector<FaceKey> faceKeys){
-        std::vector<bool> fastLookup(mesh->get_max_face_key(), false);
-        for (FaceKey k : faceKeys){
-            fastLookup[(int)k] = true;
-        }
-        std::vector<TetrahedronKey> res;
+    std::set<TetrahedronKey> Query::tetrahedra(const std::set<FaceKey> faceKeys){
+        std::set<TetrahedronKey> res;
         for (auto & tetIter : mesh->tetrahedra()){
-            const auto &edges = tetIter.face_keys();
-            if (fastLookup[(int) edges[0]] && fastLookup[(int) edges[1]] && fastLookup[(int) edges[2]] && fastLookup[(int) edges[3]]){
-                res.push_back(tetIter.key());
+            const auto &faces = tetIter.face_keys();
+            if (faceKeys.find(faces[0]) != faceKeys.end() && faceKeys.find(faces[1]) != faceKeys.end() &&
+                    faceKeys.find(faces[2]) != faceKeys.end() && faceKeys.find(faces[3]) != faceKeys.end() ){
+                res.insert(tetIter.key());
             }
         }
         return res;
     }
 
+    std::set<NodeKey> Query::nodes(is_mesh::Geometry *geometry) {
+        std::set<NodeKey> res;
+        for (auto &n:mesh->nodes()){
+            if (geometry->is_inside(n.get_pos())){
+                res.insert(n.key());
+            }
+        }
+        return res;
+    }
+
+    void Query::filter_subset(std::set<NodeKey> &nodes, std::set<EdgeKey> &edges, std::set<FaceKey> &faces, std::set<TetrahedronKey> &tets) {
+        int nodesBefore = nodes.size();
+        int edgesBefore = edges.size();
+        int facesBefore = faces.size();
+        nodes.clear();
+        for (auto t:tets){
+            for (auto n : mesh->get_nodes(t)){
+                nodes.insert(n);
+            }
+        }
+
+        edges = this->edges(nodes);
+        faces = this->faces(edges);
+        int nodesAfter = nodes.size();
+        int edgesAfter = edges.size();
+        int facesAfter = faces.size();
+        std::cout << "Nodes "<< nodesBefore<<"/"<<nodesAfter<<std::endl;
+        std::cout << "Edges "<< edgesBefore<<"/"<<edgesAfter<<std::endl;
+        std::cout << "Faces "<< facesBefore<<"/"<<facesAfter<<std::endl;
+    }
 }

@@ -344,6 +344,16 @@ void UI::keyboard(unsigned char key, int x, int y) {
             vel_fun->set_accuracy(accuracy);
             update_title();
         }
+        break;
+        case 'x':
+        {
+            if (dsc->get_is_mesh().get_subdomain()){
+                dsc->clear_subdomain();
+            } else {
+                dsc->set_subdomain(std::make_shared<is_mesh::Sphere>(vec3{0.0,0.0,0.0},0.06));
+            }
+            painter->update(*dsc);
+        }
             break;
     }
 }

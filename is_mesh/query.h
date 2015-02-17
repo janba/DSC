@@ -10,6 +10,7 @@
 #include "CGLA/Ray.h"
 #include "attribute_vector.h"
 #include <vector>
+#include <set>
 
 /**
 * Raytracing in ISMesh datastructure.
@@ -70,24 +71,27 @@ namespace is_mesh {
 
         // returns the nodes within max distance to a given from_node
         // includes the from_node in the result
-        std::vector<NodeKey> neighborhood(NodeKey from_node, double max_distance);
+        std::set<NodeKey> neighborhood(NodeKey from_node, double max_distance);
 
         // returns the nodes within max distance to a given point
-        std::vector<NodeKey> neighborhood(vec3 from, double max_distance);
+        std::set<NodeKey> neighborhood(vec3 from, double max_distance);
 
         // return the list of edges where both nodes are contained in the nodeKeys
-        std::vector<EdgeKey> edges(std::vector<NodeKey> nodeKeys);
+        std::set<EdgeKey> edges(const std::set<NodeKey> nodeKeys);
 
         // return the list of faces where both nodes are contained in the edgeKeys
-        std::vector<FaceKey> faces(std::vector<EdgeKey> edgeKeys);
+        std::set<FaceKey> faces(const std::set<EdgeKey> edgeKeys);
 
         // return the list of tets where both nodes are contained in the faceKeys
-        std::vector<TetrahedronKey> tetrahedra(std::vector<FaceKey> faceKeys);
+        std::set<TetrahedronKey> tetrahedra(const std::set<FaceKey> faceKeys);
 
+        // exclude 'hanging' nodes, edges and faces. (such as nodes with only one edge etc)
+        void filter_subset(std::set<NodeKey> &nodes, std::set<EdgeKey> &edges, std::set<FaceKey> &faces, std::set<TetrahedronKey> &tets);
 
         template <typename K>
         SimplexSet<K> connected(K initialKey, std::function<bool(K k)> includeKey);
 
+        std::set<NodeKey> nodes(is_mesh::Geometry *geometry);
     };
 
     template <typename K>

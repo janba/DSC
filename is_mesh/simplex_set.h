@@ -18,17 +18,22 @@
 
 #include <vector>
 #include <cassert>
+#include <set>
 #include "key.h"
 
 namespace is_mesh
 {
+    class ISMesh;
     
     template<typename key_type>
     class SimplexSet
     {
         std::vector<key_type> set;
-        
+        std::vector<key_type> excluded_set;
+
     public:
+
+        friend class ISMesh;
         
         SimplexSet() noexcept : set()
         {
@@ -47,18 +52,22 @@ namespace is_mesh
         
         SimplexSet& operator=(const SimplexSet& ss) noexcept
         {
-            set = std::vector<key_type>(ss.set);
+            set = ss.set;
+            excluded_set = ss.excluded_set;
             return *this;
         }
         
         SimplexSet(SimplexSet&& ss) noexcept
-                : set(std::move(ss.set))
+                : set(std::move(ss.set)), excluded_set(std::move(ss.excluded_set))
         {
         }
         
         SimplexSet& operator=(SimplexSet&& ss) noexcept
         {
-            std::swap(set, ss.set);
+            if (this != &ss){
+                std::swap(set, ss.set);
+                std::swap(excluded_set, ss.excluded_set);
+            }
             return *this;
         }
         
@@ -205,6 +214,20 @@ namespace is_mesh
             }
 
             return true;
+        }
+    private:
+        void reevaluate_excluded(std::function<bool(key_type k)> include){
+            // fill excluded set back in set
+            set.insert(set.end(), excluded_set.begin(), excluded_set.end());
+            excluded_set.clear();
+            // reevaluate elements in set
+            for (int i=set.size()-1;i>=0;i--){
+                auto k = set[i];
+                if (!include(k)){
+                    excluded_set.push_back(k);
+                    set.erase(set.begin()+i);
+                }
+            }
         }
     };
     

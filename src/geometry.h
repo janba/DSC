@@ -70,7 +70,6 @@ namespace is_mesh {
     public:
         MultipleGeometry()
         {
-            
         }
         
         ~MultipleGeometry()
@@ -80,6 +79,14 @@ namespace is_mesh {
         void add_geometry(std::shared_ptr<Geometry> geometry)
         {
             geometries.push_back(geometry);
+        }
+
+        void remove_geometry(std::shared_ptr<Geometry> geometry)
+        {
+            auto pos = std::find(geometries.begin(), geometries.end(), geometry);
+            if (pos != geometries.end()){
+                geometries.erase(pos);
+            }
         }
         
         virtual bool is_inside(vec3 p) const

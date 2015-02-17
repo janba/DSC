@@ -22,6 +22,7 @@
 #include "simplex.h"
 #include "simplex_set.h"
 #include "is_mesh_iterator.h"
+#include "geometry.h"
 
 namespace is_mesh {
 
@@ -32,12 +33,16 @@ namespace is_mesh {
         std::vector<TetrahedronKey> tetrahedronKeys;
     };
 
+    class Geometry;
+
     class ISMesh
     {
         kernel<NodeKey,Node> m_node_kernel;
         kernel<EdgeKey,Edge> m_edge_kernel;
         kernel<FaceKey,Face> m_face_kernel;
         kernel<TetrahedronKey,Tetrahedron> m_tetrahedron_kernel;
+
+        std::shared_ptr<Geometry> subdomain;
 
         std::map<long,std::function<void(const GarbageCollectDeletions&)>> m_gc_listeners;
         std::map<long,std::function<void(const TetrahedronKey& tid, unsigned int oldValue)>> m_set_label_listeners;
@@ -63,7 +68,13 @@ namespace is_mesh {
         unsigned int get_max_face_key() const;
 
         unsigned int get_max_tet_key() const;
-        
+
+        std::shared_ptr<Geometry> get_subdomain();
+
+        void clear_subdomain();
+
+        void set_subdomain(std::shared_ptr<Geometry> subdomain);
+
         ///////////////
         // ITERATORS //
         ///////////////
@@ -164,10 +175,19 @@ namespace is_mesh {
         * Perform an initial update of flags for all nodes, edges and faces.
         */
         void init_flags(const std::vector<int>& tet_labels);
+
+        DEPRECATED // use get(eid).get_boundary()
+        void update(const SimplexSet<TetrahedronKey>& tids){update_flag(tids);}
+
+        /**
+        * Updates the flags (is interface, is boundary, is crossing) of all
+        */
+        void update_flag();
+
         /**
         * Updates the flags (is interface, is boundary, is crossing) of simplices in set.
         */
-        void update(const SimplexSet<TetrahedronKey>& tids);
+        void update_flag(const SimplexSet<TetrahedronKey>& tids);
 
         void update_flag(const FaceKey & f);
 

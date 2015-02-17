@@ -1,4 +1,5 @@
 #include "is_mesh.h"
+#include "query.h"
 
 #include <algorithm>
 
@@ -152,7 +153,28 @@ namespace is_mesh{
         }
     }
 
-    void ISMesh::update(const SimplexSet<TetrahedronKey>& tids) {
+    void ISMesh::update_flag() {
+        // Update faces
+
+        for (auto & f : faces())
+        {
+            update_flag(f.key());
+        }
+
+        // Update edges
+        for (auto & e : edges())
+        {
+            update_flag(e.key());
+        }
+
+        // Update nodes
+        for (auto & n : nodes())
+        {
+            update_flag(n.key());
+        }
+    }
+
+    void ISMesh::update_flag(const SimplexSet<TetrahedronKey>& tids) {
         // Update faces
         SimplexSet<FaceKey> fids = get_faces(tids);
         for (auto f : fids)
@@ -1204,4 +1226,71 @@ namespace is_mesh{
     unsigned int ISMesh::get_max_face_key() const { return (unsigned int)m_face_kernel.capacity(); }
 
     unsigned int ISMesh::get_max_tet_key() const { return (unsigned int)m_tetrahedron_kernel.capacity(); }
+
+    std::shared_ptr<Geometry> ISMesh::get_subdomain() {
+        return subdomain;
+    }
+
+    void ISMesh::clear_subdomain() {
+        set_subdomain({});
+    }
+
+    void ISMesh::set_subdomain(std::shared_ptr<Geometry> subdomain) {
+        this->subdomain = subdomain;
+
+        m_node_kernel.revert_excluded();
+        m_edge_kernel.revert_excluded();
+        m_face_kernel.revert_excluded();
+        m_tetrahedron_kernel.revert_excluded();
+
+        // Revert excluded set
+        for (auto & n : nodes()){
+            n.m_co_boundary.reevaluate_excluded([&](EdgeKey k){return true;});
+        }
+
+        if (this->subdomain){
+            Query query(this);
+            auto m_nodes = query.nodes(subdomain.get());
+            auto m_edges = query.edges(m_nodes);
+            auto m_faces = query.faces(m_edges);
+            auto m_tetrahedra = query.tetrahedra(m_faces);
+            query.filter_subset(m_nodes, m_edges, m_faces, m_tetrahedra);
+
+            // Revert excluded set
+            for (auto & n : nodes()){
+                n.m_co_boundary.reevaluate_excluded([&](EdgeKey k){ return m_edges.find(k) != m_edges.end(); });
+            }
+            for (auto & n : edges()){
+                n.m_boundary.reevaluate_excluded([&](NodeKey k){ return m_nodes.find(k) != m_nodes.end(); });
+                n.m_co_boundary.reevaluate_excluded([&](FaceKey k){ return m_faces.find(k) != m_faces.end(); });
+            }
+            for (auto & n : faces()){
+                n.m_boundary.reevaluate_excluded([&](EdgeKey k){  return m_edges.find(k) != m_edges.end();  });
+                n.m_co_boundary.reevaluate_excluded([&](TetrahedronKey k){ return m_tetrahedra.find(k) != m_tetrahedra.end();});
+            }
+            for (auto & n : tetrahedra()){
+                n.m_boundary.reevaluate_excluded([&](FaceKey k){return m_faces.find(k) != m_faces.end();});
+            }
+
+            m_node_kernel.exclude_using_include_set(m_nodes);
+            m_edge_kernel.exclude_using_include_set(m_edges);
+            m_face_kernel.exclude_using_include_set(m_faces);
+            m_tetrahedron_kernel.exclude_using_include_set(m_tetrahedra);
+        } else {
+            // no subdomain - include all
+            for (auto & n : edges()){
+                n.m_boundary.reevaluate_excluded([&](NodeKey k){ return true; });
+                n.m_co_boundary.reevaluate_excluded([&](FaceKey k){ return true; });
+            }
+            for (auto & n : faces()){
+                n.m_boundary.reevaluate_excluded([&](EdgeKey k){  return true;  });
+                n.m_co_boundary.reevaluate_excluded([&](TetrahedronKey k){ return true;});
+            }
+            for (auto & n : tetrahedra()){
+                n.m_boundary.reevaluate_excluded([&](FaceKey k){ return true; });
+            }
+        }
+
+        update_flag();
+    }
 }

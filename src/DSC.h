@@ -141,8 +141,11 @@ namespace DSC {
         void add_design_domain(std::shared_ptr<is_mesh::Geometry> geometry);
 
         // set sub domain elements which are modified
+        void set_subdomain(std::shared_ptr<is_mesh::Geometry> subdomain);
+        DEPRECATED
         void set_subdomain(std::shared_ptr<Subdomain> subdomain);
 
+        DEPRECATED
         std::shared_ptr<Subdomain> get_subdomain();
 
         void clear_subdomain();

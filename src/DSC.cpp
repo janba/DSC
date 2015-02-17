@@ -1898,12 +1898,23 @@ namespace DSC {
         return is_mesh;
     }
 
+
+    void DeformableSimplicialComplex::set_subdomain(std::shared_ptr<is_mesh::Geometry> subdomain){
+        is_mesh.set_subdomain(subdomain);
+        add_design_domain(subdomain); // restrict the design domain with subdomain
+    }
+
     void DeformableSimplicialComplex::set_subdomain(std::shared_ptr<Subdomain> subdomain) {
         this->subdomain = subdomain;
     }
 
     void DeformableSimplicialComplex::clear_subdomain() {
-        set_subdomain(nullptr);
+        set_subdomain((std::shared_ptr<Subdomain>)nullptr);
+        if (is_mesh.get_subdomain()){
+            design_domain.remove_geometry(is_mesh.get_subdomain());
+            is_mesh.clear_subdomain();
+        }
+
     }
 
     void DeformableSimplicialComplex::on_gc(const is_mesh::GarbageCollectDeletions& gc){
