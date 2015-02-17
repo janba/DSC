@@ -152,7 +152,7 @@ namespace is_mesh
         
         SimplexSet<key_type>& operator+=(const SimplexSet<key_type>& ss)
         {
-            for (const key_type& k : ss) {
+            for (key_type k : ss) {
                 *this += k;
             }
             return *this;
@@ -160,26 +160,17 @@ namespace is_mesh
         
         SimplexSet<key_type>& operator+=(SimplexSet<key_type>&& ss)
         {
-            for (key_type& k : ss.set) {
-                *this += std::move(k);
+            for (key_type k : ss.set) {
+                *this += k;
             }
             return *this;
         }
         
-        SimplexSet<key_type>& operator+=(const key_type& key)
+        SimplexSet<key_type>& operator+=(key_type key)
         {
             if(!contains(key))
             {
                 set.push_back(key);
-            }
-            return *this;
-        }
-        
-        SimplexSet<key_type>& operator+=(key_type&& key)
-        {
-            if(!contains(key))
-            {
-                set.push_back(std::move(key));
             }
             return *this;
         }
@@ -200,20 +191,6 @@ namespace is_mesh
                 set.erase(iter);
             }
             return *this;
-        }
-
-        bool operator==(const key_type& key) noexcept
-        {
-            if (set.size() != key.set.size()){
-                return false;
-            }
-            for (auto k : set){
-                if (!key.contains(k)){
-                    return false;
-                }
-            }
-
-            return true;
         }
     private:
         void reevaluate_excluded(std::function<bool(key_type k)> include){

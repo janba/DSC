@@ -233,23 +233,23 @@ namespace is_mesh {
     }
 
     void Query::filter_subset(std::set<NodeKey> &nodes, std::set<EdgeKey> &edges, std::set<FaceKey> &faces, std::set<TetrahedronKey> &tets) {
-        int nodesBefore = nodes.size();
-        int edgesBefore = edges.size();
-        int facesBefore = faces.size();
         nodes.clear();
-        for (auto t:tets){
-            for (auto n : mesh->get_nodes(t)){
+        edges.clear();
+        faces.clear();
+        for (auto t : tets){
+            for (auto f : mesh->get(t).face_keys()){
+                faces.insert(f);
+            }
+        }
+        for (auto f : faces){
+            for (auto e : mesh->get(f).edge_keys()){
+                edges.insert(e);
+            }
+        }
+        for (auto e : edges){
+            for (auto n : mesh->get(e).node_keys()){
                 nodes.insert(n);
             }
         }
-
-        edges = this->edges(nodes);
-        faces = this->faces(edges);
-        int nodesAfter = nodes.size();
-        int edgesAfter = edges.size();
-        int facesAfter = faces.size();
-        std::cout << "Nodes "<< nodesBefore<<"/"<<nodesAfter<<std::endl;
-        std::cout << "Edges "<< edgesBefore<<"/"<<edgesAfter<<std::endl;
-        std::cout << "Faces "<< facesBefore<<"/"<<facesAfter<<std::endl;
     }
 }

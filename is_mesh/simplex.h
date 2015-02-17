@@ -70,7 +70,7 @@ namespace is_mesh
         ~Simplex()
         {
         }
-        
+
     public:
         
         const SimplexSet<co_boundary_key_type>& get_co_boundary() const noexcept

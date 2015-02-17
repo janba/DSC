@@ -23,6 +23,7 @@
 #include <iomanip>
 #include <ctime>
 #include <chrono>
+#include <random>
 
 using namespace DSC;
 
@@ -350,7 +351,17 @@ void UI::keyboard(unsigned char key, int x, int y) {
             if (dsc->get_is_mesh().get_subdomain()){
                 dsc->clear_subdomain();
             } else {
-                dsc->set_subdomain(std::make_shared<is_mesh::Sphere>(vec3{0.0,0.0,0.0},0.06));
+
+                std::random_device rd;
+
+                // Choose a random mean between 1 and 6
+                std::default_random_engine e1(rd());
+                std::uniform_real_distribution<float> uniform_dist(0.0f, 0.1f);
+
+                vec3 pos{uniform_dist(e1),uniform_dist(e1),uniform_dist(e1)};
+//                std::cout << pos[0]<< " "<<pos[1] << " "<<pos[2]<<std::endl;
+                dsc->set_subdomain(std::make_shared<is_mesh::Sphere>(vec3{0.0388154 ,0.0580396 ,0.0303345},0.56));
+
             }
             painter->update(*dsc);
         }
