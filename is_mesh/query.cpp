@@ -232,7 +232,7 @@ namespace is_mesh {
         return res;
     }
 
-    void Query::filter_subset(std::set<NodeKey> &nodes, std::set<EdgeKey> &edges, std::set<FaceKey> &faces, std::set<TetrahedronKey> &tets) {
+    void Query::filter_subset(std::set<NodeKey> &nodes, std::set<EdgeKey> &edges, std::set<FaceKey> &faces, const std::set<TetrahedronKey> &tets) {
         nodes.clear();
         edges.clear();
         faces.clear();
