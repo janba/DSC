@@ -24,14 +24,14 @@
  */
 class RotateFunc: public DSC::VelocityFunc
 {
-    
-    
+
+    vec3 center;
 public:
     /**
      Creates a rotating velocity function.
      */
-    RotateFunc(double velocity, double accuracy, int max_time_steps = 360):
-        VelocityFunc(velocity, accuracy, max_time_steps)
+    RotateFunc(double velocity, double accuracy, int max_time_steps = 360, vec3 center = vec3(0,0,0)):
+        VelocityFunc(velocity, accuracy, max_time_steps), center(center)
     {
         
     }
@@ -50,8 +50,7 @@ public:
     virtual void deform(DSC::DeformableSimplicialComplex& dsc)
     {
         auto init_time = std::chrono::system_clock::now();
-        
-        vec3 center = dsc.get_center();
+
         mat3 mrot = Util::rotation_matrix(2, M_PI*VELOCITY/(5.*180.));
         vec3 new_pos;
         for(auto & nit : dsc.get_is_mesh().nodes())

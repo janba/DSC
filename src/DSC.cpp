@@ -170,10 +170,6 @@ namespace DSC {
         }
     }
 
-    vec3 DeformableSimplicialComplex::get_center() const {
-        return vec3(0.); // todo fix
-    }
-
     double DeformableSimplicialComplex::get_min_tet_quality() const {
         return pars.MIN_TET_QUALITY;
     }
@@ -1935,4 +1931,7 @@ namespace DSC {
     }
 
 
+    std::string DeformableSimplicialComplex::lib_version() {
+        return header_version();
+    }
 }

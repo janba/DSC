@@ -211,7 +211,7 @@ namespace is_mesh{
         face.set_interface(false);
         face.set_boundary(false);
 
-        SimplexSet<TetrahedronKey> tids = get(f).tet_keys();
+        const SimplexSet<TetrahedronKey> &tids = get(f).tet_keys();
         if (tids.size() == 1)
         {
             // On the boundary
@@ -762,6 +762,10 @@ namespace is_mesh{
 
         update_split(new_nid, nids[0], nids[1]);
 
+#ifdef DEBUG
+        validity_check();
+#endif
+
         return new_nid;
     }
 
@@ -815,6 +819,10 @@ namespace is_mesh{
 
         // Update flags.
         update(get_tets(nid));
+
+#ifdef DEBUG
+        validity_check();
+#endif
     }
 
     FaceKey ISMesh::flip_32(const EdgeKey& eid) {
@@ -872,6 +880,10 @@ namespace is_mesh{
         for (auto t : get(new_fid).tet_keys()) {
             set_label(t,label);
         }
+#ifdef DEBUG
+        validity_check();
+#endif
+
         return new_fid;
     }
 
@@ -942,6 +954,10 @@ namespace is_mesh{
         for (auto t : get_tets(new_eid)) {
             set_label(t,label);
         }
+#ifdef DEBUG
+        validity_check();
+#endif
+
         return new_eid;
     }
 
@@ -1002,6 +1018,10 @@ namespace is_mesh{
 
         // Update flags
         update(e_tids);
+
+#ifdef DEBUG
+        validity_check();
+#endif
     }
 
     void ISMesh::flip_22(const FaceKey& fid1, const FaceKey& fid2) {
@@ -1013,6 +1033,10 @@ namespace is_mesh{
 #endif
 
         flip(eid[0], fid1, fid2);
+
+#ifdef DEBUG
+        validity_check();
+#endif
     }
 
     void ISMesh::flip_44(const FaceKey& fid1, const FaceKey& fid2) {
@@ -1024,6 +1048,10 @@ namespace is_mesh{
 #endif
 
         flip(eid[0], fid1, fid2);
+
+#ifdef DEBUG
+        validity_check();
+#endif
     }
 
     double ISMesh::volume_destination(const SimplexSet<NodeKey>& nids) {
@@ -1101,6 +1129,35 @@ namespace is_mesh{
     }
 
     void ISMesh::validity_check() {
+        cout << "Testing existence: ";
+        for (auto & f : faces()){
+            assert(exists(f.key()));
+            for (auto t : f.tet_keys()){
+                assert(exists(t));
+            }
+            for (auto e : f.edge_keys()){
+                assert(exists(e));
+            }
+        }
+
+        for (auto & f : edges()){
+            assert(exists(f.key()));
+            for (auto f : f.face_keys()){
+                assert(exists(f));
+            }
+            for (auto n : f.node_keys()){
+                assert(exists(n));
+            }
+        }
+
+        for (auto & n : nodes()){
+            assert(exists(n.key()));
+            for (auto e : n.edge_keys()){
+                assert(exists(e));
+            }
+        }
+
+
         cout << "Testing connectivity of simplicial complex: ";
         for(auto & tit : tetrahedra())
         {

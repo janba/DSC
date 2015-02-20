@@ -24,6 +24,7 @@
 #include <ctime>
 #include <chrono>
 #include <random>
+#include <algorithm>
 
 using namespace DSC;
 
@@ -160,7 +161,7 @@ void UI::update_title()
 {
     std::ostringstream oss;
     oss << "3D DSC\t" << vel_fun->get_name() << ", Time step " << vel_fun->get_time_step();
-    oss << " (Nu = " << vel_fun->get_velocity() << ", Delta = " << dsc->get_avg_edge_length() << ", Alpha = " << vel_fun->get_accuracy() << ")";
+    oss << " (Vel = " << vel_fun->get_velocity() << ", AvgEdgeLength = " << dsc->get_avg_edge_length() << ", Accuracy = " << vel_fun->get_accuracy() << ")";
     std::string str(oss.str());
     glutSetWindowTitle(str.c_str());
 }
@@ -360,10 +361,29 @@ void UI::keyboard(unsigned char key, int x, int y) {
 
                 vec3 pos{uniform_dist(e1),uniform_dist(e1),uniform_dist(e1)};
 //                std::cout << pos[0]<< " "<<pos[1] << " "<<pos[2]<<std::endl;
-                dsc->set_subdomain(std::make_shared<is_mesh::Sphere>(vec3{0.0388154 ,0.0580396 ,0.0303345},0.56));
-
+//                dsc->set_subdomain(std::make_shared<is_mesh::Sphere>(vec3{0.0388154 ,0.0580396 ,0.0303345},0.56));
+                dsc->set_subdomain(std::make_shared<is_mesh::Sphere>(vec3{0.0388154 ,0.0580396 ,0.0303345},0.36));
+                dsc->get_is_mesh().validity_check();
             }
             painter->update(*dsc);
+        }
+            break;
+        case '9':
+        {
+            int count = 0;
+            int edges = 0;
+            for (auto & e : dsc->get_is_mesh().edges()){
+                edges++;
+                if (e.is_boundary()){
+                    count++;
+                }
+            }
+            std::cout << "Boundary " << count << " "<<edges<<std::endl;
+            double maxLength = 0;
+            for (auto & e : dsc->get_is_mesh().nodes()){
+                maxLength = std::max(maxLength, length(e.get_pos()));
+            }
+            std::cout << "Max length " << maxLength<<std::endl;
         }
             break;
     }

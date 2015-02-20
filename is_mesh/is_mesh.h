@@ -176,7 +176,7 @@ namespace is_mesh {
         */
         void init_flags(const std::vector<int>& tet_labels);
 
-        DEPRECATED // use get(eid).get_boundary()
+        DEPRECATED
         void update(const SimplexSet<TetrahedronKey>& tids){update_flag(tids);}
 
         /**
@@ -456,11 +456,9 @@ namespace is_mesh {
         
     public:
 
-        void update_split(const NodeKey& nid_new, const NodeKey& nid1, const NodeKey& nid2);
-
         NodeKey split(const EdgeKey& eid, const vec3& pos, const vec3& destination);
 
-        void update_collapse(const NodeKey& nid, const NodeKey& nid_removed, double weight);
+
         /**
         *  Collapses the edge eid. The node nid must be adjacent to eid before the collapse. The node nid survives, while the other is removed. The weight parameter specifies how the attributes of the old nodes are weighted in the surviving node. For example the position of the surviving node is given by (1.-weight)*get(nid).get_pos() + weight*get(nid_remove).get_pos(). This means that if weight is 0, the surviving node retain its attributes.
         */
@@ -476,6 +474,11 @@ namespace is_mesh {
         void flip_22(const FaceKey& fid1, const FaceKey& fid2);
 
         void flip_44(const FaceKey& fid1, const FaceKey& fid2);
+
+    private:
+        void update_split(const NodeKey& nid_new, const NodeKey& nid1, const NodeKey& nid2);
+
+        void update_collapse(const NodeKey& nid, const NodeKey& nid_removed, double weight);
 
         ///////////////////////
         // UTILITY FUNCTIONS //

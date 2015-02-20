@@ -75,6 +75,10 @@ namespace is_mesh {
         ~MultipleGeometry()
         {
         }
+
+        const std::vector<std::shared_ptr<Geometry>> &get_geometries(){
+            return geometries;
+        }
         
         void add_geometry(std::shared_ptr<Geometry> geometry)
         {

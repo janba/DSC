@@ -162,15 +162,15 @@ namespace DSC {
         */
         virtual bool is_unsafe_editable(const is_mesh::TetrahedronKey& tid);
         /**
-        * key exists and is non interface
+        * key exists and is non interface and non boundary
         */
         virtual bool is_safe_editable(const is_mesh::NodeKey& nid);
         /**
-        * key exists and is non interface
+        * key exists and is non interface and non boundary
         */
         virtual bool is_safe_editable(const is_mesh::EdgeKey& eid);
         /**
-        * key exists and is non interface
+        * key exists and is non interface and non boundary
         */
         virtual bool is_safe_editable(const is_mesh::FaceKey& fid);
         /**
@@ -188,6 +188,11 @@ namespace DSC {
         void set_pos(const is_mesh::NodeKey& nid, const vec3& p);
 
     public:
+        inline static std::string header_version() { return "0.0.4"; };
+
+        static std::string lib_version();
+
+
         /**
         * Sets the destination where the node n is moved to when deform() is called.
         */
@@ -197,19 +202,17 @@ namespace DSC {
         // GETTERS //
         /////////////
     public:
-        // Returns nodes. If subdomain is specified only nodes in subdomain.
+        // Returns nodes.
         is_mesh::NodeIterator nodes() const;
 
-        // Returns edges. If subdomain is specified only edges in subdomain.
+        // Returns edges.
         is_mesh::EdgeIterator edges() const;
 
-        // Returns faces. If subdomain is specified only faces in subdomain.
+        // Returns faces.
         is_mesh::FaceIterator faces() const;
 
-        // Returns tetrahedra. If subdomain is specified only tetrahedra in subdomain.
+        // Returns tetrahedra.
         is_mesh::TetrahedronIterator tetrahedra() const;
-
-        vec3 get_center() const;
 
         double get_min_tet_quality() const;
 
@@ -221,6 +224,7 @@ namespace DSC {
 
         double get_avg_edge_length() const;
 
+        // possible limited by subdomain
         const is_mesh::MultipleGeometry & get_design_domain() const;
 
         /////////////

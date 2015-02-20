@@ -60,10 +60,20 @@ namespace is_mesh
     }
 
     void Node::set_pos(const vec3& p_) {
+#ifdef DEBUG
+        if (p_ != p){
+            assert(!is_boundary());
+        }
+#endif
         p = p_;
     }
 
     void Node::set_destination(const vec3& p_) {
+#ifdef DEBUG
+        if (p_ != p){
+            assert(!is_boundary());
+        }
+#endif
         p_new = p_;
     }
 
