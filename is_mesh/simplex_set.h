@@ -32,10 +32,6 @@ namespace is_mesh
 
     public:
 
-        friend class ISMesh;
-
-
-        
         SimplexSet() noexcept : set()
         {
             
@@ -48,7 +44,7 @@ namespace is_mesh
 
         SimplexSet(const SimplexSet& ss) noexcept : set(ss.set)
         {
-            
+
         }
         
         SimplexSet& operator=(const SimplexSet& ss) noexcept
@@ -58,8 +54,8 @@ namespace is_mesh
         }
         
         SimplexSet(SimplexSet&& ss) noexcept
-                : set(std::move(ss.set))
         {
+            set = std::move(ss.set);
         }
         
         SimplexSet& operator=(SimplexSet&& ss) noexcept
@@ -295,6 +291,7 @@ namespace is_mesh
     template<typename key_type>
     SimplexSet<key_type>&& operator&(SimplexSet<key_type>&& A, const SimplexSet<key_type>& B)
     {
-        return std::move(std::move(A) - (A - B));
+        auto C = (A - B);
+        return std::move(A) - C;
     }
 }

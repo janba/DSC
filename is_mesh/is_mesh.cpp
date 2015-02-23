@@ -12,6 +12,74 @@ namespace is_mesh{
         validity_check();
     }
 
+    ISMesh::ISMesh(const  ISMesh &mesh) {
+        vector<NodeKey> nodeKeys;
+        vector<EdgeKey> edgeKeys;
+        vector<FaceKey> faceKeys;
+        vector<TetrahedronKey> tetKeys;
+
+        map<NodeKey,NodeKey> nodeToNew;
+        map<EdgeKey,EdgeKey> edgeToNew;
+        map<FaceKey,FaceKey> faceToNew;
+        map<TetrahedronKey,TetrahedronKey> tetToNew;
+
+        // create all primitives
+        for (auto & node:mesh.nodes()){
+            auto k = m_node_kernel.create(this, node.get_pos()).key();
+            nodeKeys.push_back(node.key());
+            nodeToNew[node.key()] = k;
+        }
+
+        for (auto & edge : mesh.edges()){
+            auto k = m_edge_kernel.create(this).key();
+            edgeKeys.push_back(edge.key());
+            edgeToNew[edge.key()] = k;
+        }
+
+        for (auto & face : mesh.faces()){
+            auto k = m_face_kernel.create(this).key();
+            faceKeys.push_back(face.key());
+            faceToNew[face.key()] = k;
+        }
+
+        for (auto & tet : mesh.tetrahedra()){
+            auto k = m_tetrahedron_kernel.create(this, tet.label()).key();
+            tetKeys.push_back(tet.key());
+            tetToNew[tet.key()] = k;
+        }
+
+        // copy connectivity
+        for (auto & node : nodes()){
+            const auto & orignal = mesh.get(nodeKeys[(int)node.key()]);
+            for (auto & cb : orignal.m_co_boundary){
+                node.m_co_boundary += edgeToNew[cb];
+            }
+        }
+        for (auto & edge : edges()){
+            const auto & orignal = mesh.get(edgeKeys[(int)edge.key()]);
+            for (auto & b : orignal.m_boundary){
+                edge.m_boundary += nodeToNew[b];
+            }
+            for (auto & cb : orignal.m_co_boundary){
+                edge.m_co_boundary += faceToNew[cb];
+            }
+        }
+        for (auto & face : faces()){
+            const auto & orignal = mesh.get(faceKeys[(int)face.key()]);
+            for (auto & b : orignal.m_boundary){
+                face.m_boundary += edgeToNew[b];
+            }
+            for (auto & cb : orignal.m_co_boundary){
+                face.m_co_boundary += tetToNew[cb];
+            }
+        }
+        for (auto & tet : tetrahedra()){
+            const auto & orignal = mesh.get(tetKeys[(int)tet.key()]);
+            for (auto & b : orignal.m_boundary){
+                tet.m_boundary += faceToNew[b];
+            }
+        }
+    }
 
     ISMesh::~ISMesh() {
     }
@@ -339,6 +407,23 @@ namespace is_mesh{
     is_mesh::Tetrahedron &ISMesh::get(const TetrahedronKey& tid) {
         return m_tetrahedron_kernel.find(tid);
     }
+
+    const is_mesh::Node &ISMesh::get(const NodeKey& nid) const {
+        return m_node_kernel.find(nid);
+    }
+
+    const is_mesh::Edge &ISMesh::get(const EdgeKey& eid) const {
+        return m_edge_kernel.find(eid);
+    }
+
+    const is_mesh::Face &ISMesh::get(const FaceKey& fid) const {
+        return m_face_kernel.find(fid);
+    }
+
+    const is_mesh::Tetrahedron &ISMesh::get(const TetrahedronKey& tid) const  {
+        return m_tetrahedron_kernel.find(tid);
+    }
+
 
     const SimplexSet<NodeKey> &ISMesh::get_nodes(const EdgeKey& eid) {
         return get(eid).get_boundary();
@@ -818,7 +903,7 @@ namespace is_mesh{
         merge(nid, nid_remove);
 
         // Update flags.
-        update(get_tets(nid));
+        update_flag(get_tets(nid));
 
 #ifdef DEBUG
         validity_check();
@@ -1014,7 +1099,7 @@ namespace is_mesh{
         }
 
         // Update flags
-        update(e_tids);
+        update_flag(e_tids);
 
     }
 

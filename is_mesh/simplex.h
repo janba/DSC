@@ -37,7 +37,6 @@ namespace is_mesh
     protected:
         ISMesh *m_mesh = nullptr;
     public:
-
         friend class ISMesh;
 
         Simplex(ISMesh * owner) noexcept
@@ -82,22 +81,22 @@ namespace is_mesh
             return m_boundary;
         }
         
-        void add_co_face(const co_boundary_key_type& key)
+        void add_co_face(co_boundary_key_type key)
         {
             m_co_boundary += key;
         }
         
-        void add_face(const boundary_key_type& key)
+        void add_face(boundary_key_type key)
         {
             m_boundary += key;
         }
         
-        void remove_co_face(const co_boundary_key_type& key)
+        void remove_co_face(co_boundary_key_type key)
         {
             m_co_boundary -= key;
         }
         
-        void remove_face(const boundary_key_type& key)
+        void remove_face(boundary_key_type key)
         {
             m_boundary -= key;
         }

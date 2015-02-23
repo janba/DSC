@@ -187,7 +187,7 @@ namespace DSC {
         void set_pos(const is_mesh::NodeKey& nid, const vec3& p);
 
     public:
-        inline static std::string header_version() { return "0.0.4"; };
+        inline static std::string header_version() { return "0.0.5"; };
 
         static std::string lib_version();
 
@@ -358,7 +358,9 @@ namespace DSC {
         // FIX FUNCTIONS //
         ///////////////////
 
-        void fix_complex();
+        // Performs an laplacian smoothing of editable nodes
+        // Optionally improve mesh quality using face/edge flipping and removing degenerates
+        void fix_complex(bool optimizeMeshStructure = true);
 
         void resize_complex();
         
@@ -369,7 +371,7 @@ namespace DSC {
         /**
         * Moves all the vertices to their destination which can be set by the set_destination() function.
         */
-        void deform(int num_steps = 10);
+        void deform(int num_steps = 10, bool optimizeMeshStructure = true);
         
     private:
         /**

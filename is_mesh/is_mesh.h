@@ -50,7 +50,11 @@ namespace is_mesh {
         std::map<long,std::function<void(const NodeKey& nid, const NodeKey& nid_removed, double weight)>> m_collapse_listeners;
     public:
         ISMesh(std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels);
-        ISMesh(const ISMesh&) = delete;
+
+        // copy of ISMesh is rare. marked explicit to avoid copying the object by mistake (such as pass by value)
+        // if mesh has subdomain is is not copied
+        ISMesh(const ISMesh& mesh);
+
         ~ISMesh();
 
         unsigned int get_no_nodes() const;
@@ -146,7 +150,7 @@ namespace is_mesh {
             if (i <= j) { a = i; b = j; }
             else { a = j; b = i; }
             edge_key key(a, b);
-            typename map_type::iterator it = edge_map.find(key);
+            auto it = edge_map.find(key);
             if (it == edge_map.end())
             {
                 int n = mesh.insert_edge(i, j); //non-sorted
@@ -161,11 +165,11 @@ namespace is_mesh {
             int a[3] = {i, j, k};
             std::sort(a, a+3);
             face_key key(a[0], a[1], a[2]);
-            typename map_type::iterator it = face_map.find(key); //lookup in sorted order
+            auto it = face_map.find(key); //lookup in sorted order
             if (it == face_map.end())
             {
-                int a = mesh.insert_face(i, j, k); //create in supplied order
-                it = face_map.insert(std::pair<face_key,int>(key, a)).first;
+                int index = mesh.insert_face(i, j, k); //create in supplied order
+                it = face_map.insert(std::pair<face_key,int>(key, index)).first;
             }
             return it->second;
         }
@@ -211,6 +215,14 @@ namespace is_mesh {
         Face & get(const FaceKey& fid);
 
         Tetrahedron & get(const TetrahedronKey& tid);
+
+        const Node & get(const NodeKey& nid) const ;
+
+        const Edge & get(const EdgeKey& eid) const ;
+
+        const Face & get(const FaceKey& fid) const ;
+
+        const Tetrahedron & get(const TetrahedronKey& tid) const ;
 
         DEPRECATED // use get(eid).get_boundary()
         const SimplexSet<NodeKey> & get_nodes(const EdgeKey& eid);

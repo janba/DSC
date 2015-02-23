@@ -944,8 +944,12 @@ namespace DSC {
 #endif
     }
 
-    void DeformableSimplicialComplex::fix_complex() {
+    void DeformableSimplicialComplex::fix_complex(bool optimizeMeshStructure) {
         smooth();
+
+        if (!optimizeMeshStructure){
+            return;
+        }
 
         topological_edge_removal();
         topological_face_removal();
@@ -971,7 +975,7 @@ namespace DSC {
         fix_complex();
     }
 
-    void DeformableSimplicialComplex::deform(int num_steps) {
+    void DeformableSimplicialComplex::deform(int num_steps, bool optimizeMeshStructure) {
 #ifdef DEBUG
         is_mesh.validity_check();
         cout << endl << "********************************" << endl;
@@ -986,9 +990,10 @@ namespace DSC {
             int movable = 0;
             for (auto & nit : nodes())
             {
-                if (is_movable(nit.key()))
+                auto k = nit.key();
+                if (is_movable(k))
                 {
-                    if(!move_vertex(nit.key()))
+                    if(!move_vertex(k))
                     {
                         missing++;
                     }
@@ -998,14 +1003,16 @@ namespace DSC {
 #ifdef DEBUG
             cout << "\tVertices missing to be moved: " << missing <<"/" << movable << endl;
 #endif
-            fix_complex();
+            fix_complex(optimizeMeshStructure);
 #ifdef DEBUG
             is_mesh.validity_check();
 #endif
             ++step;
         } while (missing > 0 && step < num_steps);
 
-        resize_complex();
+        if (optimizeMeshStructure){
+            resize_complex();
+        }
 
         is_mesh.garbage_collect();
         for (auto & nit : is_mesh.nodes()) // reset all nodes

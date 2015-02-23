@@ -25,6 +25,7 @@ namespace is_mesh
         unsigned int l = 0;
     public:
         Tetrahedron(ISMesh *owner) noexcept;
+        Tetrahedron(ISMesh *owner, int l) noexcept;
 
         Tetrahedron(Tetrahedron&& other) noexcept;
 

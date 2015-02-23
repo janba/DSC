@@ -49,7 +49,7 @@ namespace is_mesh
             
             kernel_element(const kernel_element& ke) = delete;
 
-            kernel_element(kernel_element&& ke) : value{std::move(ke.value)}, state{std::move(ke.state)} {
+            kernel_element(kernel_element&& ke) : value{std::move(ke.value)}, state{ke.state} {
             }
 
             kernel_element&& operator=(kernel_element&& other) {
@@ -107,7 +107,7 @@ namespace is_mesh
             assert((int)k < m_data.size() || !"k out of range");
             return m_data[k];
         }
-        
+
         /**
          * Finds the next free cell in the kernel. If necessary new memory is allocated.
          *
@@ -252,7 +252,7 @@ namespace is_mesh
          *
          * @param k     The handle of the cell.
          */
-        iterator find_iterator(key_type const & k)
+        iterator find_iterator(key_type k)
         {
             if (is_valid(k))
                 return iterator(this, k);
@@ -272,6 +272,18 @@ namespace is_mesh
             kernel_element& tmp = lookup(k);
             assert(tmp.state == kernel_element::VALID || tmp.state == kernel_element::EXCLUDED);
             return tmp.value;
+        }
+
+        /**
+        * Returns a managed object. Beware of deallocating or other memory
+        * handlings of the returned object, as this might lead to undefined
+        * behavior in the kernel.
+        *
+        * @param k     The handle to the object.
+        */
+        const value_type & find(key_type const & k) const
+        {
+            return const_cast<kernel_type*>(this)->find(k);
         }
 
         /**
