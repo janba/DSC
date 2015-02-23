@@ -72,7 +72,6 @@ namespace DSC {
     class DeformableSimplicialComplex
     {
     public:
-
         DEPRECATED
         typedef is_mesh::NodeKey      node_key;
         DEPRECATED

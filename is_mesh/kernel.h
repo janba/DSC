@@ -41,14 +41,15 @@ namespace is_mesh
         template< typename key_t_, typename value_t_ >
         struct kernel_element
         {
-            typedef value_t_            value_type;
+            using value_type = value_t_;
 
             enum state_type { VALID, MARKED, EMPTY, EXCLUDED };
             
-            kernel_element() : value(nullptr) { }
+            kernel_element() : value(nullptr), state{kernel_element::EMPTY} { }
             
-            kernel_element(kernel_element&& ke) : value{std::move(ke.value)} {
-                state = ke.state;
+            kernel_element(const kernel_element& ke) = delete;
+
+            kernel_element(kernel_element&& ke) : value{std::move(ke.value)}, state{std::move(ke.state)} {
             }
 
             kernel_element&& operator=(kernel_element&& other) {
@@ -79,11 +80,11 @@ namespace is_mesh
     class kernel
     {
     public:
-        typedef          kernel<key_type, value_type>                   kernel_type;
-        typedef          key_type                                       kernel_key_type;
-        typedef          util::kernel_element<key_type, value_type>     kernel_element;
-        typedef          kernel_iterator<kernel_type>                   iterator;
-        typedef          iterator const                                 const_iterator;
+        using kernel_type = kernel<key_type, value_type>;
+        using kernel_key_type = key_type;
+        using kernel_element = util::kernel_element<key_type, value_type>;
+        using iterator = kernel_iterator<kernel_type>;
+        using const_iterator = iterator const;
 
         friend class kernel_iterator<kernel_type>;
 
@@ -117,9 +118,7 @@ namespace is_mesh
             if (m_data_freelist.size()==0){
                 key = (unsigned int)m_data.size();
                 m_data.emplace_back();
-                kernel_element& element = m_data.back();
-                element.state = kernel_element::EMPTY;
-                return element;
+                return m_data.back();
             } else {
                 key = (unsigned int)m_data_freelist.back();
                 m_data_freelist.pop_back();

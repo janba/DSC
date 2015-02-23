@@ -30,11 +30,11 @@
 #include <CGLA/Mat3x3d.h>
 #include <CGLA/Mat4x4d.h>
 
-typedef CGLA::Vec2d       vec2;
-typedef CGLA::Vec3d       vec3;
-typedef CGLA::Vec4d       vec4;
-typedef CGLA::Mat3x3d     mat3;
-typedef CGLA::Mat4x4d     mat4;
+using vec2 = CGLA::Vec2d;
+using vec3 = CGLA::Vec3d;
+using vec4 = CGLA::Vec4d;
+using mat3 = CGLA::Mat3x3d;
+using mat4 = CGLA::Mat4x4d;
 
 static const double EPSILON = 1e-8;
 

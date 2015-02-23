@@ -22,13 +22,13 @@ namespace is_mesh
     class kernel_iterator
     {
     private:
-        typedef typename kernel_t_::kernel_element element_type;
+        using element_type = typename kernel_t_::kernel_element;
     public:
-        typedef          kernel_t_ kernel_type;
-        typedef          kernel_iterator<kernel_type> iterator;
-        typedef typename kernel_type::kernel_element kernel_element;
-        typedef typename element_type::value_type value_type;
-        typedef typename kernel_t_::kernel_key_type key_type;
+        using kernel_type = kernel_t_;
+        using iterator = kernel_iterator<kernel_type>;
+        using kernel_element = typename kernel_type::kernel_element;
+        using value_type = typename element_type::value_type;
+        using key_type = typename kernel_t_::kernel_key_type;
         
     private:
         unsigned int     m_key;
