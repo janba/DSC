@@ -461,6 +461,7 @@ namespace DSC {
         }
 #ifdef DEBUG
         cout << "Topological edge removals: " << i + k << "/" << j << " (" << k << " at interface)" << endl;
+        is_mesh.validity_check();
 #endif
         is_mesh.garbage_collect();
     }
@@ -595,8 +596,8 @@ namespace DSC {
         }
 #ifdef DEBUG
         cout << "Topological face removals: " << i << "/" << j << endl;
+        is_mesh.validity_check();
 #endif
-
         is_mesh.garbage_collect();
     }
 
@@ -1498,7 +1499,7 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::check_consistency(const SimplexSet<NodeKey>& nids, SimplexSet<NodeKey>& polygon) {
-        unsigned int n = static_cast<unsigned int>(polygon.size());
+        unsigned int n = polygon.size();
         vector<vec3> pos = is_mesh.get_pos(nids);
         vector<vec3> poly_pos = is_mesh.get_pos(polygon);
         double sum = 0;

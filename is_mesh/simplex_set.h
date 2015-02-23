@@ -24,16 +24,17 @@
 namespace is_mesh
 {
     class ISMesh;
-    
+
     template<typename key_type>
     class SimplexSet
     {
         std::vector<key_type> set;
-        std::vector<key_type> excluded_set;
 
     public:
 
         friend class ISMesh;
+
+
         
         SimplexSet() noexcept : set()
         {
@@ -53,12 +54,11 @@ namespace is_mesh
         SimplexSet& operator=(const SimplexSet& ss) noexcept
         {
             set = ss.set;
-            excluded_set = ss.excluded_set;
             return *this;
         }
         
         SimplexSet(SimplexSet&& ss) noexcept
-                : set(std::move(ss.set)), excluded_set(std::move(ss.excluded_set))
+                : set(std::move(ss.set))
         {
         }
         
@@ -66,7 +66,6 @@ namespace is_mesh
         {
             if (this != &ss){
                 std::swap(set, ss.set);
-                std::swap(excluded_set, ss.excluded_set);
             }
             return *this;
         }
@@ -85,7 +84,7 @@ namespace is_mesh
         {
             return set.end();
         }
-        
+
         unsigned int size() const
         {
             return static_cast<unsigned int>(set.size());
@@ -137,12 +136,6 @@ namespace is_mesh
             set.push_back(k);
         }
         
-        void push_back(key_type&& k)
-        {
-            assert(!contains(k));
-            set.push_back(std::move(k));
-        }
-        
         void swap(unsigned int i = 0, unsigned int j = 1)
         {
             assert(size() > i);
@@ -183,7 +176,7 @@ namespace is_mesh
             return *this;
         }
         
-        SimplexSet<key_type>& operator-=(const key_type& key)
+        SimplexSet<key_type>& operator-=(key_type key)
         {
             auto iter = std::find(begin(), end(), key);
             if(iter != end())
@@ -192,22 +185,8 @@ namespace is_mesh
             }
             return *this;
         }
-    private:
-        void reevaluate_excluded(std::function<bool(key_type k)> include){
-            // fill excluded set back in set
-            set.insert(set.end(), excluded_set.begin(), excluded_set.end());
-            excluded_set.clear();
-            // reevaluate elements in set
-            for (int i=set.size()-1;i>=0;i--){
-                auto k = set[i];
-                if (!include(k)){
-                    excluded_set.push_back(k);
-                    set.erase(set.begin()+i);
-                }
-            }
-        }
     };
-    
+
     template<typename key_type>
     bool operator==(const SimplexSet<key_type>& A, const SimplexSet<key_type>& B) noexcept
     {
@@ -224,7 +203,7 @@ namespace is_mesh
         }
         return false;
     }
-    
+
     /**
      *  Returns the union of the two sets A and B.
      */

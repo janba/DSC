@@ -178,7 +178,8 @@ namespace is_mesh
 
             assert(cur.state != kernel_element::VALID || !"Cannot create new element, duplicate key.");
             assert(cur.state != kernel_element::MARKED || !"Attempted to overwrite a marked element.");
-            
+            assert(cur.state != kernel_element::EXCLUDED || !"Attempted to overwrite an excluded element.");
+
             cur.value = value_type{isMesh, values...};
             cur.state = kernel_element::VALID;
             return iterator(this, key);
@@ -216,8 +217,8 @@ namespace is_mesh
         void erase(key_type const & k)
         {
             kernel_element& p = lookup(k);
-            assert (p.state == kernel_element::VALID || !"Attempted to remove a non-valid element!");
-            if (p.state != kernel_element::VALID)
+            assert (p.state == kernel_element::VALID || p.state == kernel_element::EXCLUDED || !"Attempted to remove a non-valid element!");
+            if (p.state != kernel_element::VALID && p.state != kernel_element::EXCLUDED )
             {
                 //No element with that key.
                 return;
@@ -270,7 +271,7 @@ namespace is_mesh
         value_type & find(key_type const & k)
         {
             kernel_element& tmp = lookup(k);
-            assert(tmp.state == kernel_element::VALID);
+            assert(tmp.state == kernel_element::VALID || tmp.state == kernel_element::EXCLUDED);
             return tmp.value;
         }
 
@@ -290,7 +291,7 @@ namespace is_mesh
         bool is_valid(key_type const & k)
         {
             kernel_element& tmp = lookup(k);
-            if (tmp.state == kernel_element::VALID) return true;
+            if (tmp.state == kernel_element::VALID || tmp.state == kernel_element::EXCLUDED ) return true;
             return false;
         }
         
