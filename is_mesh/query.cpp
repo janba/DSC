@@ -232,7 +232,7 @@ namespace is_mesh {
         return res;
     }
 
-    void Query::filter_subset(std::set<NodeKey> &nodes, std::set<EdgeKey> &edges, std::set<FaceKey> &faces, const std::set<TetrahedronKey> &tets) {
+    void Query::filter_subset(std::set<NodeKey> &nodes, std::set<EdgeKey> &edges, std::set<FaceKey> &faces, std::set<TetrahedronKey> &tets) {
         nodes.clear();
         edges.clear();
         faces.clear();
@@ -250,6 +250,38 @@ namespace is_mesh {
             for (auto n : mesh->get(e).node_keys()){
                 nodes.insert(n);
             }
+        }
+
+        // exclude boundary vertices connected to non-manifold edges
+        SimplexSet<TetrahedronKey> tetSet;
+        for (auto t : tets){
+            tetSet += t;
+        }
+        std::set<TetrahedronKey> tetsToDelete;
+        std::vector<EdgeKey> nonManifoldEdges;
+        for (auto ek : edges){
+            auto faceKeys = mesh->get(ek).face_keys();
+            std::vector<TetrahedronKey> boundaryTets;
+            for (auto fk : faceKeys){
+                Face & face = mesh->get(fk);
+                auto intersection = face.tet_keys() & tetSet;
+
+                if (intersection.size() == 1){
+                    boundaryTets.push_back(intersection[0]);
+                }
+            }
+            bool isNonManifoldEdge = boundaryTets.size()>2; // has more than two boundary edges
+            if (isNonManifoldEdge){
+                for (auto tk : boundaryTets){
+                    tetsToDelete.insert(tk);
+                }
+            }
+        }
+        if (!tetsToDelete.empty()){
+            for (auto tk : tetsToDelete){
+                tets.erase(tets.find(tk));
+            }
+            filter_subset(nodes, edges, faces, tets);
         }
     }
 }

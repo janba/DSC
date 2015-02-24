@@ -20,6 +20,7 @@
 
 namespace is_mesh
 {
+    // Note: Non-polymorphic
     class Key
     {
     protected:

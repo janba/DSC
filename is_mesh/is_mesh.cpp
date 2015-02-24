@@ -52,33 +52,40 @@ namespace is_mesh{
         for (auto & node : nodes()){
             const auto & orignal = mesh.get(nodeKeys[(int)node.key()]);
             for (auto & cb : orignal.m_co_boundary){
-                node.m_co_boundary += edgeToNew[cb];
+                if (edgeToNew.find(cb) != edgeToNew.end())
+                    node.m_co_boundary += edgeToNew[cb];
             }
         }
         for (auto & edge : edges()){
             const auto & orignal = mesh.get(edgeKeys[(int)edge.key()]);
             for (auto & b : orignal.m_boundary){
-                edge.m_boundary += nodeToNew[b];
+                if (nodeToNew.find(b) != nodeToNew.end())
+                    edge.m_boundary += nodeToNew[b];
             }
             for (auto & cb : orignal.m_co_boundary){
-                edge.m_co_boundary += faceToNew[cb];
+                if (faceToNew.find(cb) != faceToNew.end())
+                    edge.m_co_boundary += faceToNew[cb];
             }
         }
         for (auto & face : faces()){
             const auto & orignal = mesh.get(faceKeys[(int)face.key()]);
             for (auto & b : orignal.m_boundary){
-                face.m_boundary += edgeToNew[b];
+                if (edgeToNew.find(b) != edgeToNew.end())
+                    face.m_boundary += edgeToNew[b];
             }
             for (auto & cb : orignal.m_co_boundary){
-                face.m_co_boundary += tetToNew[cb];
+                if (tetToNew.find(cb) != tetToNew.end())
+                    face.m_co_boundary += tetToNew[cb];
             }
         }
         for (auto & tet : tetrahedra()){
             const auto & orignal = mesh.get(tetKeys[(int)tet.key()]);
             for (auto & b : orignal.m_boundary){
-                tet.m_boundary += faceToNew[b];
+                if (faceToNew.find(b) != faceToNew.end())
+                    tet.m_boundary += faceToNew[b];
             }
         }
+        update_flag();
     }
 
     ISMesh::~ISMesh() {
@@ -152,7 +159,7 @@ namespace is_mesh{
         int oldLabel = get(tid).label();
         get(tid).label(newLabel);
         SimplexSet<TetrahedronKey> tids = {tid};
-        update(tids);
+        update_flag(tids);
 
         for (auto & l : m_set_label_listeners){
             l.second(tid, oldLabel);

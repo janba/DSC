@@ -53,7 +53,7 @@ namespace is_mesh {
 
         // copy of ISMesh is rare. marked explicit to avoid copying the object by mistake (such as pass by value)
         // if mesh has subdomain is is not copied
-        ISMesh(const ISMesh& mesh);
+        explicit ISMesh(const ISMesh& mesh);
 
         ~ISMesh();
 

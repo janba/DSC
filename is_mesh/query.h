@@ -87,7 +87,7 @@ namespace is_mesh {
 
         // exclude 'hanging' nodes, edges and faces. (such as nodes with only one edge etc)
         // or in other words only include structures from tets
-        void filter_subset(std::set<NodeKey> &nodes, std::set<EdgeKey> &edges, std::set<FaceKey> &faces, const std::set<TetrahedronKey> &tets);
+        void filter_subset(std::set<NodeKey> &nodes, std::set<EdgeKey> &edges, std::set<FaceKey> &faces, std::set<TetrahedronKey> &tets);
 
         template <typename K>
         SimplexSet<K> connected(K initialKey, std::function<bool(K k)> includeKey);
