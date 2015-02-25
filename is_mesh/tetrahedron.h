@@ -23,6 +23,9 @@ namespace is_mesh
     class Tetrahedron : public Simplex<FaceKey, Key>
     {
         unsigned int l = 0;
+
+        // modify through ISMesh::set_label
+        void label(unsigned int _label);
     public:
         Tetrahedron(ISMesh *owner) noexcept;
         Tetrahedron(ISMesh *owner, int l) noexcept;
@@ -36,8 +39,6 @@ namespace is_mesh
         const SimplexSet<NodeKey> node_keys() const noexcept;
 
         int label();
-
-        void label(unsigned int _label);
 
         double volume();
 
