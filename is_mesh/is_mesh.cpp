@@ -284,13 +284,10 @@ namespace is_mesh{
     void ISMesh::update_flag(const FaceKey & f) {
         Face & face = get(f);
         face.set_interface(false);
-        face.set_boundary(false);
 
         const SimplexSet<TetrahedronKey> &tids = get(f).tet_keys();
         if (tids.size() == 1)
         {
-            // On the boundary
-            face.set_boundary(true);
             if (get(tids.front()).label() != 0)
             {
                 face.set_interface(true);

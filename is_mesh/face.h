@@ -20,9 +20,9 @@
 
 namespace is_mesh
 {
-    class Face :  public Simplex<EdgeKey, TetrahedronKey>
+    class Face : public Simplex<EdgeKey, TetrahedronKey>
     {
-        std::bitset<2> flags;
+        bool interface = false;
     public:
         Face(ISMesh *owner) noexcept;
 
@@ -56,8 +56,6 @@ namespace is_mesh
 
         FaceKey key() const noexcept;
     private:
-        void set_boundary(bool b);
-
         void set_interface(bool b);
 
         friend class ISMesh;

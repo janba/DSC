@@ -29,11 +29,11 @@ namespace is_mesh
     }
 
     Face::Face(Face&& other) noexcept
-            : flags(std::move(other.flags)), Simplex<EdgeKey, TetrahedronKey>(std::move(other)) {}
+            : interface(other.interface), Simplex<EdgeKey, TetrahedronKey>(std::move(other)) {}
 
     Face &Face::operator=(Face&& other) noexcept {
         if (this != &other){
-            std::swap(flags, other.flags);
+            std::swap(interface, other.interface);
             ((Simplex<EdgeKey, TetrahedronKey>*)this)->operator=(std::move(other));
         }
         return *this;
@@ -48,19 +48,15 @@ namespace is_mesh
     }
 
     bool Face::is_boundary() noexcept {
-        return flags[1];
+        return tet_keys().size() < 2;
     }
 
     bool Face::is_interface() noexcept {
-        return flags[0];
-    }
-
-    void Face::set_boundary(bool b) {
-        flags[1] = b;
+        return interface;
     }
 
     void Face::set_interface(bool b) {
-        flags[0] = b;
+        interface = b;
     }
 
     double Face::area() {
