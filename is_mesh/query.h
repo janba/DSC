@@ -89,6 +89,8 @@ namespace is_mesh {
         // or in other words only include structures from tets
         void filter_subset(std::set<NodeKey> &nodes, std::set<EdgeKey> &edges, std::set<FaceKey> &faces, std::set<TetrahedronKey> &tets);
 
+        // Performs graph search
+        // Valid for TetrahedronKey, FaceKey, EdgeKey but _not_ NodeKey
         template <typename K>
         SimplexSet<K> connected(K initialKey, std::function<bool(K k)> includeKey);
 
