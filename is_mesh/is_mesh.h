@@ -507,6 +507,9 @@ namespace is_mesh {
 
         void extract_surface_mesh(std::vector<vec3>& points, std::vector<int>& faces);
 
+        // extract all tests as tet surfaces
+        void extract_surface_mesh_debug(std::vector<vec3>& points, std::vector<int>& faces);
+
         void extract_tet_mesh(std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels);
 
         void validity_check();

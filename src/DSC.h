@@ -187,7 +187,7 @@ namespace DSC {
         void set_pos(const is_mesh::NodeKey& nid, const vec3& p);
 
     public:
-        inline static std::string header_version() { return "0.0.14"; };
+        inline static std::string header_version() { return "0.0.15"; };
 
         static std::string lib_version();
 

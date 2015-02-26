@@ -15,6 +15,7 @@
 //  See licence.txt for a copy of the GNU General Public License.
 
 #include "mesh_io.h"
+#include "is_mesh.h"
 #include <fstream>
 
 namespace is_mesh {
@@ -325,6 +326,9 @@ namespace is_mesh {
     {
 //        scale(points, 3.);
         std::ofstream file(filename.data());
+        if (!file.is_open()){
+            std::cerr << "Cannot open file for export_surface_mesh "<<filename<<std::endl;
+        }
         
         for (auto &p : points)
         {
@@ -344,6 +348,9 @@ namespace is_mesh {
 //        scale(points, 2.);
         std::ofstream obj_file;
         obj_file.open(filename.data());
+        if (!obj_file.is_open()){
+            std::cerr << "Cannot open file for export_surface_mesh "<<filename<<std::endl;
+        }
         
         for (unsigned int i = 0; i < points.size(); ++i)
         {
@@ -367,5 +374,30 @@ namespace is_mesh {
         }
         
         obj_file.close();
+    }
+
+    void export_tet_mesh(const std::string &filename, ISMesh &mesh) {
+        using namespace std;
+        vector<vec3> points;
+        vector<int> tets;
+        vector<int> tet_labels;
+        mesh.extract_tet_mesh(points, tets, tet_labels);
+        export_tet_mesh(filename, points, tets, tet_labels);
+    }
+
+    void export_surface_mesh(const std::string &filename, ISMesh &mesh) {
+        using namespace std;
+        vector<vec3> points;
+        vector<int> faces;
+        mesh.extract_surface_mesh(points, faces);
+        export_surface_mesh(filename, points, faces);
+    }
+
+    void export_surface_mesh_debug(const std::string &filename, ISMesh &mesh) {
+        using namespace std;
+        vector<vec3> points;
+        vector<int> faces;
+        mesh.extract_surface_mesh_debug(points, faces);
+        export_surface_mesh(filename, points, faces);
     }
 }

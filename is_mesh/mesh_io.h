@@ -20,7 +20,8 @@
 #include "geometry.h"
 
 namespace is_mesh {
-    
+    class ISMesh;
+
     /**
      * Imports a mesh from a .dsc file.
      */
@@ -55,4 +56,20 @@ namespace is_mesh {
      * Exports the surface mesh to an .obj file.
      */
     void export_surface_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& faces);
+
+
+    /**
+    * Exports the mesh as a .dsc file.
+    */
+    void export_tet_mesh(const std::string& filename, ISMesh &mesh);
+
+    /**
+    * Exports the surface mesh to an .obj file.
+    */
+    void export_surface_mesh(const std::string& filename, ISMesh &mesh);
+
+    /**
+    * Exports the debug surface mesh to an .obj file.
+    */
+    void export_surface_mesh_debug(const std::string &filename, ISMesh &mesh);
 }

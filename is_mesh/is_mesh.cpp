@@ -1184,6 +1184,27 @@ namespace is_mesh{
         }
     }
 
+    void ISMesh::extract_surface_mesh_debug(vector<vec3>& points, vector<int>& faces) {
+        garbage_collect();
+
+        map<NodeKey, int> indices;
+        // Extract vertices
+        for (auto & nit : nodes())
+        {
+            points.push_back(nit.get_pos());
+            indices[nit.key()] = static_cast<int>(points.size());
+        }
+
+        // Extract faces
+        for (auto & fit : ISMesh::faces())
+        {
+            for (auto &n : get_sorted_nodes(fit.key()))
+            {
+                faces.push_back(indices[n]);
+            }
+        }
+    }
+
     void ISMesh::extract_tet_mesh(vector<vec3>& points, vector<int>& tets, vector<int>& tet_labels) {
         garbage_collect();
 
