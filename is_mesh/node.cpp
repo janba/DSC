@@ -33,15 +33,20 @@ namespace is_mesh
 
     Node::Node(Node&& other) noexcept
             : p (other.p), p_new(other.p_new),
-                               flags(std::move(other.flags)),Simplex<Key, EdgeKey>(std::move(other))
+              crossing(other.crossing),
+              boundary(other.boundary),
+              interface(other.interface),
+              Simplex<Key, EdgeKey>(std::move(other))
     {
     }
 
     Node &Node::operator=(Node&& other) noexcept {
         if (this != &other){
-            std::swap(p, other.p);
-            std::swap(p_new, other.p_new);
-            std::swap(flags, other.flags);
+            p = other.p;
+            p_new = other.p_new;
+            crossing = other.crossing;
+            boundary = other.boundary;
+            interface = other.interface;
             ((Simplex<Key, EdgeKey>*)this)->operator=(std::move(other));
         }
         return *this;
@@ -78,27 +83,27 @@ namespace is_mesh
     }
 
     bool Node::is_crossing() const noexcept {
-        return flags[2];
+        return crossing;
     }
 
     bool Node::is_boundary() const noexcept {
-        return flags[1];
+        return boundary;
     }
 
     bool Node::is_interface() const noexcept {
-        return flags[0];
+        return interface;
     }
 
     void Node::set_crossing(bool b) {
-        flags[2] = b;
+        crossing = b;
     }
 
     void Node::set_boundary(bool b) {
-        flags[1] = b;
+        boundary = b;
     }
 
     void Node::set_interface(bool b) {
-        flags[0] = b;
+        interface = b;
     }
 
     NodeKey Node::key() const noexcept {

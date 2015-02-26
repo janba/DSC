@@ -24,13 +24,18 @@ namespace is_mesh
     }
 
     Edge::Edge(Edge&& other) noexcept
-            : flags(std::move(other.flags)), Simplex<NodeKey, FaceKey>(std::move(other))
+            :crossing(other.crossing),
+            boundary(other.boundary),
+            interface(other.interface),
+            Simplex<NodeKey, FaceKey>(std::move(other))
     {
     }
 
     Edge &Edge::operator=(Edge&& other) noexcept {
         if (this != &other){
-            std::swap(flags, other.flags);
+            crossing = other.crossing;
+            boundary = other.boundary;
+            interface = other.interface;
             ((Simplex<NodeKey, FaceKey>*)this)->operator=(std::move(other));
         }
         return *this;
@@ -45,27 +50,27 @@ namespace is_mesh
     }
 
     bool Edge::is_crossing() noexcept {
-        return flags[2];
+        return crossing;
     }
 
     bool Edge::is_boundary() noexcept {
-        return flags[1];
+        return boundary;
     }
 
     bool Edge::is_interface() noexcept {
-        return flags[0];
+        return interface;
     }
 
     void Edge::set_crossing(bool b) {
-        flags[2] = b;
+        crossing = b;
     }
 
     void Edge::set_boundary(bool b) {
-        flags[1] = b;
+        boundary = b;
     }
 
     void Edge::set_interface(bool b) {
-        flags[0] = b;
+        interface = b;
     }
 
     double Edge::length() {

@@ -24,7 +24,9 @@ namespace is_mesh
     {
         vec3 p;
         vec3 p_new;
-        std::bitset<3> flags;
+        bool crossing = false;
+        bool boundary = false;
+        bool interface = false;
     public:
         Node(ISMesh *owner) noexcept;
         Node(ISMesh *owner, vec3 _p) noexcept;

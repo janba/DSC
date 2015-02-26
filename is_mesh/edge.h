@@ -22,7 +22,9 @@ namespace is_mesh
 {
     class Edge : public Simplex<NodeKey, FaceKey>
     {
-        std::bitset<3> flags;
+        bool crossing = false;
+        bool boundary = false;
+        bool interface = false;
     public:
         Edge(ISMesh *owner) noexcept;
 
