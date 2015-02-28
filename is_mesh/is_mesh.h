@@ -17,6 +17,7 @@
 #pragma once
 
 #include <functional>
+#include <thread>
 #include "util.h"
 #include "kernel.h"
 #include "simplex.h"
@@ -83,6 +84,18 @@ namespace is_mesh {
         // ITERATORS //
         ///////////////
     public:
+        // Runs the function fn on each node simultaneously on many threads
+        // Number of threads used is std::thread::hardware_concurrency()
+        void for_each_node_par(std::function<void(Node& node, int threadid)> fn);
+
+        // Space partitioned parallel for each
+        // Runs the function fn on each node simultaneously on many threads
+        // Number of threads used is std::thread::hardware_concurrency()
+        // partitionsize must be larger than twice the maximum node size
+        // if node position is changed, the function fn may run twice for a single node
+        // dimension is on which axis the space is partitioned (x,y or z)
+        void for_each_node_par_sp(double partitionsize,  int dimension, std::function<void(Node& node, int threadid)> fn);
+
         NodeIterator nodes() const;
 
         EdgeIterator edges() const;
