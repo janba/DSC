@@ -908,12 +908,12 @@ namespace DSC {
     }
 
     bool DeformableSimplicialComplex::smart_laplacian(const NodeKey& nid, double alpha) {
-        SimplexSet<TetrahedronKey> tids = is_mesh.get_tets(nid);
-        SimplexSet<FaceKey> fids = is_mesh.get_faces(tids) - is_mesh.get_faces(nid);
+            SimplexSet<TetrahedronKey> tids = is_mesh.get_tets(nid);
+            SimplexSet<FaceKey> fids = is_mesh.get_faces(tids) - is_mesh.get_faces(nid);
 
-        vec3 old_pos = is_mesh.get(nid).get_pos();
-        vec3 avg_pos = get_barycenter(is_mesh.get_nodes(fids));
-        vec3 new_pos = old_pos + alpha * (avg_pos - old_pos);
+            vec3 old_pos = is_mesh.get(nid).get_pos();
+            vec3 avg_pos = get_barycenter(is_mesh.get_nodes(fids));
+            vec3 new_pos = old_pos + alpha * (avg_pos - old_pos);
 
         double q_old, q_new;
         min_quality(fids, old_pos, new_pos, q_old, q_new);
@@ -1320,20 +1320,7 @@ namespace DSC {
     }
 
     vec3 DeformableSimplicialComplex::get_barycenter(const SimplexSet<NodeKey>& nids, bool interface) {
-        vec3 avg_pos(0.);
-        int i = 0;
-        for (auto n : nids)
-        {
-            if (!interface || is_mesh.get(n).is_interface())
-            {
-                avg_pos += is_mesh.get(n).get_pos();
-                i++;
-            }
-        }
-#ifdef DEBUG
-        assert(i != 0);
-#endif
-        return avg_pos / static_cast<double>(i);
+        return is_mesh.get_barycenter(nids, interface);
     }
 
     vec3 DeformableSimplicialComplex::get_barycenter(const NodeKey& nid, bool interface) {

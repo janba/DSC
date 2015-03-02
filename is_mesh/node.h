@@ -37,6 +37,8 @@ namespace is_mesh
 
         const SimplexSet<EdgeKey> & edge_keys() const noexcept;
 
+        const vec3 get_center() const;
+
         const vec3 & get_pos() const;
 
         const vec3 & get_destination() const;
@@ -51,6 +53,8 @@ namespace is_mesh
 
         bool is_interface() const noexcept;
 
+        vec3 smart_laplacian(double alpha = 1.) const;
+
         NodeKey key() const noexcept;
     private:
         void set_crossing(bool b);
@@ -60,5 +64,7 @@ namespace is_mesh
         void set_interface(bool b);
 
         friend class ISMesh;
+
+
     };
 }

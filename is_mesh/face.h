@@ -36,23 +36,25 @@ namespace is_mesh
 
         const SimplexSet<NodeKey> node_keys() const noexcept;
 
+        vec3 get_center() const;
+
         bool is_boundary() noexcept;
 
         bool is_interface() noexcept;
 
-        double area();
+        double area() const;
 
-        double area_destination();
+        double area_destination() const;
 
-        double min_angle();
+        double min_angle() const;
 
-        double max_angle();
+        double max_angle() const;
 
-        double quality();
+        double quality() const;
 
-        EdgeKey longest_edge();
+        EdgeKey longest_edge() const;
 
-        vec3 barycenter();
+        vec3 barycenter() const;
 
         FaceKey key() const noexcept;
     private:

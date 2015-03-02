@@ -9,6 +9,7 @@
 #include "is_mesh.h"
 #include "query.h"
 #include <vector>
+#include <chrono>
 
 bool equal(vec3 v1, vec3 v2){
 
@@ -105,5 +106,37 @@ int connectedTest() {
 
 
 
+    return 1;
+}
+
+
+int forEachTest(){
+    using namespace is_mesh;
+    vector<vec3> points2;
+    vector<int> tets2;
+    vector<int> tet_labels2;
+    import_tet_mesh( "data/blob-test.dsc", points2, tets2, tet_labels2);
+
+    ISMesh mesh(points2, tets2, tet_labels2);
+
+    auto fnSmooth = [](Node& node, int threadid){
+        node.set_pos(node.smart_laplacian());
+    };
+    typedef std::chrono::high_resolution_clock Clock;
+    auto t1 = Clock::now();
+
+    mesh.for_each_node_par(fnSmooth);
+    auto t2 = Clock::now();
+    mesh.for_each_node_par_sp(0.1, 0, fnSmooth);
+    auto t3 = Clock::now();
+    // naive
+    for (auto & node : mesh.nodes()){
+        node.set_pos(node.smart_laplacian());
+    }
+    auto t4 = Clock::now();
+
+    cout << "For each "<<std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << "ms"<< endl;
+    cout << "For each sp " << std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2).count() << "ms"<< endl;
+    cout << "Sequential " << std::chrono::duration_cast<std::chrono::milliseconds>(t4 - t3).count() << "ms"<< endl;
     return 1;
 }

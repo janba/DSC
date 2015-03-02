@@ -73,12 +73,12 @@ namespace is_mesh
         interface = b;
     }
 
-    double Edge::length() {
+    double Edge::length() const {
         const SimplexSet<NodeKey> & nids = node_keys();
         return Util::length(m_mesh->get(nids[0]).get_pos() - m_mesh->get(nids[1]).get_pos());
     }
 
-    double Edge::length_destination() {
+    double Edge::length_destination() const {
         const SimplexSet<NodeKey> & nids = node_keys();
         return Util::length(m_mesh->get(nids[0]).get_destination() - m_mesh->get(nids[1]).get_destination());
     }
@@ -88,5 +88,10 @@ namespace is_mesh
         assert(index >= 0);
         assert(index < m_mesh->m_edge_kernel.capacity());
         return EdgeKey((unsigned int) index);
+    }
+
+    vec3 Edge::get_center() const {
+        const SimplexSet<NodeKey> & nids = node_keys();
+        return (m_mesh->get(nids[0]).get_pos() + m_mesh->get(nids[1]).get_pos()) * 0.5;
     }
 }

@@ -36,15 +36,17 @@ namespace is_mesh
 
         const SimplexSet<FaceKey> & face_keys() const noexcept;
 
+        vec3 get_center() const;
+
         bool is_crossing() noexcept;
 
         bool is_boundary() noexcept;
 
         bool is_interface() noexcept;
 
-        double length();
+        double length() const;
 
-        double length_destination();
+        double length_destination() const;
 
         EdgeKey key() const noexcept;
     private:

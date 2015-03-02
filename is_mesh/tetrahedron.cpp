@@ -45,7 +45,7 @@ namespace is_mesh
         return get_boundary();
     }
 
-    int Tetrahedron::label() {
+    int Tetrahedron::label() const {
         return l;
     }
 
@@ -53,7 +53,7 @@ namespace is_mesh
         l = _label;
     }
 
-    double Tetrahedron::volume() {
+    double Tetrahedron::volume() const {
         SimplexSet<NodeKey> nids = node_keys();
         return Util::volume(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos(), m_mesh->get(nids[3]).get_pos());
     }
@@ -66,22 +66,22 @@ namespace is_mesh
 
     }
 
-    double Tetrahedron::volume_destination() {
+    double Tetrahedron::volume_destination() const {
         SimplexSet<NodeKey> nids = node_keys();
         return Util::volume(m_mesh->get(nids[0]).get_destination(), m_mesh->get(nids[1]).get_destination(), m_mesh->get(nids[2]).get_destination(), m_mesh->get(nids[3]).get_destination());
     }
 
-    vec3 Tetrahedron::barycenter() {
+    vec3 Tetrahedron::barycenter() const {
         SimplexSet<NodeKey> nids = node_keys();
         return Util::barycenter(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos(), m_mesh->get(nids[3]).get_pos());
     }
 
-    vec3 Tetrahedron::barycenter_destination() {
+    vec3 Tetrahedron::barycenter_destination() const {
         SimplexSet<NodeKey> nids = node_keys();
         return Util::barycenter(m_mesh->get(nids[0]).get_destination(), m_mesh->get(nids[1]).get_destination(), m_mesh->get(nids[2]).get_destination(), m_mesh->get(nids[3]).get_destination());
     }
 
-    double Tetrahedron::quality() {
+    double Tetrahedron::quality() const {
         SimplexSet<NodeKey> nids = node_keys();
         return fabs(Util::quality(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos(), m_mesh->get(nids[3]).get_pos()));
     }
@@ -91,5 +91,9 @@ namespace is_mesh
         assert(index >= 0);
         assert(index < m_mesh->m_tetrahedron_kernel.capacity());
         return TetrahedronKey((unsigned int) index);
+    }
+
+    vec3 Tetrahedron::get_center() const {
+        return barycenter();
     }
 }

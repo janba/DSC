@@ -454,10 +454,8 @@ namespace DSC {
         Returns the normal to interface node n.
         */
         vec3 get_normal(const is_mesh::NodeKey& nid);
-        /**
-        * Calculates the average position of the nodes in the simplex set nids.
-        * If interface is true, the average position is only calculated among the nodes which are interface.
-        */
+
+        DEPRECATED // use ISMesh::get_barycenter()
         vec3 get_barycenter(const is_mesh::SimplexSet<is_mesh::NodeKey>& nids, bool interface = false);
         /**
         * Calculates the average position of the neighbouring nodes to node n.

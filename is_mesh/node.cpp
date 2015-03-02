@@ -106,10 +106,23 @@ namespace is_mesh
         interface = b;
     }
 
+    vec3 Node::smart_laplacian(double alpha) const {
+        auto k = key();
+        SimplexSet<TetrahedronKey> tids = m_mesh->get_tets(k);
+        SimplexSet<FaceKey> fids = m_mesh->get_faces(tids) - m_mesh->get_faces(k);
+
+        vec3 avg_pos = m_mesh->get_barycenter(m_mesh->get_nodes(fids));
+        return p + alpha * (avg_pos - p);
+    }
+
     NodeKey Node::key() const noexcept {
         long index = ((char*)this - m_mesh->m_node_kernel.data())/sizeof(util::kernel_element<NodeKey, Node> );
         assert(index >= 0);
         assert(index < m_mesh->m_node_kernel.capacity());
         return NodeKey((unsigned int) index);
+    }
+
+    const vec3 Node::get_center() const {
+        return p;
     }
 }

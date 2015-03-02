@@ -59,7 +59,7 @@ namespace is_mesh
         interface = b;
     }
 
-    double Face::area() {
+    double Face::area() const {
         const SimplexSet<NodeKey>& nids = node_keys();
         return Util::area(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos());
     }
@@ -71,22 +71,22 @@ namespace is_mesh
         return nids;
     }
 
-    double Face::area_destination() {
+    double Face::area_destination() const {
         const SimplexSet<NodeKey>& nids = node_keys();
         return Util::area(m_mesh->get(nids[0]).get_destination(), m_mesh->get(nids[1]).get_destination(), m_mesh->get(nids[2]).get_destination());
     }
 
-    double Face::min_angle() {
+    double Face::min_angle() const {
         SimplexSet<NodeKey> nids = node_keys();
         return Util::min_angle(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos());
     }
 
-    double Face::max_angle() {
+    double Face::max_angle() const {
         SimplexSet<NodeKey> nids = node_keys();
         return Util::max_angle(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos());
     }
 
-    double Face::quality() {
+    double Face::quality() const {
         SimplexSet<NodeKey> nids = node_keys();
         auto angles = Util::cos_angles(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos());
         double worst_a = -INFINITY;
@@ -98,7 +98,7 @@ namespace is_mesh
     }
 
 
-    EdgeKey Face::longest_edge() {
+    EdgeKey Face::longest_edge() const {
         double max_l = -INFINITY;
         EdgeKey max_e;
         for(auto e : edge_keys())
@@ -113,7 +113,7 @@ namespace is_mesh
         return max_e;
     }
 
-    vec3 Face::barycenter() {
+    vec3 Face::barycenter() const {
         auto nids = node_keys();
         return Util::barycenter(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos());
     }
@@ -123,5 +123,9 @@ namespace is_mesh
         assert(index >= 0);
         assert(index < m_mesh->m_face_kernel.capacity());
         return FaceKey((unsigned int) index);
+    }
+
+    vec3 Face::get_center() const {
+        return barycenter();
     }
 }

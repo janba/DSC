@@ -11,3 +11,5 @@ int tetGenTest(void);
 
 int connectedTest(void);
 
+int forEachTest();
+

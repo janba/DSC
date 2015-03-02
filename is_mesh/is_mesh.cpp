@@ -1474,4 +1474,21 @@ namespace is_mesh{
             delete threads[i];
         }
     }
+
+    vec3 ISMesh::get_barycenter(const SimplexSet<NodeKey>& nids, bool interface) {
+        vec3 avg_pos(0.);
+        int i = 0;
+        for (auto n : nids)
+        {
+            if (!interface || get(n).is_interface())
+            {
+                avg_pos += get(n).get_pos();
+                i++;
+            }
+        }
+#ifdef DEBUG
+        assert(i != 0);
+#endif
+        return avg_pos / static_cast<double>(i);
+    }
 }

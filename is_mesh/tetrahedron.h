@@ -38,16 +38,18 @@ namespace is_mesh
 
         const SimplexSet<NodeKey> node_keys() const noexcept;
 
-        int label();
+        vec3 get_center() const;
 
-        double volume();
+        int label() const;
 
-        double volume_destination();
+        double volume() const;
 
-        vec3 barycenter();
-        vec3 barycenter_destination();
+        double volume_destination() const;
 
-        double quality();
+        vec3 barycenter() const;
+        vec3 barycenter_destination() const;
+
+        double quality() const;
 
         TetrahedronKey key() const noexcept;
 

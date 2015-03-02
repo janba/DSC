@@ -216,7 +216,7 @@ namespace is_mesh {
 
 
         void update_flag(const NodeKey & n);
-        
+
         //////////////////////
         // GETTER FUNCTIONS //
         //////////////////////
@@ -480,6 +480,11 @@ namespace is_mesh {
         }
         
     public:
+        /**
+        * Calculates the average position of the nodes in the simplex set nids.
+        * If interface is true, the average position is only calculated among the nodes which are interface.
+        */
+        vec3 get_barycenter(const SimplexSet<NodeKey>& nids, bool interface = false);
 
         NodeKey split(const EdgeKey& eid, const vec3& pos, const vec3& destination);
 
