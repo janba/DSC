@@ -36,6 +36,8 @@ namespace is_mesh {
 
     class Geometry;
 
+
+
     class ISMesh
     {
         kernel<NodeKey,Node> m_node_kernel;
@@ -86,15 +88,17 @@ namespace is_mesh {
     public:
         // Runs the function fn on each node simultaneously on many threads
         // Number of threads used is std::thread::hardware_concurrency()
-        void for_each_node_par(std::function<void(Node& node, int threadid)> fn);
+        template<typename value_type>
+        void for_each_par(std::function<void(value_type&,int)> fn);
 
-        // Space partitioned parallel for each
+            // Space partitioned parallel for each
         // Runs the function fn on each node simultaneously on many threads
         // Number of threads used is std::thread::hardware_concurrency()
         // partitionsize must be larger than twice the maximum node size
         // if node position is changed, the function fn may run twice for a single node
         // dimension is on which axis the space is partitioned (x,y or z)
-        void for_each_node_par_sp(double partitionsize,  int dimension, std::function<void(Node& node, int threadid)> fn);
+        template<typename value_type>
+        void for_each_par_sp(double partitionsize,  int dimension, std::function<void(value_type& node, int threadid)> fn);
 
         NodeIterator nodes() const;
 
@@ -133,6 +137,8 @@ namespace is_mesh {
         void set_label(const TetrahedronKey& tid, int label);
 
     private:
+        template<typename key_type, typename value_type>
+        kernel<key_type,value_type>& get_kernel();
 
         struct edge_key {
             int k1, k2;
@@ -556,5 +562,99 @@ namespace is_mesh {
         friend class Face;
         friend class Tetrahedron;
     };
-    
+
+
+    template<typename key_type, typename value_type>
+    inline void run_for_each_par(std::function<void(value_type&,int)> fn, kernel<key_type,value_type> *kernel, int from, int to, int threadid){
+        auto begin = kernel->find_iterator(key_type(from));
+        auto end = kernel->find_iterator(key_type(std::min(to, (int)kernel->capacity())));
+        for (auto iter = begin;iter!=end;iter++){
+            auto& n = *iter;
+            fn(n,threadid);
+        }
+    }
+
+    template<typename value_type>
+    inline void ISMesh::for_each_par(std::function<void(value_type&,int)> fn) {
+        using KeyType = decltype(std::declval<value_type>().key()); // the type of value().key()
+        auto kernel = &get_kernel<KeyType, value_type>();
+
+        int thread_count = std::thread::hardware_concurrency();
+
+        std::vector<std::thread*> threads;
+        int chunk_size = (int)ceil(kernel->capacity() / (float)(thread_count));
+
+        for (int i=0;i<thread_count;i++){
+            threads.push_back(new std::thread(run_for_each_par<KeyType, value_type>, fn, kernel, i*chunk_size,(1+i)*chunk_size, i));
+        }
+
+        for (int i=0;i<thread_count;i++){
+            threads[i]->join();
+            delete threads[i];
+        }
+    }
+
+    template<typename value_type, typename kernel_type>
+    inline void run_for_each_par_sp(std::function<void(value_type&,int)> fn, kernel_type* kernel,  double partitionsize, int max_threads, int dimension, int threadid, int actualthread){
+        for (auto &n : *kernel){
+            double p = n.get_center()[dimension];
+            double concur_partitionsize = partitionsize * max_threads;
+            if (p<0){
+                p += concur_partitionsize * (int)(ceil(-p/concur_partitionsize));
+            }
+            p = fmod(p , concur_partitionsize);
+            int run_in_thread = std::min((int)floor(p / partitionsize),max_threads-1);
+            if (run_in_thread == threadid){
+                fn(n,actualthread);
+            }
+        }
+    }
+
+    template<typename value_type>
+    inline void ISMesh::for_each_par_sp(double partitionsize, int dimension, std::function<void(value_type&,int)> fn) {
+        using KeyType = decltype(std::declval<value_type>().key()); // the type of value().key()
+        using KernelType = kernel<KeyType, value_type>;
+        auto kernel = &get_kernel<KeyType, value_type>();
+
+        int thread_count = std::thread::hardware_concurrency();
+
+        std::vector<std::thread*> threads;
+        for (int i=0;i<thread_count;i++){
+            threads.push_back(new std::thread(run_for_each_par_sp<value_type, KernelType>, fn, kernel, partitionsize,thread_count*2,dimension, i*2,i));
+        }
+        for (int i=0;i<thread_count;i++){
+            threads[i]->join();
+        }
+
+        for (int i=0;i<thread_count;i++){
+            delete threads[i];
+            threads[i] = new std::thread(run_for_each_par_sp<value_type, KernelType>, fn, kernel, partitionsize,thread_count*2,dimension, 1+i*2,i);
+        }
+        for (int i=0;i<thread_count;i++){
+            threads[i]->join();
+            delete threads[i];
+        }
+    }
+
+    template<>
+    inline kernel<NodeKey,Node>& ISMesh::get_kernel(){
+        return m_node_kernel;
+    }
+
+    template<>
+    inline kernel<EdgeKey,Edge>& ISMesh::get_kernel(){
+        return m_edge_kernel;
+    }
+
+    template<>
+    inline kernel<FaceKey,Face>& ISMesh::get_kernel(){
+        return m_face_kernel;
+    }
+
+    template<>
+    inline kernel<TetrahedronKey,Tetrahedron>& ISMesh::get_kernel(){
+        return m_tetrahedron_kernel;
+    }
+
+
 }

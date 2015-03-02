@@ -25,6 +25,7 @@
 #include <chrono>
 #include <random>
 #include <algorithm>
+#include <atomic>
 
 using namespace DSC;
 
@@ -366,6 +367,30 @@ void UI::keyboard(unsigned char key, int x, int y) {
                 dsc->get_is_mesh().validity_check();
             }
             painter->update(*dsc);
+        }
+            break;
+        case '8': {
+            std::atomic_int counter;
+            using type = is_mesh::Tetrahedron;
+            auto fnSmooth = [&](type& node, int threadid){
+                counter++;
+            };
+            typedef std::chrono::high_resolution_clock Clock;
+
+            auto t1 = Clock::now();
+            dsc->get_is_mesh().for_each_par<type>(fnSmooth);
+            auto t2 = Clock::now();
+            dsc->get_is_mesh().for_each_par_sp<type>(0.1, 0, fnSmooth);
+            auto t3 = Clock::now();
+            // naive
+            for (auto & node : dsc->get_is_mesh().tetrahedra()){
+                counter++;
+            }
+            auto t4 = Clock::now();
+
+            std::cout << "For each "<<std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << "microsec"<< std::endl;
+            std::cout << "For each sp " << std::chrono::duration_cast<std::chrono::microseconds	>(t3 - t2).count() << "microsec"<< std::endl;
+            std::cout << "Sequential " << std::chrono::duration_cast<std::chrono::microseconds	>(t4 - t3).count() << "microsec"<< std::endl;
         }
             break;
         case '9':

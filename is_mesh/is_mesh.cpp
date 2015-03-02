@@ -1414,67 +1414,6 @@ namespace is_mesh{
         }
     }
 
-    void run_for_each_node_par(std::function<void(Node&,int)> fn, kernel<NodeKey,Node> *node_kernel, int from, int to, int threadid){
-        auto begin = node_kernel->find_iterator(NodeKey(from));
-        auto end = node_kernel->find_iterator(NodeKey(std::min(to, (int)node_kernel->capacity())));
-        for (auto iter = begin;iter!=end;iter++){
-            auto& n = *iter;
-            fn(n,threadid);
-        }
-    }
-
-    void ISMesh::for_each_node_par(std::function<void(Node&,int)> fn) {
-        int thread_count = std::thread::hardware_concurrency();
-
-        vector<std::thread*> threads;
-        int chunk_size = (int)ceil(get_max_node_key() / (float)(thread_count));
-
-        for (int i=0;i<thread_count;i++){
-            threads.push_back(new thread(run_for_each_node_par, fn, &m_node_kernel, i*chunk_size,(1+i)*chunk_size, i));
-        }
-
-        for (int i=0;i<thread_count;i++){
-            threads[i]->join();
-            delete threads[i];
-        }
-    }
-
-    void run_for_each_node_par_sp(std::function<void(Node&,int)> fn, NodeIterator iter,  double partitionsize, int max_threads, int dimension, int threadid, int actualthread){
-        for (Node & n : iter){
-            double p = n.get_pos()[dimension];
-            double concur_partitionsize = partitionsize * max_threads;
-            if (p<0){
-                p += concur_partitionsize * (int)(ceil(-p/concur_partitionsize));
-            }
-            p = fmod(p , concur_partitionsize);
-            int run_in_thread = min((int)floor(p / partitionsize),max_threads-1);
-            if (run_in_thread == threadid){
-                fn(n,actualthread);
-            }
-        }
-    }
-
-    void ISMesh::for_each_node_par_sp(double partitionsize, int dimension, std::function<void(Node&,int)> fn) {
-        int thread_count = std::thread::hardware_concurrency();
-
-        vector<std::thread*> threads;
-        for (int i=0;i<thread_count;i++){
-            threads.push_back(new thread(run_for_each_node_par_sp, fn, nodes(), partitionsize,thread_count*2,dimension, i*2,i));
-        }
-        for (int i=0;i<thread_count;i++){
-            threads[i]->join();
-        }
-
-        for (int i=0;i<thread_count;i++){
-            delete threads[i];
-            threads[i] = new thread(run_for_each_node_par_sp, fn, nodes(), partitionsize,thread_count*2,dimension, 1+i*2,i);
-        }
-        for (int i=0;i<thread_count;i++){
-            threads[i]->join();
-            delete threads[i];
-        }
-    }
-
     vec3 ISMesh::get_barycenter(const SimplexSet<NodeKey>& nids, bool interface) {
         vec3 avg_pos(0.);
         int i = 0;
