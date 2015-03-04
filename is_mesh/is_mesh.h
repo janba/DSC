@@ -86,6 +86,14 @@ namespace is_mesh {
         // ITERATORS //
         ///////////////
     public:
+        std::vector<TetrahedronKey> find_par_tet(std::function<bool(Tetrahedron&)> include){ return find_par<TetrahedronKey,Tetrahedron>(include); }
+        std::vector<FaceKey> find_par_face(std::function<bool(Face&)> include){ return find_par<FaceKey,Face>(include); }
+        std::vector<EdgeKey> find_par_edge(std::function<bool(Edge&)> include){ return find_par<EdgeKey,Edge>(include); }
+        std::vector<NodeKey> find_par_node(std::function<bool(Node&)> include){ return find_par<NodeKey,Node>(include); }
+
+        template<typename key_type, typename value_type>
+        std::vector<key_type> find_par(std::function<bool(value_type&)> include);
+
         // Runs the function fn on each node simultaneously on many threads
         // Number of threads used is std::thread::hardware_concurrency()
         template<typename value_type>
@@ -592,6 +600,22 @@ namespace is_mesh {
             threads[i]->join();
             delete threads[i];
         }
+    }
+
+    template<typename key_type, typename value_type>
+    inline std::vector<key_type> ISMesh::find_par(std::function<bool(value_type&)> include){
+        std::vector<std::vector<key_type>> res_array(std::thread::hardware_concurrency(), {});
+        for_each_par<value_type>([&](value_type &value, int threadid){
+            if (include(value))
+            {
+                res_array[threadid].push_back(value.key());
+            }
+        });
+        std::vector<key_type> res;
+        for (auto & t:res_array){
+            res.insert(res.end(), t.begin(), t.end());
+        }
+        return res;
     }
 
     template<typename value_type, typename kernel_type>

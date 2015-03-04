@@ -44,13 +44,13 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::set_labels(const Geometry& geometry, int label) {
-        for (auto & tit : tetrahedra()) {
+        is_mesh.for_each_par<Tetrahedron>([&](Tetrahedron & tit, int threadid){
             SimplexSet<NodeKey> nids = is_mesh.get_nodes(tit.key());
             if(geometry.is_inside(Util::barycenter(is_mesh.get(nids[0]).get_pos(), is_mesh.get(nids[1]).get_pos(), is_mesh.get(nids[2]).get_pos(), is_mesh.get(nids[3]).get_pos())))
             {
                 is_mesh.set_label(tit.key(),label);
             }
-        }
+        });
     }
 
     void DeformableSimplicialComplex::print(const NodeKey& n) {
@@ -438,7 +438,9 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::topological_edge_removal() {
-        vector<TetrahedronKey> tets = get_low_quality_tets(pars.MIN_TET_QUALITY);
+        vector<TetrahedronKey> tets = is_mesh.find_par_tet([&](Tetrahedron& t){
+            return t.quality() < pars.MIN_TET_QUALITY;
+        });
 
         // Attempt to remove each edge of each tetrahedron in tets. Accept if it increases the minimum quality locally.
         int i = 0, j = 0, k = 0;
@@ -572,7 +574,9 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::topological_face_removal() {
-        vector<TetrahedronKey> tets = get_low_quality_tets(pars.MIN_TET_QUALITY);
+        vector<TetrahedronKey> tets = is_mesh.find_par_tet([&](Tetrahedron& t){
+            return t.quality() < pars.MIN_TET_QUALITY;
+        });
 
         // Attempt to remove each face of each remaining tetrahedron in tets using multi-face removal.
         // Accept if it increases the minimum quality locally.
@@ -609,14 +613,10 @@ namespace DSC {
             return;
         }
 
-        vector<EdgeKey> edges;
-        for (auto & eit : DeformableSimplicialComplex::edges())
-        {
-            if ((eit.is_interface() || eit.is_boundary()) && eit.length() > pars.MAX_LENGTH*AVG_LENGTH)
-            {
-                edges.push_back(eit.key());
-            }
-        }
+        vector<EdgeKey> edges = is_mesh.find_par_edge([&](Edge& eit){
+            return ((eit.is_interface() || eit.is_boundary()) && eit.length() > pars.MAX_LENGTH*AVG_LENGTH);
+        });
+
         int i = 0;
         for(auto &e : edges)
         {
@@ -637,14 +637,10 @@ namespace DSC {
             return;
         }
 
-        vector<TetrahedronKey> tetrahedra;
-        for (auto & tit : DeformableSimplicialComplex::tetrahedra())
-        {
-            if (tit.volume() > pars.MAX_VOLUME*AVG_VOLUME)
-            {
-                tetrahedra.push_back(tit.key());
-            }
-        }
+        vector<TetrahedronKey> tetrahedra = is_mesh.find_par_tet([&](Tetrahedron& tit){
+            return (tit.volume() > pars.MAX_VOLUME*AVG_VOLUME);
+        });
+
         int i = 0;
         for(auto &t : tetrahedra)
         {
@@ -665,14 +661,10 @@ namespace DSC {
             return;
         }
 
-        vector<EdgeKey> edges;
-        for (auto & eit : DeformableSimplicialComplex::edges())
-        {
-            if ((eit.is_interface() || eit.is_boundary()) && eit.length() < pars.MIN_LENGTH*AVG_LENGTH)
-            {
-                edges.push_back(eit.key());
-            }
-        }
+        vector<EdgeKey> edges = is_mesh.find_par_edge([&](Edge& eit){
+            return ((eit.is_interface() || eit.is_boundary()) && eit.length() < pars.MIN_LENGTH*AVG_LENGTH);
+        });
+
         int i = 0, j = 0;
         for(auto &e : edges)
         {
@@ -696,14 +688,10 @@ namespace DSC {
             return;
         }
 
-        vector<TetrahedronKey> tetrahedra;
-        for (auto & tit : DeformableSimplicialComplex::tetrahedra())
-        {
-            if (tit.volume() < pars.MIN_VOLUME*AVG_VOLUME)
-            {
-                tetrahedra.push_back(tit.key());
-            }
-        }
+        vector<TetrahedronKey> tetrahedra = is_mesh.find_par_tet([&](Tetrahedron& tit){
+            return (tit.volume() < pars.MIN_VOLUME*AVG_VOLUME);
+        });
+
         int i = 0, j = 0;
         for(auto &t : tetrahedra)
         {
@@ -722,14 +710,10 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::remove_degenerate_edges() {
-        list<EdgeKey> edges;
-        for (auto & eit : DeformableSimplicialComplex::edges())
-        {
-            if (quality(eit.key()) < pars.DEG_EDGE_QUALITY)
-            {
-                edges.push_back(eit.key());
-            }
-        }
+        vector<EdgeKey> edges = is_mesh.find_par_edge([&](Edge& eit){
+            return (quality(eit.key()) < pars.DEG_EDGE_QUALITY);
+        });
+
         int i = 0, j = 0;
         for(auto e : edges)
         {
@@ -749,15 +733,10 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::remove_degenerate_faces() {
-        list<FaceKey> faces;
+        auto faces = is_mesh.find_par_face([&](Face &f){
+            return f.quality() < pars.DEG_FACE_QUALITY;
+        });
 
-        for (auto & fit : DeformableSimplicialComplex::faces())
-        {
-            if(fit.quality() < pars.DEG_FACE_QUALITY)
-            {
-                faces.push_back(fit.key());
-            }
-        }
 
         int i = 0, j = 0;
         for (auto &f : faces)
@@ -785,7 +764,9 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::remove_degenerate_tets() {
-        vector<TetrahedronKey> tets = get_low_quality_tets(pars.DEG_TET_QUALITY);
+        vector<TetrahedronKey> tets = is_mesh.find_par_tet([&](Tetrahedron &t){
+            return t.quality() < pars.DEG_TET_QUALITY;
+        });
 
         int i = 0, j = 0;
         for (auto &t : tets)
@@ -813,14 +794,9 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::remove_low_quality_edges() {
-        list<EdgeKey> edges;
-        for (auto & eit : DeformableSimplicialComplex::edges())
-        {
-            if (quality(eit.key()) < pars.MIN_EDGE_QUALITY)
-            {
-                edges.push_back(eit.key());
-            }
-        }
+        vector<EdgeKey> edges = is_mesh.find_par_edge([&](Edge& eit){
+            return (quality(eit.key()) < pars.MIN_EDGE_QUALITY);
+        });
         int i = 0, j = 0;
         for(auto e : edges)
         {
@@ -874,15 +850,9 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::remove_low_quality_faces() {
-        list<FaceKey> faces;
-
-        for (auto & fit : DeformableSimplicialComplex::faces())
-        {
-            if(fit.quality() < pars.MIN_FACE_QUALITY)
-            {
-                faces.push_back(fit.key());
-            }
-        }
+        auto faces = is_mesh.find_par_face([&](Face &f){
+            return f.quality() < pars.MIN_FACE_QUALITY;
+        });
 
         int i = 0, j = 0;
         for (auto &f : faces)
