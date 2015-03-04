@@ -125,9 +125,9 @@ int forEachTest(){
     typedef std::chrono::high_resolution_clock Clock;
     auto t1 = Clock::now();
 
-    mesh.for_each_node_par(fnSmooth);
+    mesh.for_each_par<Node>(fnSmooth);
     auto t2 = Clock::now();
-    mesh.for_each_node_par_sp(0.1, 0, fnSmooth);
+    mesh.for_each_par_sp<Node>(0.1, 0, fnSmooth);
     auto t3 = Clock::now();
     // naive
     for (auto & node : mesh.nodes()){

@@ -1,4 +1,5 @@
 #include "DSC.h"
+#include "attribute_vector.h"
 
 using namespace is_mesh;
 using namespace std;
@@ -907,41 +908,38 @@ namespace DSC {
         is_mesh.garbage_collect();
     }
 
-    bool DeformableSimplicialComplex::smart_laplacian(const NodeKey& nid, double alpha) {
-            SimplexSet<TetrahedronKey> tids = is_mesh.get_tets(nid);
-            SimplexSet<FaceKey> fids = is_mesh.get_faces(tids) - is_mesh.get_faces(nid);
+    vec3 DeformableSimplicialComplex::smart_laplacian(const NodeKey& nid, double alpha) {
+        SimplexSet<TetrahedronKey> tids = is_mesh.get_tets(nid);
+        SimplexSet<FaceKey> fids = is_mesh.get_faces(tids) - is_mesh.get_faces(nid);
 
-            vec3 old_pos = is_mesh.get(nid).get_pos();
-            vec3 avg_pos = get_barycenter(is_mesh.get_nodes(fids));
-            vec3 new_pos = old_pos + alpha * (avg_pos - old_pos);
+        vec3 old_pos = is_mesh.get(nid).get_pos();
+        vec3 avg_pos = get_barycenter(is_mesh.get_nodes(fids));
+        vec3 new_pos = old_pos + alpha * (avg_pos - old_pos);
 
         double q_old, q_new;
         min_quality(fids, old_pos, new_pos, q_old, q_new);
         if(q_new > pars.MIN_TET_QUALITY || q_new > q_old)
         {
-            set_pos(nid, new_pos);
-            return true;
+            return new_pos;
         }
-        return false;
+        return old_pos;
     }
 
     void DeformableSimplicialComplex::smooth() {
-        int i = 0, j = 0;
+        AttributeVector<NodeKey, vec3> positions(is_mesh.get_max_node_key(), vec3(0,0,0));
 
+        is_mesh.for_each_par<Node>([&](Node& n, int threadid){
+            auto k = n.key();
+            if (is_safe_editable(k))
+            {
+                positions[k] = smart_laplacian(k);
+            }
+        });
         for (auto & nit : nodes())
         {
-            if (is_safe_editable(nit.key()))
-            {
-                if (smart_laplacian(nit.key()))
-                {
-                    i++;
-                }
-                j++;
-            }
+            auto k = nit.key();
+            set_pos(k, positions[k]);
         }
-#ifdef DEBUG
-        cout << "Smoothed: " << i << "/" << j << endl;
-#endif
     }
 
     void DeformableSimplicialComplex::fix_complex(bool optimizeMeshStructure) {

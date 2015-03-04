@@ -91,7 +91,7 @@ namespace is_mesh {
         template<typename value_type>
         void for_each_par(std::function<void(value_type&,int)> fn);
 
-            // Space partitioned parallel for each
+        // Space partitioned parallel for each
         // Runs the function fn on each node simultaneously on many threads
         // Number of threads used is std::thread::hardware_concurrency()
         // partitionsize must be larger than twice the maximum node size
@@ -655,6 +655,4 @@ namespace is_mesh {
     inline kernel<TetrahedronKey,Tetrahedron>& ISMesh::get_kernel(){
         return m_tetrahedron_kernel;
     }
-
-
 }

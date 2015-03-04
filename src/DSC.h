@@ -347,7 +347,7 @@ namespace DSC {
         /**
         * Performs Laplacian smoothing if it improves the minimum tetrahedron quality locally.
         */
-        bool smart_laplacian(const is_mesh::NodeKey& nid, double alpha = 1.);
+        vec3 smart_laplacian(const is_mesh::NodeKey& nid, double alpha = 1.);
 
         /**
         * Performs smart_laplacian smoothing on all editable nodes
