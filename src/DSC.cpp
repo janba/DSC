@@ -422,15 +422,23 @@ namespace DSC {
         return false;
     }
 
-    void DeformableSimplicialComplex::topological_edge_removal() {
-        vector<TetrahedronKey> tets;
-        for (auto & tit : tetrahedra())
-        {
-            if (tit.quality() < pars.MIN_TET_QUALITY)
+    std::vector<is_mesh::TetrahedronKey> DeformableSimplicialComplex::get_low_quality_tets(double quality_threshold) {
+        vector<vector<TetrahedronKey>> tets(std::thread::hardware_concurrency(), {});
+        is_mesh.for_each_par<Tetrahedron>([&](Tetrahedron &tit, int threadid){
+            if (tit.quality() < quality_threshold)
             {
-                tets.push_back(tit.key());
+                tets[threadid].push_back(tit.key());
             }
+        });
+        vector<TetrahedronKey> res;
+        for (auto & t:tets){
+            res.insert(res.end(), t.begin(), t.end());
         }
+        return res;
+    }
+
+    void DeformableSimplicialComplex::topological_edge_removal() {
+        vector<TetrahedronKey> tets = get_low_quality_tets(pars.MIN_TET_QUALITY);
 
         // Attempt to remove each edge of each tetrahedron in tets. Accept if it increases the minimum quality locally.
         int i = 0, j = 0, k = 0;
@@ -564,14 +572,7 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::topological_face_removal() {
-        vector<TetrahedronKey> tets;
-        for (auto & tit : tetrahedra())
-        {
-            if (tit.quality() < pars.MIN_TET_QUALITY)
-            {
-                tets.push_back(tit.key());
-            }
-        }
+        vector<TetrahedronKey> tets = get_low_quality_tets(pars.MIN_TET_QUALITY);
 
         // Attempt to remove each face of each remaining tetrahedron in tets using multi-face removal.
         // Accept if it increases the minimum quality locally.
@@ -784,15 +785,8 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::remove_degenerate_tets() {
-        vector<TetrahedronKey> tets;
+        vector<TetrahedronKey> tets = get_low_quality_tets(pars.DEG_TET_QUALITY);
 
-        for (auto & tit : DeformableSimplicialComplex::tetrahedra())
-        {
-            if (tit.quality() < pars.DEG_TET_QUALITY)
-            {
-                tets.push_back(tit.key());
-            }
-        }
         int i = 0, j = 0;
         for (auto &t : tets)
         {

@@ -566,8 +566,8 @@ namespace is_mesh {
 
     template<typename key_type, typename value_type>
     inline void run_for_each_par(std::function<void(value_type&,int)> fn, kernel<key_type,value_type> *kernel, int from, int to, int threadid){
-        auto begin = kernel->find_iterator(key_type(from));
-        auto end = kernel->find_iterator(key_type(std::min(to, (int)kernel->capacity())));
+        auto begin = kernel->find_valid_iterator(key_type(std::min(from, (int)kernel->capacity())));
+        auto end = kernel->find_valid_iterator(key_type(std::min(to, (int)kernel->capacity())));
         for (auto iter = begin;iter!=end;iter++){
             auto& n = *iter;
             fn(n,threadid);

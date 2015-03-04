@@ -254,14 +254,29 @@ namespace is_mesh
          */
         iterator find_iterator(key_type k)
         {
-            if (k>=m_data.size()){
-                return end();
-            } else if (is_valid(k))
+            if (is_valid(k))
                 return iterator(this, k);
             else
                 return end();
         }
-        
+
+        /**
+        * Converts a key or handle to an iterator pointing to the same cell.
+        *
+        * @param k     The handle of the cell.
+        */
+        iterator find_valid_iterator(key_type k)
+        {
+            if (k>=m_data.size()){
+                return end();
+            }
+            iterator res(this, k);
+            if (!is_valid(k)){
+                res++;
+            }
+            return end();
+        }
+
         /**
          * Returns a managed object. Beware of deallocating or other memory
          * handlings of the returned object, as this might lead to undefined

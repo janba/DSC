@@ -260,6 +260,8 @@ namespace DSC {
 
         bool topological_boundary_edge_removal(const is_mesh::EdgeKey& eid);
 
+        std::vector<is_mesh::TetrahedronKey> get_low_quality_tets(double quality_threshold);
+
         void topological_edge_removal();
         
         //////////////////////////////
