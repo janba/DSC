@@ -274,7 +274,7 @@ namespace is_mesh
             if (!is_valid(k)){
                 res++;
             }
-            return end();
+            return res;
         }
 
         /**

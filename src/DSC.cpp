@@ -422,21 +422,6 @@ namespace DSC {
         return false;
     }
 
-    std::vector<is_mesh::TetrahedronKey> DeformableSimplicialComplex::get_low_quality_tets(double quality_threshold) {
-        vector<vector<TetrahedronKey>> tets(std::thread::hardware_concurrency(), {});
-        is_mesh.for_each_par<Tetrahedron>([&](Tetrahedron &tit, int threadid){
-            if (tit.quality() < quality_threshold)
-            {
-                tets[threadid].push_back(tit.key());
-            }
-        });
-        vector<TetrahedronKey> res;
-        for (auto & t:tets){
-            res.insert(res.end(), t.begin(), t.end());
-        }
-        return res;
-    }
-
     void DeformableSimplicialComplex::topological_edge_removal() {
         vector<TetrahedronKey> tets = is_mesh.find_par_tet([&](Tetrahedron& t){
             return t.quality() < pars.MIN_TET_QUALITY;

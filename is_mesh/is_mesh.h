@@ -571,7 +571,6 @@ namespace is_mesh {
         friend class Tetrahedron;
     };
 
-
     template<typename key_type, typename value_type>
     inline void run_for_each_par(std::function<void(value_type&,int)> fn, kernel<key_type,value_type> *kernel, int from, int to, int threadid){
         auto begin = kernel->find_valid_iterator(key_type(std::min(from, (int)kernel->capacity())));
