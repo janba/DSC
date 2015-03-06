@@ -105,21 +105,31 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aac3aaafa6b017e15a0f05c56d284ca9d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aac3aaafa6b017e15a0f05c56d284ca9d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>rebuild_boundary_cache</b> ()</td></tr>
 <tr class="separator:aac3aaafa6b017e15a0f05c56d284ca9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aacc4dae13b8e5ccf3a765d50f382c94d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aacc4dae13b8e5ccf3a765d50f382c94d"></a>
-std::vector&lt; <a class="el" href="classis__mesh_1_1_node_key.html">NodeKey</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>neighborhood</b> (<a class="el" href="classis__mesh_1_1_node_key.html">NodeKey</a> from_node, double max_distance)</td></tr>
-<tr class="separator:aacc4dae13b8e5ccf3a765d50f382c94d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ebf979469b199f18d71d93f0ceedc7a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9ebf979469b199f18d71d93f0ceedc7a"></a>
-std::vector&lt; <a class="el" href="classis__mesh_1_1_node_key.html">NodeKey</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>neighborhood</b> (<a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a> from, double max_distance)</td></tr>
-<tr class="separator:a9ebf979469b199f18d71d93f0ceedc7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4c5031acec01d7bf94218d02744abfb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab4c5031acec01d7bf94218d02744abfb"></a>
-std::vector&lt; <a class="el" href="classis__mesh_1_1_edge_key.html">EdgeKey</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>edges</b> (std::vector&lt; <a class="el" href="classis__mesh_1_1_node_key.html">NodeKey</a> &gt; nodeKeys)</td></tr>
-<tr class="separator:ab4c5031acec01d7bf94218d02744abfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e8e8de009e131c2ca9c6c30c555a606"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8e8e8de009e131c2ca9c6c30c555a606"></a>
-std::vector&lt; <a class="el" href="classis__mesh_1_1_face_key.html">FaceKey</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>faces</b> (std::vector&lt; <a class="el" href="classis__mesh_1_1_edge_key.html">EdgeKey</a> &gt; edgeKeys)</td></tr>
-<tr class="separator:a8e8e8de009e131c2ca9c6c30c555a606"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9619fda1558dc984ec842c921e66a91"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af9619fda1558dc984ec842c921e66a91"></a>
-std::vector&lt; <a class="el" href="classis__mesh_1_1_tetrahedron_key.html">TetrahedronKey</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>tetrahedra</b> (std::vector&lt; <a class="el" href="classis__mesh_1_1_face_key.html">FaceKey</a> &gt; faceKeys)</td></tr>
-<tr class="separator:af9619fda1558dc984ec842c921e66a91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6e621d61342390d8cda64fbc1e91bb3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad6e621d61342390d8cda64fbc1e91bb3"></a>
+std::set&lt; <a class="el" href="classis__mesh_1_1_node_key.html">NodeKey</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>neighborhood</b> (<a class="el" href="classis__mesh_1_1_node_key.html">NodeKey</a> from_node, double max_distance)</td></tr>
+<tr class="separator:ad6e621d61342390d8cda64fbc1e91bb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a019a1dbe100d061f86d2d72b25cbd5ef"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a019a1dbe100d061f86d2d72b25cbd5ef"></a>
+std::set&lt; <a class="el" href="classis__mesh_1_1_node_key.html">NodeKey</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>neighborhood</b> (<a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a> from, double max_distance)</td></tr>
+<tr class="separator:a019a1dbe100d061f86d2d72b25cbd5ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fb5e38bd9bcf4b59428c316c70a83db"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0fb5e38bd9bcf4b59428c316c70a83db"></a>
+std::set&lt; <a class="el" href="classis__mesh_1_1_edge_key.html">EdgeKey</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>edges</b> (const std::set&lt; <a class="el" href="classis__mesh_1_1_node_key.html">NodeKey</a> &gt; nodeKeys)</td></tr>
+<tr class="separator:a0fb5e38bd9bcf4b59428c316c70a83db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abee58a1f9d5af8ba2a5de7f841ac8066"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abee58a1f9d5af8ba2a5de7f841ac8066"></a>
+std::set&lt; <a class="el" href="classis__mesh_1_1_face_key.html">FaceKey</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>faces</b> (const std::set&lt; <a class="el" href="classis__mesh_1_1_edge_key.html">EdgeKey</a> &gt; edgeKeys)</td></tr>
+<tr class="separator:abee58a1f9d5af8ba2a5de7f841ac8066"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23269853c9d07d452b806716c0a83252"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a23269853c9d07d452b806716c0a83252"></a>
+std::set&lt; <a class="el" href="classis__mesh_1_1_tetrahedron_key.html">TetrahedronKey</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>tetrahedra</b> (const std::set&lt; <a class="el" href="classis__mesh_1_1_face_key.html">FaceKey</a> &gt; faceKeys)</td></tr>
+<tr class="separator:a23269853c9d07d452b806716c0a83252"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac10043ab8b9105c4ab957bffa11f7d65"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac10043ab8b9105c4ab957bffa11f7d65"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>filter_subset</b> (std::set&lt; <a class="el" href="classis__mesh_1_1_node_key.html">NodeKey</a> &gt; &amp;nodes, std::set&lt; <a class="el" href="classis__mesh_1_1_edge_key.html">EdgeKey</a> &gt; &amp;edges, std::set&lt; <a class="el" href="classis__mesh_1_1_face_key.html">FaceKey</a> &gt; &amp;faces, std::set&lt; <a class="el" href="classis__mesh_1_1_tetrahedron_key.html">TetrahedronKey</a> &gt; &amp;tets)</td></tr>
+<tr class="separator:ac10043ab8b9105c4ab957bffa11f7d65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ab607b4eaf1ffdd7b6e017d66a69b86"><td class="memTemplParams" colspan="2"><a class="anchor" id="a5ab607b4eaf1ffdd7b6e017d66a69b86"></a>
+template&lt;typename K &gt; </td></tr>
+<tr class="memitem:a5ab607b4eaf1ffdd7b6e017d66a69b86"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classis__mesh_1_1_simplex_set.html">SimplexSet</a>&lt; K &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>connected</b> (K initialKey, std::function&lt; bool(K k)&gt; includeKey)</td></tr>
+<tr class="separator:a5ab607b4eaf1ffdd7b6e017d66a69b86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afad8aaac69bae08c7c586d68697bd1ca"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afad8aaac69bae08c7c586d68697bd1ca"></a>
+std::set&lt; <a class="el" href="classis__mesh_1_1_node_key.html">NodeKey</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>nodes</b> (<a class="el" href="classis__mesh_1_1_geometry.html">is_mesh::Geometry</a> *geometry)</td></tr>
+<tr class="separator:afad8aaac69bae08c7c586d68697bd1ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>is_mesh/<a class="el" href="query_8h_source.html">query.h</a></li>
@@ -128,7 +138,7 @@ std::vector&lt; <a class="el" href="classis__mesh_1_1_tetrahedron_key.html">Tetr
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 7 2015 15:33:44 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Mar 6 2015 16:04:27 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

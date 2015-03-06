@@ -2,7 +2,7 @@ var searchData=
 [
   ['identity_5fquatd',['identity_Quatd',['../class_c_g_l_a_1_1_quatd.html#a8fd9861066b54574d1dd54ffc690bb96',1,'CGLA::Quatd']]],
   ['identity_5fquatf',['identity_Quatf',['../class_c_g_l_a_1_1_quatf.html#a326a770162b2a773e4bdcc14f4383132',1,'CGLA::Quatf']]],
-  ['import_5fgeometry',['import_geometry',['../namespaceis__mesh.html#a189fdfda020213f32cbf5b3ce47fe3e5',1,'is_mesh']]],
+  ['import_5fgeometry',['import_geometry',['../namespaceis__mesh.html#a79f48e5232a4f0f87bee9521e598d023',1,'is_mesh']]],
   ['import_5fsurface_5fmesh',['import_surface_mesh',['../namespaceis__mesh.html#a9ac1b9514888d5e220aa5384e5c02cb6',1,'is_mesh']]],
   ['import_5ftet_5fmesh',['import_tet_mesh',['../namespaceis__mesh.html#a40aabc6e06db0fc38af39c9810ab2c8d',1,'is_mesh']]],
   ['import_5fvoxel_5fgrid',['import_voxel_grid',['../namespaceis__mesh.html#a5c85e45bbd0f43445f6800177d7c8f82',1,'is_mesh']]],

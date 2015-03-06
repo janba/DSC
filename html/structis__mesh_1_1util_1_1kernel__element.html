@@ -102,18 +102,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 Public Types</h2></td></tr>
 <tr class="memitem:a1bbe181301449a5444b5cb24eebc47e6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>state_type</b> { <b>VALID</b>, 
 <b>MARKED</b>, 
-<b>EMPTY</b>
+<b>EMPTY</b>, 
+<b>EXCLUDED</b>
  }</td></tr>
 <tr class="separator:a1bbe181301449a5444b5cb24eebc47e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33299111034f06908dab88a9c93a45ab"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a33299111034f06908dab88a9c93a45ab"></a>
-typedef value_t_&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b></td></tr>
-<tr class="separator:a33299111034f06908dab88a9c93a45ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af144eb8e942054855413d8189c2492e6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af144eb8e942054855413d8189c2492e6"></a>
-typedef key_t_&#160;</td><td class="memItemRight" valign="bottom"><b>key_type</b></td></tr>
-<tr class="separator:af144eb8e942054855413d8189c2492e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6eb20eefeac2316c8d4c6c4300805d09"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6eb20eefeac2316c8d4c6c4300805d09"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = value_t_</td></tr>
+<tr class="separator:a6eb20eefeac2316c8d4c6c4300805d09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a15e02a32c853fc38b76b4be7252fbebc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a15e02a32c853fc38b76b4be7252fbebc"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>kernel_element</b> (const <a class="el" href="structis__mesh_1_1util_1_1kernel__element.html">kernel_element</a> &amp;ke)=delete</td></tr>
+<tr class="separator:a15e02a32c853fc38b76b4be7252fbebc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aebda2a4e420f91ee6150a8c912b13fc3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aebda2a4e420f91ee6150a8c912b13fc3"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>kernel_element</b> (<a class="el" href="structis__mesh_1_1util_1_1kernel__element.html">kernel_element</a> &amp;&amp;ke)</td></tr>
 <tr class="separator:aebda2a4e420f91ee6150a8c912b13fc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -134,14 +135,14 @@ state_type&#160;</td><td class="memItemRight" valign="bottom"><b>state</b></td><
 <div class="textblock"><h3>template&lt;typename key_t_, typename value_t_&gt;<br/>
 struct is_mesh::util::kernel_element&lt; key_t_, value_t_ &gt;</h3>
 
-<p>Kernel Element struct A struct to hold the actual data along with auxiliary informations, like the state of af memory cell, and list pointers. </p>
+<p>Kernel Element struct A struct to hold the actual data along with the state of the memory cell. </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>is_mesh/<a class="el" href="kernel_8h_source.html">kernel.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 7 2015 15:33:45 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Mar 6 2015 16:04:27 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

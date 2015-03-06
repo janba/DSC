@@ -14,6 +14,6 @@ var searchData=
   ['simplexset_3c_20key_20_3e',['SimplexSet&lt; Key &gt;',['../classis__mesh_1_1_simplex_set.html',1,'is_mesh']]],
   ['simplexset_3c_20nodekey_20_3e',['SimplexSet&lt; NodeKey &gt;',['../classis__mesh_1_1_simplex_set.html',1,'is_mesh']]],
   ['simplexset_3c_20tetrahedronkey_20_3e',['SimplexSet&lt; TetrahedronKey &gt;',['../classis__mesh_1_1_simplex_set.html',1,'is_mesh']]],
-  ['square',['Square',['../classis__mesh_1_1_square.html',1,'is_mesh']]],
-  ['subdomain',['Subdomain',['../class_d_s_c_1_1_subdomain.html',1,'DSC']]]
+  ['sphere',['Sphere',['../classis__mesh_1_1_sphere.html',1,'is_mesh']]],
+  ['square',['Square',['../classis__mesh_1_1_square.html',1,'is_mesh']]]
 ];

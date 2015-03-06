@@ -118,60 +118,56 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">namespace </span>is_mesh {</div>
 <div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classis__mesh_1_1_node_iterator.html">   29</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classis__mesh_1_1_node_iterator.html">NodeIterator</a> {</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel.html">kernel&lt;NodeKey, Node&gt;</a> *m_node_kernel;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keyword">const</span> std::vector&lt;NodeKey&gt; *subset;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <a class="code" href="classis__mesh_1_1_node_iterator.html">NodeIterator</a>(<span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel.html">kernel&lt;NodeKey, Node&gt;</a> *m_node_kernel, <span class="keyword">const</span> std::vector&lt;NodeKey&gt; *subset);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keyword">typename</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">kernel&lt;NodeKey, Node&gt;::iterator</a> begin() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keyword">typename</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">kernel&lt;NodeKey, Node&gt;::iterator</a> end() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    };</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classis__mesh_1_1_edge_iterator.html">   40</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classis__mesh_1_1_edge_iterator.html">EdgeIterator</a> {</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel.html">kernel&lt;EdgeKey, Edge&gt;</a>* m_edge_kernel;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keyword">const</span> std::vector&lt;EdgeKey&gt; *subset;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <a class="code" href="classis__mesh_1_1_edge_iterator.html">EdgeIterator</a>(<span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel.html">kernel&lt;EdgeKey, Edge&gt;</a> *m_edge_kernel, <span class="keyword">const</span> std::vector&lt;EdgeKey&gt; *subset);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <a class="code" href="classis__mesh_1_1_node_iterator.html">NodeIterator</a>(<span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel.html">kernel&lt;NodeKey, Node&gt;</a> *m_node_kernel);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keyword">typename</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">kernel&lt;NodeKey, Node&gt;::iterator</a> begin() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keyword">typename</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">kernel&lt;NodeKey, Node&gt;::iterator</a> end() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    };</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="classis__mesh_1_1_edge_iterator.html">   39</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classis__mesh_1_1_edge_iterator.html">EdgeIterator</a> {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel.html">kernel&lt;EdgeKey, Edge&gt;</a>* m_edge_kernel;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <a class="code" href="classis__mesh_1_1_edge_iterator.html">EdgeIterator</a>(<span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel.html">kernel&lt;EdgeKey, Edge&gt;</a> *m_edge_kernel);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keyword">typename</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">kernel&lt;EdgeKey, Edge&gt;::iterator</a> begin() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keyword">typename</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">kernel&lt;EdgeKey, Edge&gt;::iterator</a> begin() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keyword">typename</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">kernel&lt;EdgeKey, Edge&gt;::iterator</a> end() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    };</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="classis__mesh_1_1_face_iterator.html">   51</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classis__mesh_1_1_face_iterator.html">FaceIterator</a> {</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel.html">kernel&lt;FaceKey, Face&gt;</a>* m_face_kernel;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keyword">const</span> std::vector&lt;FaceKey&gt; *subset;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <a class="code" href="classis__mesh_1_1_face_iterator.html">FaceIterator</a>(<span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel.html">kernel&lt;FaceKey, Face&gt;</a> *m_face_kernel, <span class="keyword">const</span> std::vector&lt;FaceKey&gt; *subset);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keyword">typename</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">kernel&lt;FaceKey, Face&gt;::iterator</a> begin() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keyword">typename</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">kernel&lt;FaceKey, Face&gt;::iterator</a> end() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    };</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="classis__mesh_1_1_tetrahedron_iterator.html">   63</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classis__mesh_1_1_tetrahedron_iterator.html">TetrahedronIterator</a> {</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel.html">kernel&lt;TetrahedronKey, Tetrahedron&gt;</a>* m_tetrahedron_kernel;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keyword">const</span> std::vector&lt;TetrahedronKey&gt; *subset;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <a class="code" href="classis__mesh_1_1_tetrahedron_iterator.html">TetrahedronIterator</a>(<span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel.html">kernel&lt;TetrahedronKey, Tetrahedron&gt;</a> *m_tetrahedron_kernel, <span class="keyword">const</span> std::vector&lt;TetrahedronKey&gt; *subset);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keyword">typename</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">kernel&lt;EdgeKey, Edge&gt;::iterator</a> end() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    };</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="classis__mesh_1_1_face_iterator.html">   49</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classis__mesh_1_1_face_iterator.html">FaceIterator</a> {</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel.html">kernel&lt;FaceKey, Face&gt;</a>* m_face_kernel;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <a class="code" href="classis__mesh_1_1_face_iterator.html">FaceIterator</a>(<span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel.html">kernel&lt;FaceKey, Face&gt;</a> *m_face_kernel);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keyword">typename</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">kernel&lt;FaceKey, Face&gt;::iterator</a> begin() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keyword">typename</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">kernel&lt;FaceKey, Face&gt;::iterator</a> end() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    };</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="classis__mesh_1_1_tetrahedron_iterator.html">   60</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classis__mesh_1_1_tetrahedron_iterator.html">TetrahedronIterator</a> {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel.html">kernel&lt;TetrahedronKey, Tetrahedron&gt;</a>* m_tetrahedron_kernel;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <a class="code" href="classis__mesh_1_1_tetrahedron_iterator.html">TetrahedronIterator</a>(<span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel.html">kernel&lt;TetrahedronKey, Tetrahedron&gt;</a> *m_tetrahedron_kernel);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keyword">typename</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">kernel&lt;TetrahedronKey, Tetrahedron&gt;::iterator</a> begin() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keyword">typename</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">kernel&lt;TetrahedronKey, Tetrahedron&gt;::iterator</a> end() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keyword">typename</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">kernel&lt;TetrahedronKey, Tetrahedron&gt;::iterator</a> begin() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keyword">typename</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">kernel&lt;TetrahedronKey, Tetrahedron&gt;::iterator</a> end() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    };</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;}</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    };</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;}</div>
 <div class="ttc" id="classis__mesh_1_1kernel__iterator_html"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html">is_mesh::kernel_iterator</a></div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:22</div></div>
-<div class="ttc" id="classis__mesh_1_1_tetrahedron_iterator_html"><div class="ttname"><a href="classis__mesh_1_1_tetrahedron_iterator.html">is_mesh::TetrahedronIterator</a></div><div class="ttdef"><b>Definition:</b> is_mesh_iterator.h:63</div></div>
-<div class="ttc" id="classis__mesh_1_1_face_iterator_html"><div class="ttname"><a href="classis__mesh_1_1_face_iterator.html">is_mesh::FaceIterator</a></div><div class="ttdef"><b>Definition:</b> is_mesh_iterator.h:51</div></div>
+<div class="ttc" id="classis__mesh_1_1_tetrahedron_iterator_html"><div class="ttname"><a href="classis__mesh_1_1_tetrahedron_iterator.html">is_mesh::TetrahedronIterator</a></div><div class="ttdef"><b>Definition:</b> is_mesh_iterator.h:60</div></div>
+<div class="ttc" id="classis__mesh_1_1_face_iterator_html"><div class="ttname"><a href="classis__mesh_1_1_face_iterator.html">is_mesh::FaceIterator</a></div><div class="ttdef"><b>Definition:</b> is_mesh_iterator.h:49</div></div>
 <div class="ttc" id="classis__mesh_1_1_node_iterator_html"><div class="ttname"><a href="classis__mesh_1_1_node_iterator.html">is_mesh::NodeIterator</a></div><div class="ttdef"><b>Definition:</b> is_mesh_iterator.h:29</div></div>
 <div class="ttc" id="classis__mesh_1_1kernel_html"><div class="ttname"><a href="classis__mesh_1_1kernel.html">is_mesh::kernel</a></div><div class="ttdef"><b>Definition:</b> kernel.h:80</div></div>
-<div class="ttc" id="classis__mesh_1_1_edge_iterator_html"><div class="ttname"><a href="classis__mesh_1_1_edge_iterator.html">is_mesh::EdgeIterator</a></div><div class="ttdef"><b>Definition:</b> is_mesh_iterator.h:40</div></div>
+<div class="ttc" id="classis__mesh_1_1_edge_iterator_html"><div class="ttname"><a href="classis__mesh_1_1_edge_iterator.html">is_mesh::EdgeIterator</a></div><div class="ttdef"><b>Definition:</b> is_mesh_iterator.h:39</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 7 2015 15:33:42 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Mar 6 2015 16:04:24 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

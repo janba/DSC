@@ -88,6 +88,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
@@ -103,6 +104,13 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#a2062d8f54a1bcb1e9c3b09fd5da358c8">DeformableSimplicialComplex</a> (std::vector&lt; <a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a> &gt; &amp;points, std::vector&lt; int &gt; &amp;tets, const std::vector&lt; int &gt; &amp;tet_labels)</td></tr>
 <tr class="memdesc:a2062d8f54a1bcb1e9c3b09fd5da358c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">SimplicialComplex constructor. <br/></td></tr>
 <tr class="separator:a2062d8f54a1bcb1e9c3b09fd5da358c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e3a9dfadb2ba4807aa8871d90b3b29d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2e3a9dfadb2ba4807aa8871d90b3b29d"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#a2e3a9dfadb2ba4807aa8871d90b3b29d">DeformableSimplicialComplex</a> (std::shared_ptr&lt; <a class="el" href="classis__mesh_1_1_i_s_mesh.html">is_mesh::ISMesh</a> &gt; ismesh)</td></tr>
+<tr class="memdesc:a2e3a9dfadb2ba4807aa8871d90b3b29d"><td class="mdescLeft">&#160;</td><td class="mdescRight">SimplicialComplex constructor. <br/></td></tr>
+<tr class="separator:a2e3a9dfadb2ba4807aa8871d90b3b29d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac625a57f6a82ac2f3810ff56596d2291"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac625a57f6a82ac2f3810ff56596d2291"></a>
+std::shared_ptr&lt; <a class="el" href="classis__mesh_1_1_i_s_mesh.html">is_mesh::ISMesh</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>get_shared_is_mesh</b> ()</td></tr>
+<tr class="separator:ac625a57f6a82ac2f3810ff56596d2291"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab70fe3dabbc7bbf5ed4c4c0bb41cd61c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab70fe3dabbc7bbf5ed4c4c0bb41cd61c"></a>
 <a class="el" href="classis__mesh_1_1_i_s_mesh.html">is_mesh::ISMesh</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_is_mesh</b> ()</td></tr>
 <tr class="separator:ab70fe3dabbc7bbf5ed4c4c0bb41cd61c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -112,21 +120,25 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>set_avg_edge_length</
 <tr class="memitem:adcf52b4299331f2bb30273d753b0468e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adcf52b4299331f2bb30273d753b0468e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>set_parameters</b> (<a class="el" href="structparameters.html">parameters</a> pars_)</td></tr>
 <tr class="separator:adcf52b4299331f2bb30273d753b0468e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8cf56cea7d469296ae17c8bf10a3f12"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac8cf56cea7d469296ae17c8bf10a3f12"></a>
+<a class="el" href="structparameters.html">parameters</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_parameters</b> ()</td></tr>
+<tr class="separator:ac8cf56cea7d469296ae17c8bf10a3f12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a97511ea025286e26a771f98f27cbfa6c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a97511ea025286e26a771f98f27cbfa6c"></a>
 DEPRECATED void&#160;</td><td class="memItemRight" valign="bottom"><b>set_design_domain</b> (<a class="el" href="classis__mesh_1_1_geometry.html">is_mesh::Geometry</a> *geometry)</td></tr>
 <tr class="separator:a97511ea025286e26a771f98f27cbfa6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abef2e4162dead25f8cf88c28c791f923"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abef2e4162dead25f8cf88c28c791f923"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>add_design_domain</b> (<a class="el" href="classis__mesh_1_1_geometry.html">is_mesh::Geometry</a> *geometry)</td></tr>
-<tr class="separator:abef2e4162dead25f8cf88c28c791f923"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a440bbf6c403b784122eaeada1cd8ab42"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a440bbf6c403b784122eaeada1cd8ab42"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>set_subdomain</b> (<a class="el" href="class_d_s_c_1_1_subdomain.html">Subdomain</a> *subdomain)</td></tr>
-<tr class="separator:a440bbf6c403b784122eaeada1cd8ab42"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48db70cfe4c7cacdf91ae71134c3d1d1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a48db70cfe4c7cacdf91ae71134c3d1d1"></a>
-<a class="el" href="class_d_s_c_1_1_subdomain.html">Subdomain</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_subdomain</b> ()</td></tr>
-<tr class="separator:a48db70cfe4c7cacdf91ae71134c3d1d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8eeba1ca39e1a9bd0726b4c1fdde8d6a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8eeba1ca39e1a9bd0726b4c1fdde8d6a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>add_design_domain</b> (std::shared_ptr&lt; <a class="el" href="classis__mesh_1_1_geometry.html">is_mesh::Geometry</a> &gt; geometry)</td></tr>
+<tr class="separator:a8eeba1ca39e1a9bd0726b4c1fdde8d6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8618a7ecfeea196525e594332ccaf16b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8618a7ecfeea196525e594332ccaf16b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_subdomain</b> (std::shared_ptr&lt; <a class="el" href="classis__mesh_1_1_geometry.html">is_mesh::Geometry</a> &gt; subdomain)</td></tr>
+<tr class="separator:a8618a7ecfeea196525e594332ccaf16b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f51f677ec14729f7707d7ce82b5f744"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4f51f677ec14729f7707d7ce82b5f744"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clear_subdomain</b> ()</td></tr>
 <tr class="separator:a4f51f677ec14729f7707d7ce82b5f744"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6db5c841e7d05e2bd730fd7dbc909ba"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae6db5c841e7d05e2bd730fd7dbc909ba"></a>
+std::shared_ptr<br class="typebreak"/>
+&lt; <a class="el" href="classis__mesh_1_1_geometry.html">is_mesh::Geometry</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>get_subdomain</b> ()</td></tr>
+<tr class="separator:ae6db5c841e7d05e2bd730fd7dbc909ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb44bc91654f8a2a7a1ad7950304766d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afb44bc91654f8a2a7a1ad7950304766d"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>set_labels</b> (const <a class="el" href="classis__mesh_1_1_geometry.html">is_mesh::Geometry</a> &amp;geometry, int label)</td></tr>
 <tr class="separator:afb44bc91654f8a2a7a1ad7950304766d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -147,9 +159,6 @@ virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_movable</b
 <tr class="memitem:acb33d5ae6d59776f7ce54df40d16ef85"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acb33d5ae6d59776f7ce54df40d16ef85"></a>
 <a class="el" href="classis__mesh_1_1_tetrahedron_iterator.html">is_mesh::TetrahedronIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>tetrahedra</b> () const </td></tr>
 <tr class="separator:acb33d5ae6d59776f7ce54df40d16ef85"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1274f0433350de593cecc80bb655a7e3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1274f0433350de593cecc80bb655a7e3"></a>
-<a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_center</b> () const </td></tr>
-<tr class="separator:a1274f0433350de593cecc80bb655a7e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad486b912e42411cea7776f420925f439"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad486b912e42411cea7776f420925f439"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>get_min_tet_quality</b> () const </td></tr>
 <tr class="separator:ad486b912e42411cea7776f420925f439"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -168,8 +177,8 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>get_avg_edge_length
 <tr class="memitem:a22bc19bbbae3b6ba0cedc2172fb689ff"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a22bc19bbbae3b6ba0cedc2172fb689ff"></a>
 const <a class="el" href="classis__mesh_1_1_multiple_geometry.html">is_mesh::MultipleGeometry</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_design_domain</b> () const </td></tr>
 <tr class="separator:a22bc19bbbae3b6ba0cedc2172fb689ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa084c4aa96d753ba1356c6c53067972d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#aa084c4aa96d753ba1356c6c53067972d">deform</a> (int num_steps=10)</td></tr>
-<tr class="separator:aa084c4aa96d753ba1356c6c53067972d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a753b765c187ccd807ed5c930e7a5eaaf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#a753b765c187ccd807ed5c930e7a5eaaf">deform</a> (int num_steps=10, bool optimizeMeshStructure=true)</td></tr>
+<tr class="separator:a753b765c187ccd807ed5c930e7a5eaaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba29293c9de62520f192a6f9e10dd705"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#aba29293c9de62520f192a6f9e10dd705">intersection_with_link</a> (const <a class="el" href="classis__mesh_1_1_node_key.html">is_mesh::NodeKey</a> &amp;n, const <a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a> &amp;destination)</td></tr>
 <tr class="separator:aba29293c9de62520f192a6f9e10dd705"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a09252f6f510b8526be26254376179526"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classis__mesh_1_1_node_key.html">is_mesh::NodeKey</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#a09252f6f510b8526be26254376179526">split</a> (const <a class="el" href="classis__mesh_1_1_tetrahedron_key.html">is_mesh::TetrahedronKey</a> &amp;tid)</td></tr>
@@ -185,7 +194,8 @@ std::vector&lt; <a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a> &gt;&
 <tr class="separator:a45f5bc17a8b044fa21f3ebe40e9f180b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87a822c3c7ee0350d03c946cb5932076"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#a87a822c3c7ee0350d03c946cb5932076">get_normal</a> (const <a class="el" href="classis__mesh_1_1_node_key.html">is_mesh::NodeKey</a> &amp;nid)</td></tr>
 <tr class="separator:a87a822c3c7ee0350d03c946cb5932076"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53446962ad2b4b5f92fc65f0a3b269a1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#a53446962ad2b4b5f92fc65f0a3b269a1">get_barycenter</a> (const <a class="el" href="classis__mesh_1_1_simplex_set.html">is_mesh::SimplexSet</a>&lt; <a class="el" href="classis__mesh_1_1_node_key.html">is_mesh::NodeKey</a> &gt; &amp;nids, bool interface=false)</td></tr>
+<tr class="memitem:a53446962ad2b4b5f92fc65f0a3b269a1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a53446962ad2b4b5f92fc65f0a3b269a1"></a>
+DEPRECATED <a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_barycenter</b> (const <a class="el" href="classis__mesh_1_1_simplex_set.html">is_mesh::SimplexSet</a>&lt; <a class="el" href="classis__mesh_1_1_node_key.html">is_mesh::NodeKey</a> &gt; &amp;nids, bool interface=false)</td></tr>
 <tr class="separator:a53446962ad2b4b5f92fc65f0a3b269a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7ff5590cc9812546dcb730d8fb93004"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#ab7ff5590cc9812546dcb730d8fb93004">get_barycenter</a> (const <a class="el" href="classis__mesh_1_1_node_key.html">is_mesh::NodeKey</a> &amp;nid, bool interface=false)</td></tr>
 <tr class="separator:ab7ff5590cc9812546dcb730d8fb93004"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -299,6 +309,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>test_flip44</b> ()</t
 void&#160;</td><td class="memItemRight" valign="bottom"><b>test_flip22</b> ()</td></tr>
 <tr class="separator:afaa7c40778e3f13b3d7da6fdb9fcd3b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ab2c6f149839ab27d31d7ccc3f4358f99"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab2c6f149839ab27d31d7ccc3f4358f99"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>header_version</b> ()</td></tr>
+<tr class="separator:ab2c6f149839ab27d31d7ccc3f4358f99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a489d5a49dce8c1d42d05f16a2959ac88"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a489d5a49dce8c1d42d05f16a2959ac88"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>lib_version</b> ()</td></tr>
+<tr class="separator:a489d5a49dce8c1d42d05f16a2959ac88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a3a3c7157651d920c92a58caa4cb13a59"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3a3c7157651d920c92a58caa4cb13a59"></a>
@@ -335,15 +354,15 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:aafcf441b12ee9ec99b4fa21f0a93fc07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad50160c91db9cd10fa642ad2cb23284c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#ad50160c91db9cd10fa642ad2cb23284c">set_pos</a> (const <a class="el" href="classis__mesh_1_1_node_key.html">is_mesh::NodeKey</a> &amp;nid, const <a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a> &amp;p)</td></tr>
 <tr class="separator:ad50160c91db9cd10fa642ad2cb23284c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a94b5150d4bf7580227516bf7ae95bb39"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a94b5150d4bf7580227516bf7ae95bb39"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>on_gc</b> (const <a class="el" href="structis__mesh_1_1_garbage_collect_deletions.html">is_mesh::GarbageCollectDeletions</a> &amp;gc)</td></tr>
-<tr class="separator:a94b5150d4bf7580227516bf7ae95bb39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a95874892e4faec8b9bd9c94634852f90"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a95874892e4faec8b9bd9c94634852f90"></a>
-<a class="el" href="classis__mesh_1_1_i_s_mesh.html">is_mesh::ISMesh</a>&#160;</td><td class="memItemRight" valign="bottom"><b>is_mesh</b></td></tr>
-<tr class="separator:a95874892e4faec8b9bd9c94634852f90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3674ee85489c1e310ca54e08c18c1951"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3674ee85489c1e310ca54e08c18c1951"></a>
+std::shared_ptr&lt; <a class="el" href="classis__mesh_1_1_i_s_mesh.html">is_mesh::ISMesh</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>is_mesh_ptr</b></td></tr>
+<tr class="separator:a3674ee85489c1e310ca54e08c18c1951"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5c2d8243e2713f58d68ab49db7db3ec"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab5c2d8243e2713f58d68ab49db7db3ec"></a>
+<a class="el" href="classis__mesh_1_1_i_s_mesh.html">is_mesh::ISMesh</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>is_mesh</b></td></tr>
+<tr class="separator:ab5c2d8243e2713f58d68ab49db7db3ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1b10f1e8d413213571136ffc2a55bc9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab1b10f1e8d413213571136ffc2a55bc9"></a>
 <a class="el" href="classis__mesh_1_1_multiple_geometry.html">is_mesh::MultipleGeometry</a>&#160;</td><td class="memItemRight" valign="bottom"><b>design_domain</b></td></tr>
 <tr class="separator:ab1b10f1e8d413213571136ffc2a55bc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -362,9 +381,6 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>FLIP_EDGE_INTERFACE
 <tr class="memitem:abbfefbe7d3b80eb7bef5d6ade4e6fcb8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abbfefbe7d3b80eb7bef5d6ade4e6fcb8"></a>
 <a class="el" href="structparameters.html">parameters</a>&#160;</td><td class="memItemRight" valign="bottom"><b>pars</b></td></tr>
 <tr class="separator:abbfefbe7d3b80eb7bef5d6ade4e6fcb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb68251f4231b2b0c7fb9bb63e85a316"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afb68251f4231b2b0c7fb9bb63e85a316"></a>
-<a class="el" href="class_d_s_c_1_1_subdomain.html">Subdomain</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>subdomain</b> = nullptr</td></tr>
-<tr class="separator:afb68251f4231b2b0c7fb9bb63e85a316"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="a7fce5fa9064d3a43a63adda95b8743f7"></a>
@@ -394,7 +410,7 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>FLIP_EDGE_INTERFACE
 
 </div>
 </div>
-<a class="anchor" id="aa084c4aa96d753ba1356c6c53067972d"></a>
+<a class="anchor" id="a753b765c187ccd807ed5c930e7a5eaaf"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -402,8 +418,18 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>FLIP_EDGE_INTERFACE
           <td class="memname">void DSC::DeformableSimplicialComplex::deform </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>num_steps</em> = <code>10</code></td><td>)</td>
+          <td class="paramname"><em>num_steps</em> = <code>10</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>optimizeMeshStructure</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -435,33 +461,6 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>FLIP_EDGE_INTERFACE
       </table>
 </div><div class="memdoc">
 <p>Returns the dihedral angle between face f1 and face f2. </p>
-
-</div>
-</div>
-<a class="anchor" id="a53446962ad2b4b5f92fc65f0a3b269a1"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a> DSC::DeformableSimplicialComplex::get_barycenter </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classis__mesh_1_1_simplex_set.html">is_mesh::SimplexSet</a>&lt; <a class="el" href="classis__mesh_1_1_node_key.html">is_mesh::NodeKey</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>nids</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>interface</em> = <code>false</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Calculates the average position of the nodes in the simplex set nids. If interface is true, the average position is only calculated among the nodes which are interface. </p>
 
 </div>
 </div>
@@ -607,7 +606,7 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>FLIP_EDGE_INTERFACE
   </tr>
 </table>
 </div><div class="memdoc">
-<p>key exists and is non interface </p>
+<p>key exists and is non interface and non boundary </p>
 
 </div>
 </div>
@@ -632,7 +631,7 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>FLIP_EDGE_INTERFACE
   </tr>
 </table>
 </div><div class="memdoc">
-<p>key exists and is non interface </p>
+<p>key exists and is non interface and non boundary </p>
 
 </div>
 </div>
@@ -657,7 +656,7 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>FLIP_EDGE_INTERFACE
   </tr>
 </table>
 </div><div class="memdoc">
-<p>key exists and is non interface </p>
+<p>key exists and is non interface and non boundary </p>
 
 </div>
 </div>
@@ -1007,7 +1006,7 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>FLIP_EDGE_INTERFACE
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Sets the destination where the node n is moved to when <a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#aa084c4aa96d753ba1356c6c53067972d">deform()</a> is called. </p>
+<p>Sets the destination where the node n is moved to when <a class="el" href="class_d_s_c_1_1_deformable_simplicial_complex.html#a753b765c187ccd807ed5c930e7a5eaaf">deform()</a> is called. </p>
 
 </div>
 </div>
@@ -1121,7 +1120,7 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>FLIP_EDGE_INTERFACE
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 7 2015 15:33:44 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Mar 6 2015 16:04:26 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

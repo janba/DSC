@@ -21,8 +21,8 @@ var searchData=
   ['simplexset_3c_20nodekey_20_3e',['SimplexSet&lt; NodeKey &gt;',['../classis__mesh_1_1_simplex_set.html',1,'is_mesh']]],
   ['simplexset_3c_20tetrahedronkey_20_3e',['SimplexSet&lt; TetrahedronKey &gt;',['../classis__mesh_1_1_simplex_set.html',1,'is_mesh']]],
   ['size',['size',['../classis__mesh_1_1kernel.html#a2c53e3725f14691c74523ccfe7b90c68',1,'is_mesh::kernel']]],
+  ['sphere',['Sphere',['../classis__mesh_1_1_sphere.html',1,'is_mesh']]],
   ['split',['split',['../class_d_s_c_1_1_deformable_simplicial_complex.html#a09252f6f510b8526be26254376179526',1,'DSC::DeformableSimplicialComplex::split(const is_mesh::TetrahedronKey &amp;tid)'],['../class_d_s_c_1_1_deformable_simplicial_complex.html#ae85c489431c138c2fc09150314f6ecb2',1,'DSC::DeformableSimplicialComplex::split(const is_mesh::FaceKey &amp;fid)'],['../class_d_s_c_1_1_deformable_simplicial_complex.html#af0f01392e80bd03e9768eea37dcfaa90',1,'DSC::DeformableSimplicialComplex::split(const is_mesh::EdgeKey &amp;eid)']]],
   ['square',['Square',['../classis__mesh_1_1_square.html',1,'is_mesh']]],
-  ['statistics_2eh',['statistics.h',['../statistics_8h.html',1,'']]],
-  ['subdomain',['Subdomain',['../class_d_s_c_1_1_subdomain.html',1,'DSC']]]
+  ['statistics_2eh',['statistics.h',['../statistics_8h.html',1,'']]]
 ];

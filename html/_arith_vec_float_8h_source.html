@@ -106,23 +106,23 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    {</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <a class="code" href="class_c_g_l_a_1_1_arith_vec_float.html">ArithVecFloat</a>() </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <a class="code" href="class_c_g_l_a_1_1_arith_vec_float.html">ArithVecFloat</a>() noexcept</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        {</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#ifndef NDEBUG</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor"></span>            std::fill_n(this-&gt;<a class="code" href="class_c_g_l_a_1_1_arith_vec.html#ac5e05fda0ab10d10de442f76ba309807">data</a>, N, <a class="code" href="_c_g_l_a_8h.html#a5cd5efa96b8c4c17186e50306b4139de">CGLA_INIT_VALUE</a>);</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor"></span>        }</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <a class="code" href="class_c_g_l_a_1_1_arith_vec_float.html">ArithVecFloat</a>(T a): </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <a class="code" href="class_c_g_l_a_1_1_arith_vec_float.html">ArithVecFloat</a>(T a) noexcept:</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <a class="code" href="class_c_g_l_a_1_1_arith_vec.html">ArithVec&lt;T,V,N&gt;</a>(a) {}</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <a class="code" href="class_c_g_l_a_1_1_arith_vec_float.html">ArithVecFloat</a>(T a, T b): </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <a class="code" href="class_c_g_l_a_1_1_arith_vec_float.html">ArithVecFloat</a>(T a, T b) noexcept:</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <a class="code" href="class_c_g_l_a_1_1_arith_vec.html">ArithVec&lt;T,V,N&gt;</a>(a,b) {}</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <a class="code" href="class_c_g_l_a_1_1_arith_vec_float.html">ArithVecFloat</a>(T a, T b, T c): </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <a class="code" href="class_c_g_l_a_1_1_arith_vec_float.html">ArithVecFloat</a>(T a, T b, T c) noexcept:</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <a class="code" href="class_c_g_l_a_1_1_arith_vec.html">ArithVec&lt;T,V,N&gt;</a>(a,b,c) {}</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <a class="code" href="class_c_g_l_a_1_1_arith_vec_float.html">ArithVecFloat</a>(T a, T b, T c, T d): </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <a class="code" href="class_c_g_l_a_1_1_arith_vec_float.html">ArithVecFloat</a>(T a, T b, T c, T d) noexcept:</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <a class="code" href="class_c_g_l_a_1_1_arith_vec.html">ArithVec&lt;T,V,N&gt;</a>(a,b,c,d) {}</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        </div>
 <div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="class_c_g_l_a_1_1_arith_vec_float.html#a181b7f7302bffd880b65adfe824d4d95">   43</a></span>&#160;        T <a class="code" href="class_c_g_l_a_1_1_arith_vec_float.html#a181b7f7302bffd880b65adfe824d4d95">length</a>()<span class="keyword"> const </span></div>
@@ -170,7 +170,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor"></span></div>
-<div class="ttc" id="_c_g_l_a_8h_html_a5cd5efa96b8c4c17186e50306b4139de"><div class="ttname"><a href="_c_g_l_a_8h.html#a5cd5efa96b8c4c17186e50306b4139de">CGLA_INIT_VALUE</a></div><div class="ttdeci">#define CGLA_INIT_VALUE</div><div class="ttdef"><b>Definition:</b> CGLA.h:47</div></div>
+<div class="ttc" id="_c_g_l_a_8h_html_a5cd5efa96b8c4c17186e50306b4139de"><div class="ttname"><a href="_c_g_l_a_8h.html#a5cd5efa96b8c4c17186e50306b4139de">CGLA_INIT_VALUE</a></div><div class="ttdeci">#define CGLA_INIT_VALUE</div><div class="ttdef"><b>Definition:</b> CGLA.h:46</div></div>
 <div class="ttc" id="class_c_g_l_a_1_1_arith_vec_float_html"><div class="ttname"><a href="class_c_g_l_a_1_1_arith_vec_float.html">CGLA::ArithVecFloat</a></div><div class="ttdef"><b>Definition:</b> ArithVecFloat.h:19</div></div>
 <div class="ttc" id="class_c_g_l_a_1_1_arith_vec_float_html_a181b7f7302bffd880b65adfe824d4d95"><div class="ttname"><a href="class_c_g_l_a_1_1_arith_vec_float.html#a181b7f7302bffd880b65adfe824d4d95">CGLA::ArithVecFloat::length</a></div><div class="ttdeci">T length() const </div><div class="ttdoc">Compute Euclidean length. </div><div class="ttdef"><b>Definition:</b> ArithVecFloat.h:43</div></div>
 <div class="ttc" id="class_c_g_l_a_1_1_arith_vec_float_html_a0eef9fb98c2c5dee4777b4c1c308cbc0"><div class="ttname"><a href="class_c_g_l_a_1_1_arith_vec_float.html#a0eef9fb98c2c5dee4777b4c1c308cbc0">CGLA::ArithVecFloat::normalize</a></div><div class="ttdeci">void normalize()</div><div class="ttdoc">Normalize vector. </div><div class="ttdef"><b>Definition:</b> ArithVecFloat.h:49</div></div>
@@ -181,7 +181,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 7 2015 15:33:41 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Mar 6 2015 16:04:23 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

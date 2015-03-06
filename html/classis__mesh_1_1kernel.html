@@ -100,21 +100,21 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ae9e758d0cf845f4d3c95089d03152dd6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae9e758d0cf845f4d3c95089d03152dd6"></a>
-typedef <a class="el" href="classis__mesh_1_1kernel.html">kernel</a>&lt; key_type, <br class="typebreak"/>
-value_type &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>kernel_type</b></td></tr>
-<tr class="separator:ae9e758d0cf845f4d3c95089d03152dd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a997e715c6a13d058ee4a8cca278fd654"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a997e715c6a13d058ee4a8cca278fd654"></a>
-typedef <a class="el" href="structis__mesh_1_1util_1_1kernel__element.html">util::kernel_element</a><br class="typebreak"/>
-&lt; key_type, value_type &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>kernel_element</b></td></tr>
-<tr class="separator:a997e715c6a13d058ee4a8cca278fd654"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb8df61d7a72611e4d19a982468f8fac"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adb8df61d7a72611e4d19a982468f8fac"></a>
-typedef <a class="el" href="classis__mesh_1_1kernel__iterator.html">kernel_iterator</a><br class="typebreak"/>
-&lt; <a class="el" href="classis__mesh_1_1kernel.html">kernel_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>iterator</b></td></tr>
-<tr class="separator:adb8df61d7a72611e4d19a982468f8fac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea3bfc910f2ecd9c2cdb6c3710f50c50"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aea3bfc910f2ecd9c2cdb6c3710f50c50"></a>
-typedef <a class="el" href="classis__mesh_1_1kernel__iterator.html">iterator</a> const&#160;</td><td class="memItemRight" valign="bottom"><b>const_iterator</b></td></tr>
-<tr class="separator:aea3bfc910f2ecd9c2cdb6c3710f50c50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e4f86d456e615f8d64bcd5d71c9ac43"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8e4f86d456e615f8d64bcd5d71c9ac43"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>kernel_type</b> = <a class="el" href="classis__mesh_1_1kernel.html">kernel</a>&lt; key_type, value_type &gt;</td></tr>
+<tr class="separator:a8e4f86d456e615f8d64bcd5d71c9ac43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54efda1adeffe2a47adb44503eb9210d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a54efda1adeffe2a47adb44503eb9210d"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>kernel_key_type</b> = key_type</td></tr>
+<tr class="separator:a54efda1adeffe2a47adb44503eb9210d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35f13383cdf69a49c8584980da010719"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a35f13383cdf69a49c8584980da010719"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>kernel_element</b> = <a class="el" href="structis__mesh_1_1util_1_1kernel__element.html">util::kernel_element</a>&lt; key_type, value_type &gt;</td></tr>
+<tr class="separator:a35f13383cdf69a49c8584980da010719"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6d3e69fe2698205a4e5847b8eb5d6a4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af6d3e69fe2698205a4e5847b8eb5d6a4"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>iterator</b> = <a class="el" href="classis__mesh_1_1kernel__iterator.html">kernel_iterator</a>&lt; <a class="el" href="classis__mesh_1_1kernel.html">kernel_type</a> &gt;</td></tr>
+<tr class="separator:af6d3e69fe2698205a4e5847b8eb5d6a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1afbfd6264e3729393dffacd57f1f83c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1afbfd6264e3729393dffacd57f1f83c"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>const_iterator</b> = <a class="el" href="classis__mesh_1_1kernel__iterator.html">iterator</a> const</td></tr>
+<tr class="separator:a1afbfd6264e3729393dffacd57f1f83c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -141,16 +141,26 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a265113af5bd553f8cd566a0f0109eb01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55f05d427a9b43c91c29c445c1620049"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel.html#a55f05d427a9b43c91c29c445c1620049">clear</a> ()</td></tr>
 <tr class="separator:a55f05d427a9b43c91c29c445c1620049"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a77669d4720c8ec2c273f087ff4223cba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classis__mesh_1_1kernel__iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel.html#a77669d4720c8ec2c273f087ff4223cba">find_iterator</a> (key_type const &amp;k)</td></tr>
-<tr class="separator:a77669d4720c8ec2c273f087ff4223cba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2b5a1023316589cb6d7bd4dc8d3f6c9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classis__mesh_1_1kernel__iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel.html#ac2b5a1023316589cb6d7bd4dc8d3f6c9">find_iterator</a> (key_type k)</td></tr>
+<tr class="separator:ac2b5a1023316589cb6d7bd4dc8d3f6c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada53efd8efab1e89ddeff815e697d51d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classis__mesh_1_1kernel__iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel.html#ada53efd8efab1e89ddeff815e697d51d">find_valid_iterator</a> (key_type k)</td></tr>
+<tr class="separator:ada53efd8efab1e89ddeff815e697d51d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa97166a31c0188e24e21f8e5398b3166"><td class="memItemLeft" align="right" valign="top">value_type &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel.html#aa97166a31c0188e24e21f8e5398b3166">find</a> (key_type const &amp;k)</td></tr>
 <tr class="separator:aa97166a31c0188e24e21f8e5398b3166"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab254aaa4a2aa51a8a8684c78b54107c"><td class="memItemLeft" align="right" valign="top">const value_type &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel.html#aab254aaa4a2aa51a8a8684c78b54107c">find</a> (key_type const &amp;k) const </td></tr>
+<tr class="separator:aab254aaa4a2aa51a8a8684c78b54107c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae634f8e76235f99ec9e547fdf9d92ccd"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel.html#ae634f8e76235f99ec9e547fdf9d92ccd">data</a> ()</td></tr>
 <tr class="separator:ae634f8e76235f99ec9e547fdf9d92ccd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0807fed05950749cb8527e9ceec2924f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel.html#a0807fed05950749cb8527e9ceec2924f">is_valid</a> (key_type const &amp;k)</td></tr>
 <tr class="separator:a0807fed05950749cb8527e9ceec2924f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab394c97bafc8ae98142a7b4cfb9751bb"><td class="memItemLeft" align="right" valign="top">std::vector&lt; key_type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel.html#ab394c97bafc8ae98142a7b4cfb9751bb">commit_all</a> ()</td></tr>
 <tr class="separator:ab394c97bafc8ae98142a7b4cfb9751bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a781f9c02c81beb3b4daeff7c5d1dcc22"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a781f9c02c81beb3b4daeff7c5d1dcc22"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>revert_excluded</b> ()</td></tr>
+<tr class="separator:a781f9c02c81beb3b4daeff7c5d1dcc22"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af093a932602d28907135c77585af2212"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af093a932602d28907135c77585af2212"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>exclude_using_include_set</b> (std::set&lt; key_type &gt; include_set)</td></tr>
+<tr class="separator:af093a932602d28907135c77585af2212"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac3276c2ab5a2b92ac6ec726bd4cecf4"><td class="memItemLeft" align="right" valign="top">std::vector&lt; key_type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel.html#aac3276c2ab5a2b92ac6ec726bd4cecf4">garbage_collect</a> ()</td></tr>
 <tr class="separator:aac3276c2ab5a2b92ac6ec726bd4cecf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -560,7 +570,40 @@ template&lt;typename key_type, typename value_type&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a77669d4720c8ec2c273f087ff4223cba"></a>
+<a class="anchor" id="aab254aaa4a2aa51a8a8684c78b54107c"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename key_type, typename value_type&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const value_type&amp; <a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel</a>&lt; key_type, value_type &gt;::find </td>
+          <td>(</td>
+          <td class="paramtype">key_type const &amp;&#160;</td>
+          <td class="paramname"><em>k</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Returns a managed object. Beware of deallocating or other memory handlings of the returned object, as this might lead to undefined behavior in the kernel.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">k</td><td>The handle to the object. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ac2b5a1023316589cb6d7bd4dc8d3f6c9"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -572,7 +615,40 @@ template&lt;typename key_type, typename value_type&gt; </div>
         <tr>
           <td class="memname"><a class="el" href="classis__mesh_1_1kernel__iterator.html">iterator</a> <a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel</a>&lt; key_type, value_type &gt;::find_iterator </td>
           <td>(</td>
-          <td class="paramtype">key_type const &amp;&#160;</td>
+          <td class="paramtype">key_type&#160;</td>
+          <td class="paramname"><em>k</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Converts a key or handle to an iterator pointing to the same cell.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">k</td><td>The handle of the cell. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ada53efd8efab1e89ddeff815e697d51d"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename key_type, typename value_type&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classis__mesh_1_1kernel__iterator.html">iterator</a> <a class="el" href="classis__mesh_1_1kernel.html">is_mesh::kernel</a>&lt; key_type, value_type &gt;::find_valid_iterator </td>
+          <td>(</td>
+          <td class="paramtype">key_type&#160;</td>
           <td class="paramname"><em>k</em></td><td>)</td>
           <td></td>
         </tr>
@@ -685,7 +761,7 @@ template&lt;typename key_type, typename value_type&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 7 2015 15:33:44 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Mar 6 2015 16:04:27 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

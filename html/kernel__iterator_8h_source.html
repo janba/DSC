@@ -97,107 +97,83 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classis__mesh_1_1kernel__iterator.html">   22</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classis__mesh_1_1kernel__iterator.html">kernel_iterator</a></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    {</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <span class="keyword">typedef</span> <span class="keyword">typename</span> kernel_t_::kernel_element element_type;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <span class="keyword">using</span> element_type = <span class="keyword">typename</span> kernel_t_::kernel_element;</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keyword">typedef</span>          kernel_t_ kernel_type;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keyword">typedef</span>          <a class="code" href="classis__mesh_1_1kernel__iterator.html">kernel_iterator&lt;kernel_type&gt;</a> <a class="code" href="classis__mesh_1_1kernel__iterator.html">iterator</a>;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keyword">typedef</span> <span class="keyword">typename</span> kernel_type::kernel_element kernel_element;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keyword">typedef</span> <span class="keyword">typename</span> element_type::value_type value_type;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keyword">typedef</span> <span class="keyword">typename</span> element_type::key_type key_type;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keyword">using</span> kernel_type = kernel_t_;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keyword">using</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">iterator</a> = <a class="code" href="classis__mesh_1_1kernel__iterator.html">kernel_iterator&lt;kernel_type&gt;</a>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keyword">using</span> kernel_element = <span class="keyword">typename</span> kernel_type::kernel_element;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keyword">using</span> value_type = <span class="keyword">typename</span> element_type::value_type;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keyword">using</span> key_type = <span class="keyword">typename</span> kernel_t_::kernel_key_type;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        </div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keyword">const</span> std::vector&lt;key_type&gt; *m_keys;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>     m_key;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        kernel_type*     m_kernel;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="classis__mesh_1_1kernel__iterator.html#adc4f5387f328512164f432f00b402a82">   43</a></span>&#160;        <a class="code" href="classis__mesh_1_1kernel__iterator.html#adc4f5387f328512164f432f00b402a82">kernel_iterator</a>(kernel_type <span class="keyword">const</span> * <span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel.html">kernel</a>, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <span class="keyword">const</span> &amp; <a class="code" href="classis__mesh_1_1kernel__iterator.html#a53663b0006b2efa438e92425cef0b188">key</a>) : m_key(key), m_keys(nullptr)</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        {</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            m_kernel = <span class="keyword">const_cast&lt;</span>kernel_type*<span class="keyword">&gt;</span>(<a class="code" href="classis__mesh_1_1kernel__iterator.html#aa0702d165d4caada95dbf6e4931a1c3f">kernel</a>);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        }</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="classis__mesh_1_1kernel__iterator.html#a677f323e3de915721f923386b33dca15">   52</a></span>&#160;        <a class="code" href="classis__mesh_1_1kernel__iterator.html#a677f323e3de915721f923386b33dca15">kernel_iterator</a>(kernel_type <span class="keyword">const</span> * <span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel.html">kernel</a>, <span class="keyword">const</span> std::vector&lt;key_type&gt; *keys) : m_key(0), m_keys(keys)</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        {</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            m_kernel = <span class="keyword">const_cast&lt;</span>kernel_type*<span class="keyword">&gt;</span>(<a class="code" href="classis__mesh_1_1kernel__iterator.html#aa0702d165d4caada95dbf6e4931a1c3f">kernel</a>);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        }</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="classis__mesh_1_1kernel__iterator.html#a53663b0006b2efa438e92425cef0b188">   61</a></span>&#160;        key_type     <a class="code" href="classis__mesh_1_1kernel__iterator.html#a53663b0006b2efa438e92425cef0b188">key</a>()<span class="keyword">    const </span>{</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            <span class="keywordflow">if</span> (m_keys){</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                <span class="keywordflow">return</span> (*m_keys)[m_key];</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            }</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            <span class="keywordflow">return</span> key_type{m_key};</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>     m_key;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        kernel_type*     m_kernel;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classis__mesh_1_1kernel__iterator.html#adc4f5387f328512164f432f00b402a82">   42</a></span>&#160;        <a class="code" href="classis__mesh_1_1kernel__iterator.html#adc4f5387f328512164f432f00b402a82">kernel_iterator</a>(kernel_type <span class="keyword">const</span> * <span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel.html">kernel</a>, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <span class="keyword">const</span> &amp; <a class="code" href="classis__mesh_1_1kernel__iterator.html#a53663b0006b2efa438e92425cef0b188">key</a>) : m_key(key)</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        {</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            m_kernel = <span class="keyword">const_cast&lt;</span>kernel_type*<span class="keyword">&gt;</span>(<a class="code" href="classis__mesh_1_1kernel__iterator.html#aa0702d165d4caada95dbf6e4931a1c3f">kernel</a>);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        }</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="classis__mesh_1_1kernel__iterator.html#a53663b0006b2efa438e92425cef0b188">   52</a></span>&#160;        key_type     <a class="code" href="classis__mesh_1_1kernel__iterator.html#a53663b0006b2efa438e92425cef0b188">key</a>()<span class="keyword">    const </span>{</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            <span class="keywordflow">return</span> key_type{m_key};</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        }</div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="classis__mesh_1_1kernel__iterator.html#aa0702d165d4caada95dbf6e4931a1c3f">   58</a></span>&#160;        kernel_type* <a class="code" href="classis__mesh_1_1kernel__iterator.html#aa0702d165d4caada95dbf6e4931a1c3f">kernel</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_kernel; }</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        </div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="classis__mesh_1_1kernel__iterator.html#ab4fbf4ec1adb318724e439e0e0d7cb5a">   63</a></span>&#160;        <span class="keyword">friend</span> <span class="keywordtype">bool</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html#ab4fbf4ec1adb318724e439e0e0d7cb5a">operator==</a>(<span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">iterator</a>&amp; i, <span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">iterator</a>&amp; j)</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        {</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            <span class="keywordflow">return</span> (i.m_key == j.m_key) &amp;&amp; (i.m_kernel == j.m_kernel);</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        }</div>
-<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="classis__mesh_1_1kernel__iterator.html#aa0702d165d4caada95dbf6e4931a1c3f">   70</a></span>&#160;        kernel_type* <a class="code" href="classis__mesh_1_1kernel__iterator.html#aa0702d165d4caada95dbf6e4931a1c3f">kernel</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_kernel; }</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        </div>
-<div class="line"><a name="l00075"></a><span class="lineno"><a class="line" href="classis__mesh_1_1kernel__iterator.html#ab4fbf4ec1adb318724e439e0e0d7cb5a">   75</a></span>&#160;        <span class="keyword">friend</span> <span class="keywordtype">bool</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html#ab4fbf4ec1adb318724e439e0e0d7cb5a">operator==</a>(<span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">iterator</a>&amp; i, <span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">iterator</a>&amp; j)</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        {</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            <span class="keywordflow">return</span> (i.m_key == j.m_key) &amp;&amp; (i.m_kernel == j.m_kernel);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        }</div>
-<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="classis__mesh_1_1kernel__iterator.html#aa5e36ce47fd2be66708d5ba6873ce789">   82</a></span>&#160;        <span class="keyword">friend</span> <span class="keywordtype">bool</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html#aa5e36ce47fd2be66708d5ba6873ce789">operator!=</a>(<span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">iterator</a>&amp; i, <span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">iterator</a>&amp; j)</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        {</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            <span class="keywordflow">return</span> (i.m_key != j.m_key) || (i.m_kernel != j.m_kernel);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        }</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        </div>
-<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="classis__mesh_1_1kernel__iterator.html#ac6b6149d1a788bfce9c6acef49db0aa8">   92</a></span>&#160;        value_type* <a class="code" href="classis__mesh_1_1kernel__iterator.html#ac6b6149d1a788bfce9c6acef49db0aa8">operator-&gt;</a>()</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        {</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            <span class="keywordflow">if</span> (m_keys){</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                <span class="keywordflow">return</span> &amp;m_kernel-&gt;m_data[(*m_keys)[m_key]].value;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            }</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            assert(m_kernel-&gt;lookup(key_type{m_key}).state == element_type::VALID);</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            <span class="keywordflow">return</span> &amp;m_kernel-&gt;m_data[m_key].value;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        }</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        </div>
-<div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="classis__mesh_1_1kernel__iterator.html#ae6e3b3b6620b527c1e6592ae20613e50">  106</a></span>&#160;        value_type&amp; <a class="code" href="classis__mesh_1_1kernel__iterator.html#ae6e3b3b6620b527c1e6592ae20613e50">operator*</a>()</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        {</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            <span class="keywordflow">if</span> (m_keys){</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                <span class="keywordflow">return</span> m_kernel-&gt;m_data[(*m_keys)[m_key]].value;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            }</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            assert(m_kernel-&gt;lookup(key_type{m_key}).state == element_type::VALID);</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            <span class="keywordflow">return</span> m_kernel-&gt;m_data[m_key].value;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        }</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        </div>
-<div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="classis__mesh_1_1kernel__iterator.html#a0b497eef0d0438c7a4b15e4c4c71ec50">  120</a></span>&#160;        <a class="code" href="classis__mesh_1_1kernel__iterator.html">iterator</a>&amp; <a class="code" href="classis__mesh_1_1kernel__iterator.html#a0b497eef0d0438c7a4b15e4c4c71ec50">operator++</a>()</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        {</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            <span class="keywordflow">if</span> (m_keys){</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;                <span class="keywordflow">do</span>{</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                    m_key++;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                } <span class="keywordflow">while</span> (m_key &lt; m_keys-&gt;size() &amp;&amp; m_kernel-&gt;m_data[(*m_keys)[m_key]].state != element_type::VALID);</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;                <span class="keywordflow">if</span> (m_key&gt;= m_keys-&gt;size()){</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;                    m_key = (<span class="keywordtype">unsigned</span> int)m_kernel-&gt;m_data.size();</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;                }</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;                <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            }</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            <span class="keywordflow">do</span> {</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;                m_key++;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            } <span class="keywordflow">while</span> (m_key &lt; m_kernel-&gt;m_data.size() &amp;&amp; m_kernel-&gt;m_data[m_key].state != element_type::VALID);</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        }</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        </div>
-<div class="line"><a name="l00142"></a><span class="lineno"><a class="line" href="classis__mesh_1_1kernel__iterator.html#a9dffd93d9455c32c0acdcc872e7855d6">  142</a></span>&#160;        <a class="code" href="classis__mesh_1_1kernel__iterator.html">iterator</a> <a class="code" href="classis__mesh_1_1kernel__iterator.html#a9dffd93d9455c32c0acdcc872e7855d6">operator++</a>(<span class="keywordtype">int</span>)</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        {</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;            <a class="code" href="classis__mesh_1_1kernel__iterator.html">iterator</a> tmp = *<span class="keyword">this</span>;</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;            ++*<span class="keyword">this</span>;</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;            <span class="keywordflow">return</span> tmp;</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        }</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    };</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;}</div>
-<div class="ttc" id="classis__mesh_1_1kernel__iterator_html_aa0702d165d4caada95dbf6e4931a1c3f"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html#aa0702d165d4caada95dbf6e4931a1c3f">is_mesh::kernel_iterator::kernel</a></div><div class="ttdeci">kernel_type * kernel() const </div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:70</div></div>
-<div class="ttc" id="classis__mesh_1_1kernel__iterator_html_ab4fbf4ec1adb318724e439e0e0d7cb5a"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html#ab4fbf4ec1adb318724e439e0e0d7cb5a">is_mesh::kernel_iterator::operator==</a></div><div class="ttdeci">friend bool operator==(const iterator &amp;i, const iterator &amp;j)</div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:75</div></div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="classis__mesh_1_1kernel__iterator.html#aa5e36ce47fd2be66708d5ba6873ce789">   70</a></span>&#160;        <span class="keyword">friend</span> <span class="keywordtype">bool</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html#aa5e36ce47fd2be66708d5ba6873ce789">operator!=</a>(<span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">iterator</a>&amp; i, <span class="keyword">const</span> <a class="code" href="classis__mesh_1_1kernel__iterator.html">iterator</a>&amp; j)</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        {</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            <span class="keywordflow">return</span> (i.m_key != j.m_key) || (i.m_kernel != j.m_kernel);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        }</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        </div>
+<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="classis__mesh_1_1kernel__iterator.html#ac6b6149d1a788bfce9c6acef49db0aa8">   80</a></span>&#160;        value_type* <a class="code" href="classis__mesh_1_1kernel__iterator.html#ac6b6149d1a788bfce9c6acef49db0aa8">operator-&gt;</a>()</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        {</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            assert(m_kernel-&gt;lookup(key_type{m_key}).state == element_type::VALID);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            <span class="keywordflow">return</span> &amp;m_kernel-&gt;m_data[m_key].value;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        }</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        </div>
+<div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="classis__mesh_1_1kernel__iterator.html#ae6e3b3b6620b527c1e6592ae20613e50">   91</a></span>&#160;        value_type&amp; <a class="code" href="classis__mesh_1_1kernel__iterator.html#ae6e3b3b6620b527c1e6592ae20613e50">operator*</a>()</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        {</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            assert(m_kernel-&gt;lookup(key_type{m_key}).state == element_type::VALID);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            <span class="keywordflow">return</span> m_kernel-&gt;m_data[m_key].value;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        }</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        </div>
+<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="classis__mesh_1_1kernel__iterator.html#a0b497eef0d0438c7a4b15e4c4c71ec50">  102</a></span>&#160;        <a class="code" href="classis__mesh_1_1kernel__iterator.html">iterator</a>&amp; <a class="code" href="classis__mesh_1_1kernel__iterator.html#a0b497eef0d0438c7a4b15e4c4c71ec50">operator++</a>()</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        {</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            <span class="keywordflow">do</span> {</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                m_key++;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            } <span class="keywordflow">while</span> (m_key &lt; m_kernel-&gt;m_data.size() &amp;&amp; m_kernel-&gt;m_data[m_key].state != element_type::VALID);</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;            <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        }</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        </div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="classis__mesh_1_1kernel__iterator.html#a9dffd93d9455c32c0acdcc872e7855d6">  115</a></span>&#160;        <a class="code" href="classis__mesh_1_1kernel__iterator.html">iterator</a> <a class="code" href="classis__mesh_1_1kernel__iterator.html#a9dffd93d9455c32c0acdcc872e7855d6">operator++</a>(<span class="keywordtype">int</span>)</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        {</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            <a class="code" href="classis__mesh_1_1kernel__iterator.html">iterator</a> tmp = *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;            ++*<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            <span class="keywordflow">return</span> tmp;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        }</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    };</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;}</div>
+<div class="ttc" id="classis__mesh_1_1kernel__iterator_html_aa0702d165d4caada95dbf6e4931a1c3f"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html#aa0702d165d4caada95dbf6e4931a1c3f">is_mesh::kernel_iterator::kernel</a></div><div class="ttdeci">kernel_type * kernel() const </div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:58</div></div>
+<div class="ttc" id="classis__mesh_1_1kernel__iterator_html_ab4fbf4ec1adb318724e439e0e0d7cb5a"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html#ab4fbf4ec1adb318724e439e0e0d7cb5a">is_mesh::kernel_iterator::operator==</a></div><div class="ttdeci">friend bool operator==(const iterator &amp;i, const iterator &amp;j)</div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:63</div></div>
 <div class="ttc" id="classis__mesh_1_1kernel__iterator_html"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html">is_mesh::kernel_iterator</a></div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:22</div></div>
-<div class="ttc" id="classis__mesh_1_1kernel__iterator_html_aa5e36ce47fd2be66708d5ba6873ce789"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html#aa5e36ce47fd2be66708d5ba6873ce789">is_mesh::kernel_iterator::operator!=</a></div><div class="ttdeci">friend bool operator!=(const iterator &amp;i, const iterator &amp;j)</div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:82</div></div>
-<div class="ttc" id="classis__mesh_1_1kernel__iterator_html_a9dffd93d9455c32c0acdcc872e7855d6"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html#a9dffd93d9455c32c0acdcc872e7855d6">is_mesh::kernel_iterator::operator++</a></div><div class="ttdeci">iterator operator++(int)</div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:142</div></div>
-<div class="ttc" id="classis__mesh_1_1kernel__iterator_html_adc4f5387f328512164f432f00b402a82"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html#adc4f5387f328512164f432f00b402a82">is_mesh::kernel_iterator::kernel_iterator</a></div><div class="ttdeci">kernel_iterator(kernel_type const *const kernel, unsigned int const &amp;key)</div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:43</div></div>
-<div class="ttc" id="classis__mesh_1_1kernel__iterator_html_a53663b0006b2efa438e92425cef0b188"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html#a53663b0006b2efa438e92425cef0b188">is_mesh::kernel_iterator::key</a></div><div class="ttdeci">key_type key() const </div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:61</div></div>
-<div class="ttc" id="classis__mesh_1_1kernel__iterator_html_ae6e3b3b6620b527c1e6592ae20613e50"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html#ae6e3b3b6620b527c1e6592ae20613e50">is_mesh::kernel_iterator::operator*</a></div><div class="ttdeci">value_type &amp; operator*()</div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:106</div></div>
-<div class="ttc" id="classis__mesh_1_1kernel__iterator_html_a677f323e3de915721f923386b33dca15"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html#a677f323e3de915721f923386b33dca15">is_mesh::kernel_iterator::kernel_iterator</a></div><div class="ttdeci">kernel_iterator(kernel_type const *const kernel, const std::vector&lt; key_type &gt; *keys)</div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:52</div></div>
+<div class="ttc" id="classis__mesh_1_1kernel__iterator_html_aa5e36ce47fd2be66708d5ba6873ce789"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html#aa5e36ce47fd2be66708d5ba6873ce789">is_mesh::kernel_iterator::operator!=</a></div><div class="ttdeci">friend bool operator!=(const iterator &amp;i, const iterator &amp;j)</div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:70</div></div>
+<div class="ttc" id="classis__mesh_1_1kernel__iterator_html_a9dffd93d9455c32c0acdcc872e7855d6"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html#a9dffd93d9455c32c0acdcc872e7855d6">is_mesh::kernel_iterator::operator++</a></div><div class="ttdeci">iterator operator++(int)</div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:115</div></div>
+<div class="ttc" id="classis__mesh_1_1kernel__iterator_html_adc4f5387f328512164f432f00b402a82"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html#adc4f5387f328512164f432f00b402a82">is_mesh::kernel_iterator::kernel_iterator</a></div><div class="ttdeci">kernel_iterator(kernel_type const *const kernel, unsigned int const &amp;key)</div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:42</div></div>
+<div class="ttc" id="classis__mesh_1_1kernel__iterator_html_a53663b0006b2efa438e92425cef0b188"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html#a53663b0006b2efa438e92425cef0b188">is_mesh::kernel_iterator::key</a></div><div class="ttdeci">key_type key() const </div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:52</div></div>
+<div class="ttc" id="classis__mesh_1_1kernel__iterator_html_ae6e3b3b6620b527c1e6592ae20613e50"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html#ae6e3b3b6620b527c1e6592ae20613e50">is_mesh::kernel_iterator::operator*</a></div><div class="ttdeci">value_type &amp; operator*()</div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:91</div></div>
 <div class="ttc" id="classis__mesh_1_1kernel_html"><div class="ttname"><a href="classis__mesh_1_1kernel.html">is_mesh::kernel</a></div><div class="ttdef"><b>Definition:</b> kernel.h:80</div></div>
-<div class="ttc" id="classis__mesh_1_1kernel__iterator_html_a0b497eef0d0438c7a4b15e4c4c71ec50"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html#a0b497eef0d0438c7a4b15e4c4c71ec50">is_mesh::kernel_iterator::operator++</a></div><div class="ttdeci">iterator &amp; operator++()</div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:120</div></div>
-<div class="ttc" id="classis__mesh_1_1kernel__iterator_html_ac6b6149d1a788bfce9c6acef49db0aa8"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html#ac6b6149d1a788bfce9c6acef49db0aa8">is_mesh::kernel_iterator::operator-&gt;</a></div><div class="ttdeci">value_type * operator-&gt;()</div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:92</div></div>
+<div class="ttc" id="classis__mesh_1_1kernel__iterator_html_a0b497eef0d0438c7a4b15e4c4c71ec50"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html#a0b497eef0d0438c7a4b15e4c4c71ec50">is_mesh::kernel_iterator::operator++</a></div><div class="ttdeci">iterator &amp; operator++()</div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:102</div></div>
+<div class="ttc" id="classis__mesh_1_1kernel__iterator_html_ac6b6149d1a788bfce9c6acef49db0aa8"><div class="ttname"><a href="classis__mesh_1_1kernel__iterator.html#ac6b6149d1a788bfce9c6acef49db0aa8">is_mesh::kernel_iterator::operator-&gt;</a></div><div class="ttdeci">value_type * operator-&gt;()</div><div class="ttdef"><b>Definition:</b> kernel_iterator.h:80</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 7 2015 15:33:42 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Mar 6 2015 16:04:24 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

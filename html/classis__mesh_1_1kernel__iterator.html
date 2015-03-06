@@ -100,29 +100,26 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a5add56801914a7d8dcc9fac57014abfe"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5add56801914a7d8dcc9fac57014abfe"></a>
-typedef kernel_t_&#160;</td><td class="memItemRight" valign="bottom"><b>kernel_type</b></td></tr>
-<tr class="separator:a5add56801914a7d8dcc9fac57014abfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adaad2341e5ce3ae41c314987b182e66e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adaad2341e5ce3ae41c314987b182e66e"></a>
-typedef <a class="el" href="classis__mesh_1_1kernel__iterator.html">kernel_iterator</a><br class="typebreak"/>
-&lt; kernel_type &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>iterator</b></td></tr>
-<tr class="separator:adaad2341e5ce3ae41c314987b182e66e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c91bc8cac831d0eb96df88f8120ecba"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4c91bc8cac831d0eb96df88f8120ecba"></a>
-typedef kernel_type::kernel_element&#160;</td><td class="memItemRight" valign="bottom"><b>kernel_element</b></td></tr>
-<tr class="separator:a4c91bc8cac831d0eb96df88f8120ecba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac63bb0b68824eaa5901bca345d926dab"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac63bb0b68824eaa5901bca345d926dab"></a>
-typedef element_type::value_type&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b></td></tr>
-<tr class="separator:ac63bb0b68824eaa5901bca345d926dab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22863b48f2dec35429bd72b559bc122e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a22863b48f2dec35429bd72b559bc122e"></a>
-typedef element_type::key_type&#160;</td><td class="memItemRight" valign="bottom"><b>key_type</b></td></tr>
-<tr class="separator:a22863b48f2dec35429bd72b559bc122e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3679ee4bd6d5e9d6ef6637321a2d4f73"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3679ee4bd6d5e9d6ef6637321a2d4f73"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>kernel_type</b> = kernel_t_</td></tr>
+<tr class="separator:a3679ee4bd6d5e9d6ef6637321a2d4f73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96b8dce13d6c4cb0d201fae5d2c6c627"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a96b8dce13d6c4cb0d201fae5d2c6c627"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>iterator</b> = <a class="el" href="classis__mesh_1_1kernel__iterator.html">kernel_iterator</a>&lt; kernel_type &gt;</td></tr>
+<tr class="separator:a96b8dce13d6c4cb0d201fae5d2c6c627"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b81a2d2b5b4367df663705bb8687bef"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3b81a2d2b5b4367df663705bb8687bef"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>kernel_element</b> = typename kernel_type::kernel_element</td></tr>
+<tr class="separator:a3b81a2d2b5b4367df663705bb8687bef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c1c3a2c2d3c1b07b86590e280451c7a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4c1c3a2c2d3c1b07b86590e280451c7a"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = typename element_type::value_type</td></tr>
+<tr class="separator:a4c1c3a2c2d3c1b07b86590e280451c7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adac1f5bc0210826f77936b33cf64dbed"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adac1f5bc0210826f77936b33cf64dbed"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>key_type</b> = typename kernel_t_::kernel_key_type</td></tr>
+<tr class="separator:adac1f5bc0210826f77936b33cf64dbed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:adc4f5387f328512164f432f00b402a82"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel__iterator.html#adc4f5387f328512164f432f00b402a82">kernel_iterator</a> (kernel_type const *const <a class="el" href="classis__mesh_1_1kernel.html">kernel</a>, unsigned int const &amp;<a class="el" href="classis__mesh_1_1kernel__iterator.html#a53663b0006b2efa438e92425cef0b188">key</a>)</td></tr>
 <tr class="separator:adc4f5387f328512164f432f00b402a82"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a677f323e3de915721f923386b33dca15"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel__iterator.html#a677f323e3de915721f923386b33dca15">kernel_iterator</a> (kernel_type const *const <a class="el" href="classis__mesh_1_1kernel.html">kernel</a>, const std::vector&lt; key_type &gt; *keys)</td></tr>
-<tr class="separator:a677f323e3de915721f923386b33dca15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53663b0006b2efa438e92425cef0b188"><td class="memItemLeft" align="right" valign="top">key_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel__iterator.html#a53663b0006b2efa438e92425cef0b188">key</a> () const </td></tr>
 <tr class="separator:a53663b0006b2efa438e92425cef0b188"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0702d165d4caada95dbf6e4931a1c3f"><td class="memItemLeft" align="right" valign="top">kernel_type *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classis__mesh_1_1kernel__iterator.html#aa0702d165d4caada95dbf6e4931a1c3f">kernel</a> () const </td></tr>
@@ -171,43 +168,6 @@ template&lt;class kernel_t_ &gt; </div>
           <td></td>
           <td class="paramtype">unsigned int const &amp;&#160;</td>
           <td class="paramname"><em>key</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>The only constructor. Creates a kernel iterator. Should only be created from the kernel. </p>
-
-</div>
-</div>
-<a class="anchor" id="a677f323e3de915721f923386b33dca15"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class kernel_t_ &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classis__mesh_1_1kernel__iterator.html">is_mesh::kernel_iterator</a>&lt; kernel_t_ &gt;::<a class="el" href="classis__mesh_1_1kernel__iterator.html">kernel_iterator</a> </td>
-          <td>(</td>
-          <td class="paramtype">kernel_type const *const&#160;</td>
-          <td class="paramname"><em>kernel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::vector&lt; key_type &gt; *&#160;</td>
-          <td class="paramname"><em>keys</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -468,7 +428,7 @@ template&lt;class kernel_t_ &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 7 2015 15:33:44 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Mar 6 2015 16:04:27 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
