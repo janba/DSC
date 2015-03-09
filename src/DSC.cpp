@@ -938,18 +938,7 @@ namespace DSC {
 #endif
             missing = 0;
             int movable = 0;
-            for (auto & nit : nodes())
-            {
-                auto k = nit.key();
-                if (is_movable(k))
-                {
-                    if(!move_vertex(k))
-                    {
-                        missing++;
-                    }
-                    movable++;
-                }
-            }
+            move_vertices(missing, movable);
 #ifdef DEBUG
             cout << "\tVertices missing to be moved: " << missing <<"/" << movable << endl;
 #endif
@@ -972,6 +961,21 @@ namespace DSC {
 #ifdef DEBUG
         is_mesh.validity_check();
 #endif
+    }
+
+    void DeformableSimplicialComplex::move_vertices(int &outMissing, int &outMovable) {
+        for (auto & nit : nodes())
+        {
+            auto k = nit.key();
+            if (is_movable(k))
+            {
+                if(!move_vertex(k))
+                {
+                    outMissing++;
+                }
+                outMovable++;
+            }
+        }
     }
 
     bool DeformableSimplicialComplex::move_vertex(const NodeKey & n) {

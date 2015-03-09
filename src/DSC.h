@@ -375,6 +375,10 @@ namespace DSC {
         
     private:
         /**
+        * For each node, call move_vertex(NodeKey)
+        */
+        void move_vertices(int &outMissing, int &outMovable);
+        /**
         * Tries moving the node n to the new position new_pos. Returns true if it succeeds.
         */
         bool move_vertex(const is_mesh::NodeKey & n);
@@ -600,6 +604,7 @@ namespace DSC {
         void test_flip44();
 
         void test_flip22();
+
     };
 
 
