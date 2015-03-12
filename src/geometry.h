@@ -62,13 +62,18 @@ namespace is_mesh {
             return p;
         }
     };
-    
+
+    enum class SetType { Union, Intersection};
+
     class MultipleGeometry : public Geometry
     {
         std::vector<std::shared_ptr<Geometry>> geometries;
-        
+        SetType setType;
     public:
-        MultipleGeometry()
+
+
+        MultipleGeometry(SetType setType = SetType::Intersection)
+                :setType(setType)
         {
         }
         
@@ -95,14 +100,27 @@ namespace is_mesh {
         
         virtual bool is_inside(vec3 p) const
         {
-            for (auto geometry : geometries)
-            {
-                if(!geometry->is_inside(p))
+            if (setType == SetType::Intersection){
+                for (auto geometry : geometries)
                 {
-                    return false;
+                    if(!geometry->is_inside(p))
+                    {
+                        return false;
+                    }
                 }
+                return true;
+            } else if (setType == SetType::Union) {
+                for (auto geometry : geometries)
+                {
+                    if(geometry->is_inside(p))
+                    {
+                        return true;
+                    }
+                }
+                return false;
             }
-            return true;
+            assert(false);
+            return false;
         }
         
         virtual void clamp_vector(const vec3& p, vec3& v) const

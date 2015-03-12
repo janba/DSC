@@ -271,9 +271,10 @@ namespace is_mesh
                 return end();
             }
             iterator res(this, k);
-            if (!is_valid(k)){
+            if (!is_valid(k) || is_excluded(k)){
                 res++;
             }
+            assert(res == end() || is_valid(res.key()));
             return res;
         }
 
@@ -314,7 +315,7 @@ namespace is_mesh
          * Returns the status of the cell given its key.
          *
          * @param k     The handle to the object.
-         * @returns     True if the object is a valid element, false if it is marked for deletion or k refers to an empty cell.
+         * @returns     True if the object is a valid (including excluded) element, false if it is marked for deletion or k refers to an empty cell.
          */
         bool is_valid(key_type const & k)
         {
@@ -322,7 +323,16 @@ namespace is_mesh
             if (tmp.state == kernel_element::VALID || tmp.state == kernel_element::EXCLUDED ) return true;
             return false;
         }
-        
+
+        /**
+        * Returns true if element is excluded
+        */
+        bool is_excluded(key_type const & k){
+            kernel_element& tmp = lookup(k);
+            if (tmp.state == kernel_element::EXCLUDED ) return true;
+            return false;
+        }
+
         /**
          * Commits all the changes in the kernel, and permanently removes all the marked elements.
          */
