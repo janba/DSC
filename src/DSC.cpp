@@ -39,6 +39,10 @@ namespace DSC {
         pars = pars_;
     }
 
+    void DeformableSimplicialComplex::clear_design_domain() {
+        design_domain.clear();
+    }
+
     void DeformableSimplicialComplex::add_design_domain(std::shared_ptr<Geometry> geometry) {
         design_domain.add_geometry(geometry);
     }
@@ -1883,4 +1887,11 @@ namespace DSC {
     std::string DeformableSimplicialComplex::lib_version() {
         return header_version();
     }
+
+    void DeformableSimplicialComplex::set_is_mesh(std::shared_ptr<is_mesh::ISMesh> ismesh) {
+        is_mesh_ptr = ismesh;
+        is_mesh = *is_mesh_ptr;
+        set_avg_edge_length();
+    }
+
 }

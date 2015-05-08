@@ -115,6 +115,8 @@ namespace DSC {
 
         is_mesh::ISMesh & get_is_mesh();
 
+        void set_is_mesh(std::shared_ptr<is_mesh::ISMesh> ismesh);
+
         void set_avg_edge_length(double avg_edge_length = 0.);
 
         void set_parameters(parameters pars_);
@@ -125,6 +127,8 @@ namespace DSC {
         void set_design_domain(is_mesh::Geometry *geometry) { add_design_domain(std::shared_ptr<is_mesh::Geometry>(geometry)); }
 
         void add_design_domain(std::shared_ptr<is_mesh::Geometry> geometry);
+
+        void clear_design_domain();
 
         // set sub domain elements which are modified
         void set_subdomain(std::shared_ptr<is_mesh::Geometry> subdomain);
@@ -613,7 +617,4 @@ namespace DSC {
         void test_flip22();
 
     };
-
-
-    
 }

@@ -90,6 +90,10 @@ namespace is_mesh {
             geometries.push_back(geometry);
         }
 
+        void clear(){
+            geometries.clear();
+        }
+
         void remove_geometry(std::shared_ptr<Geometry> geometry)
         {
             auto pos = std::find(geometries.begin(), geometries.end(), geometry);

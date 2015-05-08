@@ -575,8 +575,8 @@ namespace Util
             }
         }
         // finally do the division to get sc and tc
-        sc = (abs(sN) < EPSILON ? 0.0 : sN / sD);
-        tc = (abs(tN) < EPSILON ? 0.0 : tN / tD);
+        sc = (std::abs(sN) < EPSILON ? 0.0 : sN / sD);
+        tc = (std::abs(tN) < EPSILON ? 0.0 : tN / tD);
         
         // get the difference of the two closest points
         vec3 dP = w + (sc * u) - (tc * v);  // =  S1(sc) - S2(tc)
