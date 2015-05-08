@@ -284,4 +284,8 @@ namespace is_mesh {
             filter_subset(nodes, edges, faces, tets);
         }
     }
+
+    const ISMesh *Query::get_is_mesh() {
+        return mesh;
+    }
 }

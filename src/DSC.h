@@ -114,7 +114,7 @@ namespace DSC {
 
         is_mesh::ISMesh & get_is_mesh();
 
-        void set_is_mesh(std::shared_ptr<is_mesh::ISMesh> ismesh);
+        virtual void set_is_mesh(std::shared_ptr<is_mesh::ISMesh> ismesh);
 
         void set_avg_edge_length(double avg_edge_length = 0.);
 
@@ -125,9 +125,9 @@ namespace DSC {
         DEPRECATED // Use add_design_domain
         void set_design_domain(is_mesh::Geometry *geometry) { add_design_domain(std::shared_ptr<is_mesh::Geometry>(geometry)); }
 
-        void add_design_domain(std::shared_ptr<is_mesh::Geometry> geometry);
+        virtual void add_design_domain(std::shared_ptr<is_mesh::Geometry> geometry);
 
-        void clear_design_domain();
+        virtual void clear_design_domain();
 
         // set sub domain elements which are modified
         void set_subdomain(std::shared_ptr<is_mesh::Geometry> subdomain);
@@ -190,7 +190,7 @@ namespace DSC {
         void set_pos(const is_mesh::NodeKey& nid, const vec3& p);
 
     public:
-        inline static std::string header_version() { return std::string{"0.0.17"}
+        inline static std::string header_version() { return std::string{"0.0.19"}
 #ifdef DEBUG
                 +"d"
 #endif

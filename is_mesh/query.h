@@ -3,7 +3,6 @@
 // Copyright (c) 2014 ___FULLUSERNAME___. All rights reserved.
 //
 
-
 #pragma once
 
 #include "DSC.h"
@@ -64,6 +63,9 @@ namespace is_mesh {
     public:
         Query(ISMesh *mesh);
         ~Query();
+
+        const ISMesh * get_is_mesh();
+
         QueryResult raycast_faces(CGLA::Ray ray, QueryType queryType = QueryType::All);
 
         // Must be called explicit prior to raycasting if the boundary triangles of the ISMesh has changed
