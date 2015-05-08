@@ -83,7 +83,6 @@ namespace DSC {
         
     protected:
         std::shared_ptr<is_mesh::ISMesh> is_mesh_ptr;
-        is_mesh::ISMesh& is_mesh;
         is_mesh::MultipleGeometry design_domain;
         
         // Input parameter
