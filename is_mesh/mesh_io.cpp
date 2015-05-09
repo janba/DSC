@@ -350,6 +350,9 @@ namespace is_mesh {
     
     void export_tet_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels)
     {
+        // verify structure
+        is_mesh::ISMesh mesh(points, tets, tet_labels);
+
 //        scale(points, 3.);
         std::ofstream file(filename.data());
         if (!file.is_open()){

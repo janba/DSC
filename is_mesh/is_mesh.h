@@ -544,7 +544,7 @@ namespace is_mesh {
 
         void extract_tet_mesh(std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels);
 
-        void validity_check();
+        void validity_check(bool skip_boundary_check = false);
 
         // subscribe for gc events - needed if you are working with persistent attribute_vectors
         // returns listener id

@@ -8,6 +8,7 @@ using namespace std;
 namespace is_mesh{
     ISMesh::ISMesh(vector<vec3> & points, vector<int> & tets, const vector<int>& tet_labels) {
         create(points, tets);
+        validity_check(true);
         init_flags(tet_labels);
         validity_check();
     }
@@ -286,7 +287,8 @@ namespace is_mesh{
         face.set_interface(false);
 
         const SimplexSet<TetrahedronKey> &tids = get(f).tet_keys();
-        if (tids.size() == 1)
+        int size = tids.size();
+        if (size == 1)
         {
             if (get(tids.front()).label() != 0)
             {
@@ -295,7 +297,8 @@ namespace is_mesh{
         }
         else
         {
-            assert(tids.size() == 2);
+
+            assert(size == 2);
             if (get(tids.front()).label() != get(tids.back()).label())
             {
                 // On the interface
@@ -1226,7 +1229,27 @@ namespace is_mesh{
         }
     }
 
-    void ISMesh::validity_check() {
+    void ISMesh::validity_check(bool skip_boundary_check) {
+        cout << "Testing structure:  ";
+        for (auto & f : faces()){
+            auto tetsPerFace = f.tet_keys().size();
+            assert(tetsPerFace >0 && tetsPerFace <=2);
+            auto edgesPerFace = f.edge_keys().size();
+            assert(edgesPerFace == 3);
+        }
+        for (auto & e : edges()){
+            auto facesPerEdge = e.face_keys().size();
+            assert(facesPerEdge >= 2);
+            auto nodesPerEdge = e.node_keys().size();
+            assert(nodesPerEdge == 2);
+        }
+
+        for (auto & n : nodes()){
+            auto edgesPerNode = n.edge_keys().size();
+            assert(edgesPerNode >= 3);
+        }
+        cout << "PASSED" << endl;
+
         cout << "Testing existence: ";
         for (auto & f : faces()){
             assert(exists(f.key()));
@@ -1254,7 +1277,7 @@ namespace is_mesh{
                 assert(exists(e));
             }
         }
-
+        cout << "PASSED" << endl;
 
         cout << "Testing connectivity of simplicial complex: ";
         for(auto & tit : tetrahedra())
@@ -1308,26 +1331,27 @@ namespace is_mesh{
             assert(!is_inverted(tit.key()));
         }
         cout << "PASSED" << endl;
-
-        cout << "Testing for corrupted interface or boundary: ";
-        for (auto & eit : edges())
-        {
-            int boundary = 0;
-            int interface = 0;
-            for (auto f : eit.face_keys()) {
-                if(get(f).is_boundary())
-                {
-                    boundary++;
+        if (!skip_boundary_check){
+            cout << "Testing for corrupted interface or boundary: ";
+            for (auto & eit : edges())
+            {
+                int boundary = 0;
+                int interface = 0;
+                for (auto f : eit.face_keys()) {
+                    if(get(f).is_boundary())
+                    {
+                        boundary++;
+                    }
+                    if(get(f).is_interface())
+                    {
+                        interface++;
+                    }
                 }
-                if(get(f).is_interface())
-                {
-                    interface++;
-                }
+                assert((eit.is_interface() && interface >= 2) || (!eit.is_interface() && interface == 0)); // Check that the interface is not corrupted
+                assert((eit.is_boundary() && boundary == 2) || (!eit.is_boundary() && boundary == 0)); // Check that the boundary is not corrupted
             }
-            assert((eit.is_interface() && interface >= 2) || (!eit.is_interface() && interface == 0)); // Check that the interface is not corrupted
-            assert((eit.is_boundary() && boundary == 2) || (!eit.is_boundary() && boundary == 0)); // Check that the boundary is not corrupted
+            cout << "PASSED" << endl;
         }
-        cout << "PASSED" << endl;
     }
 
     long ISMesh::add_gc_listener(function<void(const GarbageCollectDeletions&)> fn) {

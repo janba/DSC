@@ -1883,7 +1883,6 @@ namespace DSC {
         return pars;
     }
 
-
     std::string DeformableSimplicialComplex::lib_version() {
         return header_version();
     }
