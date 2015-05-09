@@ -19,11 +19,6 @@
 
 using namespace std;
 
-#ifdef _WIN32
-const std::string file_path = "@PROJECT_SOURCE_DIR@/data/";
-#else
-const std::string file_path = "./data/";
-#endif
 const string extension = ".dsc";
 
 void generate_from_obj(string input_file_name, string output_file_name, double padding, double avg_edge_length)
@@ -34,7 +29,7 @@ void generate_from_obj(string input_file_name, string output_file_name, double p
     
     std::vector<vec3> points_interface;
     std::vector<int> faces_interface;
-    is_mesh::import_surface_mesh(file_path + input_file_name, points_interface, faces_interface);
+    is_mesh::import_surface_mesh(input_file_name, points_interface, faces_interface);
     // debug
     std::cout<<"Points"<<std::endl;
     for (int i=0;i<points_interface.size();i++){
@@ -45,7 +40,7 @@ void generate_from_obj(string input_file_name, string output_file_name, double p
         std::cout << i/3<<"\t"<<faces_interface[i]<<" "<<faces_interface[i+1]<<" "<<faces_interface[i+2]<<" "<<std::endl;
     }
     Tetralizer::tetralize(padding, avg_edge_length, points_interface, faces_interface, points, tets, tet_labels);
-    auto out = file_path + output_file_name + extension;
+    auto out = output_file_name + extension;
     cout << "Writing result to "<<out<<endl;
 
     is_mesh::export_tet_mesh(out, points, tets, tet_labels);
@@ -60,10 +55,10 @@ void generate_from_vg(const string& input_file_name, const string& output_file_n
     vec3 origin, voxel_size;
     int Ni, Nj, Nk;
     std::vector<int> voxel_labels;
-    is_mesh::import_voxel_grid(file_path + input_file_name, origin, voxel_size, Ni, Nj, Nk, voxel_labels);
+    is_mesh::import_voxel_grid(input_file_name, origin, voxel_size, Ni, Nj, Nk, voxel_labels);
     
     Tetralizer::tetralize(origin, voxel_size, Ni, Nj, Nk, voxel_labels, points, tets, tet_labels);
-    auto out = file_path + output_file_name + extension;
+    auto out = output_file_name + extension;
     cout << "Writing result to "<<out<<endl;
     is_mesh::export_tet_mesh(out+ extension, points, tets, tet_labels);
 }
@@ -80,10 +75,10 @@ void generate_from_geo(const string& input_file_name, const string& output_file_
     std::vector<unsigned int> labels;
     std::vector<std::shared_ptr<is_mesh::Geometry>> geometries;
     
-    is_mesh::import_geometry(file_path + input_file_name, origin, size, discretization, labels, geometries);
+    is_mesh::import_geometry(input_file_name, origin, size, discretization, labels, geometries);
     
     Tetralizer::tetralize(origin - vec3(3.*discretization), size + vec3(6.*discretization), discretization, labels, geometries, points, tets, tet_labels);
-    auto out = file_path + output_file_name + extension;
+    auto out = output_file_name + extension;
     cout << "Writing result to "<<out<<endl;
     is_mesh::export_tet_mesh(out, points, tets, tet_labels);
     
