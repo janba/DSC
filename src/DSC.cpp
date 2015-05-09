@@ -879,21 +879,11 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::smooth() {
-        AttributeVector<NodeKey, vec3> positions(is_mesh_ptr->get_max_node_key(), vec3(0,0,0));
-        AttributeVector<NodeKey, char> editable(is_mesh_ptr->get_max_node_key(), 0);
-        is_mesh_ptr->for_each_par<Node>([&](Node& n, int threadid){
-            auto k = n.key();
-            if (is_safe_editable(k))
-            {
-                positions[k] = smart_laplacian(k);
-                editable[k] = 1;
-            }
-        });
-        for (auto & nit : nodes())
+        for (auto& nit : is_mesh_ptr->nodes())
         {
-            auto k = nit.key();
-            if (editable[nit.key()]) {
-                set_pos(k, positions[k]);
+            if (is_safe_editable(nit.key()))
+            {
+                nit.set_pos( smart_laplacian(nit.key()));
             }
         }
     }
