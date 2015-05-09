@@ -45,8 +45,10 @@ void generate_from_obj(string input_file_name, string output_file_name, double p
         std::cout << i/3<<"\t"<<faces_interface[i]<<" "<<faces_interface[i+1]<<" "<<faces_interface[i+2]<<" "<<std::endl;
     }
     Tetralizer::tetralize(padding, avg_edge_length, points_interface, faces_interface, points, tets, tet_labels);
-    
-    is_mesh::export_tet_mesh(file_path + output_file_name + extension, points, tets, tet_labels);
+    auto out = file_path + output_file_name + extension;
+    cout << "Writing result to "<<out<<endl;
+
+    is_mesh::export_tet_mesh(out, points, tets, tet_labels);
 }
 
 void generate_from_vg(const string& input_file_name, const string& output_file_name)
@@ -61,8 +63,9 @@ void generate_from_vg(const string& input_file_name, const string& output_file_n
     is_mesh::import_voxel_grid(file_path + input_file_name, origin, voxel_size, Ni, Nj, Nk, voxel_labels);
     
     Tetralizer::tetralize(origin, voxel_size, Ni, Nj, Nk, voxel_labels, points, tets, tet_labels);
-    
-    is_mesh::export_tet_mesh(file_path + output_file_name + extension, points, tets, tet_labels);
+    auto out = file_path + output_file_name + extension;
+    cout << "Writing result to "<<out<<endl;
+    is_mesh::export_tet_mesh(out+ extension, points, tets, tet_labels);
 }
 
 void generate_from_geo(const string& input_file_name, const string& output_file_name)
@@ -75,13 +78,14 @@ void generate_from_geo(const string& input_file_name, const string& output_file_
     vec3 size;
     double discretization;
     std::vector<unsigned int> labels;
-    std::vector<is_mesh::Geometry*> geometries;
+    std::vector<std::shared_ptr<is_mesh::Geometry>> geometries;
     
     is_mesh::import_geometry(file_path + input_file_name, origin, size, discretization, labels, geometries);
     
     Tetralizer::tetralize(origin - vec3(3.*discretization), size + vec3(6.*discretization), discretization, labels, geometries, points, tets, tet_labels);
-    
-    is_mesh::export_tet_mesh(file_path + output_file_name + extension, points, tets, tet_labels);
+    auto out = file_path + output_file_name + extension;
+    cout << "Writing result to "<<out<<endl;
+    is_mesh::export_tet_mesh(out, points, tets, tet_labels);
     
 }
 
@@ -97,6 +101,7 @@ int main(int argc, const char * argv[])
         if(argc > 4){
             avg_edge_length = stod(argv[4]);
         }
+        std::cout << "Padding " << padding<< " avg_edge_length " << avg_edge_length<< std::endl;
         string output_file_name = string(argv[1]);
         string input_file_name = string(argv[2]);
         if(input_file_name.compare(input_file_name.size() - 4, 4, ".txt") == 0 || input_file_name.compare(input_file_name.size() - 3, 3, ".vg") == 0)

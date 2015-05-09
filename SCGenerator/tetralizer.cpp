@@ -500,7 +500,7 @@ void Tetralizer::tetralize(const vec3& origin, const vec3& voxel_size, int Ni, i
     }
 }
 
-void Tetralizer::tetralize(const vec3& origin, const vec3& size, double avg_edge_length, std::vector<unsigned int>& labels, std::vector<is_mesh::Geometry*>& geometries, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels) {
+void Tetralizer::tetralize(const vec3& origin, const vec3& size, double avg_edge_length, std::vector<unsigned int>& labels, std::vector<std::shared_ptr<is_mesh::Geometry>>& geometries, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels) {
     int Ni = (int)std::ceil(size[0]/avg_edge_length);
     int Nj = (int)std::ceil(size[1]/avg_edge_length);
     int Nk = (int)std::ceil(size[2]/avg_edge_length);

@@ -30,7 +30,7 @@ namespace is_mesh {
     /**
      * Imports a surface mesh from an .obj file.
      */
-    void import_surface_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& faces);
+    void import_surface_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>&triangleIndices);
     
     /**
      * Imports a voxel grid from an .txt file.

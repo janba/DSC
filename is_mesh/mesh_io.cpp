@@ -19,6 +19,26 @@
 #include <fstream>
 
 namespace is_mesh {
+
+    namespace {
+        // http://stackoverflow.com/a/236803/420250
+        std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
+            std::stringstream ss(s);
+            std::string item;
+            while (std::getline(ss, item, delim)) {
+                elems.push_back(item);
+            }
+            return elems;
+        }
+
+        // http://stackoverflow.com/a/236803/420250
+        std::vector<std::string> split(const std::string &s, char delim) {
+            std::vector<std::string> elems;
+            split(s, delim, elems);
+            return elems;
+        }
+    }
+
     
     void scale(std::vector<vec3>& points, double size)
     {
@@ -82,8 +102,8 @@ namespace is_mesh {
         file.close();
 //        scale(points, 3.);
     }
-    
-    void import_surface_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& faces)
+
+    void import_surface_mesh(const std::string& filename, std::vector<vec3>& points, std::vector<int>& triangleIndices)
     {
         std::ifstream file(filename.data());
         if (!file.is_open()){
@@ -110,15 +130,21 @@ namespace is_mesh {
                 {
                     char line[1000];
                     file.getline(line, 998);
-                    char* pch = strtok(line, " \t");
-                    int ctr = 0;
-                    while(pch != 0)
-                    {
-                        int v;
-                        sscanf(pch, "%d", &v);
-                        faces.push_back(v-1);
-                        pch = strtok(0, " \t");
-                        ++ctr;
+                    auto tokens = split(line, ' ');
+                    // find all polygon indices
+                    std::vector<int> lineIndices;
+                    for (auto t : tokens){
+                        if (t.length()>0){
+                            auto indices = split(t, '/'); // obj index may be V or V/U/N, where U and N is optional. We only need V = vertex index
+                            lineIndices.push_back(atoi(indices[0].c_str())-1);
+                        }
+                    }
+                    assert(lineIndices.size()>=3);
+                    // convert polygon to triangles
+                    for (int i=2;i<lineIndices.size();i++){
+                        triangleIndices.push_back(lineIndices[0]);
+                        triangleIndices.push_back(lineIndices[i-1]);
+                        triangleIndices.push_back(lineIndices[i]);
                     }
                 }
                 else

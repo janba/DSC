@@ -177,7 +177,7 @@
   y = b - bvirt
 
 #define Fast_Two_Sum(a, b, x, y) \
-  x = (double) (a + b); \
+  x = (REAL) (a + b); \
   Fast_Two_Sum_Tail(a, b, x, y)
 
 #define Fast_Two_Diff_Tail(a, b, x, y) \
@@ -185,34 +185,34 @@
   y = bvirt - b
 
 #define Fast_Two_Diff(a, b, x, y) \
-  x = (double) (a - b); \
+  x = (REAL) (a - b); \
   Fast_Two_Diff_Tail(a, b, x, y)
 
 #define Two_Sum_Tail(a, b, x, y) \
-  bvirt = (double) (x - a); \
+  bvirt = (REAL) (x - a); \
   avirt = x - bvirt; \
   bround = b - bvirt; \
   around = a - avirt; \
   y = around + bround
 
 #define Two_Sum(a, b, x, y) \
-  x = (double) (a + b); \
+  x = (REAL) (a + b); \
   Two_Sum_Tail(a, b, x, y)
 
 #define Two_Diff_Tail(a, b, x, y) \
-  bvirt = (double) (a - x); \
+  bvirt = (REAL) (a - x); \
   avirt = x + bvirt; \
   bround = bvirt - b; \
   around = a - avirt; \
   y = around + bround
 
 #define Two_Diff(a, b, x, y) \
-  x = (double) (a - b); \
+  x = (REAL) (a - b); \
   Two_Diff_Tail(a, b, x, y)
 
 #define Split(a, ahi, alo) \
-  c = (double) (splitter * a); \
-  abig = (double) (c - a); \
+  c = (REAL) (splitter * a); \
+  abig = (REAL) (c - a); \
   ahi = c - abig; \
   alo = a - ahi
 
@@ -225,14 +225,14 @@
   y = (alo * blo) - err3
 
 #define Two_Product(a, b, x, y) \
-  x = (double) (a * b); \
+  x = (REAL) (a * b); \
   Two_Product_Tail(a, b, x, y)
 
 /* Two_Product_Presplit() is Two_Product() where one of the inputs has       */
 /*   already been split.  Avoids redundant splitting.                        */
 
 #define Two_Product_Presplit(a, b, bhi, blo, x, y) \
-  x = (double) (a * b); \
+  x = (REAL) (a * b); \
   Split(a, ahi, alo); \
   err1 = x - (ahi * bhi); \
   err2 = err1 - (alo * bhi); \
@@ -243,7 +243,7 @@
 /*   already been split.  Avoids redundant splitting.                        */
 
 #define Two_Product_2Presplit(a, ahi, alo, b, bhi, blo, x, y) \
-  x = (double) (a * b); \
+  x = (REAL) (a * b); \
   err1 = x - (ahi * bhi); \
   err2 = err1 - (alo * bhi); \
   err3 = err2 - (ahi * blo); \
@@ -258,7 +258,7 @@
   y = (alo * alo) - err3
 
 #define Square(a, x, y) \
-  x = (double) (a * a); \
+  x = (REAL) (a * a); \
   Square_Tail(a, x, y)
 
 /* Macros for summing expansions of various fixed lengths.  These are all    */
@@ -373,14 +373,14 @@
   Two_Two_Sum(_j, _1, _l, _2, x5, x4, x3, x2)
 
 /* splitter = 2^ceiling(p / 2) + 1.  Used to split floats in half.           */
-static double splitter;
-static double epsilon;         /* = 2^(-p).  Used to estimate roundoff errors. */
+static REAL splitter;
+static REAL epsilon;         /* = 2^(-p).  Used to estimate roundoff errors. */
 /* A set of coefficients used to calculate maximum roundoff errors.          */
-static double resulterrbound;
-static double ccwerrboundA, ccwerrboundB, ccwerrboundC;
-static double o3derrboundA, o3derrboundB, o3derrboundC;
-static double iccerrboundA, iccerrboundB, iccerrboundC;
-static double isperrboundA, isperrboundB, isperrboundC;
+static REAL resulterrbound;
+static REAL ccwerrboundA, ccwerrboundB, ccwerrboundC;
+static REAL o3derrboundA, o3derrboundB, o3derrboundC;
+static REAL iccerrboundA, iccerrboundB, iccerrboundC;
+static REAL isperrboundA, isperrboundB, isperrboundC;
 
 // Options to choose types of geometric computtaions. 
 // Added by H. Si, 2012-08-23.
@@ -390,8 +390,8 @@ static int  _use_static_filter; // Default option, disable it by -X1
 // Static filters for orient3d() and insphere(). 
 // They are pre-calcualted and set in exactinit().
 // Added by H. Si, 2012-08-23.
-static double o3dstaticfilter;
-static double ispstaticfilter;
+static REAL o3dstaticfilter;
+static REAL ispstaticfilter;
 
 
 
@@ -534,17 +534,17 @@ int test_double(int verbose)
 /*                                                                           */
 /*  I imagine that a highly optimizing compiler might be too smart for its   */
 /*  own good, and somehow cause this routine to fail, if it pretends that    */
-/*  floating-point arithmetic is too much like double arithmetic.              */
+/*  floating-point arithmetic is too much like real arithmetic.              */
 /*                                                                           */
 /*  Don't change this routine unless you fully understand it.                */
 /*                                                                           */
 /*****************************************************************************/
 
-void exactinit(int verbose, int noexact, int nofilter, double maxx, double maxy,
-               double maxz)
+void exactinit(int verbose, int noexact, int nofilter, REAL maxx, REAL maxy, 
+               REAL maxz)
 {
-  double half;
-  double check, lastcheck;
+  REAL half;
+  REAL check, lastcheck;
   int every_other;
 #ifdef LINUX
   int cword;
@@ -629,10 +629,6 @@ void exactinit(int verbose, int noexact, int nofilter, double maxx, double maxy,
   // Added by H. Si, 2012-08-23.
 
   // Sort maxx < maxy < maxz. Re-use 'half' for swapping.
-  assert(maxx > 0);
-  assert(maxy > 0);
-  assert(maxz > 0);
-
   if (maxx > maxz) {
     half = maxx; maxx = maxz; maxz = half;
   }
@@ -661,15 +657,15 @@ void exactinit(int verbose, int noexact, int nofilter, double maxx, double maxy,
 /*                                                                           */
 /*****************************************************************************/
 
-int grow_expansion(int elen, double *e, double b, double *h)
+int grow_expansion(int elen, REAL *e, REAL b, REAL *h)
 /* e and h can be the same. */
 {
-  double Q;
-  INEXACT double Qnew;
+  REAL Q;
+  INEXACT REAL Qnew;
   int eindex;
-  double enow;
-  INEXACT double bvirt;
-  double avirt, bround, around;
+  REAL enow;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
 
   Q = b;
   for (eindex = 0; eindex < elen; eindex++) {
@@ -695,15 +691,15 @@ int grow_expansion(int elen, double *e, double b, double *h)
 /*                                                                           */
 /*****************************************************************************/
 
-int grow_expansion_zeroelim(int elen, double *e, double b, double *h)
+int grow_expansion_zeroelim(int elen, REAL *e, REAL b, REAL *h)
 /* e and h can be the same. */
 {
-  double Q, hh;
-  INEXACT double Qnew;
+  REAL Q, hh;
+  INEXACT REAL Qnew;
   int eindex, hindex;
-  double enow;
-  INEXACT double bvirt;
-  double avirt, bround, around;
+  REAL enow;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
 
   hindex = 0;
   Q = b;
@@ -734,15 +730,15 @@ int grow_expansion_zeroelim(int elen, double *e, double b, double *h)
 /*                                                                           */
 /*****************************************************************************/
 
-int expansion_sum(int elen, double *e, int flen, double *f, double *h)
+int expansion_sum(int elen, REAL *e, int flen, REAL *f, REAL *h)
 /* e and h can be the same, but f and h cannot. */
 {
-  double Q;
-  INEXACT double Qnew;
+  REAL Q;
+  INEXACT REAL Qnew;
   int findex, hindex, hlast;
-  double hnow;
-  INEXACT double bvirt;
-  double avirt, bround, around;
+  REAL hnow;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
 
   Q = f[0];
   for (hindex = 0; hindex < elen; hindex++) {
@@ -778,15 +774,15 @@ int expansion_sum(int elen, double *e, int flen, double *f, double *h)
 /*                                                                           */
 /*****************************************************************************/
 
-int expansion_sum_zeroelim1(int elen, double *e, int flen, double *f, double *h)
+int expansion_sum_zeroelim1(int elen, REAL *e, int flen, REAL *f, REAL *h)
 /* e and h can be the same, but f and h cannot. */
 {
-  double Q;
-  INEXACT double Qnew;
+  REAL Q;
+  INEXACT REAL Qnew;
   int index, findex, hindex, hlast;
-  double hnow;
-  INEXACT double bvirt;
-  double avirt, bround, around;
+  REAL hnow;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
 
   Q = f[0];
   for (hindex = 0; hindex < elen; hindex++) {
@@ -833,15 +829,15 @@ int expansion_sum_zeroelim1(int elen, double *e, int flen, double *f, double *h)
 /*                                                                           */
 /*****************************************************************************/
 
-int expansion_sum_zeroelim2(int elen, double *e, int flen, double *f, double *h)
+int expansion_sum_zeroelim2(int elen, REAL *e, int flen, REAL *f, REAL *h)
 /* e and h can be the same, but f and h cannot. */
 {
-  double Q, hh;
-  INEXACT double Qnew;
+  REAL Q, hh;
+  INEXACT REAL Qnew;
   int eindex, findex, hindex, hlast;
-  double enow;
-  INEXACT double bvirt;
-  double avirt, bround, around;
+  REAL enow;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
 
   hindex = 0;
   Q = f[0];
@@ -885,15 +881,15 @@ int expansion_sum_zeroelim2(int elen, double *e, int flen, double *f, double *h)
 /*                                                                           */
 /*****************************************************************************/
 
-int fast_expansion_sum(int elen, double *e, int flen, double *f, double *h)
+int fast_expansion_sum(int elen, REAL *e, int flen, REAL *f, REAL *h)
 /* h cannot be e or f. */
 {
-  double Q;
-  INEXACT double Qnew;
-  INEXACT double bvirt;
-  double avirt, bround, around;
+  REAL Q;
+  INEXACT REAL Qnew;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
   int eindex, findex, hindex;
-  double enow, fnow;
+  REAL enow, fnow;
 
   enow = e[0];
   fnow = f[0];
@@ -958,16 +954,16 @@ int fast_expansion_sum(int elen, double *e, int flen, double *f, double *h)
 /*                                                                           */
 /*****************************************************************************/
 
-int fast_expansion_sum_zeroelim(int elen, double *e, int flen, double *f, double *h)
+int fast_expansion_sum_zeroelim(int elen, REAL *e, int flen, REAL *f, REAL *h)
 /* h cannot be e or f. */
 {
-  double Q;
-  INEXACT double Qnew;
-  INEXACT double hh;
-  INEXACT double bvirt;
-  double avirt, bround, around;
+  REAL Q;
+  INEXACT REAL Qnew;
+  INEXACT REAL hh;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
   int eindex, findex, hindex;
-  double enow, fnow;
+  REAL enow, fnow;
 
   enow = e[0];
   fnow = f[0];
@@ -1039,17 +1035,17 @@ int fast_expansion_sum_zeroelim(int elen, double *e, int flen, double *f, double
 /*                                                                           */
 /*****************************************************************************/
 
-int linear_expansion_sum(int elen, double *e, int flen, double *f, double *h)
+int linear_expansion_sum(int elen, REAL *e, int flen, REAL *f, REAL *h)
 /* h cannot be e or f. */
 {
-  double Q, q;
-  INEXACT double Qnew;
-  INEXACT double R;
-  INEXACT double bvirt;
-  double avirt, bround, around;
+  REAL Q, q;
+  INEXACT REAL Qnew;
+  INEXACT REAL R;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
   int eindex, findex, hindex;
-  double enow, fnow;
-  double g0;
+  REAL enow, fnow;
+  REAL g0;
 
   enow = e[0];
   fnow = f[0];
@@ -1099,19 +1095,19 @@ int linear_expansion_sum(int elen, double *e, int flen, double *f, double *h)
 /*                                                                           */
 /*****************************************************************************/
 
-int linear_expansion_sum_zeroelim(int elen, double *e, int flen, double *f,
-                                  double *h)
+int linear_expansion_sum_zeroelim(int elen, REAL *e, int flen, REAL *f,
+                                  REAL *h)
 /* h cannot be e or f. */
 {
-  double Q, q, hh;
-  INEXACT double Qnew;
-  INEXACT double R;
-  INEXACT double bvirt;
-  double avirt, bround, around;
+  REAL Q, q, hh;
+  INEXACT REAL Qnew;
+  INEXACT REAL R;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
   int eindex, findex, hindex;
   int count;
-  double enow, fnow;
-  double g0;
+  REAL enow, fnow;
+  REAL g0;
 
   enow = e[0];
   fnow = f[0];
@@ -1170,21 +1166,21 @@ int linear_expansion_sum_zeroelim(int elen, double *e, int flen, double *f,
 /*                                                                           */
 /*****************************************************************************/
 
-int scale_expansion(int elen, double *e, double b, double *h)
+int scale_expansion(int elen, REAL *e, REAL b, REAL *h)
 /* e and h cannot be the same. */
 {
-  INEXACT double Q;
-  INEXACT double sum;
-  INEXACT double product1;
-  double product0;
+  INEXACT REAL Q;
+  INEXACT REAL sum;
+  INEXACT REAL product1;
+  REAL product0;
   int eindex, hindex;
-  double enow;
-  INEXACT double bvirt;
-  double avirt, bround, around;
-  INEXACT double c;
-  INEXACT double abig;
-  double ahi, alo, bhi, blo;
-  double err1, err2, err3;
+  REAL enow;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
+  INEXACT REAL c;
+  INEXACT REAL abig;
+  REAL ahi, alo, bhi, blo;
+  REAL err1, err2, err3;
 
   Split(b, bhi, blo);
   Two_Product_Presplit(e[0], b, bhi, blo, Q, h[0]);
@@ -1216,21 +1212,21 @@ int scale_expansion(int elen, double *e, double b, double *h)
 /*                                                                           */
 /*****************************************************************************/
 
-int scale_expansion_zeroelim(int elen, double *e, double b, double *h)
+int scale_expansion_zeroelim(int elen, REAL *e, REAL b, REAL *h)
 /* e and h cannot be the same. */
 {
-  INEXACT double Q, sum;
-  double hh;
-  INEXACT double product1;
-  double product0;
+  INEXACT REAL Q, sum;
+  REAL hh;
+  INEXACT REAL product1;
+  REAL product0;
   int eindex, hindex;
-  double enow;
-  INEXACT double bvirt;
-  double avirt, bround, around;
-  INEXACT double c;
-  INEXACT double abig;
-  double ahi, alo, bhi, blo;
-  double err1, err2, err3;
+  REAL enow;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
+  INEXACT REAL c;
+  INEXACT REAL abig;
+  REAL ahi, alo, bhi, blo;
+  REAL err1, err2, err3;
 
   Split(b, bhi, blo);
   Two_Product_Presplit(e[0], b, bhi, blo, Q, hh);
@@ -1268,14 +1264,14 @@ int scale_expansion_zeroelim(int elen, double *e, double b, double *h)
 /*                                                                           */
 /*****************************************************************************/
 
-int compress(int elen, double *e, double *h)
+int compress(int elen, REAL *e, REAL *h)
 /* e and h may be the same. */
 {
-  double Q, q;
-  INEXACT double Qnew;
+  REAL Q, q;
+  INEXACT REAL Qnew;
   int eindex, hindex;
-  INEXACT double bvirt;
-  double enow, hnow;
+  INEXACT REAL bvirt;
+  REAL enow, hnow;
   int top, bottom;
 
   bottom = elen - 1;
@@ -1311,9 +1307,9 @@ int compress(int elen, double *e, double *h)
 /*                                                                           */
 /*****************************************************************************/
 
-double estimate(int elen, double *e)
+REAL estimate(int elen, REAL *e)
 {
-  double Q;
+  REAL Q;
   int eindex;
 
   Q = e[0];
@@ -1349,9 +1345,9 @@ double estimate(int elen, double *e)
 /*                                                                           */
 /*****************************************************************************/
 
-double orient2dfast(double *pa, double *pb, double *pc)
+REAL orient2dfast(REAL *pa, REAL *pb, REAL *pc)
 {
-  double acx, bcx, acy, bcy;
+  REAL acx, bcx, acy, bcy;
 
   acx = pa[0] - pc[0];
   bcx = pb[0] - pc[0];
@@ -1360,23 +1356,23 @@ double orient2dfast(double *pa, double *pb, double *pc)
   return acx * bcy - acy * bcx;
 }
 
-double orient2dexact(double *pa, double *pb, double *pc)
+REAL orient2dexact(REAL *pa, REAL *pb, REAL *pc)
 {
-  INEXACT double axby1, axcy1, bxcy1, bxay1, cxay1, cxby1;
-  double axby0, axcy0, bxcy0, bxay0, cxay0, cxby0;
-  double aterms[4], bterms[4], cterms[4];
-  INEXACT double aterms3, bterms3, cterms3;
-  double v[8], w[12];
+  INEXACT REAL axby1, axcy1, bxcy1, bxay1, cxay1, cxby1;
+  REAL axby0, axcy0, bxcy0, bxay0, cxay0, cxby0;
+  REAL aterms[4], bterms[4], cterms[4];
+  INEXACT REAL aterms3, bterms3, cterms3;
+  REAL v[8], w[12];
   int vlength, wlength;
 
-  INEXACT double bvirt;
-  double avirt, bround, around;
-  INEXACT double c;
-  INEXACT double abig;
-  double ahi, alo, bhi, blo;
-  double err1, err2, err3;
-  INEXACT double _i, _j;
-  double _0;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
+  INEXACT REAL c;
+  INEXACT REAL abig;
+  REAL ahi, alo, bhi, blo;
+  REAL err1, err2, err3;
+  INEXACT REAL _i, _j;
+  REAL _0;
 
   Two_Product(pa[0], pb[1], axby1, axby0);
   Two_Product(pa[0], pc[1], axcy1, axcy0);
@@ -1402,25 +1398,25 @@ double orient2dexact(double *pa, double *pb, double *pc)
   return w[wlength - 1];
 }
 
-double orient2dslow(double *pa, double *pb, double *pc)
+REAL orient2dslow(REAL *pa, REAL *pb, REAL *pc)
 {
-  INEXACT double acx, acy, bcx, bcy;
-  double acxtail, acytail;
-  double bcxtail, bcytail;
-  double negate, negatetail;
-  double axby[8], bxay[8];
-  INEXACT double axby7, bxay7;
-  double deter[16];
+  INEXACT REAL acx, acy, bcx, bcy;
+  REAL acxtail, acytail;
+  REAL bcxtail, bcytail;
+  REAL negate, negatetail;
+  REAL axby[8], bxay[8];
+  INEXACT REAL axby7, bxay7;
+  REAL deter[16];
   int deterlen;
 
-  INEXACT double bvirt;
-  double avirt, bround, around;
-  INEXACT double c;
-  INEXACT double abig;
-  double a0hi, a0lo, a1hi, a1lo, bhi, blo;
-  double err1, err2, err3;
-  INEXACT double _i, _j, _k, _l, _m, _n;
-  double _0, _1, _2;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
+  INEXACT REAL c;
+  INEXACT REAL abig;
+  REAL a0hi, a0lo, a1hi, a1lo, bhi, blo;
+  REAL err1, err2, err3;
+  INEXACT REAL _i, _j, _k, _l, _m, _n;
+  REAL _0, _1, _2;
 
   Two_Diff(pa[0], pc[0], acx, acxtail);
   Two_Diff(pa[1], pc[1], acy, acytail);
@@ -1443,34 +1439,34 @@ double orient2dslow(double *pa, double *pb, double *pc)
   return deter[deterlen - 1];
 }
 
-double orient2dadapt(double *pa, double *pb, double *pc, double detsum)
+REAL orient2dadapt(REAL *pa, REAL *pb, REAL *pc, REAL detsum)
 {
-  INEXACT double acx, acy, bcx, bcy;
-  double acxtail, acytail, bcxtail, bcytail;
-  INEXACT double detleft, detright;
-  double detlefttail, detrighttail;
-  double det, errbound;
-  double B[4], C1[8], C2[12], D[16];
-  INEXACT double B3;
+  INEXACT REAL acx, acy, bcx, bcy;
+  REAL acxtail, acytail, bcxtail, bcytail;
+  INEXACT REAL detleft, detright;
+  REAL detlefttail, detrighttail;
+  REAL det, errbound;
+  REAL B[4], C1[8], C2[12], D[16];
+  INEXACT REAL B3;
   int C1length, C2length, Dlength;
-  double u[4];
-  INEXACT double u3;
-  INEXACT double s1, t1;
-  double s0, t0;
+  REAL u[4];
+  INEXACT REAL u3;
+  INEXACT REAL s1, t1;
+  REAL s0, t0;
 
-  INEXACT double bvirt;
-  double avirt, bround, around;
-  INEXACT double c;
-  INEXACT double abig;
-  double ahi, alo, bhi, blo;
-  double err1, err2, err3;
-  INEXACT double _i, _j;
-  double _0;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
+  INEXACT REAL c;
+  INEXACT REAL abig;
+  REAL ahi, alo, bhi, blo;
+  REAL err1, err2, err3;
+  INEXACT REAL _i, _j;
+  REAL _0;
 
-  acx = (double) (pa[0] - pc[0]);
-  bcx = (double) (pb[0] - pc[0]);
-  acy = (double) (pa[1] - pc[1]);
-  bcy = (double) (pb[1] - pc[1]);
+  acx = (REAL) (pa[0] - pc[0]);
+  bcx = (REAL) (pb[0] - pc[0]);
+  acy = (REAL) (pa[1] - pc[1]);
+  bcy = (REAL) (pb[1] - pc[1]);
 
   Two_Product(acx, bcy, detleft, detlefttail);
   Two_Product(acy, bcx, detright, detrighttail);
@@ -1523,10 +1519,10 @@ double orient2dadapt(double *pa, double *pb, double *pc, double detsum)
   return(D[Dlength - 1]);
 }
 
-double orient2d(double *pa, double *pb, double *pc)
+REAL orient2d(REAL *pa, REAL *pb, REAL *pc)
 {
-  double detleft, detright, det;
-  double detsum, errbound;
+  REAL detleft, detright, det;
+  REAL detsum, errbound;
 
   detleft = (pa[0] - pc[0]) * (pb[1] - pc[1]);
   detright = (pa[1] - pc[1]) * (pb[0] - pc[0]);
@@ -1585,11 +1581,11 @@ double orient2d(double *pa, double *pb, double *pc)
 /*                                                                           */
 /*****************************************************************************/
 
-double orient3dfast(double *pa, double *pb, double *pc, double *pd)
+REAL orient3dfast(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
 {
-  double adx, bdx, cdx;
-  double ady, bdy, cdy;
-  double adz, bdz, cdz;
+  REAL adx, bdx, cdx;
+  REAL ady, bdy, cdy;
+  REAL adz, bdz, cdz;
 
   adx = pa[0] - pd[0];
   bdx = pb[0] - pd[0];
@@ -1606,33 +1602,33 @@ double orient3dfast(double *pa, double *pb, double *pc, double *pd)
        + cdx * (ady * bdz - adz * bdy);
 }
 
-double orient3dexact(double *pa, double *pb, double *pc, double *pd)
+REAL orient3dexact(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
 {
-  INEXACT double axby1, bxcy1, cxdy1, dxay1, axcy1, bxdy1;
-  INEXACT double bxay1, cxby1, dxcy1, axdy1, cxay1, dxby1;
-  double axby0, bxcy0, cxdy0, dxay0, axcy0, bxdy0;
-  double bxay0, cxby0, dxcy0, axdy0, cxay0, dxby0;
-  double ab[4], bc[4], cd[4], da[4], ac[4], bd[4];
-  double temp8[8];
+  INEXACT REAL axby1, bxcy1, cxdy1, dxay1, axcy1, bxdy1;
+  INEXACT REAL bxay1, cxby1, dxcy1, axdy1, cxay1, dxby1;
+  REAL axby0, bxcy0, cxdy0, dxay0, axcy0, bxdy0;
+  REAL bxay0, cxby0, dxcy0, axdy0, cxay0, dxby0;
+  REAL ab[4], bc[4], cd[4], da[4], ac[4], bd[4];
+  REAL temp8[8];
   int templen;
-  double abc[12], bcd[12], cda[12], dab[12];
+  REAL abc[12], bcd[12], cda[12], dab[12];
   int abclen, bcdlen, cdalen, dablen;
-  double adet[24], bdet[24], cdet[24], ddet[24];
+  REAL adet[24], bdet[24], cdet[24], ddet[24];
   int alen, blen, clen, dlen;
-  double abdet[48], cddet[48];
+  REAL abdet[48], cddet[48];
   int ablen, cdlen;
-  double deter[96];
+  REAL deter[96];
   int deterlen;
   int i;
 
-  INEXACT double bvirt;
-  double avirt, bround, around;
-  INEXACT double c;
-  INEXACT double abig;
-  double ahi, alo, bhi, blo;
-  double err1, err2, err3;
-  INEXACT double _i, _j;
-  double _0;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
+  INEXACT REAL c;
+  INEXACT REAL abig;
+  REAL ahi, alo, bhi, blo;
+  REAL err1, err2, err3;
+  INEXACT REAL _i, _j;
+  REAL _0;
 
   Two_Product(pa[0], pb[1], axby1, axby0);
   Two_Product(pb[0], pa[1], bxay1, bxay0);
@@ -1683,32 +1679,32 @@ double orient3dexact(double *pa, double *pb, double *pc, double *pd)
   return deter[deterlen - 1];
 }
 
-double orient3dslow(double *pa, double *pb, double *pc, double *pd)
+REAL orient3dslow(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
 {
-  INEXACT double adx, ady, adz, bdx, bdy, bdz, cdx, cdy, cdz;
-  double adxtail, adytail, adztail;
-  double bdxtail, bdytail, bdztail;
-  double cdxtail, cdytail, cdztail;
-  double negate, negatetail;
-  INEXACT double axby7, bxcy7, axcy7, bxay7, cxby7, cxay7;
-  double axby[8], bxcy[8], axcy[8], bxay[8], cxby[8], cxay[8];
-  double temp16[16], temp32[32], temp32t[32];
+  INEXACT REAL adx, ady, adz, bdx, bdy, bdz, cdx, cdy, cdz;
+  REAL adxtail, adytail, adztail;
+  REAL bdxtail, bdytail, bdztail;
+  REAL cdxtail, cdytail, cdztail;
+  REAL negate, negatetail;
+  INEXACT REAL axby7, bxcy7, axcy7, bxay7, cxby7, cxay7;
+  REAL axby[8], bxcy[8], axcy[8], bxay[8], cxby[8], cxay[8];
+  REAL temp16[16], temp32[32], temp32t[32];
   int temp16len, temp32len, temp32tlen;
-  double adet[64], bdet[64], cdet[64];
+  REAL adet[64], bdet[64], cdet[64];
   int alen, blen, clen;
-  double abdet[128];
+  REAL abdet[128];
   int ablen;
-  double deter[192];
+  REAL deter[192];
   int deterlen;
 
-  INEXACT double bvirt;
-  double avirt, bround, around;
-  INEXACT double c;
-  INEXACT double abig;
-  double a0hi, a0lo, a1hi, a1lo, bhi, blo;
-  double err1, err2, err3;
-  INEXACT double _i, _j, _k, _l, _m, _n;
-  double _0, _1, _2;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
+  INEXACT REAL c;
+  INEXACT REAL abig;
+  REAL a0hi, a0lo, a1hi, a1lo, bhi, blo;
+  REAL err1, err2, err3;
+  INEXACT REAL _i, _j, _k, _l, _m, _n;
+  REAL _0, _1, _2;
 
   Two_Diff(pa[0], pd[0], adx, adxtail);
   Two_Diff(pa[1], pd[1], ady, adytail);
@@ -1775,70 +1771,70 @@ double orient3dslow(double *pa, double *pb, double *pc, double *pd)
   return deter[deterlen - 1];
 }
 
-double orient3dadapt(double *pa, double *pb, double *pc, double *pd, double permanent)
+REAL orient3dadapt(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL permanent)
 {
-  INEXACT double adx, bdx, cdx, ady, bdy, cdy, adz, bdz, cdz;
-  double det, errbound;
+  INEXACT REAL adx, bdx, cdx, ady, bdy, cdy, adz, bdz, cdz;
+  REAL det, errbound;
 
-  INEXACT double bdxcdy1, cdxbdy1, cdxady1, adxcdy1, adxbdy1, bdxady1;
-  double bdxcdy0, cdxbdy0, cdxady0, adxcdy0, adxbdy0, bdxady0;
-  double bc[4], ca[4], ab[4];
-  INEXACT double bc3, ca3, ab3;
-  double adet[8], bdet[8], cdet[8];
+  INEXACT REAL bdxcdy1, cdxbdy1, cdxady1, adxcdy1, adxbdy1, bdxady1;
+  REAL bdxcdy0, cdxbdy0, cdxady0, adxcdy0, adxbdy0, bdxady0;
+  REAL bc[4], ca[4], ab[4];
+  INEXACT REAL bc3, ca3, ab3;
+  REAL adet[8], bdet[8], cdet[8];
   int alen, blen, clen;
-  double abdet[16];
+  REAL abdet[16];
   int ablen;
-  double *finnow, *finother, *finswap;
-  double fin1[192], fin2[192];
+  REAL *finnow, *finother, *finswap;
+  REAL fin1[192], fin2[192];
   int finlength;
 
 
-  double adxtail, bdxtail, cdxtail;
-  double adytail, bdytail, cdytail;
-  double adztail, bdztail, cdztail;
-  INEXACT double at_blarge, at_clarge;
-  INEXACT double bt_clarge, bt_alarge;
-  INEXACT double ct_alarge, ct_blarge;
-  double at_b[4], at_c[4], bt_c[4], bt_a[4], ct_a[4], ct_b[4];
+  REAL adxtail, bdxtail, cdxtail;
+  REAL adytail, bdytail, cdytail;
+  REAL adztail, bdztail, cdztail;
+  INEXACT REAL at_blarge, at_clarge;
+  INEXACT REAL bt_clarge, bt_alarge;
+  INEXACT REAL ct_alarge, ct_blarge;
+  REAL at_b[4], at_c[4], bt_c[4], bt_a[4], ct_a[4], ct_b[4];
   int at_blen, at_clen, bt_clen, bt_alen, ct_alen, ct_blen;
-  INEXACT double bdxt_cdy1, cdxt_bdy1, cdxt_ady1;
-  INEXACT double adxt_cdy1, adxt_bdy1, bdxt_ady1;
-  double bdxt_cdy0, cdxt_bdy0, cdxt_ady0;
-  double adxt_cdy0, adxt_bdy0, bdxt_ady0;
-  INEXACT double bdyt_cdx1, cdyt_bdx1, cdyt_adx1;
-  INEXACT double adyt_cdx1, adyt_bdx1, bdyt_adx1;
-  double bdyt_cdx0, cdyt_bdx0, cdyt_adx0;
-  double adyt_cdx0, adyt_bdx0, bdyt_adx0;
-  double bct[8], cat[8], abt[8];
+  INEXACT REAL bdxt_cdy1, cdxt_bdy1, cdxt_ady1;
+  INEXACT REAL adxt_cdy1, adxt_bdy1, bdxt_ady1;
+  REAL bdxt_cdy0, cdxt_bdy0, cdxt_ady0;
+  REAL adxt_cdy0, adxt_bdy0, bdxt_ady0;
+  INEXACT REAL bdyt_cdx1, cdyt_bdx1, cdyt_adx1;
+  INEXACT REAL adyt_cdx1, adyt_bdx1, bdyt_adx1;
+  REAL bdyt_cdx0, cdyt_bdx0, cdyt_adx0;
+  REAL adyt_cdx0, adyt_bdx0, bdyt_adx0;
+  REAL bct[8], cat[8], abt[8];
   int bctlen, catlen, abtlen;
-  INEXACT double bdxt_cdyt1, cdxt_bdyt1, cdxt_adyt1;
-  INEXACT double adxt_cdyt1, adxt_bdyt1, bdxt_adyt1;
-  double bdxt_cdyt0, cdxt_bdyt0, cdxt_adyt0;
-  double adxt_cdyt0, adxt_bdyt0, bdxt_adyt0;
-  double u[4], v[12], w[16];
-  INEXACT double u3;
+  INEXACT REAL bdxt_cdyt1, cdxt_bdyt1, cdxt_adyt1;
+  INEXACT REAL adxt_cdyt1, adxt_bdyt1, bdxt_adyt1;
+  REAL bdxt_cdyt0, cdxt_bdyt0, cdxt_adyt0;
+  REAL adxt_cdyt0, adxt_bdyt0, bdxt_adyt0;
+  REAL u[4], v[12], w[16];
+  INEXACT REAL u3;
   int vlength, wlength;
-  double negate;
+  REAL negate;
 
-  INEXACT double bvirt;
-  double avirt, bround, around;
-  INEXACT double c;
-  INEXACT double abig;
-  double ahi, alo, bhi, blo;
-  double err1, err2, err3;
-  INEXACT double _i, _j, _k;
-  double _0;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
+  INEXACT REAL c;
+  INEXACT REAL abig;
+  REAL ahi, alo, bhi, blo;
+  REAL err1, err2, err3;
+  INEXACT REAL _i, _j, _k;
+  REAL _0;
 
 
-  adx = (double) (pa[0] - pd[0]);
-  bdx = (double) (pb[0] - pd[0]);
-  cdx = (double) (pc[0] - pd[0]);
-  ady = (double) (pa[1] - pd[1]);
-  bdy = (double) (pb[1] - pd[1]);
-  cdy = (double) (pc[1] - pd[1]);
-  adz = (double) (pa[2] - pd[2]);
-  bdz = (double) (pb[2] - pd[2]);
-  cdz = (double) (pc[2] - pd[2]);
+  adx = (REAL) (pa[0] - pd[0]);
+  bdx = (REAL) (pb[0] - pd[0]);
+  cdx = (REAL) (pc[0] - pd[0]);
+  ady = (REAL) (pa[1] - pd[1]);
+  bdy = (REAL) (pb[1] - pd[1]);
+  cdy = (REAL) (pc[1] - pd[1]);
+  adz = (REAL) (pa[2] - pd[2]);
+  bdz = (REAL) (pb[2] - pd[2]);
+  cdz = (REAL) (pc[2] - pd[2]);
 
   Two_Product(bdx, cdy, bdxcdy1, bdxcdy0);
   Two_Product(cdx, bdy, cdxbdy1, cdxbdy0);
@@ -2179,9 +2175,9 @@ double orient3dadapt(double *pa, double *pb, double *pc, double *pd, double perm
 
 #ifdef USE_CGAL_PREDICATES
 
-double orient3d(double *pa, double *pb, double *pc, double *pd)
+REAL orient3d(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
 {
-  return (double)
+  return (REAL) 
     - cgal_pred_obj.orientation_3_object()
         (Point(pa[0], pa[1], pa[2]), 
          Point(pb[0], pb[1], pb[2]),
@@ -2191,11 +2187,11 @@ double orient3d(double *pa, double *pb, double *pc, double *pd)
 
 #else
 
-double orient3d(double *pa, double *pb, double *pc, double *pd)
+REAL orient3d(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
 {
-  double adx, bdx, cdx, ady, bdy, cdy, adz, bdz, cdz;
-  double bdxcdy, cdxbdy, cdxady, adxcdy, adxbdy, bdxady;
-  double det;
+  REAL adx, bdx, cdx, ady, bdy, cdy, adz, bdz, cdz;
+  REAL bdxcdy, cdxbdy, cdxady, adxcdy, adxbdy, bdxady;
+  REAL det;
 
 
   adx = pa[0] - pd[0];
@@ -2232,7 +2228,7 @@ double orient3d(double *pa, double *pb, double *pc, double *pd)
   }
 
 
-  double permanent, errbound;
+  REAL permanent, errbound;
 
   permanent = (Absolute(bdxcdy) + Absolute(cdxbdy)) * Absolute(adz)
             + (Absolute(cdxady) + Absolute(adxcdy)) * Absolute(bdz)
@@ -2273,11 +2269,11 @@ double orient3d(double *pa, double *pb, double *pc, double *pd)
 /*                                                                           */
 /*****************************************************************************/
 
-double incirclefast(double *pa, double *pb, double *pc, double *pd)
+REAL incirclefast(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
 {
-  double adx, ady, bdx, bdy, cdx, cdy;
-  double abdet, bcdet, cadet;
-  double alift, blift, clift;
+  REAL adx, ady, bdx, bdy, cdx, cdy;
+  REAL abdet, bcdet, cadet;
+  REAL alift, blift, clift;
 
   adx = pa[0] - pd[0];
   ady = pa[1] - pd[1];
@@ -2296,35 +2292,35 @@ double incirclefast(double *pa, double *pb, double *pc, double *pd)
   return alift * bcdet + blift * cadet + clift * abdet;
 }
 
-double incircleexact(double *pa, double *pb, double *pc, double *pd)
+REAL incircleexact(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
 {
-  INEXACT double axby1, bxcy1, cxdy1, dxay1, axcy1, bxdy1;
-  INEXACT double bxay1, cxby1, dxcy1, axdy1, cxay1, dxby1;
-  double axby0, bxcy0, cxdy0, dxay0, axcy0, bxdy0;
-  double bxay0, cxby0, dxcy0, axdy0, cxay0, dxby0;
-  double ab[4], bc[4], cd[4], da[4], ac[4], bd[4];
-  double temp8[8];
+  INEXACT REAL axby1, bxcy1, cxdy1, dxay1, axcy1, bxdy1;
+  INEXACT REAL bxay1, cxby1, dxcy1, axdy1, cxay1, dxby1;
+  REAL axby0, bxcy0, cxdy0, dxay0, axcy0, bxdy0;
+  REAL bxay0, cxby0, dxcy0, axdy0, cxay0, dxby0;
+  REAL ab[4], bc[4], cd[4], da[4], ac[4], bd[4];
+  REAL temp8[8];
   int templen;
-  double abc[12], bcd[12], cda[12], dab[12];
+  REAL abc[12], bcd[12], cda[12], dab[12];
   int abclen, bcdlen, cdalen, dablen;
-  double det24x[24], det24y[24], det48x[48], det48y[48];
+  REAL det24x[24], det24y[24], det48x[48], det48y[48];
   int xlen, ylen;
-  double adet[96], bdet[96], cdet[96], ddet[96];
+  REAL adet[96], bdet[96], cdet[96], ddet[96];
   int alen, blen, clen, dlen;
-  double abdet[192], cddet[192];
+  REAL abdet[192], cddet[192];
   int ablen, cdlen;
-  double deter[384];
+  REAL deter[384];
   int deterlen;
   int i;
 
-  INEXACT double bvirt;
-  double avirt, bround, around;
-  INEXACT double c;
-  INEXACT double abig;
-  double ahi, alo, bhi, blo;
-  double err1, err2, err3;
-  INEXACT double _i, _j;
-  double _0;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
+  INEXACT REAL c;
+  INEXACT REAL abig;
+  REAL ahi, alo, bhi, blo;
+  REAL err1, err2, err3;
+  INEXACT REAL _i, _j;
+  REAL _0;
 
   Two_Product(pa[0], pb[1], axby1, axby0);
   Two_Product(pb[0], pa[1], bxay1, bxay0);
@@ -2394,36 +2390,36 @@ double incircleexact(double *pa, double *pb, double *pc, double *pd)
   return deter[deterlen - 1];
 }
 
-double incircleslow(double *pa, double *pb, double *pc, double *pd)
+REAL incircleslow(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
 {
-  INEXACT double adx, bdx, cdx, ady, bdy, cdy;
-  double adxtail, bdxtail, cdxtail;
-  double adytail, bdytail, cdytail;
-  double negate, negatetail;
-  INEXACT double axby7, bxcy7, axcy7, bxay7, cxby7, cxay7;
-  double axby[8], bxcy[8], axcy[8], bxay[8], cxby[8], cxay[8];
-  double temp16[16];
+  INEXACT REAL adx, bdx, cdx, ady, bdy, cdy;
+  REAL adxtail, bdxtail, cdxtail;
+  REAL adytail, bdytail, cdytail;
+  REAL negate, negatetail;
+  INEXACT REAL axby7, bxcy7, axcy7, bxay7, cxby7, cxay7;
+  REAL axby[8], bxcy[8], axcy[8], bxay[8], cxby[8], cxay[8];
+  REAL temp16[16];
   int temp16len;
-  double detx[32], detxx[64], detxt[32], detxxt[64], detxtxt[64];
+  REAL detx[32], detxx[64], detxt[32], detxxt[64], detxtxt[64];
   int xlen, xxlen, xtlen, xxtlen, xtxtlen;
-  double x1[128], x2[192];
+  REAL x1[128], x2[192];
   int x1len, x2len;
-  double dety[32], detyy[64], detyt[32], detyyt[64], detytyt[64];
+  REAL dety[32], detyy[64], detyt[32], detyyt[64], detytyt[64];
   int ylen, yylen, ytlen, yytlen, ytytlen;
-  double y1[128], y2[192];
+  REAL y1[128], y2[192];
   int y1len, y2len;
-  double adet[384], bdet[384], cdet[384], abdet[768], deter[1152];
+  REAL adet[384], bdet[384], cdet[384], abdet[768], deter[1152];
   int alen, blen, clen, ablen, deterlen;
   int i;
 
-  INEXACT double bvirt;
-  double avirt, bround, around;
-  INEXACT double c;
-  INEXACT double abig;
-  double a0hi, a0lo, a1hi, a1lo, bhi, blo;
-  double err1, err2, err3;
-  INEXACT double _i, _j, _k, _l, _m, _n;
-  double _0, _1, _2;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
+  INEXACT REAL c;
+  INEXACT REAL abig;
+  REAL a0hi, a0lo, a1hi, a1lo, bhi, blo;
+  REAL err1, err2, err3;
+  INEXACT REAL _i, _j, _k, _l, _m, _n;
+  REAL _0, _1, _2;
 
   Two_Diff(pa[0], pd[0], adx, adxtail);
   Two_Diff(pa[1], pd[1], ady, adytail);
@@ -2550,78 +2546,78 @@ double incircleslow(double *pa, double *pb, double *pc, double *pd)
   return deter[deterlen - 1];
 }
 
-double incircleadapt(double *pa, double *pb, double *pc, double *pd, double permanent)
+REAL incircleadapt(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL permanent)
 {
-  INEXACT double adx, bdx, cdx, ady, bdy, cdy;
-  double det, errbound;
+  INEXACT REAL adx, bdx, cdx, ady, bdy, cdy;
+  REAL det, errbound;
 
-  INEXACT double bdxcdy1, cdxbdy1, cdxady1, adxcdy1, adxbdy1, bdxady1;
-  double bdxcdy0, cdxbdy0, cdxady0, adxcdy0, adxbdy0, bdxady0;
-  double bc[4], ca[4], ab[4];
-  INEXACT double bc3, ca3, ab3;
-  double axbc[8], axxbc[16], aybc[8], ayybc[16], adet[32];
+  INEXACT REAL bdxcdy1, cdxbdy1, cdxady1, adxcdy1, adxbdy1, bdxady1;
+  REAL bdxcdy0, cdxbdy0, cdxady0, adxcdy0, adxbdy0, bdxady0;
+  REAL bc[4], ca[4], ab[4];
+  INEXACT REAL bc3, ca3, ab3;
+  REAL axbc[8], axxbc[16], aybc[8], ayybc[16], adet[32];
   int axbclen, axxbclen, aybclen, ayybclen, alen;
-  double bxca[8], bxxca[16], byca[8], byyca[16], bdet[32];
+  REAL bxca[8], bxxca[16], byca[8], byyca[16], bdet[32];
   int bxcalen, bxxcalen, bycalen, byycalen, blen;
-  double cxab[8], cxxab[16], cyab[8], cyyab[16], cdet[32];
+  REAL cxab[8], cxxab[16], cyab[8], cyyab[16], cdet[32];
   int cxablen, cxxablen, cyablen, cyyablen, clen;
-  double abdet[64];
+  REAL abdet[64];
   int ablen;
-  double fin1[1152], fin2[1152];
-  double *finnow, *finother, *finswap;
+  REAL fin1[1152], fin2[1152];
+  REAL *finnow, *finother, *finswap;
   int finlength;
 
-  double adxtail, bdxtail, cdxtail, adytail, bdytail, cdytail;
-  INEXACT double adxadx1, adyady1, bdxbdx1, bdybdy1, cdxcdx1, cdycdy1;
-  double adxadx0, adyady0, bdxbdx0, bdybdy0, cdxcdx0, cdycdy0;
-  double aa[4], bb[4], cc[4];
-  INEXACT double aa3, bb3, cc3;
-  INEXACT double ti1, tj1;
-  double ti0, tj0;
-  double u[4], v[4];
-  INEXACT double u3, v3;
-  double temp8[8], temp16a[16], temp16b[16], temp16c[16];
-  double temp32a[32], temp32b[32], temp48[48], temp64[64];
+  REAL adxtail, bdxtail, cdxtail, adytail, bdytail, cdytail;
+  INEXACT REAL adxadx1, adyady1, bdxbdx1, bdybdy1, cdxcdx1, cdycdy1;
+  REAL adxadx0, adyady0, bdxbdx0, bdybdy0, cdxcdx0, cdycdy0;
+  REAL aa[4], bb[4], cc[4];
+  INEXACT REAL aa3, bb3, cc3;
+  INEXACT REAL ti1, tj1;
+  REAL ti0, tj0;
+  REAL u[4], v[4];
+  INEXACT REAL u3, v3;
+  REAL temp8[8], temp16a[16], temp16b[16], temp16c[16];
+  REAL temp32a[32], temp32b[32], temp48[48], temp64[64];
   int temp8len, temp16alen, temp16blen, temp16clen;
   int temp32alen, temp32blen, temp48len, temp64len;
-  double axtbb[8], axtcc[8], aytbb[8], aytcc[8];
+  REAL axtbb[8], axtcc[8], aytbb[8], aytcc[8];
   int axtbblen, axtcclen, aytbblen, aytcclen;
-  double bxtaa[8], bxtcc[8], bytaa[8], bytcc[8];
+  REAL bxtaa[8], bxtcc[8], bytaa[8], bytcc[8];
   int bxtaalen, bxtcclen, bytaalen, bytcclen;
-  double cxtaa[8], cxtbb[8], cytaa[8], cytbb[8];
+  REAL cxtaa[8], cxtbb[8], cytaa[8], cytbb[8];
   int cxtaalen, cxtbblen, cytaalen, cytbblen;
-  double axtbc[8], aytbc[8], bxtca[8], bytca[8], cxtab[8], cytab[8];
+  REAL axtbc[8], aytbc[8], bxtca[8], bytca[8], cxtab[8], cytab[8];
   int axtbclen, aytbclen, bxtcalen, bytcalen, cxtablen, cytablen;
-  double axtbct[16], aytbct[16], bxtcat[16], bytcat[16], cxtabt[16], cytabt[16];
+  REAL axtbct[16], aytbct[16], bxtcat[16], bytcat[16], cxtabt[16], cytabt[16];
   int axtbctlen, aytbctlen, bxtcatlen, bytcatlen, cxtabtlen, cytabtlen;
-  double axtbctt[8], aytbctt[8], bxtcatt[8];
-  double bytcatt[8], cxtabtt[8], cytabtt[8];
+  REAL axtbctt[8], aytbctt[8], bxtcatt[8];
+  REAL bytcatt[8], cxtabtt[8], cytabtt[8];
   int axtbcttlen, aytbcttlen, bxtcattlen, bytcattlen, cxtabttlen, cytabttlen;
-  double abt[8], bct[8], cat[8];
+  REAL abt[8], bct[8], cat[8];
   int abtlen, bctlen, catlen;
-  double abtt[4], bctt[4], catt[4];
+  REAL abtt[4], bctt[4], catt[4];
   int abttlen, bcttlen, cattlen;
-  INEXACT double abtt3, bctt3, catt3;
-  double negate;
+  INEXACT REAL abtt3, bctt3, catt3;
+  REAL negate;
 
-  INEXACT double bvirt;
-  double avirt, bround, around;
-  INEXACT double c;
-  INEXACT double abig;
-  double ahi, alo, bhi, blo;
-  double err1, err2, err3;
-  INEXACT double _i, _j;
-  double _0;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
+  INEXACT REAL c;
+  INEXACT REAL abig;
+  REAL ahi, alo, bhi, blo;
+  REAL err1, err2, err3;
+  INEXACT REAL _i, _j;
+  REAL _0;
 
   // Avoid compiler warnings. H. Si, 2012-02-16.
   axtbclen = aytbclen = bxtcalen = bytcalen = cxtablen = cytablen = 0;
 
-  adx = (double) (pa[0] - pd[0]);
-  bdx = (double) (pb[0] - pd[0]);
-  cdx = (double) (pc[0] - pd[0]);
-  ady = (double) (pa[1] - pd[1]);
-  bdy = (double) (pb[1] - pd[1]);
-  cdy = (double) (pc[1] - pd[1]);
+  adx = (REAL) (pa[0] - pd[0]);
+  bdx = (REAL) (pb[0] - pd[0]);
+  cdx = (REAL) (pc[0] - pd[0]);
+  ady = (REAL) (pa[1] - pd[1]);
+  bdy = (REAL) (pb[1] - pd[1]);
+  cdy = (REAL) (pc[1] - pd[1]);
 
   Two_Product(bdx, cdy, bdxcdy1, bdxcdy0);
   Two_Product(cdx, bdy, cdxbdy1, cdxbdy0);
@@ -3122,13 +3118,13 @@ double incircleadapt(double *pa, double *pb, double *pc, double *pd, double perm
   return finnow[finlength - 1];
 }
 
-double incircle(double *pa, double *pb, double *pc, double *pd)
+REAL incircle(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
 {
-  double adx, bdx, cdx, ady, bdy, cdy;
-  double bdxcdy, cdxbdy, cdxady, adxcdy, adxbdy, bdxady;
-  double alift, blift, clift;
-  double det;
-  double permanent, errbound;
+  REAL adx, bdx, cdx, ady, bdy, cdy;
+  REAL bdxcdy, cdxbdy, cdxady, adxcdy, adxbdy, bdxady;
+  REAL alift, blift, clift;
+  REAL det;
+  REAL permanent, errbound;
 
   adx = pa[0] - pd[0];
   bdx = pb[0] - pd[0];
@@ -3191,14 +3187,14 @@ double incircle(double *pa, double *pb, double *pc, double *pd)
 /*                                                                           */
 /*****************************************************************************/
 
-double inspherefast(double *pa, double *pb, double *pc, double *pd, double *pe)
+REAL inspherefast(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL *pe)
 {
-  double aex, bex, cex, dex;
-  double aey, bey, cey, dey;
-  double aez, bez, cez, dez;
-  double alift, blift, clift, dlift;
-  double ab, bc, cd, da, ac, bd;
-  double abc, bcd, cda, dab;
+  REAL aex, bex, cex, dex;
+  REAL aey, bey, cey, dey;
+  REAL aez, bez, cez, dez;
+  REAL alift, blift, clift, dlift;
+  REAL ab, bc, cd, da, ac, bd;
+  REAL abc, bcd, cda, dab;
 
   aex = pa[0] - pe[0];
   bex = pb[0] - pe[0];
@@ -3234,49 +3230,49 @@ double inspherefast(double *pa, double *pb, double *pc, double *pd, double *pe)
   return (dlift * abc - clift * dab) + (blift * cda - alift * bcd);
 }
 
-double insphereexact(double *pa, double *pb, double *pc, double *pd, double *pe)
+REAL insphereexact(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL *pe)
 {
-  INEXACT double axby1, bxcy1, cxdy1, dxey1, exay1;
-  INEXACT double bxay1, cxby1, dxcy1, exdy1, axey1;
-  INEXACT double axcy1, bxdy1, cxey1, dxay1, exby1;
-  INEXACT double cxay1, dxby1, excy1, axdy1, bxey1;
-  double axby0, bxcy0, cxdy0, dxey0, exay0;
-  double bxay0, cxby0, dxcy0, exdy0, axey0;
-  double axcy0, bxdy0, cxey0, dxay0, exby0;
-  double cxay0, dxby0, excy0, axdy0, bxey0;
-  double ab[4], bc[4], cd[4], de[4], ea[4];
-  double ac[4], bd[4], ce[4], da[4], eb[4];
-  double temp8a[8], temp8b[8], temp16[16];
+  INEXACT REAL axby1, bxcy1, cxdy1, dxey1, exay1;
+  INEXACT REAL bxay1, cxby1, dxcy1, exdy1, axey1;
+  INEXACT REAL axcy1, bxdy1, cxey1, dxay1, exby1;
+  INEXACT REAL cxay1, dxby1, excy1, axdy1, bxey1;
+  REAL axby0, bxcy0, cxdy0, dxey0, exay0;
+  REAL bxay0, cxby0, dxcy0, exdy0, axey0;
+  REAL axcy0, bxdy0, cxey0, dxay0, exby0;
+  REAL cxay0, dxby0, excy0, axdy0, bxey0;
+  REAL ab[4], bc[4], cd[4], de[4], ea[4];
+  REAL ac[4], bd[4], ce[4], da[4], eb[4];
+  REAL temp8a[8], temp8b[8], temp16[16];
   int temp8alen, temp8blen, temp16len;
-  double abc[24], bcd[24], cde[24], dea[24], eab[24];
-  double abd[24], bce[24], cda[24], deb[24], eac[24];
+  REAL abc[24], bcd[24], cde[24], dea[24], eab[24];
+  REAL abd[24], bce[24], cda[24], deb[24], eac[24];
   int abclen, bcdlen, cdelen, dealen, eablen;
   int abdlen, bcelen, cdalen, deblen, eaclen;
-  double temp48a[48], temp48b[48];
+  REAL temp48a[48], temp48b[48];
   int temp48alen, temp48blen;
-  double abcd[96], bcde[96], cdea[96], deab[96], eabc[96];
+  REAL abcd[96], bcde[96], cdea[96], deab[96], eabc[96];
   int abcdlen, bcdelen, cdealen, deablen, eabclen;
-  double temp192[192];
-  double det384x[384], det384y[384], det384z[384];
+  REAL temp192[192];
+  REAL det384x[384], det384y[384], det384z[384];
   int xlen, ylen, zlen;
-  double detxy[768];
+  REAL detxy[768];
   int xylen;
-  double adet[1152], bdet[1152], cdet[1152], ddet[1152], edet[1152];
+  REAL adet[1152], bdet[1152], cdet[1152], ddet[1152], edet[1152];
   int alen, blen, clen, dlen, elen;
-  double abdet[2304], cddet[2304], cdedet[3456];
+  REAL abdet[2304], cddet[2304], cdedet[3456];
   int ablen, cdlen;
-  double deter[5760];
+  REAL deter[5760];
   int deterlen;
   int i;
 
-  INEXACT double bvirt;
-  double avirt, bround, around;
-  INEXACT double c;
-  INEXACT double abig;
-  double ahi, alo, bhi, blo;
-  double err1, err2, err3;
-  INEXACT double _i, _j;
-  double _0;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
+  INEXACT REAL c;
+  INEXACT REAL abig;
+  REAL ahi, alo, bhi, blo;
+  REAL err1, err2, err3;
+  INEXACT REAL _i, _j;
+  REAL _0;
 
 
   Two_Product(pa[0], pb[1], axby1, axby0);
@@ -3487,51 +3483,51 @@ double insphereexact(double *pa, double *pb, double *pc, double *pd, double *pe)
   return deter[deterlen - 1];
 }
 
-double insphereslow(double *pa, double *pb, double *pc, double *pd, double *pe)
+REAL insphereslow(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL *pe)
 {
-  INEXACT double aex, bex, cex, dex, aey, bey, cey, dey, aez, bez, cez, dez;
-  double aextail, bextail, cextail, dextail;
-  double aeytail, beytail, ceytail, deytail;
-  double aeztail, beztail, ceztail, deztail;
-  double negate, negatetail;
-  INEXACT double axby7, bxcy7, cxdy7, dxay7, axcy7, bxdy7;
-  INEXACT double bxay7, cxby7, dxcy7, axdy7, cxay7, dxby7;
-  double axby[8], bxcy[8], cxdy[8], dxay[8], axcy[8], bxdy[8];
-  double bxay[8], cxby[8], dxcy[8], axdy[8], cxay[8], dxby[8];
-  double ab[16], bc[16], cd[16], da[16], ac[16], bd[16];
+  INEXACT REAL aex, bex, cex, dex, aey, bey, cey, dey, aez, bez, cez, dez;
+  REAL aextail, bextail, cextail, dextail;
+  REAL aeytail, beytail, ceytail, deytail;
+  REAL aeztail, beztail, ceztail, deztail;
+  REAL negate, negatetail;
+  INEXACT REAL axby7, bxcy7, cxdy7, dxay7, axcy7, bxdy7;
+  INEXACT REAL bxay7, cxby7, dxcy7, axdy7, cxay7, dxby7;
+  REAL axby[8], bxcy[8], cxdy[8], dxay[8], axcy[8], bxdy[8];
+  REAL bxay[8], cxby[8], dxcy[8], axdy[8], cxay[8], dxby[8];
+  REAL ab[16], bc[16], cd[16], da[16], ac[16], bd[16];
   int ablen, bclen, cdlen, dalen, aclen, bdlen;
-  double temp32a[32], temp32b[32], temp64a[64], temp64b[64], temp64c[64];
+  REAL temp32a[32], temp32b[32], temp64a[64], temp64b[64], temp64c[64];
   int temp32alen, temp32blen, temp64alen, temp64blen, temp64clen;
-  double temp128[128], temp192[192];
+  REAL temp128[128], temp192[192];
   int temp128len, temp192len;
-  double detx[384], detxx[768], detxt[384], detxxt[768], detxtxt[768];
+  REAL detx[384], detxx[768], detxt[384], detxxt[768], detxtxt[768];
   int xlen, xxlen, xtlen, xxtlen, xtxtlen;
-  double x1[1536], x2[2304];
+  REAL x1[1536], x2[2304];
   int x1len, x2len;
-  double dety[384], detyy[768], detyt[384], detyyt[768], detytyt[768];
+  REAL dety[384], detyy[768], detyt[384], detyyt[768], detytyt[768];
   int ylen, yylen, ytlen, yytlen, ytytlen;
-  double y1[1536], y2[2304];
+  REAL y1[1536], y2[2304];
   int y1len, y2len;
-  double detz[384], detzz[768], detzt[384], detzzt[768], detztzt[768];
+  REAL detz[384], detzz[768], detzt[384], detzzt[768], detztzt[768];
   int zlen, zzlen, ztlen, zztlen, ztztlen;
-  double z1[1536], z2[2304];
+  REAL z1[1536], z2[2304];
   int z1len, z2len;
-  double detxy[4608];
+  REAL detxy[4608];
   int xylen;
-  double adet[6912], bdet[6912], cdet[6912], ddet[6912];
+  REAL adet[6912], bdet[6912], cdet[6912], ddet[6912];
   int alen, blen, clen, dlen;
-  double abdet[13824], cddet[13824], deter[27648];
+  REAL abdet[13824], cddet[13824], deter[27648];
   int deterlen;
   int i;
 
-  INEXACT double bvirt;
-  double avirt, bround, around;
-  INEXACT double c;
-  INEXACT double abig;
-  double a0hi, a0lo, a1hi, a1lo, bhi, blo;
-  double err1, err2, err3;
-  INEXACT double _i, _j, _k, _l, _m, _n;
-  double _0, _1, _2;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
+  INEXACT REAL c;
+  INEXACT REAL abig;
+  REAL a0hi, a0lo, a1hi, a1lo, bhi, blo;
+  REAL err1, err2, err3;
+  INEXACT REAL _i, _j, _k, _l, _m, _n;
+  REAL _0, _1, _2;
 
   Two_Diff(pa[0], pe[0], aex, aextail);
   Two_Diff(pa[1], pe[1], aey, aeytail);
@@ -3816,58 +3812,58 @@ double insphereslow(double *pa, double *pb, double *pc, double *pd, double *pe)
   return deter[deterlen - 1];
 }
 
-double insphereadapt(double *pa, double *pb, double *pc, double *pd, double *pe,
-                   double permanent)
+REAL insphereadapt(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL *pe,
+                   REAL permanent)
 {
-  INEXACT double aex, bex, cex, dex, aey, bey, cey, dey, aez, bez, cez, dez;
-  double det, errbound;
+  INEXACT REAL aex, bex, cex, dex, aey, bey, cey, dey, aez, bez, cez, dez;
+  REAL det, errbound;
 
-  INEXACT double aexbey1, bexaey1, bexcey1, cexbey1;
-  INEXACT double cexdey1, dexcey1, dexaey1, aexdey1;
-  INEXACT double aexcey1, cexaey1, bexdey1, dexbey1;
-  double aexbey0, bexaey0, bexcey0, cexbey0;
-  double cexdey0, dexcey0, dexaey0, aexdey0;
-  double aexcey0, cexaey0, bexdey0, dexbey0;
-  double ab[4], bc[4], cd[4], da[4], ac[4], bd[4];
-  INEXACT double ab3, bc3, cd3, da3, ac3, bd3;
-  double abeps, bceps, cdeps, daeps, aceps, bdeps;
-  double temp8a[8], temp8b[8], temp8c[8], temp16[16], temp24[24], temp48[48];
+  INEXACT REAL aexbey1, bexaey1, bexcey1, cexbey1;
+  INEXACT REAL cexdey1, dexcey1, dexaey1, aexdey1;
+  INEXACT REAL aexcey1, cexaey1, bexdey1, dexbey1;
+  REAL aexbey0, bexaey0, bexcey0, cexbey0;
+  REAL cexdey0, dexcey0, dexaey0, aexdey0;
+  REAL aexcey0, cexaey0, bexdey0, dexbey0;
+  REAL ab[4], bc[4], cd[4], da[4], ac[4], bd[4];
+  INEXACT REAL ab3, bc3, cd3, da3, ac3, bd3;
+  REAL abeps, bceps, cdeps, daeps, aceps, bdeps;
+  REAL temp8a[8], temp8b[8], temp8c[8], temp16[16], temp24[24], temp48[48];
   int temp8alen, temp8blen, temp8clen, temp16len, temp24len, temp48len;
-  double xdet[96], ydet[96], zdet[96], xydet[192];
+  REAL xdet[96], ydet[96], zdet[96], xydet[192];
   int xlen, ylen, zlen, xylen;
-  double adet[288], bdet[288], cdet[288], ddet[288];
+  REAL adet[288], bdet[288], cdet[288], ddet[288];
   int alen, blen, clen, dlen;
-  double abdet[576], cddet[576];
+  REAL abdet[576], cddet[576];
   int ablen, cdlen;
-  double fin1[1152];
+  REAL fin1[1152];
   int finlength;
 
-  double aextail, bextail, cextail, dextail;
-  double aeytail, beytail, ceytail, deytail;
-  double aeztail, beztail, ceztail, deztail;
+  REAL aextail, bextail, cextail, dextail;
+  REAL aeytail, beytail, ceytail, deytail;
+  REAL aeztail, beztail, ceztail, deztail;
 
-  INEXACT double bvirt;
-  double avirt, bround, around;
-  INEXACT double c;
-  INEXACT double abig;
-  double ahi, alo, bhi, blo;
-  double err1, err2, err3;
-  INEXACT double _i, _j;
-  double _0;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
+  INEXACT REAL c;
+  INEXACT REAL abig;
+  REAL ahi, alo, bhi, blo;
+  REAL err1, err2, err3;
+  INEXACT REAL _i, _j;
+  REAL _0;
 
 
-  aex = (double) (pa[0] - pe[0]);
-  bex = (double) (pb[0] - pe[0]);
-  cex = (double) (pc[0] - pe[0]);
-  dex = (double) (pd[0] - pe[0]);
-  aey = (double) (pa[1] - pe[1]);
-  bey = (double) (pb[1] - pe[1]);
-  cey = (double) (pc[1] - pe[1]);
-  dey = (double) (pd[1] - pe[1]);
-  aez = (double) (pa[2] - pe[2]);
-  bez = (double) (pb[2] - pe[2]);
-  cez = (double) (pc[2] - pe[2]);
-  dez = (double) (pd[2] - pe[2]);
+  aex = (REAL) (pa[0] - pe[0]);
+  bex = (REAL) (pb[0] - pe[0]);
+  cex = (REAL) (pc[0] - pe[0]);
+  dex = (REAL) (pd[0] - pe[0]);
+  aey = (REAL) (pa[1] - pe[1]);
+  bey = (REAL) (pb[1] - pe[1]);
+  cey = (REAL) (pc[1] - pe[1]);
+  dey = (REAL) (pd[1] - pe[1]);
+  aez = (REAL) (pa[2] - pe[2]);
+  bez = (REAL) (pb[2] - pe[2]);
+  cez = (REAL) (pc[2] - pe[2]);
+  dez = (REAL) (pd[2] - pe[2]);
 
   Two_Product(aex, bey, aexbey1, aexbey0);
   Two_Product(bex, aey, bexaey1, bexaey0);
@@ -4034,9 +4030,9 @@ double insphereadapt(double *pa, double *pb, double *pc, double *pd, double *pe,
 
 #ifdef USE_CGAL_PREDICATES
 
-double insphere(double *pa, double *pb, double *pc, double *pd, double *pe)
+REAL insphere(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL *pe)
 {
-  return (double)
+  return (REAL)
     - cgal_pred_obj.side_of_oriented_sphere_3_object()
         (Point(pa[0], pa[1], pa[2]),
          Point(pb[0], pb[1], pb[2]),
@@ -4047,17 +4043,17 @@ double insphere(double *pa, double *pb, double *pc, double *pd, double *pe)
 
 #else
 
-double insphere(double *pa, double *pb, double *pc, double *pd, double *pe)
+REAL insphere(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL *pe)
 {
-  double aex, bex, cex, dex;
-  double aey, bey, cey, dey;
-  double aez, bez, cez, dez;
-  double aexbey, bexaey, bexcey, cexbey, cexdey, dexcey, dexaey, aexdey;
-  double aexcey, cexaey, bexdey, dexbey;
-  double alift, blift, clift, dlift;
-  double ab, bc, cd, da, ac, bd;
-  double abc, bcd, cda, dab;
-  double det;
+  REAL aex, bex, cex, dex;
+  REAL aey, bey, cey, dey;
+  REAL aez, bez, cez, dez;
+  REAL aexbey, bexaey, bexcey, cexbey, cexdey, dexcey, dexaey, aexdey;
+  REAL aexcey, cexaey, bexdey, dexbey;
+  REAL alift, blift, clift, dlift;
+  REAL ab, bc, cd, da, ac, bd;
+  REAL abc, bcd, cda, dab;
+  REAL det;
 
 
   aex = pa[0] - pe[0];
@@ -4116,11 +4112,11 @@ double insphere(double *pa, double *pb, double *pc, double *pd, double *pe)
 
   }
 
-  double aezplus, bezplus, cezplus, dezplus;
-  double aexbeyplus, bexaeyplus, bexceyplus, cexbeyplus;
-  double cexdeyplus, dexceyplus, dexaeyplus, aexdeyplus;
-  double aexceyplus, cexaeyplus, bexdeyplus, dexbeyplus;
-  double permanent, errbound;
+  REAL aezplus, bezplus, cezplus, dezplus;
+  REAL aexbeyplus, bexaeyplus, bexceyplus, cexbeyplus;
+  REAL cexdeyplus, dexceyplus, dexaeyplus, aexdeyplus;
+  REAL aexceyplus, cexaeyplus, bexdeyplus, dexbeyplus;
+  REAL permanent, errbound;
 
   aezplus = Absolute(aez);
   bezplus = Absolute(bez);
@@ -4186,46 +4182,46 @@ double insphere(double *pa, double *pb, double *pc, double *pd, double *pe)
 /*                                                                           */
 /*****************************************************************************/
 
-double orient4dexact(double* pa, double* pb, double* pc, double* pd, double* pe,
-                   double aheight, double bheight, double cheight, double dheight,
-                   double eheight)
+REAL orient4dexact(REAL* pa, REAL* pb, REAL* pc, REAL* pd, REAL* pe,
+                   REAL aheight, REAL bheight, REAL cheight, REAL dheight, 
+                   REAL eheight)
 {
-  INEXACT double axby1, bxcy1, cxdy1, dxey1, exay1;
-  INEXACT double bxay1, cxby1, dxcy1, exdy1, axey1;
-  INEXACT double axcy1, bxdy1, cxey1, dxay1, exby1;
-  INEXACT double cxay1, dxby1, excy1, axdy1, bxey1;
-  double axby0, bxcy0, cxdy0, dxey0, exay0;
-  double bxay0, cxby0, dxcy0, exdy0, axey0;
-  double axcy0, bxdy0, cxey0, dxay0, exby0;
-  double cxay0, dxby0, excy0, axdy0, bxey0;
-  double ab[4], bc[4], cd[4], de[4], ea[4];
-  double ac[4], bd[4], ce[4], da[4], eb[4];
-  double temp8a[8], temp8b[8], temp16[16];
+  INEXACT REAL axby1, bxcy1, cxdy1, dxey1, exay1;
+  INEXACT REAL bxay1, cxby1, dxcy1, exdy1, axey1;
+  INEXACT REAL axcy1, bxdy1, cxey1, dxay1, exby1;
+  INEXACT REAL cxay1, dxby1, excy1, axdy1, bxey1;
+  REAL axby0, bxcy0, cxdy0, dxey0, exay0;
+  REAL bxay0, cxby0, dxcy0, exdy0, axey0;
+  REAL axcy0, bxdy0, cxey0, dxay0, exby0;
+  REAL cxay0, dxby0, excy0, axdy0, bxey0;
+  REAL ab[4], bc[4], cd[4], de[4], ea[4];
+  REAL ac[4], bd[4], ce[4], da[4], eb[4];
+  REAL temp8a[8], temp8b[8], temp16[16];
   int temp8alen, temp8blen, temp16len;
-  double abc[24], bcd[24], cde[24], dea[24], eab[24];
-  double abd[24], bce[24], cda[24], deb[24], eac[24];
+  REAL abc[24], bcd[24], cde[24], dea[24], eab[24];
+  REAL abd[24], bce[24], cda[24], deb[24], eac[24];
   int abclen, bcdlen, cdelen, dealen, eablen;
   int abdlen, bcelen, cdalen, deblen, eaclen;
-  double temp48a[48], temp48b[48];
+  REAL temp48a[48], temp48b[48];
   int temp48alen, temp48blen;
-  double abcd[96], bcde[96], cdea[96], deab[96], eabc[96];
+  REAL abcd[96], bcde[96], cdea[96], deab[96], eabc[96];
   int abcdlen, bcdelen, cdealen, deablen, eabclen;
-  double adet[192], bdet[192], cdet[192], ddet[192], edet[192];
+  REAL adet[192], bdet[192], cdet[192], ddet[192], edet[192];
   int alen, blen, clen, dlen, elen;
-  double abdet[384], cddet[384], cdedet[576];
+  REAL abdet[384], cddet[384], cdedet[576];
   int ablen, cdlen;
-  double deter[960];
+  REAL deter[960];
   int deterlen;
   int i;
 
-  INEXACT double bvirt;
-  double avirt, bround, around;
-  INEXACT double c;
-  INEXACT double abig;
-  double ahi, alo, bhi, blo;
-  double err1, err2, err3;
-  INEXACT double _i, _j;
-  double _0;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
+  INEXACT REAL c;
+  INEXACT REAL abig;
+  REAL ahi, alo, bhi, blo;
+  REAL err1, err2, err3;
+  INEXACT REAL _i, _j;
+  REAL _0;
 
 
   Two_Product(pa[0], pb[1], axby1, axby0);
@@ -4401,63 +4397,63 @@ double orient4dexact(double* pa, double* pb, double* pc, double* pd, double* pe,
   return deter[deterlen - 1];
 }
 
-double orient4dadapt(double* pa, double* pb, double* pc, double* pd, double* pe,
-                   double aheight, double bheight, double cheight, double dheight,
-                   double eheight, double permanent)
+REAL orient4dadapt(REAL* pa, REAL* pb, REAL* pc, REAL* pd, REAL* pe,
+                   REAL aheight, REAL bheight, REAL cheight, REAL dheight, 
+                   REAL eheight, REAL permanent)
 {
-  INEXACT double aex, bex, cex, dex, aey, bey, cey, dey, aez, bez, cez, dez;
-  INEXACT double aeheight, beheight, ceheight, deheight;
-  double det, errbound;
+  INEXACT REAL aex, bex, cex, dex, aey, bey, cey, dey, aez, bez, cez, dez;
+  INEXACT REAL aeheight, beheight, ceheight, deheight;
+  REAL det, errbound;
 
-  INEXACT double aexbey1, bexaey1, bexcey1, cexbey1;
-  INEXACT double cexdey1, dexcey1, dexaey1, aexdey1;
-  INEXACT double aexcey1, cexaey1, bexdey1, dexbey1;
-  double aexbey0, bexaey0, bexcey0, cexbey0;
-  double cexdey0, dexcey0, dexaey0, aexdey0;
-  double aexcey0, cexaey0, bexdey0, dexbey0;
-  double ab[4], bc[4], cd[4], da[4], ac[4], bd[4];
-  INEXACT double ab3, bc3, cd3, da3, ac3, bd3;
-  double abeps, bceps, cdeps, daeps, aceps, bdeps;
-  double temp8a[8], temp8b[8], temp8c[8], temp16[16], temp24[24];
+  INEXACT REAL aexbey1, bexaey1, bexcey1, cexbey1;
+  INEXACT REAL cexdey1, dexcey1, dexaey1, aexdey1;
+  INEXACT REAL aexcey1, cexaey1, bexdey1, dexbey1;
+  REAL aexbey0, bexaey0, bexcey0, cexbey0;
+  REAL cexdey0, dexcey0, dexaey0, aexdey0;
+  REAL aexcey0, cexaey0, bexdey0, dexbey0;
+  REAL ab[4], bc[4], cd[4], da[4], ac[4], bd[4];
+  INEXACT REAL ab3, bc3, cd3, da3, ac3, bd3;
+  REAL abeps, bceps, cdeps, daeps, aceps, bdeps;
+  REAL temp8a[8], temp8b[8], temp8c[8], temp16[16], temp24[24];
   int temp8alen, temp8blen, temp8clen, temp16len, temp24len;
-  double adet[48], bdet[48], cdet[48], ddet[48];
+  REAL adet[48], bdet[48], cdet[48], ddet[48];
   int alen, blen, clen, dlen;
-  double abdet[96], cddet[96];
+  REAL abdet[96], cddet[96];
   int ablen, cdlen;
-  double fin1[192];
+  REAL fin1[192];
   int finlength;
 
-  double aextail, bextail, cextail, dextail;
-  double aeytail, beytail, ceytail, deytail;
-  double aeztail, beztail, ceztail, deztail;
-  double aeheighttail, beheighttail, ceheighttail, deheighttail;
+  REAL aextail, bextail, cextail, dextail;
+  REAL aeytail, beytail, ceytail, deytail;
+  REAL aeztail, beztail, ceztail, deztail;
+  REAL aeheighttail, beheighttail, ceheighttail, deheighttail;
 
-  INEXACT double bvirt;
-  double avirt, bround, around;
-  INEXACT double c;
-  INEXACT double abig;
-  double ahi, alo, bhi, blo;
-  double err1, err2, err3;
-  INEXACT double _i, _j;
-  double _0;
+  INEXACT REAL bvirt;
+  REAL avirt, bround, around;
+  INEXACT REAL c;
+  INEXACT REAL abig;
+  REAL ahi, alo, bhi, blo;
+  REAL err1, err2, err3;
+  INEXACT REAL _i, _j;
+  REAL _0;
 
 
-  aex = (double) (pa[0] - pe[0]);
-  bex = (double) (pb[0] - pe[0]);
-  cex = (double) (pc[0] - pe[0]);
-  dex = (double) (pd[0] - pe[0]);
-  aey = (double) (pa[1] - pe[1]);
-  bey = (double) (pb[1] - pe[1]);
-  cey = (double) (pc[1] - pe[1]);
-  dey = (double) (pd[1] - pe[1]);
-  aez = (double) (pa[2] - pe[2]);
-  bez = (double) (pb[2] - pe[2]);
-  cez = (double) (pc[2] - pe[2]);
-  dez = (double) (pd[2] - pe[2]);
-  aeheight = (double) (aheight - eheight);
-  beheight = (double) (bheight - eheight);
-  ceheight = (double) (cheight - eheight);
-  deheight = (double) (dheight - eheight);
+  aex = (REAL) (pa[0] - pe[0]);
+  bex = (REAL) (pb[0] - pe[0]);
+  cex = (REAL) (pc[0] - pe[0]);
+  dex = (REAL) (pd[0] - pe[0]);
+  aey = (REAL) (pa[1] - pe[1]);
+  bey = (REAL) (pb[1] - pe[1]);
+  cey = (REAL) (pc[1] - pe[1]);
+  dey = (REAL) (pd[1] - pe[1]);
+  aez = (REAL) (pa[2] - pe[2]);
+  bez = (REAL) (pb[2] - pe[2]);
+  cez = (REAL) (pc[2] - pe[2]);
+  dez = (REAL) (pd[2] - pe[2]);
+  aeheight = (REAL) (aheight - eheight);
+  beheight = (REAL) (bheight - eheight);
+  ceheight = (REAL) (cheight - eheight);
+  deheight = (REAL) (dheight - eheight);
 
   Two_Product(aex, bey, aexbey1, aexbey0);
   Two_Product(bex, aey, bexaey1, bexaey0);
@@ -4597,24 +4593,24 @@ double orient4dadapt(double* pa, double* pb, double* pc, double* pd, double* pe,
                        aheight, bheight, cheight, dheight, eheight);
 }
 
-double orient4d(double* pa, double* pb, double* pc, double* pd, double* pe,
-              double aheight, double bheight, double cheight, double dheight,
-              double eheight)
+REAL orient4d(REAL* pa, REAL* pb, REAL* pc, REAL* pd, REAL* pe, 
+              REAL aheight, REAL bheight, REAL cheight, REAL dheight, 
+              REAL eheight)
 {
- double aex, bex, cex, dex;
- double aey, bey, cey, dey;
- double aez, bez, cez, dez;
- double aexbey, bexaey, bexcey, cexbey, cexdey, dexcey, dexaey, aexdey;
- double aexcey, cexaey, bexdey, dexbey;
- double aeheight, beheight, ceheight, deheight;
- double ab, bc, cd, da, ac, bd;
- double abc, bcd, cda, dab;
- double aezplus, bezplus, cezplus, dezplus;
- double aexbeyplus, bexaeyplus, bexceyplus, cexbeyplus;
- double cexdeyplus, dexceyplus, dexaeyplus, aexdeyplus;
- double aexceyplus, cexaeyplus, bexdeyplus, dexbeyplus;
- double det;
- double permanent, errbound;
+ REAL aex, bex, cex, dex;
+ REAL aey, bey, cey, dey;
+ REAL aez, bez, cez, dez;
+ REAL aexbey, bexaey, bexcey, cexbey, cexdey, dexcey, dexaey, aexdey;
+ REAL aexcey, cexaey, bexdey, dexbey;
+ REAL aeheight, beheight, ceheight, deheight;
+ REAL ab, bc, cd, da, ac, bd;
+ REAL abc, bcd, cda, dab;
+ REAL aezplus, bezplus, cezplus, dezplus;
+ REAL aexbeyplus, bexaeyplus, bexceyplus, cexbeyplus;
+ REAL cexdeyplus, dexceyplus, dexaeyplus, aexdeyplus;
+ REAL aexceyplus, cexaeyplus, bexdeyplus, dexbeyplus;
+ REAL det;
+ REAL permanent, errbound;
 
 
  aex = pa[0] - pe[0];

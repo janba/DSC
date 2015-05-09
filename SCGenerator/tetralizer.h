@@ -43,5 +43,5 @@ public:
 
     static void tetralize(const vec3& origin, const vec3& voxel_size, int Ni, int Nj, int Nk, const std::vector<int>& voxel_labels, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels);
 
-    static void tetralize(const vec3& origin, const vec3& size, double avg_edge_length, std::vector<unsigned int>& labels, std::vector<is_mesh::Geometry*>& geometries, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels);
+    static void tetralize(const vec3& origin, const vec3& size, double avg_edge_length, std::vector<unsigned int>& labels, std::vector<std::shared_ptr<is_mesh::Geometry>>& geometries, std::vector<vec3>& points, std::vector<int>& tets, std::vector<int>& tet_labels);
 };
