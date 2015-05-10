@@ -11,12 +11,17 @@ namespace DSC {
             : is_mesh_ptr(std::make_shared<ISMesh>(points, tets, tet_labels))
     {
         set_avg_edge_length();
+#ifdef DEBUG
+        validity_check();
+#endif
 
     }
     DeformableSimplicialComplex::DeformableSimplicialComplex(shared_ptr<ISMesh> ptr)
     :is_mesh_ptr(ptr) {
         set_avg_edge_length();
-
+#ifdef DEBUG
+        validity_check();
+#endif
     }
 
     DeformableSimplicialComplex::~DeformableSimplicialComplex() {
@@ -879,13 +884,16 @@ namespace DSC {
     }
 
     void DeformableSimplicialComplex::smooth() {
-        for (auto& nit : is_mesh_ptr->nodes())
-        {
-            if (is_safe_editable(nit.key()))
+        int partition_dimension = 0;
+        double partitionLength = get_max_edge_length()*2.1f; // make the partition length over twice the max edge length
+
+        is_mesh_ptr->for_each_par_sp<Node>(partitionLength, partition_dimension,[&](Node& n, int threadid){
+            auto k = n.key();
+            if (is_safe_editable(k))
             {
-                nit.set_pos( smart_laplacian(nit.key()));
+                n.set_pos( smart_laplacian(k));
             }
-        }
+        });
     }
 
     void DeformableSimplicialComplex::fix_complex(bool optimizeMeshStructure) {
@@ -954,6 +962,7 @@ namespace DSC {
         }
 #ifdef DEBUG
         is_mesh_ptr->validity_check();
+        validity_check();
 #endif
     }
 
@@ -1882,4 +1891,78 @@ namespace DSC {
         set_avg_edge_length();
     }
 
+    bool DeformableSimplicialComplex::validity_check() {
+        cout << "Validate DSC ";
+
+        int minEdges = 0;
+        int maxEdges = 0;
+        int minEdgeQuality = 0;
+        int edgeCount = 0;
+        for (is_mesh::Edge & e : is_mesh_ptr->edges()){
+            auto length = e.length();
+            if (length < pars.MIN_LENGTH*AVG_LENGTH){
+                minEdges++;
+            }
+            if (length > pars.MIN_LENGTH*AVG_LENGTH){
+                maxEdges++;
+            }
+            if (quality(e.key()) < minEdgeQuality){
+                minEdgeQuality++;
+            }
+            edgeCount++;
+        }
+
+        int minVol = 0;
+        int maxVol = 0;
+        int minTQuality = 0;
+        int tetCount = 0;
+        for (is_mesh::Tetrahedron &t : is_mesh_ptr->tetrahedra()){
+            auto vol = t.volume();
+            if (vol < pars.MIN_VOLUME*AVG_VOLUME){
+                minVol++;
+            }
+            if (vol > pars.MAX_VOLUME*AVG_VOLUME){
+                maxVol++;
+            }
+            if (t.quality() < pars.MIN_TET_QUALITY){
+                minTQuality++;
+            }
+            tetCount++;
+        }
+
+        int minFQuality = 0;
+        int faceCount = 0;
+        for (is_mesh::Face &f : is_mesh_ptr->faces()){
+            if (f.quality() < pars.MIN_FACE_QUALITY){
+                minFQuality++;
+            }
+            faceCount++;
+        }
+
+        bool valid =  minEdges == 0 && maxEdges == 0 && minEdgeQuality == 0 && minVol == 0 && maxVol == 0 && minTQuality == 0 && minFQuality == 0;
+        if (valid){
+            cout << "OK"<<endl;
+        } else {
+            cout << endl;
+            cout <<  "minEdges "<<  minEdges <<"/"<< edgeCount <<endl;
+            cout <<  "maxEdges "<<  maxEdges <<"/"<< edgeCount <<endl;
+            cout <<  "minEdgeQuality "<<  minEdgeQuality <<"/"<< edgeCount <<endl;
+            cout <<  "minVol "<<  minVol <<"/"<< tetCount <<endl;
+            cout <<  "maxVol "<<  maxVol<<"/"<< tetCount <<endl;
+            cout <<  "minTQuality "<<  minTQuality<<"/"<< tetCount <<endl;
+            cout <<  "minFQuality "<<  minFQuality <<"/"<< faceCount<<endl;
+        }
+        return valid;
+
+    }
+
+    double DeformableSimplicialComplex::get_max_edge_length() const {
+        std::vector<double> m(std::thread::hardware_concurrency(), 0.0);
+        is_mesh_ptr->for_each_par<is_mesh::Edge>([&](is_mesh::Edge& e, int id){
+            m[id] = std::max(m[id], e.sqr_length());
+        });
+
+        double resSqr = *std::max_element(m.begin(), m.end());
+        return sqrt(resSqr);
+    }
 }

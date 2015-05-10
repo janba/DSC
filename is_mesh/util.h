@@ -429,6 +429,8 @@ namespace Util
         return sqrt(ms_length(a, b, c, d));
     }
 
+
+    // https://hal.inria.fr/inria-00518327
     inline double quality(const vec3& a, const vec3& b, const vec3& c, const vec3& d)
     {
         double v = signed_volume(a, b, c, d);

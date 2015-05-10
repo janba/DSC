@@ -45,8 +45,10 @@ namespace is_mesh
         bool is_interface() noexcept;
 
         double length() const;
+        double sqr_length() const;
 
         double length_destination() const;
+        double sqr_length_destination() const;
 
         EdgeKey key() const noexcept;
     private:

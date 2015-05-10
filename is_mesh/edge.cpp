@@ -78,9 +78,19 @@ namespace is_mesh
         return Util::length(m_mesh->get(nids[0]).get_pos() - m_mesh->get(nids[1]).get_pos());
     }
 
+    double Edge::sqr_length() const {
+        const SimplexSet<NodeKey> & nids = node_keys();
+        return Util::sqr_length(m_mesh->get(nids[0]).get_pos() - m_mesh->get(nids[1]).get_pos());
+    }
+
     double Edge::length_destination() const {
         const SimplexSet<NodeKey> & nids = node_keys();
         return Util::length(m_mesh->get(nids[0]).get_destination() - m_mesh->get(nids[1]).get_destination());
+    }
+
+    double Edge::sqr_length_destination() const {
+        const SimplexSet<NodeKey> & nids = node_keys();
+        return Util::sqr_length(m_mesh->get(nids[0]).get_destination() - m_mesh->get(nids[1]).get_destination());
     }
 
     EdgeKey Edge::key() const noexcept {

@@ -67,33 +67,6 @@ struct parameters {
               MAX_VOLUME(MAX_VOLUME) {
     }
 
-    // eksperimental
-    parameters(double avg_edge_length){
-        DEG_EDGE_QUALITY = 0.1;
-        MIN_EDGE_QUALITY = 0.5;
-
-        // Thresholds on the quality of faces.
-        DEG_FACE_QUALITY = 0.0005;
-        MIN_FACE_QUALITY = 0.015;
-
-        // Thresholds on the quality of tetrahedra.
-        DEG_TET_QUALITY = 0.3;
-        MIN_TET_QUALITY = 0.5;
-
-
-        MIN_LENGTH = avg_edge_length*0.50;
-        MAX_AREA = avg_edge_length*2.00;
-
-        // average area of regular triangle with edge length avg_edge_length
-        double averageArea = (sqrt(3.0)/4.0)*avg_edge_length*avg_edge_length;
-        MIN_AREA = averageArea*0.50;
-        MAX_AREA = averageArea*2.00;
-
-        // average volume of regular tetrahedron with edge length avg_edge_length
-        double averageVolume = pow(avg_edge_length,3) / (6 * sqrt(2.0));
-        MIN_VOLUME = averageVolume*0.50;
-        MAX_VOLUME = averageVolume*2.00;
-    }
 };
 
 namespace DSC {
@@ -269,7 +242,6 @@ namespace DSC {
         /////////////
 
     private:
-        
         //////////////////////////////
         // TOPOLOGICAL EDGE REMOVAL //
         //////////////////////////////
@@ -582,7 +554,9 @@ namespace DSC {
         * Returns the old (in min_q_old) and new (in min_q_new) minimum tetrahedral quality of when moving a node from old_pos to new_pos. The faces in the link of the node should be passed in fids.
         */
         void min_quality(const is_mesh::SimplexSet<is_mesh::FaceKey>& fids, const vec3& pos_old, const vec3& pos_new, double& min_q_old, double& min_q_new);
-        
+
+
+        double get_max_edge_length() const;
         
     private:
         /**
@@ -642,6 +616,11 @@ namespace DSC {
         void test_flip44();
 
         void test_flip22();
+
+        /**
+        * Validates that the constraints in the parameters is satisfied
+        */
+        bool validity_check();
 
     };
 }
