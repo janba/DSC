@@ -6,6 +6,7 @@
 #include "Query.h"
 #include "is_mesh/is_mesh.h"
 #include <limits>
+#include <cmath>
 
 using namespace CGLA;
 
@@ -19,6 +20,16 @@ using namespace CGLA;
 */
 namespace is_mesh {
 
+    // It is very likely to raytrace regular axis aligned meshes where the origin of the ray happens to match one of the
+    // planes in the mesh. This minimizes the change of this significant.
+    vec3 addEpsilonOffset(vec3 v){
+        return v + vec3(0.001,0.003,0.007);
+//        return vec3(
+//                nextafter((float)v[0],FLT_MAX),
+//                nextafter(nextafter((float)v[1],FLT_MAX),FLT_MAX),
+//                nextafter(nextafter(nextafter((float)v[2],FLT_MAX),FLT_MAX),FLT_MAX));
+    }
+
     Query::Query(ISMesh *mesh)
             : mesh(mesh) {
 
@@ -29,6 +40,7 @@ namespace is_mesh {
     }
 
     QueryResult Query::raycast_faces(Ray ray, QueryType queryType) {
+        ray = Ray(addEpsilonOffset(ray.get_origin()), ray.get_direction());
         if (!boundary_faces){
             rebuild_boundary_cache();
         }
@@ -49,10 +61,10 @@ namespace is_mesh {
                         firstIntersection = faceIter;
                         dist = newDist;
                     }
-                    break;
                 }
             }
         }
+
         if ((unsigned int)firstIntersection == (unsigned int)-1){
             return QueryResult();
         }
@@ -78,8 +90,10 @@ namespace is_mesh {
         face_key = FaceKey((unsigned int) -1);
     }
 
+
     QueryResultIterator::QueryResultIterator(FaceKey const &first_boundary_intersection, double dist, Ray const &ray, QueryType const &query_type, ISMesh *mesh)
-            : face_key(first_boundary_intersection), dist(dist), ray(ray), query_type(query_type), mesh(mesh) {
+            : face_key(first_boundary_intersection), dist(dist), ray(ray.get_origin(), ray.get_direction()),query_type(query_type), mesh(mesh) {
+
         tetrahedron_key = mesh->get(first_boundary_intersection).tet_keys(); // since boundary always only one
         if (dist < 0 || query_type == QueryType::Interface){
             next();
@@ -91,43 +105,44 @@ namespace is_mesh {
             face_key = FaceKey((unsigned int) -1);
         } else {
             while (tetrahedron_key.size()>0){
-                SimplexSet<FaceKey> faces = mesh->get(tetrahedron_key.front()).face_keys() - face_key;
-                double newDist = std::numeric_limits<double>::max();
-                for (FaceKey current_face_key : faces) {
-                    auto & face = mesh->get(current_face_key);
-                    auto nodePos = mesh->get_pos(face.node_keys());
-                    if (ray.intersect_triangle(nodePos[0], nodePos[1], nodePos[2], newDist)) {
-                        face_key = current_face_key;
-                        tetrahedron_key = face.get_co_boundary() - tetrahedron_key;
-                        if (newDist >=0 && (query_type == QueryType::All ||
-                                (query_type == QueryType::Interface && face.is_interface()) ||
-                                (query_type == QueryType::Boundary && face.is_boundary()))){
-                            dist = newDist;
-                            return;
-                        }
-                        break;
-                    }
-                }
-                bool notFound = newDist == std::numeric_limits<double>::max() ;
-                if (notFound){
-#ifdef DEBUG
-                    auto & face = mesh->get(face_key);
-                    auto node_pos = mesh->get_pos(face.node_keys());
-                    for(auto n : node_pos){
-                        std::cerr << n <<" dist to ray "<< ray.distance(n) << std::endl;
-                    }
-                    assert(false);
-#endif
-                    face_key = FaceKey((unsigned int) -1);
+                SimplexSet<FaceKey> faces = mesh->get_faces(tetrahedron_key) - face_key;
+                double oldDist = dist;
+                if (tetWalking(faces)){
                     return;
                 }
+                bool found_new_tet = oldDist != dist;
+                if (found_new_tet){
+                    continue;
+                }
+                break;
             }
         }
         face_key = FaceKey((unsigned int) -1);
     }
 
+    bool QueryResultIterator::tetWalking(SimplexSet < FaceKey > &faces) {
+        double newDist = std::numeric_limits<double>::max();
+        bool found = false;
+        for (FaceKey current_face_key : faces) {
+            Face & face = mesh->get(current_face_key);
+            auto nodePos = mesh->get_pos(face.node_keys());
+            if (ray.intersect_triangle(nodePos[0], nodePos[1], nodePos[2], newDist)) {
+                face_key = current_face_key;
+                tetrahedron_key = face.get_co_boundary() - tetrahedron_key;
+                dist = newDist;
+                if (newDist >= dist && (query_type == QueryType::All ||
+                        (query_type == QueryType::Interface && face.is_interface()) ||
+                        (query_type == QueryType::Boundary && face.is_boundary()))){
+                    found = true;
+                }
+                break;
+            }
+        }
+        return found;
+    }
+
     CGLA::Vec3d QueryResultIterator::collision_point() {
-        return ray.origin + ray.direction * dist;
+        return ray.get_origin() + ray.get_direction() * dist;
     }
 
     FaceKey QueryResultIterator::operator*() { return face_key; }
@@ -135,6 +150,11 @@ namespace is_mesh {
     bool QueryResultIterator::operator!=(const QueryResultIterator & other) {
         return !(face_key == other.face_key);
     }
+
+    bool QueryResultIterator::operator==(const QueryResultIterator & other) {
+        return (face_key == other.face_key);
+    }
+
 
     QueryResult::QueryResult(FaceKey const &first_intersection, double dist, Ray const &ray, QueryType const &query_type, ISMesh *mesh)
             : first_intersection(first_intersection), dist(dist), ray(ray), query_type(query_type), mesh(mesh) {
@@ -253,10 +273,15 @@ namespace is_mesh {
         }
 
         // exclude boundary vertices connected to non-manifold edges
-        SimplexSet<TetrahedronKey> tetSet;
-        for (auto t : tets){
-            tetSet += t;
+        int maxKey = 0;
+        for (auto t:tets){
+            maxKey = std::max(maxKey, (int)t);
         }
+        std::vector<bool> tetLookup(maxKey+1);
+        for (auto t:tets){
+            tetLookup[(int)t] = true;
+        }
+
         std::set<TetrahedronKey> tetsToDelete;
         std::vector<EdgeKey> nonManifoldEdges;
         for (auto ek : edges){
@@ -264,10 +289,16 @@ namespace is_mesh {
             std::vector<TetrahedronKey> boundaryTets;
             for (auto fk : faceKeys){
                 Face & face = mesh->get(fk);
-                auto intersection = face.tet_keys() & tetSet;
+                auto intersection = face.tet_keys();
 
-                if (intersection.size() == 1){
+                if (intersection.size() == 1 && tetLookup[(int)intersection[0]]){
                     boundaryTets.push_back(intersection[0]);
+                } else if (intersection.size() == 2 && (tetLookup[(int)intersection[0]] ^ tetLookup[(int)intersection[1]])){
+                    if (tetLookup[(int)intersection[0]]){
+                        boundaryTets.push_back(intersection[0]);
+                    } else {
+                        boundaryTets.push_back(intersection[1]);
+                    }
                 }
             }
             bool isNonManifoldEdge = boundaryTets.size()>2; // has more than two boundary edges

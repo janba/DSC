@@ -36,7 +36,13 @@ namespace is_mesh
         {
             
         }
-        
+
+        template <class InputIterator>
+        SimplexSet(InputIterator first, InputIterator last) noexcept : set(first, last)
+        {
+        }
+
+
         SimplexSet(std::initializer_list<key_type> il) noexcept : set(il)
         {
             

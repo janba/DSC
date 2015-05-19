@@ -13,3 +13,4 @@ int connectedTest(void);
 
 int forEachTest();
 
+int rayTest();

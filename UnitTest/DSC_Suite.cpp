@@ -140,3 +140,47 @@ int forEachTest(){
     cout << "Sequential " << std::chrono::duration_cast<std::chrono::milliseconds>(t4 - t3).count() << "ms"<< endl;
     return 1;
 }
+
+int rayTest() {
+    using namespace is_mesh;
+    using namespace CGLA;
+    vector<vec3> points2;
+    vector<int> tets2;
+    vector<int> tet_labels2;
+    import_tet_mesh( "data/cantilever-test.dsc", points2, tets2, tet_labels2);
+
+    ISMesh mesh(points2, tets2, tet_labels2);
+    Ray ray(Vec3d(1000,0.00,0.00),Vec3d(-1,0,0));
+    int faceCount = 0;
+    int faceInterfaces = 0;
+    int faceIntersections = 0;
+    for (Face &f:mesh.faces()){
+        if (f.is_interface()){
+            faceInterfaces++;
+            auto pos = mesh.get_pos(f.node_keys());
+            double dist;
+            if (ray.intersect_triangle(pos[0], pos[1], pos[2], dist)){
+                faceIntersections++;
+            }
+        }
+        faceCount++;
+    }
+    cout <<"faces "<<faceCount<<" face interfaces "<<faceInterfaces<<" ray interface intersections "<< faceIntersections<<endl;
+
+    Query q(&mesh);
+
+    auto iter = q.raycast_faces(ray, QueryType::Interface);
+
+    int count = 0;
+    for (auto p : iter){
+        cout <<"Collision point "<<endl;
+        count++;
+    }
+    TINYTEST_ASSERT(2 == count);
+
+    for (auto i = iter.begin();i != iter.end();++i){
+        cout <<"Collision point "<<i.collision_point()<<endl;
+    }
+
+    return 1;
+}

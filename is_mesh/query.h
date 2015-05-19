@@ -31,6 +31,7 @@ namespace is_mesh {
         FaceKey face_key;
         ISMesh *mesh;
         void next();
+        bool tetWalking(SimplexSet < FaceKey > &faces);
     public:
 
         QueryResultIterator();
@@ -40,6 +41,7 @@ namespace is_mesh {
         FaceKey operator*();
         QueryResultIterator &operator++();
         bool operator!=(const QueryResultIterator & other);
+        bool operator==(const QueryResultIterator & other);
     };
 
     class QueryResult {
