@@ -591,6 +591,7 @@ namespace is_mesh {
     inline void ISMesh::for_each_par(std::function<void(value_type&,int)> fn) {
         using KeyType = decltype(std::declval<value_type>().key()); // the type of value().key()
         auto kernel = &get_kernel<KeyType, value_type>();
+        kernel->readonly = true;
 
         int thread_count = m_number_of_threads;
         if (thread_count==1){
@@ -610,6 +611,7 @@ namespace is_mesh {
                 delete threads[i];
             }
         }
+        kernel->readonly = false;
     }
 
     template<typename key_type, typename value_type>
@@ -649,6 +651,7 @@ namespace is_mesh {
         using KeyType = decltype(std::declval<value_type>().key()); // the type of value().key()
         using KernelType = kernel<KeyType, value_type>;
         auto kernel = &get_kernel<KeyType, value_type>();
+        kernel->readonly = true;
 
         int thread_count = m_number_of_threads;
 
@@ -674,6 +677,7 @@ namespace is_mesh {
                 delete threads[i];
             }
         }
+        kernel->readonly = false;
     }
 
     template<>

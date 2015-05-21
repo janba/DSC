@@ -353,6 +353,14 @@ namespace DSC {
         ///////////////
         // SMOOTHING //
         ///////////////
+    public:
+        // laplacian smoothing between nodes and their neighborgs based on node::is_interface()
+        // new position is stored in node::destination but based on node::get_pos
+        void smooth_interface_laplacian(is_mesh::SimplexSet<is_mesh::NodeKey> nodes, double weight=0.5);
+        // taubin smoothing between nodes and their neighborgs based on node::is_interface()
+        // new position is stored in node::destination but based on node::get_pos
+        void smooth_interface_taubin(is_mesh::SimplexSet<is_mesh::NodeKey> nodes, double u=0.5, double v = -0.52);
+
     private:
         /**
         * Performs Laplacian smoothing if it improves the minimum tetrahedron quality locally.

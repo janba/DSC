@@ -88,6 +88,8 @@ namespace is_mesh
 
         friend class kernel_iterator<kernel_type>;
 
+        bool readonly = false;
+
     private:
         std::vector<kernel_element> m_data;
         std::vector<key_type> m_data_freelist;
@@ -172,6 +174,7 @@ namespace is_mesh
         template<typename... Values>
         const_iterator create(ISMesh* isMesh, Values... values)
         {
+            assert(!readonly);
             unsigned int key;
             kernel_element& cur = get_next_free_cell(key);
 
@@ -215,6 +218,7 @@ namespace is_mesh
          */
         void erase(key_type const & k)
         {
+            assert(!readonly);
             kernel_element& p = lookup(k);
             assert (p.state == kernel_element::VALID || p.state == kernel_element::EXCLUDED || !"Attempted to remove a non-valid element!");
             if (p.state != kernel_element::VALID && p.state != kernel_element::EXCLUDED )
@@ -234,6 +238,7 @@ namespace is_mesh
          */
         void erase(const iterator& it)
         {
+            assert(!readonly);
             erase(it.key());
         }
         
@@ -242,6 +247,7 @@ namespace is_mesh
          */
         void clear()
         {
+            assert(!readonly);
             m_data.clear();
             m_data_freelist.clear();
             m_data_marked_for_deletion.clear();
@@ -338,6 +344,7 @@ namespace is_mesh
          */
         std::vector<key_type> commit_all()
         {
+            assert(!readonly);
             std::vector<key_type> deletedKeys = m_data_marked_for_deletion;
             for (auto key : m_data_marked_for_deletion){
                 auto & p = m_data[key];
@@ -351,6 +358,7 @@ namespace is_mesh
         }
 
         void revert_excluded(){
+            assert(!readonly);
             for (auto &e : m_data){
                 if (e.state == kernel_element::state_type::EXCLUDED){
                     e.state = kernel_element::state_type::VALID;
@@ -359,6 +367,7 @@ namespace is_mesh
         }
 
         void exclude_using_include_set(std::set<key_type> include_set){
+            assert(!readonly);
             for (unsigned int i=0;i<m_data.size();i++){
                 auto& e= m_data[i];
                 key_type k{i};
@@ -379,6 +388,7 @@ namespace is_mesh
          */
         std::vector<key_type> garbage_collect()
         {
+            assert(!readonly);
             return commit_all();
         }
     };

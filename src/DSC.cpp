@@ -944,7 +944,9 @@ namespace DSC {
 #ifdef DEBUG
             cout << "\tVertices missing to be moved: " << missing <<"/" << movable << endl;
 #endif
-            fix_complex(optimizeMeshStructure);
+            if (optimizeMeshStructure) {
+                fix_complex(optimizeMeshStructure);
+            }
 #ifdef DEBUG
             is_mesh_ptr->validity_check();
 #endif
@@ -953,9 +955,9 @@ namespace DSC {
 
         if (optimizeMeshStructure){
             resize_complex();
-        }
 
-        is_mesh_ptr->garbage_collect();
+            is_mesh_ptr->garbage_collect();
+        }
         for (auto & nit : is_mesh_ptr->nodes()) // reset all nodes
         {
             nit.set_destination(nit.get_pos());
@@ -1970,5 +1972,40 @@ namespace DSC {
 
         double resSqr = *std::max_element(m.begin(), m.end());
         return sqrt(resSqr);
+    }
+
+    void DeformableSimplicialComplex::smooth_interface_laplacian(is_mesh::SimplexSet<is_mesh::NodeKey> nodes, double weight) {
+        AttributeVector<NodeKey, vec3> positions;
+        for (auto nodeKey : nodes){
+            Node & node = is_mesh_ptr->get(nodeKey);
+            assert(node.is_interface());
+            int count = 0;
+            vec3 pos = node.get_pos();
+            vec3 newPos(0,0,0);
+            SimplexSet<EdgeKey> neighbourEdges = node.get_co_boundary();
+            for (auto edgeKey : neighbourEdges ){
+                Edge & edge = is_mesh_ptr->get(edgeKey);
+                if (edge.is_interface()){
+                    Node & otherNode = is_mesh_ptr->get((edge.node_keys() - nodeKey)[0]);
+                    newPos += otherNode.get_pos() - pos;
+                    count ++;
+                }
+            }
+
+            newPos = pos + (weight/count)*newPos;
+            positions[nodeKey] = newPos;
+
+        }
+        for (auto nodeKey : nodes) {
+            Node &node = is_mesh_ptr->get(nodeKey);
+            node.set_destination(positions[nodeKey]);
+        }
+    }
+
+    void DeformableSimplicialComplex::smooth_interface_taubin(is_mesh::SimplexSet<is_mesh::NodeKey> nodes, double u, double v) {
+        double values[] = {u,v};
+        for (int i=0;i<2;i++) {
+            smooth_interface_laplacian(nodes, values[i]);
+        }
     }
 }
