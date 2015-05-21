@@ -74,11 +74,9 @@ namespace is_mesh
     }
 
     void Node::set_destination(const vec3& p_) {
-#ifdef DEBUG
-        if (p_ != p){
-            assert(!is_boundary());
+        if (is_boundary()){
+            assert(p_ == p);
         }
-#endif
         p_new = p_;
     }
 

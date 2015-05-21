@@ -350,9 +350,9 @@ namespace DSC {
 
     bool DeformableSimplicialComplex::topological_edge_removal(const EdgeKey& eid) {
         vector<SimplexSet<NodeKey>> polygon = get_polygons(eid);
-#ifdef DEBUG
+
         assert(polygon.size() == 1 && polygon.front().size() > 2);
-#endif
+
 
         vector<vector<int>> K;
         double q_new = build_table(eid, polygon.front(), K);
@@ -1020,9 +1020,9 @@ namespace DSC {
                 min_t = Util::min(t, min_t);
             }
         }
-#ifdef DEBUG
+
         assert(min_t < INFINITY);
-#endif
+
         return min_t;
     }
 
@@ -1064,9 +1064,8 @@ namespace DSC {
 
         SimplexSet<NodeKey> e_nids = is_mesh_ptr->get(eid).node_keys();
         SimplexSet<NodeKey> new_e_nids = (is_mesh_ptr->get_nodes(fids[0]) + is_mesh_ptr->get_nodes(fids[1])) - e_nids;
-#ifdef DEBUG
+
         assert(new_e_nids.size() == 2);
-#endif
 
         // Check that there does not already exist an edge.
         if(is_mesh_ptr->get_edge(new_e_nids[0], new_e_nids[1]).is_valid())
@@ -1087,10 +1086,10 @@ namespace DSC {
         SimplexSet<NodeKey> e_nids = is_mesh_ptr->get(eid).node_keys();
         SimplexSet<NodeKey> new_e_nids = (is_mesh_ptr->get_nodes(f1) + is_mesh_ptr->get_nodes(f2)) - e_nids;
         SimplexSet<NodeKey> apices = (is_mesh_ptr->get_nodes(is_mesh_ptr->get(eid).face_keys()) - e_nids) - new_e_nids;
-#ifdef DEBUG
+
         assert(e_nids.size() == 2);
         assert(new_e_nids.size() == 2);
-#endif
+
 
         // Check that there does not already exist an edge.
         if(is_mesh_ptr->get_edge(new_e_nids[0], new_e_nids[1]).is_valid())
@@ -1174,6 +1173,13 @@ namespace DSC {
         {
             return false;
         }
+
+        if (!safe){
+            // make edge sorting based on safe versions of is_collapsable()
+            n0_is_editable = is_collapsable(eid, nids[0], true);
+            n1_is_editable = is_collapsable(eid, nids[1], true);
+        }
+
         vector<double> test_weights;
         if (!n0_is_editable || !n1_is_editable)
         {
@@ -1192,7 +1198,7 @@ namespace DSC {
         SimplexSet<FaceKey> fids1 = is_mesh_ptr->get_faces(is_mesh_ptr->get_tets(nids[1]) - e_tids) - is_mesh_ptr->get_faces(nids[1]);
 
         double q_max = -INFINITY;
-        double weight;
+        double weight = 0;
         for (double w : test_weights)
         {
             vec3 p = (1.-w) * is_mesh_ptr->get(nids[1]).get_pos() + w * is_mesh_ptr->get(nids[0]).get_pos();
@@ -1270,9 +1276,9 @@ namespace DSC {
         if (Util::length(result) < EPSILON) {
             return vec3(0.);
         }
-#ifdef DEBUG
+
         assert(!Util::isnan(result[0]) && !Util::isnan(result[1]) && !Util::isnan(result[2]));
-#endif
+
         return Util::normalize(result);
     }
 
@@ -1547,9 +1553,9 @@ namespace DSC {
             double q = tit.quality();
             min_quality = Util::min(min_quality, q);
             int index = static_cast<int>(floor(q*100.));
-#ifdef DEBUG
+
             assert(index < 100 && index >= 0);
-#endif
+
             histogram[index] += 1;
         }
     }

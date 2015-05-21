@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <array>
 #include "util.h"
 
 namespace is_mesh {
@@ -167,6 +168,10 @@ namespace is_mesh {
         {
             return sqr_length(p - point) < EPSILON;
         }
+
+        vec3 get_point()  const {
+            return point;
+        }
     };
 
     class Sphere : public Geometry {
@@ -188,19 +193,35 @@ namespace is_mesh {
             }
             return res;
         }
+
+        vec3 get_point() const {
+            return point;
+        }
+
+        double get_radius() const {
+            return sqrt(radius2);
+        }
     };
 
     class Cube : public Point {
     protected:
         vec3 size;
-        std::vector<vec3> directions;
+        std::array<vec3, 3> directions;
         
     public:
         Cube(vec3 c, vec3 s, vec3 x = vec3(1., 0., 0.), vec3 y = vec3(0., 1., 0.)) : Point(c), size(0.5*s)
         {
-            directions.push_back(normalize(x));
-            directions.push_back(normalize(y));
-            directions.push_back(normalize(cross(directions[0], directions[1])));
+            directions[0] = normalize(x);
+            directions[1] = normalize(y);
+            directions[2] = normalize(cross(directions[0], directions[1]));
+        }
+
+        vec3 get_size()  const  {
+            return size;
+        }
+
+        std::array<vec3, 3> get_directions() const {
+            return directions;
         }
         
         virtual bool is_inside(vec3 p) const override
@@ -285,6 +306,18 @@ namespace is_mesh {
         {
             
         }
+
+        double get_radius() const  {
+            return sqrt(sqr_radius);
+        }
+
+        double get_height()  const  {
+            return height;
+        }
+
+        vec3 get_up_direction()  const  {
+            return up_direction;
+        }
         
         virtual bool is_inside(vec3 p) const override
         {
@@ -327,6 +360,10 @@ namespace is_mesh {
         virtual bool is_inside(vec3 p) const override
         {
             return std::abs(dot(p - point, normal)) < EPSILON;
+        }
+
+        vec3 get_normal()  const  {
+            return normal;
         }
     };
     

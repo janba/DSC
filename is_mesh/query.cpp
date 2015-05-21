@@ -277,13 +277,12 @@ namespace is_mesh {
         for (auto t:tets){
             maxKey = std::max(maxKey, (int)t);
         }
-        std::vector<bool> tetLookup(maxKey+1);
+        std::vector<bool> tetLookup(maxKey+1, false);
         for (auto t:tets){
             tetLookup[(int)t] = true;
         }
 
         std::set<TetrahedronKey> tetsToDelete;
-        std::vector<EdgeKey> nonManifoldEdges;
         for (auto ek : edges){
             auto faceKeys = mesh->get(ek).face_keys();
             std::vector<TetrahedronKey> boundaryTets;
@@ -309,8 +308,11 @@ namespace is_mesh {
             }
         }
         if (!tetsToDelete.empty()){
-            for (auto tk : tetsToDelete){
-                tets.erase(tets.find(tk));
+            for (auto tk : tetsToDelete) {
+                auto iter = tets.find(tk);
+                if (iter != tets.end()){
+                    tets.erase(iter);
+                }
             }
             filter_subset(nodes, edges, faces, tets);
         }

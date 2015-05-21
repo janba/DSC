@@ -76,7 +76,7 @@ namespace CGLA
   /// Useful enum that represents coordinate axes.
   enum Axis {XAXIS=0,YAXIS=1,ZAXIS=2};
 
-  inline bool isnan(double x) { return x != x; }
+  inline bool isnan(double x) { return std::isnan(x); }
 
   template<class Scalar>
   Scalar s_min(Scalar a, Scalar b)

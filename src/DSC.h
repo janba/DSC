@@ -191,7 +191,7 @@ namespace DSC {
         void set_pos(const is_mesh::NodeKey& nid, const vec3& p);
 
     public:
-        inline static std::string header_version() { return std::string{"0.0.19"}
+        inline static std::string header_version() { return std::string{"0.0.20"}
 #ifdef DEBUG
                 +"d"
 #endif
@@ -382,7 +382,7 @@ namespace DSC {
         * Moves all the vertices to their destination which can be set by the set_destination() function.
         */
         void deform(int num_steps = 10, bool optimizeMeshStructure = true);
-        
+
     private:
         /**
         * For each node, call move_vertex(NodeKey)
