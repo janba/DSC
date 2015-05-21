@@ -51,6 +51,8 @@ namespace is_mesh {
         std::map<long,std::function<void(const TetrahedronKey& tid, unsigned int oldValue)>> m_set_label_listeners;
         std::map<long,std::function<void(const NodeKey& nid_new, const NodeKey& nid1, const NodeKey& nid2)>> m_split_listeners;
         std::map<long,std::function<void(const NodeKey& nid, const NodeKey& nid_removed, double weight)>> m_collapse_listeners;
+
+        int m_number_of_threads = std::thread::hardware_concurrency();
     public:
         ISMesh(std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels);
 
@@ -81,6 +83,10 @@ namespace is_mesh {
         void clear_subdomain();
 
         void set_subdomain(std::shared_ptr<Geometry> subdomain);
+
+        int get_number_of_threads() const;
+
+        void set_number_of_threads(int m_number_of_threads);
 
         ///////////////
         // ITERATORS //
@@ -586,24 +592,29 @@ namespace is_mesh {
         using KeyType = decltype(std::declval<value_type>().key()); // the type of value().key()
         auto kernel = &get_kernel<KeyType, value_type>();
 
-        int thread_count = std::thread::hardware_concurrency();
+        int thread_count = m_number_of_threads;
+        if (thread_count==1){
+            for (auto &n : *kernel){
+                fn(n,0);
+            }
+        } else {
+            std::vector<std::thread *> threads;
+            int chunk_size = (int) ceil(kernel->capacity() / (float) (thread_count));
 
-        std::vector<std::thread*> threads;
-        int chunk_size = (int)ceil(kernel->capacity() / (float)(thread_count));
+            for (int i = 0; i < thread_count; i++) {
+                threads.push_back(new std::thread(run_for_each_par<KeyType, value_type>, fn, kernel, i * chunk_size, (1 + i) * chunk_size, i));
+            }
 
-        for (int i=0;i<thread_count;i++){
-            threads.push_back(new std::thread(run_for_each_par<KeyType, value_type>, fn, kernel, i*chunk_size,(1+i)*chunk_size, i));
-        }
-
-        for (int i=0;i<thread_count;i++){
-            threads[i]->join();
-            delete threads[i];
+            for (int i = 0; i < thread_count; i++) {
+                threads[i]->join();
+                delete threads[i];
+            }
         }
     }
 
     template<typename key_type, typename value_type>
     inline std::vector<key_type> ISMesh::find_par(std::function<bool(value_type&)> include){
-        std::vector<std::vector<key_type>> res_array(std::thread::hardware_concurrency(), {});
+        std::vector<std::vector<key_type>> res_array(m_number_of_threads, {});
         for_each_par<value_type>([&](value_type &value, int threadid){
             if (include(value))
             {
@@ -639,23 +650,29 @@ namespace is_mesh {
         using KernelType = kernel<KeyType, value_type>;
         auto kernel = &get_kernel<KeyType, value_type>();
 
-        int thread_count = std::thread::hardware_concurrency();
+        int thread_count = m_number_of_threads;
 
-        std::vector<std::thread*> threads;
-        for (int i=0;i<thread_count;i++){
-            threads.push_back(new std::thread(run_for_each_par_sp<value_type, KernelType>, fn, kernel, partitionsize,thread_count*2,dimension, i*2,i));
-        }
-        for (int i=0;i<thread_count;i++){
-            threads[i]->join();
-        }
+        if (thread_count==1){
+            for (auto &n : *kernel){
+                fn(n,0);
+            }
+        } else {
+            std::vector<std::thread*> threads;
+            for (int i=0;i<thread_count;i++){
+                threads.push_back(new std::thread(run_for_each_par_sp<value_type, KernelType>, fn, kernel, partitionsize,thread_count*2,dimension, i*2,i));
+            }
+            for (int i=0;i<thread_count;i++){
+                threads[i]->join();
+            }
 
-        for (int i=0;i<thread_count;i++){
-            delete threads[i];
-            threads[i] = new std::thread(run_for_each_par_sp<value_type, KernelType>, fn, kernel, partitionsize,thread_count*2,dimension, 1+i*2,i);
-        }
-        for (int i=0;i<thread_count;i++){
-            threads[i]->join();
-            delete threads[i];
+            for (int i=0;i<thread_count;i++){
+                delete threads[i];
+                threads[i] = new std::thread(run_for_each_par_sp<value_type, KernelType>, fn, kernel, partitionsize,thread_count*2,dimension, 1+i*2,i);
+            }
+            for (int i=0;i<thread_count;i++){
+                threads[i]->join();
+                delete threads[i];
+            }
         }
     }
 

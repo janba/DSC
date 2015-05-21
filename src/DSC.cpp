@@ -1963,7 +1963,7 @@ namespace DSC {
     }
 
     double DeformableSimplicialComplex::get_max_edge_length() const {
-        std::vector<double> m(std::thread::hardware_concurrency(), 0.0);
+        std::vector<double> m(is_mesh_ptr->get_number_of_threads(), 0.0);
         is_mesh_ptr->for_each_par<is_mesh::Edge>([&](is_mesh::Edge& e, int id){
             m[id] = std::max(m[id], e.sqr_length());
         });
