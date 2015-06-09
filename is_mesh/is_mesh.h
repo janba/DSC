@@ -52,7 +52,7 @@ namespace is_mesh {
         std::map<long,std::function<void(const NodeKey& nid_new, const NodeKey& nid1, const NodeKey& nid2)>> m_split_listeners;
         std::map<long,std::function<void(const NodeKey& nid, const NodeKey& nid_removed, double weight)>> m_collapse_listeners;
 
-        int m_number_of_threads = std::thread::hardware_concurrency();
+        unsigned int m_number_of_threads = std::thread::hardware_concurrency();
     public:
         ISMesh(std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels);
 
@@ -84,9 +84,9 @@ namespace is_mesh {
 
         void set_subdomain(std::shared_ptr<Geometry> subdomain);
 
-        int get_number_of_threads() const;
+        unsigned int get_number_of_threads() const;
 
-        void set_number_of_threads(int m_number_of_threads);
+        void set_number_of_threads(unsigned int m_number_of_threads);
 
         ///////////////
         // ITERATORS //
@@ -598,7 +598,7 @@ namespace is_mesh {
         kernel->readonly = true;
 
         int thread_count = m_number_of_threads;
-        if (thread_count==1){
+        if (thread_count<=1){
             for (auto &n : *kernel){
                 fn(n,0);
             }
@@ -672,7 +672,7 @@ namespace is_mesh {
 
         int thread_count = m_number_of_threads;
 
-        if (thread_count==1){
+        if (thread_count<=1){
             for (auto &n : *kernel){
                 fn(n,0);
             }

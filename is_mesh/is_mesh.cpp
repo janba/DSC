@@ -1450,11 +1450,11 @@ namespace is_mesh{
         return avg_pos / static_cast<double>(i);
     }
 
-    int ISMesh::get_number_of_threads() const {
+    unsigned int ISMesh::get_number_of_threads() const {
         return m_number_of_threads;
     }
 
-    void ISMesh::set_number_of_threads(int m_number_of_threads) {
+    void ISMesh::set_number_of_threads(unsigned int m_number_of_threads) {
         ISMesh::m_number_of_threads = m_number_of_threads;
     }
 }
