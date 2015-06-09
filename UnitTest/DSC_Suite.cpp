@@ -109,6 +109,35 @@ int connectedTest() {
     return 1;
 }
 
+int qualityTest() {
+    using namespace is_mesh;
+    typedef std::chrono::high_resolution_clock Clock;
+    vector<vec3> points2;
+    vector<int> tets2;
+    vector<int> tet_labels2;
+    import_tet_mesh( "data/blob-test.dsc", points2, tets2, tet_labels2);
+
+    DSC::DeformableSimplicialComplex dsc(points2, tets2, tet_labels2);
+    auto t1 = Clock::now();
+    double q = dsc.min_quality();
+    auto t2 = Clock::now();
+    double avgEdgeLen = dsc.compute_avg_edge_length();
+    auto t3 = Clock::now();
+
+    cout << "min_quality "<<std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << "ms"<< endl;
+    cout << "compute_avg_edge_length "<<std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2).count() << "ms"<< endl;
+    TINYTEST_ASSERT(abs(avgEdgeLen-6.45694)<0.00001);
+    TINYTEST_ASSERT(abs(q-0.00212245)<0.00001);
+
+    std::cout << "Min quality: " <<q<<endl;
+    std::cout.flush();
+
+    return 1;
+}
+
+
+
+
 
 int forEachTest(){
     using namespace is_mesh;

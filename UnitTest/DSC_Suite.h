@@ -11,6 +11,8 @@ int tetGenTest(void);
 
 int connectedTest(void);
 
+int qualityTest(void);
+
 int forEachTest();
 
 int rayTest();

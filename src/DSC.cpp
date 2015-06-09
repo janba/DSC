@@ -1,5 +1,6 @@
 #include "DSC.h"
 #include "attribute_vector.h"
+#include <atomic>
 
 using namespace is_mesh;
 using namespace std;
@@ -1479,6 +1480,21 @@ namespace DSC {
     double DeformableSimplicialComplex::compute_avg_edge_length() {
         double avg_edge_length = 0.;
         int N = 0;
+        // Currently not any performance gain in parallelization
+        //std::atomic<int> N (0);
+        //auto map_fn = [&](Edge& e){
+        //    double len = 0;
+        //    if(e.is_interface()){
+        //        N++;
+        //        len = e.length();
+        //    }
+        //    return len;
+        //};
+        //auto add_fn = [&](double a, double b){
+        //    return a+b;
+        //};
+        //avg_edge_length = is_mesh_ptr->map_reduce_par<Edge, double>(map_fn, add_fn, 0.0);
+
         for (auto & eit : edges()) {
             if(eit.is_interface())
             {
@@ -1585,12 +1601,19 @@ namespace DSC {
     }
 
     double DeformableSimplicialComplex::min_quality() {
-        double min_q = INFINITY;
+        auto tetQuality = [](is_mesh::Tetrahedron& tet){
+            return tet.quality();
+        };
+
+        double min_q2 = is_mesh_ptr->map_reduce_par<is_mesh::Tetrahedron,double>(tetQuality, Util::min, INFINITY);
+        return min_q2;
+
+        /*double min_q = INFINITY;
         for (auto & tit : tetrahedra())
         {
             min_q = Util::min(min_q, tit.quality());
         }
-        return min_q;
+        return min_q;*/
     }
 
     void DeformableSimplicialComplex::count_nodes(int & total, int & object) {

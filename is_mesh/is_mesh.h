@@ -105,6 +105,10 @@ namespace is_mesh {
         template<typename value_type>
         void for_each_par(std::function<void(value_type&,int)> fn);
 
+        // Map each element to a return type using map_fn and then reduce the return value into a single value using reduce_fn
+        template<typename simplex_type, typename return_type>
+        return_type map_reduce_par(std::function<return_type(simplex_type&)> map_fn, std::function<return_type(return_type,return_type)> reduce_fn, return_type default_value = {});
+
         // Space partitioned parallel for each
         // Runs the function fn on each node simultaneously on many threads
         // Number of threads used is std::thread::hardware_concurrency()
@@ -612,6 +616,19 @@ namespace is_mesh {
             }
         }
         kernel->readonly = false;
+    }
+
+    template<typename simplex_type, typename return_type>
+    inline return_type ISMesh::map_reduce_par(std::function<return_type(simplex_type&)> map_fn, std::function<return_type(return_type,return_type)> reduce_fn, return_type default_value){
+        std::vector<return_type> res(m_number_of_threads, default_value);
+        for_each_par<simplex_type>([&](simplex_type& v, int index){
+            auto value = map_fn(v);
+            res[index] = reduce_fn(res[index],value);
+        });
+        for (int i=1;i<res.size();i++){
+            res[i] = reduce_fn(res[i-1], res[i]);
+        }
+        return res[res.size()-1];
     }
 
     template<typename key_type, typename value_type>
