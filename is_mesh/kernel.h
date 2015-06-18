@@ -291,7 +291,7 @@ namespace is_mesh
          *
          * @param k     The handle to the object.
          */
-        value_type & find(key_type const & k)
+        value_type & get(key_type k)
         {
             kernel_element& tmp = lookup(k);
             assert(tmp.state == kernel_element::VALID || tmp.state == kernel_element::EXCLUDED);
@@ -305,9 +305,9 @@ namespace is_mesh
         *
         * @param k     The handle to the object.
         */
-        const value_type & find(key_type const & k) const
+        const value_type &get(key_type k) const
         {
-            return const_cast<kernel_type*>(this)->find(k);
+            return const_cast<kernel_type *>(this)->get(k);
         }
 
         /**
@@ -323,7 +323,7 @@ namespace is_mesh
          * @param k     The handle to the object.
          * @returns     True if the object is a valid (including excluded) element, false if it is marked for deletion or k refers to an empty cell.
          */
-        bool is_valid(key_type const & k)
+        bool is_valid(key_type k)
         {
             kernel_element& tmp = lookup(k);
             if (tmp.state == kernel_element::VALID || tmp.state == kernel_element::EXCLUDED ) return true;
@@ -333,7 +333,7 @@ namespace is_mesh
         /**
         * Returns true if element is excluded
         */
-        bool is_excluded(key_type const & k){
+        bool is_excluded(key_type k){
             kernel_element& tmp = lookup(k);
             if (tmp.state == kernel_element::EXCLUDED ) return true;
             return false;

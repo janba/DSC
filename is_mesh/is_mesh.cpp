@@ -400,35 +400,35 @@ namespace is_mesh{
     }
 
     is_mesh::Node &ISMesh::get(const NodeKey& nid) {
-        return m_node_kernel.find(nid);
+        return m_node_kernel.get(nid);
     }
 
     is_mesh::Edge &ISMesh::get(const EdgeKey& eid) {
-        return m_edge_kernel.find(eid);
+        return m_edge_kernel.get(eid);
     }
 
     is_mesh::Face &ISMesh::get(const FaceKey& fid) {
-        return m_face_kernel.find(fid);
+        return m_face_kernel.get(fid);
     }
 
     is_mesh::Tetrahedron &ISMesh::get(const TetrahedronKey& tid) {
-        return m_tetrahedron_kernel.find(tid);
+        return m_tetrahedron_kernel.get(tid);
     }
 
     const is_mesh::Node &ISMesh::get(const NodeKey& nid) const {
-        return m_node_kernel.find(nid);
+        return m_node_kernel.get(nid);
     }
 
     const is_mesh::Edge &ISMesh::get(const EdgeKey& eid) const {
-        return m_edge_kernel.find(eid);
+        return m_edge_kernel.get(eid);
     }
 
     const is_mesh::Face &ISMesh::get(const FaceKey& fid) const {
-        return m_face_kernel.find(fid);
+        return m_face_kernel.get(fid);
     }
 
     const is_mesh::Tetrahedron &ISMesh::get(const TetrahedronKey& tid) const  {
-        return m_tetrahedron_kernel.find(tid);
+        return m_tetrahedron_kernel.get(tid);
     }
 
 
