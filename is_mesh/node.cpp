@@ -104,6 +104,33 @@ namespace is_mesh
         interface = b;
     }
 
+    int Node::get_number_of_neighbour_tet_clusters(int label){
+        auto tets = m_mesh->get_tets(key());
+        int clusters = 0;
+
+        while (tets.size()>0){
+            auto tetKey = tets.pop_back();
+            if (m_mesh->get(tetKey).label() == label){
+                SimplexSet<TetrahedronKey> boundary{{tetKey}};
+                do {
+                    tetKey = boundary.pop_back();
+                    if (m_mesh->get(tetKey).label() == label){
+                        auto faces = m_mesh->get_faces(tetKey);
+                        auto neighbourTets = m_mesh->get_tets(faces) - tetKey;
+                        for (auto nTet : neighbourTets){
+                            if (tets.contains(nTet)){
+                                tets -= nTet;
+                                boundary.push_back(nTet);
+                            }
+                        }
+                    }
+                } while (boundary.size()>0);
+                clusters++;
+            }
+        }
+        return clusters;
+    }
+
     vec3 Node::smart_laplacian(double alpha) const {
         auto k = key();
         SimplexSet<TetrahedronKey> tids = m_mesh->get_tets(k);

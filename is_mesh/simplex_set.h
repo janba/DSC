@@ -103,6 +103,12 @@ namespace is_mesh
             assert(set.size() > 0);
             return set.back();
         }
+
+        key_type pop_back() {
+            key_type last = back();
+            set.pop_back();
+            return last;
+        }
         
         const key_type& operator[](unsigned int i) const
         {

@@ -213,3 +213,72 @@ int rayTest() {
 
     return 1;
 }
+
+int testNumberOfClusters(){
+    using namespace is_mesh;
+    vec3 origin{0,0,0};
+    vec3 voxel_size{1,1,1};
+    std::vector<int> voxel_labels;
+    std::vector<vec3> points;
+    std::vector<int> tets;
+    std::vector<int> tet_labels;
+
+    Tetralizer::tetralize(origin, voxel_size, 2,2,2, voxel_labels, points, tets, tet_labels);
+
+    is_mesh::ISMesh mesh(points, tets, tet_labels);
+    NodeKey centerNodeKey;
+    for (auto & n : mesh.nodes()){
+        if (n.get_pos() == vec3(1,1,1)){
+            centerNodeKey = n.key();
+            // label single upper tet (with positive center values)
+            for (auto neighborgTets : mesh.get_tets(centerNodeKey)){
+                is_mesh::Tetrahedron & tet = mesh.get(neighborgTets);
+                auto center = tet.get_center();
+                if (center[0]>1.1 && center[1]>1.1 && center[2]>1.1){
+                    mesh.set_label(neighborgTets, 1);
+
+                    break;
+                }
+            }
+            // label single upper tet (with negative center values)
+            for (auto neighborgTets : mesh.get_tets(centerNodeKey)){
+                is_mesh::Tetrahedron & tet = mesh.get(neighborgTets);
+                auto center = tet.get_center();
+                if (center[0] < 0.9 && center[1] < 0.9 && center[2] < 0.9){
+                    mesh.set_label(neighborgTets, 1);
+                    break;
+                }
+            }
+            break;
+        }
+    }
+
+    export_surface_mesh("/Users/mono/Desktop/test-tet.obj", mesh);
+    export_surface_mesh_debug("/Users/mono/Desktop/test-tet-debug.obj", mesh);
+
+    int labels = 0;
+    for (auto & tet : mesh.tetrahedra()){
+        if (tet.label() == 1){
+            labels++;
+        }
+    }
+    TINYTEST_ASSERT(labels==2);
+
+    Node &node = mesh.get(centerNodeKey);
+    TINYTEST_ASSERT(node.is_crossing());
+    TINYTEST_ASSERT(!node.is_boundary());
+    TINYTEST_ASSERT(node.is_interface());
+
+    TINYTEST_ASSERT(node.get_number_of_neighbour_tet_clusters(1)==2);
+
+
+    for (auto & tet : mesh.tetrahedra()){
+        int label = tet.label();
+        label = (label+1)%2;
+        mesh.set_label(tet.key(), label);
+    }
+
+    TINYTEST_ASSERT(node.get_number_of_neighbour_tet_clusters(1)==1);
+
+    return 1;
+}

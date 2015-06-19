@@ -297,7 +297,6 @@ namespace is_mesh{
         }
         else
         {
-
             assert(size == 2);
             if (get(tids.front()).label() != get(tids.back()).label())
             {

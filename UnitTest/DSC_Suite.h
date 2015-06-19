@@ -16,3 +16,5 @@ int qualityTest(void);
 int forEachTest();
 
 int rayTest();
+
+int testNumberOfClusters();

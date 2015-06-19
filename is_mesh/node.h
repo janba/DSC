@@ -20,6 +20,8 @@
 
 namespace is_mesh
 {
+
+
     class Node : public Simplex<Key, EdgeKey>
     {
         vec3 p;
@@ -54,6 +56,10 @@ namespace is_mesh
         bool is_interface() const noexcept;
 
         vec3 smart_laplacian(double alpha = 1.) const;
+
+        // return the number of clusters neighbouring tets (of a given label)
+        // if >= 2 for any label, then the vertex is non-manifold
+        int get_number_of_neighbour_tet_clusters(int label);
 
         NodeKey key() const noexcept;
     private:
