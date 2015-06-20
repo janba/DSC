@@ -104,4 +104,37 @@ namespace is_mesh
         const SimplexSet<NodeKey> & nids = node_keys();
         return (m_mesh->get(nids[0]).get_pos() + m_mesh->get(nids[1]).get_pos()) * 0.5;
     }
+
+    std::vector<Face *> Edge::faces() const {
+        std::vector<Face *> res;
+        for (auto faceKey : face_keys()){
+            res.push_back(&m_mesh->get(faceKey));
+        }
+        return res;
+    }
+
+    std::vector<Node *> Edge::nodes() const {
+        std::vector<Node *> res;
+        for (auto nodeKey : node_keys()){
+            res.push_back(&m_mesh->get(nodeKey));
+        }
+        return res;
+    }
+
+    std::vector<Tetrahedron *> Edge::tets() const {
+
+        std::vector<Tetrahedron *> res;
+        for (auto key : tet_keys()){
+            res.push_back(&m_mesh->get(key));
+        }
+        return res;
+    }
+
+    SimplexSet<TetrahedronKey> Edge::tet_keys() const {
+        SimplexSet<TetrahedronKey> resKey;
+        for (auto edge : faces()){
+            resKey += edge->tet_keys();
+        }
+        return resKey;
+    }
 }

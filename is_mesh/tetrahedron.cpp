@@ -58,11 +58,12 @@ namespace is_mesh
         return Util::volume(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos(), m_mesh->get(nids[3]).get_pos());
     }
 
-    const SimplexSet<NodeKey> Tetrahedron::node_keys() const noexcept{
-        const SimplexSet<FaceKey>& fids = face_keys();
-        SimplexSet<NodeKey> nids = m_mesh->get_nodes(fids[0]);
-        nids += m_mesh->get_nodes(fids[1]);
-        return nids;
+    SimplexSet<NodeKey> Tetrahedron::node_keys() const{
+        SimplexSet<NodeKey> resKey;
+        for (auto & edge : edges()){
+            resKey += edge->node_keys();
+        }
+        return resKey;
 
     }
 
@@ -87,7 +88,7 @@ namespace is_mesh
     }
 
     TetrahedronKey Tetrahedron::key() const noexcept {
-        long index = ((char*)this - m_mesh->m_tetrahedron_kernel.data())/sizeof(util::kernel_element<TetrahedronKey, Tetrahedron>);
+        long index = ((char*)this - m_mesh->m_tetrahedron_kernel.data()) / sizeof(util::kernel_element<TetrahedronKey, Tetrahedron>);
         assert(index >= 0);
         assert(index < m_mesh->m_tetrahedron_kernel.capacity());
         return TetrahedronKey((unsigned int) index);
@@ -95,5 +96,41 @@ namespace is_mesh
 
     vec3 Tetrahedron::get_center() const {
         return barycenter();
+    }
+
+    std::vector<Face *> Tetrahedron::faces() const {
+        std::vector<Face *> faces;
+        for (auto faceKey : face_keys()){
+            faces.push_back(&m_mesh->get(faceKey));
+        }
+        return faces;
+    }
+
+    std::vector<Edge *> Tetrahedron::edges() const {
+        SimplexSet<EdgeKey> resKey;
+        for (auto face : faces()){
+            resKey += face->edge_keys();
+        }
+        std::vector<Edge *> res;
+        for (auto key : resKey){
+            res.push_back(&m_mesh->get(key));
+        }
+        return res;
+    }
+
+    std::vector<Node *> Tetrahedron::nodes() const {
+        std::vector<Node *> res;
+        for (auto key : edge_keys()){
+            res.push_back(&m_mesh->get(key));
+        }
+        return res;
+    }
+
+    SimplexSet<NodeKey> Tetrahedron::edge_keys() const {
+        SimplexSet<NodeKey> resKey;
+        for (auto edge : edges()){
+            resKey += edge->node_keys();
+        }
+        return resKey;
     }
 }

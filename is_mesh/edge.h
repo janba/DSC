@@ -20,6 +20,10 @@
 
 namespace is_mesh
 {
+    class Face;
+    class Tetrahedron;
+    class Node;
+
     class Edge : public Simplex<NodeKey, FaceKey>
     {
         bool crossing = false;
@@ -33,8 +37,13 @@ namespace is_mesh
         Edge& operator=(Edge&& other) noexcept;
 
         const SimplexSet<NodeKey> & node_keys()  const noexcept;
-
         const SimplexSet<FaceKey> & face_keys() const noexcept;
+        SimplexSet<TetrahedronKey> tet_keys() const;
+
+        std::vector<Face*> faces() const;
+        std::vector<Tetrahedron*> tets() const;
+
+        std::vector<Node*> nodes() const;
 
         vec3 get_center() const;
 

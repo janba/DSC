@@ -20,7 +20,9 @@
 
 namespace is_mesh
 {
-
+    class Edge;
+    class Face;
+    class Tetrahedron;
 
     class Node : public Simplex<Key, EdgeKey>
     {
@@ -38,6 +40,12 @@ namespace is_mesh
         Node& operator=(Node&& other) noexcept;
 
         const SimplexSet<EdgeKey> & edge_keys() const noexcept;
+        SimplexSet<FaceKey> face_keys() const;
+        SimplexSet<TetrahedronKey> tet_keys() const;
+
+        std::vector<Edge*> edges() const;
+        std::vector<Face*> faces() const;
+        std::vector<Tetrahedron*> tets() const;
 
         const vec3 get_center() const;
 
@@ -58,6 +66,7 @@ namespace is_mesh
         vec3 smart_laplacian(double alpha = 1.) const;
 
         // return the number of clusters neighbouring tets (of a given label)
+        // (here two tets are only seen as directly connected if they share a face)
         // if >= 2 for any label, then the vertex is non-manifold
         int get_number_of_neighbour_tet_clusters(int label);
 

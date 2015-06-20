@@ -65,10 +65,11 @@ namespace is_mesh
     }
 
     const SimplexSet<NodeKey> Face::node_keys() const noexcept{
-        const SimplexSet<EdgeKey>& eids = edge_keys();
-        SimplexSet<NodeKey> nids = m_mesh->get_nodes(eids[0]);
-        nids += m_mesh->get_nodes(eids[1]);
-        return nids;
+        SimplexSet<NodeKey> resKey;
+        for (auto & edge : edges()){
+            resKey += edge->node_keys();
+        }
+        return resKey;
     }
 
     double Face::area_destination() const {
@@ -118,7 +119,7 @@ namespace is_mesh
         return Util::barycenter(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos());
     }
 
-    FaceKey Face::key()  const noexcept {
+    FaceKey Face::key() const noexcept {
         long index = ((char*)this - m_mesh->m_face_kernel.data())/sizeof(util::kernel_element<FaceKey, Face>);
         assert(index >= 0);
         assert(index < m_mesh->m_face_kernel.capacity());
@@ -127,5 +128,29 @@ namespace is_mesh
 
     vec3 Face::get_center() const {
         return barycenter();
+    }
+
+    std::vector<Tetrahedron *> Face::tets() const {
+        std::vector<Tetrahedron *> res;
+        for (auto tetKey : tet_keys()){
+            res.push_back(&m_mesh->get(tetKey));
+        }
+        return res;
+    }
+
+    std::vector<Edge *> Face::edges() const {
+        std::vector<Edge *> res;
+        for (auto edgeKey : edge_keys()){
+            res.push_back(&m_mesh->get(edgeKey));
+        }
+        return res;
+    }
+
+    std::vector<Node *> Face::nodes() const {
+        std::vector<Node *> res;
+        for (auto key : node_keys()){
+            res.push_back(&m_mesh->get(key));
+        }
+        return res;
     }
 }

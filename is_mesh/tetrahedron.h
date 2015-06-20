@@ -20,6 +20,10 @@
 
 namespace is_mesh
 {
+    class Face;
+    class Edge;
+    class Node;
+
     class Tetrahedron : public Simplex<FaceKey, Key>
     {
         unsigned int l = 0;
@@ -36,7 +40,12 @@ namespace is_mesh
 
         const SimplexSet<FaceKey> & face_keys() const noexcept;
 
-        const SimplexSet<NodeKey> node_keys() const noexcept;
+        SimplexSet<NodeKey> edge_keys() const;
+        SimplexSet<NodeKey> node_keys() const;
+
+        std::vector<Face*> faces() const;
+        std::vector<Edge*> edges() const;
+        std::vector<Node*> nodes() const;
 
         vec3 get_center() const;
 

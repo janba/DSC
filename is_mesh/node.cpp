@@ -150,4 +150,44 @@ namespace is_mesh
     const vec3 Node::get_center() const {
         return p;
     }
+
+    std::vector<Edge *> Node::edges() const {
+        std::vector<Edge *> res;
+        for (auto k : edge_keys()){
+            res.push_back(&m_mesh->get(k));
+        }
+        return res;
+    }
+
+    std::vector<Face *> Node::faces() const {
+        std::vector<Face *> res;
+        for (auto key : face_keys()){
+            res.push_back(&m_mesh->get(key));
+        }
+        return res;
+    }
+
+    std::vector<Tetrahedron *> Node::tets() const {
+        std::vector<Tetrahedron *> res;
+        for (auto key : tet_keys()){
+            res.push_back(&m_mesh->get(key));
+        }
+        return res;
+    }
+
+    SimplexSet<FaceKey> Node::face_keys() const {
+        SimplexSet<FaceKey> resKey;
+        for (auto edge : edges()){
+            resKey += edge->face_keys();
+        }
+        return resKey;
+    }
+
+    SimplexSet<TetrahedronKey> Node::tet_keys() const {
+        SimplexSet<TetrahedronKey> resKey;
+        for (auto edge : faces()){
+            resKey += edge->tet_keys();
+        }
+        return resKey;
+    }
 }
