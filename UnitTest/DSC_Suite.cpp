@@ -214,6 +214,91 @@ int rayTest() {
     return 1;
 }
 
+template<typename ptr_type>
+bool allDifferent(ptr_type** ptr, int size){
+    for (int i=0;i<size;i++){
+        for (int j=i+1;j<size;j++) {
+            if (ptr[i]==ptr[j]){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+int testMeshNavigation(){
+    using namespace is_mesh;
+    vec3 origin{0,0,0};
+    vec3 voxel_size{1,1,1};
+    std::vector<int> voxel_labels;
+    std::vector<vec3> points;
+    std::vector<int> tets;
+    std::vector<int> tet_labels;
+
+    Tetralizer::tetralize(origin, voxel_size, 2,2,2, voxel_labels, points, tets, tet_labels);
+
+    is_mesh::ISMesh mesh(points, tets, tet_labels);
+    NodeKey centerNodeKey;
+    for (auto & n : mesh.nodes()){
+        if (n.get_pos() == vec3(1,1,1)){
+            centerNodeKey = n.key();
+            // label single upper tet (with positive center values)
+            for (auto neighborgTets : mesh.get_tets(centerNodeKey)){
+                is_mesh::Tetrahedron & tet = mesh.get(neighborgTets);
+                auto center = tet.get_center();
+                if (center[0]>1.1 && center[1]>1.1 && center[2]>1.1){
+                    mesh.set_label(neighborgTets, 1);
+
+                    break;
+                }
+            }
+            // label single upper tet (with negative center values)
+            for (auto neighborgTets : mesh.get_tets(centerNodeKey)){
+                is_mesh::Tetrahedron & tet = mesh.get(neighborgTets);
+                auto center = tet.get_center();
+                if (center[0] < 0.9 && center[1] < 0.9 && center[2] < 0.9){
+                    mesh.set_label(neighborgTets, 1);
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    auto & node = mesh.get(centerNodeKey);
+    TINYTEST_ASSERT(node.tets().size() == 8);
+    TINYTEST_ASSERT(node.faces().size() == 12);
+    TINYTEST_ASSERT(node.edges().size() == 6);
+    TINYTEST_ASSERT(allDifferent(node.tets().data(), 8));
+    TINYTEST_ASSERT(allDifferent(node.faces().data(), 12));
+    TINYTEST_ASSERT(allDifferent(node.edges().data(), 6));
+
+    auto & edge = *mesh.get(centerNodeKey).edges()[0];
+    TINYTEST_ASSERT(edge.tets().size() == 4);
+    TINYTEST_ASSERT(edge.faces().size() == 4);
+    TINYTEST_ASSERT(edge.nodes().size() == 2);
+    TINYTEST_ASSERT(allDifferent(edge.tets().data(), 4));
+    TINYTEST_ASSERT(allDifferent(edge.faces().data(), 4));
+    TINYTEST_ASSERT(allDifferent(edge.nodes().data(), 2));
+
+    auto & face = *mesh.get(centerNodeKey).faces()[0];
+    TINYTEST_ASSERT(face.tets().size() == 2);
+    TINYTEST_ASSERT(face.edges().size() == 3);
+    TINYTEST_ASSERT(face.nodes().size() == 3);
+    TINYTEST_ASSERT(allDifferent(face.tets().data(), 2));
+    TINYTEST_ASSERT(allDifferent(face.edges().data(), 3));
+    TINYTEST_ASSERT(allDifferent(face.nodes().data(), 3));
+
+    auto & tet = *mesh.get(centerNodeKey).tets()[0];
+    TINYTEST_ASSERT(tet.faces().size() == 4);
+    TINYTEST_ASSERT(tet.edges().size() == 6);
+    TINYTEST_ASSERT(tet.nodes().size() == 4);
+    TINYTEST_ASSERT(allDifferent(tet.faces().data(), 4));
+    TINYTEST_ASSERT(allDifferent(tet.edges().data(), 6));
+    TINYTEST_ASSERT(allDifferent(tet.nodes().data(), 4));
+
+    return 1;
+}
+
 int testNumberOfClusters(){
     using namespace is_mesh;
     vec3 origin{0,0,0};
@@ -252,9 +337,6 @@ int testNumberOfClusters(){
             break;
         }
     }
-
-    export_surface_mesh("/Users/mono/Desktop/test-tet.obj", mesh);
-    export_surface_mesh_debug("/Users/mono/Desktop/test-tet-debug.obj", mesh);
 
     int labels = 0;
     for (auto & tet : mesh.tetrahedra()){

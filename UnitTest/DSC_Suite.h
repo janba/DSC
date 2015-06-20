@@ -18,3 +18,5 @@ int forEachTest();
 int rayTest();
 
 int testNumberOfClusters();
+
+int testMeshNavigation();
