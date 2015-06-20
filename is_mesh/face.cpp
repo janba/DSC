@@ -153,4 +153,9 @@ namespace is_mesh
         }
         return res;
     }
+
+    vec3 Face::get_normal() const {
+        auto pos = m_mesh->get_pos(m_mesh->get_sorted_nodes(key()));
+        return Util::normal_direction(pos[0], pos[1], pos[2]);
+    }
 }

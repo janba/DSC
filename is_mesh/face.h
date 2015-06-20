@@ -44,6 +44,8 @@ namespace is_mesh
 
         vec3 get_center() const;
 
+        vec3 get_normal() const;
+
         bool is_boundary() noexcept;
 
         bool is_interface() noexcept;

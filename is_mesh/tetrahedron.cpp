@@ -107,12 +107,9 @@ namespace is_mesh
     }
 
     std::vector<Edge *> Tetrahedron::edges() const {
-        SimplexSet<EdgeKey> resKey;
-        for (auto face : faces()){
-            resKey += face->edge_keys();
-        }
+
         std::vector<Edge *> res;
-        for (auto key : resKey){
+        for (auto key : edge_keys()){
             res.push_back(&m_mesh->get(key));
         }
         return res;
@@ -120,16 +117,16 @@ namespace is_mesh
 
     std::vector<Node *> Tetrahedron::nodes() const {
         std::vector<Node *> res;
-        for (auto key : edge_keys()){
+        for (auto key : node_keys()){
             res.push_back(&m_mesh->get(key));
         }
         return res;
     }
 
-    SimplexSet<NodeKey> Tetrahedron::edge_keys() const {
-        SimplexSet<NodeKey> resKey;
-        for (auto edge : edges()){
-            resKey += edge->node_keys();
+    SimplexSet<EdgeKey> Tetrahedron::edge_keys() const {
+        SimplexSet<EdgeKey> resKey;
+        for (auto face : faces()){
+            resKey += face->edge_keys();
         }
         return resKey;
     }

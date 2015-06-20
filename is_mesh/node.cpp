@@ -105,7 +105,7 @@ namespace is_mesh
     }
 
     int Node::get_number_of_neighbour_tet_clusters(int label){
-        auto tets = m_mesh->get_tets(key());
+        auto tets = tet_keys();
         int clusters = 0;
 
         while (tets.size()>0){
@@ -115,7 +115,7 @@ namespace is_mesh
                 do {
                     tetKey = boundary.pop_back();
                     if (m_mesh->get(tetKey).label() == label){
-                        auto faces = m_mesh->get_faces(tetKey);
+                        auto faces = m_mesh->get(tetKey).face_keys();
                         auto neighbourTets = m_mesh->get_tets(faces) - tetKey;
                         for (auto nTet : neighbourTets){
                             if (tets.contains(nTet)){
@@ -133,8 +133,8 @@ namespace is_mesh
 
     vec3 Node::smart_laplacian(double alpha) const {
         auto k = key();
-        SimplexSet<TetrahedronKey> tids = m_mesh->get_tets(k);
-        SimplexSet<FaceKey> fids = m_mesh->get_faces(tids) - m_mesh->get_faces(k);
+        SimplexSet<TetrahedronKey> tids = tet_keys();
+        SimplexSet<FaceKey> fids = m_mesh->get_faces(tids) - face_keys();
 
         vec3 avg_pos = m_mesh->get_barycenter(m_mesh->get_nodes(fids));
         return p + alpha * (avg_pos - p);

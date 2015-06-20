@@ -352,7 +352,7 @@ namespace is_mesh{
             }
 
     bool ISMesh::crossing(const NodeKey& n) {
-        SimplexSet<TetrahedronKey> tids = get_tets(n);
+        SimplexSet<TetrahedronKey> tids = get(n).tet_keys();
 
         int c = 0;
         while (tids.size() > 0)
@@ -430,34 +430,9 @@ namespace is_mesh{
         return m_tetrahedron_kernel.get(tid);
     }
 
-
-    const SimplexSet<NodeKey> &ISMesh::get_nodes(const EdgeKey& eid) {
-        return get(eid).get_boundary();
-    }
-
-    const SimplexSet<EdgeKey> &ISMesh::get_edges(const NodeKey& nid) {
-        return get(nid).get_co_boundary();
-    }
-
-    const SimplexSet<EdgeKey> &ISMesh::get_edges(const FaceKey& fid) {
-        return get(fid).get_boundary();
-    }
-
-    const SimplexSet<FaceKey> &ISMesh::get_faces(const EdgeKey& eid) {
-        return get(eid).get_co_boundary();
-    }
-
-    const SimplexSet<FaceKey> &ISMesh::get_faces(const TetrahedronKey& tid) {
-        return get(tid).get_boundary();
-    }
-
-    const SimplexSet<TetrahedronKey> &ISMesh::get_tets(const FaceKey& fid) {
-        return get(fid).get_co_boundary();
-    }
-
     SimplexSet<NodeKey> ISMesh::get_sorted_nodes(const FaceKey& fid, const TetrahedronKey& tid) {
-        SimplexSet<NodeKey> nids = get_nodes(fid);
-        NodeKey apex = (get_nodes(tid) - nids).front();
+        SimplexSet<NodeKey> nids = get(fid).node_keys();
+        NodeKey apex = (get(tid).node_keys() - nids).front();
         orient_cc(apex, nids);
         return nids;
     }
@@ -484,60 +459,7 @@ namespace is_mesh{
             TetrahedronKey tid = f.tet_keys().front();
             return get_sorted_nodes(fid, tid);
         }
-        return get_nodes(fid);
-    }
-
-    SimplexSet<NodeKey> ISMesh::get_nodes(const FaceKey& fid) {
-        const SimplexSet<EdgeKey>& eids = get(fid).edge_keys();
-        SimplexSet<NodeKey> nids = get(eids[0]).node_keys();
-        nids += get(eids[1]).node_keys();
-        return nids;
-    }
-
-    SimplexSet<NodeKey> ISMesh::get_nodes(const TetrahedronKey& tid) {
-        const SimplexSet<FaceKey>& fids = get(tid).face_keys();
-        SimplexSet<NodeKey> nids = get_nodes(fids[0]);
-        nids += get_nodes(fids[1]);
-        return nids;
-    }
-
-    SimplexSet<EdgeKey> ISMesh::get_edges(const TetrahedronKey& tid) {
-        SimplexSet<EdgeKey> eids;
-        for(const FaceKey& f : get(tid).face_keys())
-        {
-            eids += get(f).edge_keys();
-        }
-        return eids;
-    }
-
-    SimplexSet<FaceKey> ISMesh::get_faces(const NodeKey& nid) {
-        SimplexSet<FaceKey> fids;
-        for(const EdgeKey& e : get(nid).edge_keys())
-        {
-            fids += get(e).face_keys();
-        }
-        return fids;
-    }
-
-    SimplexSet<TetrahedronKey> ISMesh::get_tets(const NodeKey& nid) {
-        SimplexSet<TetrahedronKey> tids;
-        for(const EdgeKey& e : get(nid).edge_keys())
-        {
-            for(const FaceKey& f : get(e).face_keys())
-            {
-                tids += get(f).tet_keys();
-            }
-        }
-        return tids;
-    }
-
-    SimplexSet<TetrahedronKey> ISMesh::get_tets(const EdgeKey& eid) {
-        SimplexSet<TetrahedronKey> tids;
-        for(const FaceKey& f : get(eid).face_keys())
-        {
-            tids += get(f).tet_keys();
-        }
-        return tids;
+        return get(fid).node_keys();
     }
 
     NodeKey ISMesh::get_node(const EdgeKey& eid1, const EdgeKey& eid2) {
@@ -583,9 +505,9 @@ namespace is_mesh{
     }
 
     FaceKey ISMesh::get_face(const NodeKey& nid1, const NodeKey& nid2, const NodeKey& nid3) {
-        SimplexSet<FaceKey> fids1 = get_faces(nid1);
-        SimplexSet<FaceKey> fids2 = get_faces(nid2);
-        for (const FaceKey& f : get_faces(nid3)) {
+        SimplexSet<FaceKey> fids1 = get(nid1).face_keys();
+        SimplexSet<FaceKey> fids2 = get(nid2).face_keys();
+        for (const FaceKey& f : get(nid3).face_keys()) {
             if(fids1.contains(f) && fids2.contains(f))
             {
                 return f;
@@ -687,7 +609,7 @@ namespace is_mesh{
             const SimplexSet<TetrahedronKey>& tids = get(f).tet_keys();
             if(tids.size() == 2) // Check that f is not a boundary face.
             {
-                SimplexSet<NodeKey> nids = get_nodes(f);
+                SimplexSet<NodeKey> nids = get(f).node_keys();
                 SimplexSet<NodeKey> apices = get_nodes(tids) - nids;
                 auto normal = cross(get(nids[0]).get_destination() - get(nids[2]).get_destination(), get(nids[1]).get_destination() - get(nids[2]).get_destination());
                 auto d1 = dot(get(apices[0]).get_destination() - get(nids[2]).get_destination(), normal);
@@ -803,7 +725,7 @@ namespace is_mesh{
         Edge &e = get(eid);
         auto nids = e.node_keys();
         auto fids = e.face_keys();
-        auto tids = get_tets(eid);
+        auto tids = get_tets(fids);
 
         // Split edge
         auto new_nid = insert_node(pos);
@@ -820,7 +742,7 @@ namespace is_mesh{
             EdgeKey f_eid = (get(f).edge_keys() & get(nids[1]).edge_keys()).front();
             disconnect(f_eid, f);
 
-            SimplexSet<NodeKey> new_e_nids = get_nodes(get(f).edge_keys()) - nids[0];
+            SimplexSet<NodeKey> new_e_nids = get(f).node_keys() - nids[0];
             assert(new_e_nids.size() == 2);
             EdgeKey new_f_eid = insert_edge(new_e_nids[0], new_e_nids[1]);
             connect(new_f_eid, f);
@@ -832,7 +754,7 @@ namespace is_mesh{
         SimplexSet<TetrahedronKey> new_tids;
         for (auto t : tids)
         {
-            FaceKey t_fid = (get(t).face_keys() - get_faces(nids[0])).front();
+            FaceKey t_fid = (get(t).face_keys() - get(nids[0]).face_keys()).front();
             disconnect(t_fid, t);
 
             SimplexSet<EdgeKey> new_f_eids = get_edges(get(t).face_keys()) - get(nids[0]).edge_keys();
@@ -872,11 +794,12 @@ namespace is_mesh{
     }
 
     void ISMesh::collapse(const EdgeKey& eid, const NodeKey& nid, double weight) {
-        NodeKey nid_remove = (get(eid).node_keys() - nid).front();
+        Edge& edge = get(eid);
+        NodeKey nid_remove = (edge.node_keys() - nid).front();
         update_collapse(nid, nid_remove, weight);
 
-        auto fids = get(eid).face_keys();
-        auto tids = get_tets(eid);
+        auto fids = edge.face_keys();
+        auto tids = edge.tet_keys();
 
         // Remove edge
         remove(eid);
@@ -898,7 +821,7 @@ namespace is_mesh{
         {
             SimplexSet<FaceKey> fids = get(t).face_keys();
             remove(t);
-            if(get_nodes(fids[1]).contains(nid))
+            if(get(fids[1]).node_keys().contains(nid))
             {
                 fids.swap();
             }
@@ -909,7 +832,7 @@ namespace is_mesh{
         merge(nid, nid_remove);
 
         // Update flags.
-        update_flag(get_tets(nid));
+        update_flag(get(nid).tet_keys());
 
 #ifdef DEBUG
         validity_check();
@@ -951,7 +874,7 @@ namespace is_mesh{
         SimplexSet<FaceKey> exterior_fids = get_faces(e_tids);
         for (const NodeKey& n : e_nids)
         {
-            SimplexSet<FaceKey> t_fids = exterior_fids & get_faces(n);
+            SimplexSet<FaceKey> t_fids = exterior_fids & get(n).face_keys();
 
             assert(t_fids.size() == 3);
 
@@ -1040,9 +963,9 @@ namespace is_mesh{
 
         // Update flags
 
-        assert(get_tets(new_eid).size() == 3);
+        assert(get(new_eid).tet_keys().size() == 3);
 
-        for (auto t : get_tets(new_eid)) {
+        for (auto t : get(new_eid).tet_keys()) {
             set_label(t,label);
         }
 
@@ -1079,7 +1002,7 @@ namespace is_mesh{
 
             assert(rm_eids.size() == 2);
 
-            SimplexSet<NodeKey> apex = get_nodes(f) - (new_e_nids + e_nids);
+            SimplexSet<NodeKey> apex = get(f).node_keys() - (new_e_nids + e_nids);
 
             assert(apex.size() == 1);
 
@@ -1215,7 +1138,7 @@ namespace is_mesh{
 
         for (auto & tit : tetrahedra())
         {
-            for (auto n : get_nodes(tit.key()))
+            for (auto n : tit.node_keys())
             {
                 tets.push_back(indices[n]);
             }
@@ -1314,8 +1237,8 @@ namespace is_mesh{
 
             }
 
-            assert(get_edges(tit.key()).size() == 6);
-            assert(get_nodes(tit.key()).size() == 4);
+            assert(tit.edge_keys().size() == 6);
+            assert(tit.node_keys().size() == 4);
         }
         cout << "PASSED" << endl;
 

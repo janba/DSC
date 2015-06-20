@@ -520,12 +520,11 @@ void Painter::update_low_quality(DSC::DeformableSimplicialComplex& dsc)
     {
         if(fit.quality() < dsc.get_min_face_quality())
         {
-            auto nodes = mesh.get_nodes(fit.key());
             vec3 normal = dsc.get_normal(fit.key());
             
-            for(auto &n : nodes)
+            for(auto &n : fit.nodes())
             {
-                data.push_back(mesh.get(n).get_pos());
+                data.push_back(n->get_pos());
                 data.push_back(normal);
             }
         }

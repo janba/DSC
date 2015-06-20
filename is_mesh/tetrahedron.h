@@ -40,7 +40,7 @@ namespace is_mesh
 
         const SimplexSet<FaceKey> & face_keys() const noexcept;
 
-        SimplexSet<NodeKey> edge_keys() const;
+        SimplexSet<EdgeKey> edge_keys() const;
         SimplexSet<NodeKey> node_keys() const;
 
         std::vector<Face*> faces() const;
