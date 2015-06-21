@@ -72,15 +72,15 @@ struct parameters {
 namespace DSC {
     class DeformableSimplicialComplex
     {
-    public:
-        DEPRECATED
-        typedef is_mesh::NodeKey      node_key;
-        DEPRECATED
-        typedef is_mesh::EdgeKey      edge_key;
-        DEPRECATED
-        typedef is_mesh::FaceKey      face_key;
-        DEPRECATED
-        typedef is_mesh::TetrahedronKey       tet_key;
+//    public:
+//        DEPRECATED
+//        typedef is_mesh::NodeKey      node_key;
+//        DEPRECATED
+//        typedef is_mesh::EdgeKey      edge_key;
+//        DEPRECATED
+//        typedef is_mesh::FaceKey      face_key;
+//        DEPRECATED
+//        typedef is_mesh::TetrahedronKey       tet_key;
         
     protected:
         std::shared_ptr<is_mesh::ISMesh> is_mesh_ptr;
@@ -122,9 +122,6 @@ namespace DSC {
         void set_parameters(parameters pars_);
 
         parameters get_parameters();
-
-        DEPRECATED // Use add_design_domain
-        void set_design_domain(is_mesh::Geometry *geometry) { add_design_domain(std::shared_ptr<is_mesh::Geometry>(geometry)); }
 
         virtual void add_design_domain(std::shared_ptr<is_mesh::Geometry> geometry);
 
@@ -477,8 +474,6 @@ namespace DSC {
         */
         vec3 get_normal(const is_mesh::NodeKey& nid);
 
-        DEPRECATED // use ISMesh::get_barycenter()
-        vec3 get_barycenter(const is_mesh::SimplexSet<is_mesh::NodeKey>& nids, bool interface = false);
         /**
         * Calculates the average position of the neighbouring nodes to node n.
         * If interface is true, the average position is only calculated among the neighbouring nodes which are interface.
@@ -490,48 +485,6 @@ namespace DSC {
         ///////////////////////
         
     public:
-        DEPRECATED // use Edge::length()
-        double length(const is_mesh::EdgeKey& eid);
-
-        DEPRECATED // use Edge::length_destination()
-        double length_destination(const is_mesh::EdgeKey& eid);
-
-        DEPRECATED // use Face::area()
-        double area(const is_mesh::FaceKey& fid);
-
-        DEPRECATED // use Face::area_destination()
-        double area_destination(const is_mesh::FaceKey& fid);
-
-        DEPRECATED // use Tetrahedron::volume()
-        double volume(const is_mesh::TetrahedronKey& tid);
-
-        DEPRECATED // use Tetrahedron::volume_destination()
-        double volume_destination(const is_mesh::TetrahedronKey& tid);
-
-        DEPRECATED // use ISMesh::volume_destination(nids)
-        double volume_destination(const is_mesh::SimplexSet<is_mesh::NodeKey>& nids);
-
-        DEPRECATED // use ISMesh::signed_volume_destination(nids)
-        double signed_volume_destination(const is_mesh::SimplexSet<is_mesh::NodeKey>& nids);
-
-        DEPRECATED // use Tetrahedron::barycenter()
-        vec3 barycenter(const is_mesh::TetrahedronKey& tid);
-
-        DEPRECATED // use Tetrahedron::barycenter_destination()
-        vec3 barycenter_destination(const is_mesh::TetrahedronKey& tid);
-
-        DEPRECATED // use Tetrahedron::quality()
-        double quality(const is_mesh::TetrahedronKey& tid);
-
-        DEPRECATED // use Face::min_angle()
-        double min_angle(const is_mesh::FaceKey& fid);
-
-        DEPRECATED // use Face::max_angle()
-        double max_angle(const is_mesh::FaceKey& fid);
-
-        DEPRECATED // use Face::quality()
-        double quality(const is_mesh::FaceKey& fid);
-
         double quality(const is_mesh::EdgeKey& eid);
 
         /**

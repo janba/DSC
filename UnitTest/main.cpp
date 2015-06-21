@@ -13,13 +13,13 @@
 using namespace std;
 
 TINYTEST_START_SUITE(DSCSuite);
-//    TINYTEST_ADD_TEST(build_boundary_mesh_test);
-//    TINYTEST_ADD_TEST(tetGenTest);
-//    TINYTEST_ADD_TEST(connectedTest);
-//    TINYTEST_ADD_TEST(qualityTest);
-//    TINYTEST_ADD_TEST(forEachTest);
-//    TINYTEST_ADD_TEST(rayTest);
-//    TINYTEST_ADD_TEST(testNumberOfClusters);
+    TINYTEST_ADD_TEST(build_boundary_mesh_test);
+    TINYTEST_ADD_TEST(tetGenTest);
+    TINYTEST_ADD_TEST(connectedTest);
+    TINYTEST_ADD_TEST(qualityTest);
+    TINYTEST_ADD_TEST(forEachTest);
+    TINYTEST_ADD_TEST(rayTest);
+    TINYTEST_ADD_TEST(testNumberOfClusters);
     TINYTEST_ADD_TEST(testMeshNavigation);
 TINYTEST_END_SUITE();
 

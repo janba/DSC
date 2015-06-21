@@ -873,7 +873,7 @@ namespace DSC {
         SimplexSet<FaceKey> fids = is_mesh_ptr->get_faces(tids) - node.face_keys();
 
         vec3 old_pos = node .get_pos();
-        vec3 avg_pos = get_barycenter(is_mesh_ptr->get_nodes(fids));
+        vec3 avg_pos = is_mesh_ptr->get_barycenter(is_mesh_ptr->get_nodes(fids));
         vec3 new_pos = old_pos + alpha * (avg_pos - old_pos);
 
         double q_old, q_new;
@@ -1288,10 +1288,6 @@ namespace DSC {
         return Util::normalize(result);
     }
 
-    vec3 DeformableSimplicialComplex::get_barycenter(const SimplexSet<NodeKey>& nids, bool interface) {
-        return is_mesh_ptr->get_barycenter(nids, interface);
-    }
-
     vec3 DeformableSimplicialComplex::get_barycenter(const NodeKey& nid, bool interface) {
         if(interface && !is_mesh_ptr->get(nid).is_interface())
         {
@@ -1299,63 +1295,7 @@ namespace DSC {
         }
 
         SimplexSet<NodeKey> nids = is_mesh_ptr->get_nodes(is_mesh_ptr->get(nid).tet_keys()) - nid;
-        return get_barycenter(nids, interface);
-    }
-
-    double DeformableSimplicialComplex::length(const EdgeKey& eid) {
-        return is_mesh_ptr->get(eid).length();
-    }
-
-    double DeformableSimplicialComplex::length_destination(const EdgeKey& eid) {
-        return is_mesh_ptr->get(eid).length_destination();
-    }
-
-    double DeformableSimplicialComplex::area(const FaceKey& fid) {
-        return is_mesh_ptr->get(fid).area();
-    }
-
-    double DeformableSimplicialComplex::area_destination(const FaceKey& fid) {
-        return is_mesh_ptr->get(fid).area_destination();
-    }
-
-    double DeformableSimplicialComplex::volume(const TetrahedronKey& tid) {
-        return is_mesh_ptr->get(tid).volume();
-    }
-
-    double DeformableSimplicialComplex::volume_destination(const TetrahedronKey& tid) {
-        return is_mesh_ptr->get(tid).volume_destination();
-    }
-
-    double DeformableSimplicialComplex::volume_destination(const SimplexSet<NodeKey>& nids) {
-        return is_mesh_ptr->volume_destination(nids);
-    }
-
-    double DeformableSimplicialComplex::signed_volume_destination(const SimplexSet<NodeKey>& nids) {
-        return is_mesh_ptr->signed_volume_destination(nids);
-    }
-
-    vec3 DeformableSimplicialComplex::barycenter(const TetrahedronKey& tid) {
-        return is_mesh_ptr->get(tid).barycenter();
-    }
-
-    vec3 DeformableSimplicialComplex::barycenter_destination(const TetrahedronKey& tid) {
-        return is_mesh_ptr->get(tid).barycenter_destination();
-    }
-
-    double DeformableSimplicialComplex::quality(const TetrahedronKey& tid) {
-        return is_mesh_ptr->get(tid).quality();
-    }
-
-    double DeformableSimplicialComplex::min_angle(const FaceKey& fid) {
-        return is_mesh_ptr->get(fid).min_angle();
-    }
-
-    double DeformableSimplicialComplex::max_angle(const FaceKey& fid) {
-        return is_mesh_ptr->get(fid).max_angle();
-    }
-
-    double DeformableSimplicialComplex::quality(const FaceKey& fid) {
-        return is_mesh_ptr->get(fid).quality();
+        return is_mesh_ptr->get_barycenter(nids, interface);
     }
 
     double DeformableSimplicialComplex::quality(const EdgeKey& eid) {

@@ -36,8 +36,6 @@ namespace is_mesh {
 
     class Geometry;
 
-
-
     class ISMesh
     {
         kernel<NodeKey,Node> m_node_kernel;
@@ -126,31 +124,6 @@ namespace is_mesh {
 
         TetrahedronIterator tetrahedra() const;
 
-
-        DEPRECATED // use nodes() instead
-        kernel<NodeKey,Node>::iterator nodes_begin();
-
-        DEPRECATED // use nodes() instead
-        kernel<NodeKey,Node>::iterator nodes_end();
-
-        DEPRECATED // use nodes() instead
-        kernel<EdgeKey,Edge>::iterator edges_begin();
-
-        DEPRECATED // use nodes() instead
-        kernel<EdgeKey,Edge>::iterator edges_end();
-
-        DEPRECATED // use nodes() instead
-        kernel<FaceKey,Face>::iterator faces_begin();
-
-        DEPRECATED // use nodes() instead
-        kernel<FaceKey,Face>::iterator faces_end();
-
-        DEPRECATED // use nodes() instead
-        kernel<TetrahedronKey,Tetrahedron>::iterator tetrahedra_begin();
-
-        DEPRECATED // use nodes() instead
-        kernel<TetrahedronKey,Tetrahedron>::iterator tetrahedra_end();
-
     public:
         void set_label(const TetrahedronKey& tid, int label);
 
@@ -216,9 +189,6 @@ namespace is_mesh {
         * Perform an initial update of flags for all nodes, edges and faces.
         */
         void init_flags(const std::vector<int>& tet_labels);
-
-        DEPRECATED
-        void update(const SimplexSet<TetrahedronKey>& tids){update_flag(tids);}
 
         /**
         * Updates the flags (is interface, is boundary, is crossing) of all
@@ -342,11 +312,6 @@ namespace is_mesh {
         *  Returns the tetrahedron which shares the face fid with tid, i.e. the neighbour to tid.
         */
         TetrahedronKey get_tet(const TetrahedronKey& tid, const FaceKey& fid);
-        /**
-        * Use get(nid).get_pot()
-        */
-        DEPRECATED
-        vec3 get_pos(const NodeKey& nid);
         /**
         * Returns the positions of nodes nids.
         */

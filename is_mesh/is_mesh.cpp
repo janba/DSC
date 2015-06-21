@@ -124,38 +124,6 @@ namespace is_mesh{
         return TetrahedronIterator{&m_tetrahedron_kernel};
     }
 
-    typename kernel<NodeKey,Node>::iterator ISMesh::nodes_begin() {
-        return m_node_kernel.begin();
-    }
-
-    typename kernel<NodeKey,Node>::iterator ISMesh::nodes_end() {
-        return m_node_kernel.end();
-    }
-
-    typename kernel<EdgeKey,Edge>::iterator ISMesh::edges_begin() {
-        return m_edge_kernel.begin();
-    }
-
-    typename kernel<EdgeKey,Edge>::iterator ISMesh::edges_end() {
-        return m_edge_kernel.end();
-    }
-
-    typename kernel<FaceKey,Face>::iterator ISMesh::faces_begin() {
-        return m_face_kernel.begin();
-    }
-
-    typename kernel<FaceKey,Face>::iterator ISMesh::faces_end() {
-        return m_face_kernel.end();
-    }
-
-    typename kernel<TetrahedronKey,Tetrahedron>::iterator ISMesh::tetrahedra_begin() {
-        return m_tetrahedron_kernel.begin();
-    }
-
-    typename kernel<TetrahedronKey,Tetrahedron>::iterator ISMesh::tetrahedra_end() {
-        return m_tetrahedron_kernel.end();
-    }
-
     void ISMesh::set_label(const TetrahedronKey& tid, int newLabel) {
         int oldLabel = get(tid).label();
         get(tid).label(newLabel);
@@ -536,10 +504,6 @@ namespace is_mesh{
             }
         }
         return TetrahedronKey();
-    }
-
-    vec3 ISMesh::get_pos(const NodeKey& nid) {
-        return get(nid).get_pos();
     }
 
     vector<vec3> ISMesh::get_pos(const SimplexSet<NodeKey>& nids) {

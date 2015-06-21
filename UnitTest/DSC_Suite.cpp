@@ -243,7 +243,7 @@ int testMeshNavigation(){
         if (n.get_pos() == vec3(1,1,1)){
             centerNodeKey = n.key();
             // label single upper tet (with positive center values)
-            for (auto neighborgTets : mesh.get_tets(centerNodeKey)){
+            for (auto neighborgTets : mesh.get(centerNodeKey).tet_keys()){
                 is_mesh::Tetrahedron & tet = mesh.get(neighborgTets);
                 auto center = tet.get_center();
                 if (center[0]>1.1 && center[1]>1.1 && center[2]>1.1){
@@ -253,7 +253,7 @@ int testMeshNavigation(){
                 }
             }
             // label single upper tet (with negative center values)
-            for (auto neighborgTets : mesh.get_tets(centerNodeKey)){
+            for (auto neighborgTets : mesh.get(centerNodeKey).tet_keys()){
                 is_mesh::Tetrahedron & tet = mesh.get(neighborgTets);
                 auto center = tet.get_center();
                 if (center[0] < 0.9 && center[1] < 0.9 && center[2] < 0.9){
@@ -316,7 +316,7 @@ int testNumberOfClusters(){
         if (n.get_pos() == vec3(1,1,1)){
             centerNodeKey = n.key();
             // label single upper tet (with positive center values)
-            for (auto neighborgTets : mesh.get_tets(centerNodeKey)){
+            for (auto neighborgTets : mesh.get(centerNodeKey).tet_keys()){
                 is_mesh::Tetrahedron & tet = mesh.get(neighborgTets);
                 auto center = tet.get_center();
                 if (center[0]>1.1 && center[1]>1.1 && center[2]>1.1){
@@ -326,7 +326,7 @@ int testNumberOfClusters(){
                 }
             }
             // label single upper tet (with negative center values)
-            for (auto neighborgTets : mesh.get_tets(centerNodeKey)){
+            for (auto neighborgTets : mesh.get(centerNodeKey).tet_keys()){
                 is_mesh::Tetrahedron & tet = mesh.get(neighborgTets);
                 auto center = tet.get_center();
                 if (center[0] < 0.9 && center[1] < 0.9 && center[2] < 0.9){
