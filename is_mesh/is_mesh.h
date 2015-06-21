@@ -329,8 +329,17 @@ namespace is_mesh {
         bool exists(const EdgeKey& e);
 
         bool exists(const NodeKey& n);
-        
-        
+
+
+        bool excluded(const TetrahedronKey& t);
+
+        bool excluded(const FaceKey& f);
+
+        bool excluded(const EdgeKey& e);
+
+        bool excluded(const NodeKey& n);
+
+
         ///////////////////////////
         // ORIENTATION FUNCTIONS //
         ///////////////////////////

@@ -531,6 +531,22 @@ namespace is_mesh{
         return m_node_kernel.is_valid(n);
     }
 
+    bool ISMesh::excluded(const TetrahedronKey& t) {
+        return m_tetrahedron_kernel.is_excluded(t);
+    }
+
+    bool ISMesh::excluded(const FaceKey& f) {
+        return m_face_kernel.is_excluded(f);
+    }
+
+    bool ISMesh::excluded(const EdgeKey& e) {
+        return m_edge_kernel.is_excluded(e);
+    }
+
+    bool ISMesh::excluded(const NodeKey& n) {
+        return m_node_kernel.is_excluded(n);
+    }
+
     bool ISMesh::is_clockwise_order(const NodeKey& nid, SimplexSet<NodeKey>& nids) {
         auto x = get(nid).get_pos() - get(nids[0]).get_pos();
         auto y = get(nids[1]).get_pos() - get(nids[0]).get_pos();
