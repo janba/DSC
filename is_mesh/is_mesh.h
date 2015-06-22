@@ -24,6 +24,7 @@
 #include "simplex_set.h"
 #include "is_mesh_iterator.h"
 #include "geometry.h"
+#include "attribute_vector.h"
 
 namespace is_mesh {
 
@@ -591,18 +592,13 @@ namespace is_mesh {
         return res;
     }
 
-    template<typename value_type, typename kernel_type>
-    inline void run_for_each_par_sp(std::function<void(value_type&,int)> fn, kernel_type* kernel,  double partitionsize, int max_threads, int dimension, int threadid, int actualthread){
-        for (auto &n : *kernel){
-            double p = n.get_center()[dimension];
-            double concur_partitionsize = partitionsize * max_threads;
-            if (p<0){
-                p += concur_partitionsize * (int)(ceil(-p/concur_partitionsize));
-            }
-            p = fmod(p , concur_partitionsize);
-            int run_in_thread = std::min((int)floor(p / partitionsize),max_threads-1);
+    template<typename value_type, typename kernel_type, typename key_type>
+    inline void run_for_each_par_sp(std::function<void(value_type&,int)> fn, kernel_type* kernel,  int threadid, int actualthread, AttributeVector<key_type, int> *attributeVector){
+        for (int i=0;i< attributeVector->size();i++){
+            key_type key(i);
+            int run_in_thread = (*attributeVector)[key];
             if (run_in_thread == threadid){
-                fn(n,actualthread);
+                fn(kernel->get(key), actualthread);
             }
         }
     }
@@ -621,17 +617,27 @@ namespace is_mesh {
                 fn(n,0);
             }
         } else {
+            AttributeVector<KeyType, int> attributeVector(kernel->capacity(), -1);
+            for_each_par<value_type>([&](value_type& n, int t){
+                double p = n.get_center()[dimension];
+                double concur_partitionsize = partitionsize * thread_count*2;
+                if (p<0){
+                    p += concur_partitionsize * (int)(ceil(-p/concur_partitionsize));
+                }
+                p = fmod(p , concur_partitionsize);
+                int run_in_thread = std::min((int)floor(p / partitionsize),(thread_count*2)-1);
+                attributeVector[run_in_thread] = run_in_thread;
+            });
             std::vector<std::thread*> threads;
             for (int i=0;i<thread_count;i++){
-                threads.push_back(new std::thread(run_for_each_par_sp<value_type, KernelType>, fn, kernel, partitionsize,thread_count*2,dimension, i*2,i));
+                threads.push_back(new std::thread(run_for_each_par_sp<value_type, KernelType, KeyType>, fn, kernel, i*2,i, &attributeVector));
             }
             for (int i=0;i<thread_count;i++){
                 threads[i]->join();
             }
-
             for (int i=0;i<thread_count;i++){
                 delete threads[i];
-                threads[i] = new std::thread(run_for_each_par_sp<value_type, KernelType>, fn, kernel, partitionsize,thread_count*2,dimension, 1+i*2,i);
+                threads[i] = new std::thread(run_for_each_par_sp<value_type, KernelType, KeyType>, fn, kernel, 1+i*2,i, &attributeVector);
             }
             for (int i=0;i<thread_count;i++){
                 threads[i]->join();

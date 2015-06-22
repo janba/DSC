@@ -869,7 +869,7 @@ namespace is_mesh{
 
         // Update flags
 #ifdef DEBUG
-        assert(get_tets(new_fid).size() == 2);
+        assert(get(new_fid).tet_keys().size() == 2);
 #endif
         for (auto t : get(new_fid).tet_keys()) {
             set_label(t,label);
