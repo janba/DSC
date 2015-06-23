@@ -10,6 +10,7 @@
 #include "query.h"
 #include <vector>
 #include <chrono>
+#include <atomic>
 
 bool equal(vec3 v1, vec3 v2){
 
@@ -144,29 +145,38 @@ int forEachTest(){
     vector<vec3> points2;
     vector<int> tets2;
     vector<int> tet_labels2;
+    std::atomic<int> counter(0);
     import_tet_mesh( "data/blob-test.dsc", points2, tets2, tet_labels2);
 
     ISMesh mesh(points2, tets2, tet_labels2);
 
-    auto fnSmooth = [](Node& node, int threadid){
+    auto fnSmooth = [&](Node& node, int threadid){
         node.set_pos(node.smart_laplacian());
+        counter++;
     };
     typedef std::chrono::high_resolution_clock Clock;
     auto t1 = Clock::now();
 
     mesh.for_each_par<Node>(fnSmooth);
+    int count1 = counter.load();
     auto t2 = Clock::now();
     mesh.for_each_par_sp<Node>(0.1, 0, fnSmooth);
+    int count2 = counter.load()-count1;
     auto t3 = Clock::now();
     // naive
+    int count = 0;
     for (auto & node : mesh.nodes()){
         node.set_pos(node.smart_laplacian());
+        count++;
     }
     auto t4 = Clock::now();
 
     cout << "For each "<<std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << "ms"<< endl;
     cout << "For each sp " << std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2).count() << "ms"<< endl;
     cout << "Sequential " << std::chrono::duration_cast<std::chrono::milliseconds>(t4 - t3).count() << "ms"<< endl;
+    cout << "Count "<<count << " c1 "<<count1<<" c2 "<<count2<<endl;
+    TINYTEST_ASSERT(count == count1);
+    TINYTEST_ASSERT(count == count2);
     return 1;
 }
 
@@ -352,7 +362,6 @@ int testNumberOfClusters(){
     TINYTEST_ASSERT(node.is_interface());
 
     TINYTEST_ASSERT(node.get_number_of_neighbour_tet_clusters(1)==2);
-
 
     for (auto & tet : mesh.tetrahedra()){
         int label = tet.label();

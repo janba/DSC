@@ -610,9 +610,7 @@ namespace is_mesh {
         auto kernel = &get_kernel<KeyType, value_type>();
         kernel->readonly = true;
 
-        int thread_count = m_number_of_threads;
-
-        if (thread_count<=1){
+        if (m_number_of_threads <=1){
             for (auto &n : *kernel){
                 fn(n,0);
             }
@@ -620,26 +618,27 @@ namespace is_mesh {
             AttributeVector<KeyType, int> attributeVector(kernel->capacity(), -1);
             for_each_par<value_type>([&](value_type& n, int t){
                 double p = n.get_center()[dimension];
-                double concur_partitionsize = partitionsize * thread_count*2;
-                if (p<0){
-                    p += concur_partitionsize * (int)(ceil(-p/concur_partitionsize));
+                double concur_partitionsize = partitionsize * m_number_of_threads * 2;
+                if (p < 0) {
+                    p += concur_partitionsize * (int) (ceil(-p / concur_partitionsize));
                 }
-                p = fmod(p , concur_partitionsize);
-                int run_in_thread = std::min((int)floor(p / partitionsize),(thread_count*2)-1);
-                attributeVector[run_in_thread] = run_in_thread;
+                p = fmod(p, concur_partitionsize);
+                int run_in_thread = std::min((int) floor(p / partitionsize), ((int) m_number_of_threads * 2) - 1);
+                attributeVector[n.key()] = run_in_thread;
             });
+
             std::vector<std::thread*> threads;
-            for (int i=0;i<thread_count;i++){
+            for (int i=0;i< m_number_of_threads;i++){
                 threads.push_back(new std::thread(run_for_each_par_sp<value_type, KernelType, KeyType>, fn, kernel, i*2,i, &attributeVector));
             }
-            for (int i=0;i<thread_count;i++){
+            for (int i=0;i< m_number_of_threads;i++){
                 threads[i]->join();
             }
-            for (int i=0;i<thread_count;i++){
+            for (int i=0;i< m_number_of_threads;i++){
                 delete threads[i];
                 threads[i] = new std::thread(run_for_each_par_sp<value_type, KernelType, KeyType>, fn, kernel, 1+i*2,i, &attributeVector);
             }
-            for (int i=0;i<thread_count;i++){
+            for (int i=0;i< m_number_of_threads;i++){
                 threads[i]->join();
                 delete threads[i];
             }

@@ -1948,6 +1948,7 @@ namespace DSC {
             vec3 pos = node.get_pos();
             vec3 newPos(0,0,0);
             SimplexSet<EdgeKey> neighbourEdges = node.get_co_boundary();
+
             for (auto edgeKey : neighbourEdges ){
                 Edge & edge = is_mesh_ptr->get(edgeKey);
                 if (edge.is_interface()){
@@ -1963,7 +1964,9 @@ namespace DSC {
         }
         for (auto nodeKey : nodes) {
             Node &node = is_mesh_ptr->get(nodeKey);
-            node.set_destination(positions[nodeKey]);
+            if (!node.is_boundary()){
+                node.set_destination(positions[nodeKey]);
+            }
         }
     }
 
