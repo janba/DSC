@@ -112,7 +112,7 @@ namespace is_mesh {
         // Runs the function fn on each node simultaneously on many threads
         // Number of threads used is std::thread::hardware_concurrency()
         // partitionsize must be larger than twice the maximum node size
-        // if node position is changed, the function fn may run twice for a single node
+        // the function is evaluated once for each simplex
         // dimension is on which axis the space is partitioned (x,y or z)
         template<typename value_type>
         void for_each_par_sp(double partitionsize,  int dimension, std::function<void(value_type& node, int threadid)> fn);
