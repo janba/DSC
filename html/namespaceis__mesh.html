@@ -164,6 +164,10 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
+<tr class="memitem:a4ff795718c08fd5c27377a2d18882e5d"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>SetType</b> { <b>Union</b>, 
+<b>Intersection</b>
+ }</td></tr>
+<tr class="separator:a4ff795718c08fd5c27377a2d18882e5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26547cc692215a45ec26aa6ee2cfbec1"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>QueryType</b> { <b>All</b>, 
 <b>Interface</b>, 
 <b>Boundary</b>
@@ -176,17 +180,17 @@ Functions</h2></td></tr>
 template&lt;typename key_type , typename value_type &gt; </td></tr>
 <tr class="memitem:a24a086fb531212676d5a13e5a8fea5e9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>run_for_each_par</b> (std::function&lt; void(value_type &amp;, int)&gt; fn, <a class="el" href="classis__mesh_1_1kernel.html">kernel</a>&lt; key_type, value_type &gt; *<a class="el" href="classis__mesh_1_1kernel.html">kernel</a>, int from, int to, int threadid)</td></tr>
 <tr class="separator:a24a086fb531212676d5a13e5a8fea5e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb4a902bae376cd27812681747aeb9aa"><td class="memTemplParams" colspan="2"><a class="anchor" id="abb4a902bae376cd27812681747aeb9aa"></a>
-template&lt;typename value_type , typename kernel_type &gt; </td></tr>
-<tr class="memitem:abb4a902bae376cd27812681747aeb9aa"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>run_for_each_par_sp</b> (std::function&lt; void(value_type &amp;, int)&gt; fn, kernel_type *<a class="el" href="classis__mesh_1_1kernel.html">kernel</a>, double partitionsize, int max_threads, int dimension, int threadid, int actualthread)</td></tr>
-<tr class="separator:abb4a902bae376cd27812681747aeb9aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f005d79149d0adc496f6545080d1968"><td class="memTemplParams" colspan="2"><a class="anchor" id="a1f005d79149d0adc496f6545080d1968"></a>
+template&lt;typename value_type , typename kernel_type , typename key_type &gt; </td></tr>
+<tr class="memitem:a1f005d79149d0adc496f6545080d1968"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>run_for_each_par_sp</b> (std::function&lt; void(value_type &amp;, int)&gt; fn, kernel_type *<a class="el" href="classis__mesh_1_1kernel.html">kernel</a>, int threadid, int actualthread, <a class="el" href="classis__mesh_1_1_attribute_vector.html">AttributeVector</a>&lt; key_type, int &gt; *attributeVector)</td></tr>
+<tr class="separator:a1f005d79149d0adc496f6545080d1968"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a141927e4a165de9d1ef83d16566a052c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a141927e4a165de9d1ef83d16566a052c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>scale</b> (std::vector&lt; <a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a> &gt; &amp;points, double size)</td></tr>
 <tr class="separator:a141927e4a165de9d1ef83d16566a052c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a40aabc6e06db0fc38af39c9810ab2c8d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceis__mesh.html#a40aabc6e06db0fc38af39c9810ab2c8d">import_tet_mesh</a> (const std::string &amp;filename, std::vector&lt; <a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a> &gt; &amp;points, std::vector&lt; int &gt; &amp;tets, std::vector&lt; int &gt; &amp;tet_labels)</td></tr>
 <tr class="separator:a40aabc6e06db0fc38af39c9810ab2c8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ac1b9514888d5e220aa5384e5c02cb6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceis__mesh.html#a9ac1b9514888d5e220aa5384e5c02cb6">import_surface_mesh</a> (const std::string &amp;filename, std::vector&lt; <a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a> &gt; &amp;points, std::vector&lt; int &gt; &amp;faces)</td></tr>
-<tr class="separator:a9ac1b9514888d5e220aa5384e5c02cb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53e78d51266b164346a26a3a09207473"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceis__mesh.html#a53e78d51266b164346a26a3a09207473">import_surface_mesh</a> (const std::string &amp;filename, std::vector&lt; <a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a> &gt; &amp;points, std::vector&lt; int &gt; &amp;triangleIndices)</td></tr>
+<tr class="separator:a53e78d51266b164346a26a3a09207473"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c85e45bbd0f43445f6800177d7c8f82"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceis__mesh.html#a5c85e45bbd0f43445f6800177d7c8f82">import_voxel_grid</a> (const std::string &amp;filename, <a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a> &amp;origin, <a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a> &amp;voxel_size, int &amp;Ni, int &amp;Nj, int &amp;Nk, std::vector&lt; int &gt; &amp;voxels)</td></tr>
 <tr class="separator:a5c85e45bbd0f43445f6800177d7c8f82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06b6e10f265a8f624973f57cbfd3fe77"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classis__mesh_1_1_geometry.html">Geometry</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceis__mesh.html#a06b6e10f265a8f624973f57cbfd3fe77">load_geometry</a> (std::ifstream &amp;file)</td></tr>
@@ -203,6 +207,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>scale</b> (std::vecto
 <tr class="separator:a7d6151302af7e85d4dde9cac5fe51004"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae8cfa7b44fa5184af4a263b3af3be104"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceis__mesh.html#ae8cfa7b44fa5184af4a263b3af3be104">export_surface_mesh_debug</a> (const std::string &amp;filename, <a class="el" href="classis__mesh_1_1_i_s_mesh.html">ISMesh</a> &amp;mesh)</td></tr>
 <tr class="separator:ae8cfa7b44fa5184af4a263b3af3be104"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06ac5386346235c7b850768da5ab4e48"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a06ac5386346235c7b850768da5ab4e48"></a>
+<a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><b>addEpsilonOffset</b> (<a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a> v)</td></tr>
+<tr class="separator:a06ac5386346235c7b850768da5ab4e48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0f185d012979a580f734ebd62c07930"><td class="memTemplParams" colspan="2"><a class="anchor" id="ac0f185d012979a580f734ebd62c07930"></a>
 template&lt;typename key_type &gt; </td></tr>
 <tr class="memitem:ac0f185d012979a580f734ebd62c07930"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classis__mesh_1_1_simplex_set.html">SimplexSet</a>&lt; key_type &gt; &amp;A, const <a class="el" href="classis__mesh_1_1_simplex_set.html">SimplexSet</a>&lt; key_type &gt; &amp;B) noexcept</td></tr>
@@ -451,7 +458,7 @@ template&lt;typename key_type &gt; </td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a9ac1b9514888d5e220aa5384e5c02cb6"></a>
+<a class="anchor" id="a53e78d51266b164346a26a3a09207473"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -471,7 +478,7 @@ template&lt;typename key_type &gt; </td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::vector&lt; int &gt; &amp;&#160;</td>
-          <td class="paramname"><em>faces</em>&#160;</td>
+          <td class="paramname"><em>triangleIndices</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -890,7 +897,7 @@ template&lt;typename key_type &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Mar 6 2015 16:04:26 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Jun 23 2015 12:37:21 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

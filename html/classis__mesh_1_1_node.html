@@ -121,6 +121,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7098595082477c16050aeeb91401bae9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7098595082477c16050aeeb91401bae9"></a>
 const <a class="el" href="classis__mesh_1_1_simplex_set.html">SimplexSet</a>&lt; <a class="el" href="classis__mesh_1_1_edge_key.html">EdgeKey</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>edge_keys</b> () const noexcept</td></tr>
 <tr class="separator:a7098595082477c16050aeeb91401bae9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15d7d916863c11e7a83c77b1ec3b4cb9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a15d7d916863c11e7a83c77b1ec3b4cb9"></a>
+<a class="el" href="classis__mesh_1_1_simplex_set.html">SimplexSet</a>&lt; <a class="el" href="classis__mesh_1_1_face_key.html">FaceKey</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>face_keys</b> () const </td></tr>
+<tr class="separator:a15d7d916863c11e7a83c77b1ec3b4cb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81265aaec128a6afb19c776e306c1adb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a81265aaec128a6afb19c776e306c1adb"></a>
+<a class="el" href="classis__mesh_1_1_simplex_set.html">SimplexSet</a>&lt; <a class="el" href="classis__mesh_1_1_tetrahedron_key.html">TetrahedronKey</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>tet_keys</b> () const </td></tr>
+<tr class="separator:a81265aaec128a6afb19c776e306c1adb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa6ef83abd99a81d29571102d792d02b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaa6ef83abd99a81d29571102d792d02b"></a>
+std::vector&lt; <a class="el" href="classis__mesh_1_1_edge.html">Edge</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>edges</b> () const </td></tr>
+<tr class="separator:aaa6ef83abd99a81d29571102d792d02b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a399f63c950782aa3d8a1750b359ed7fe"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a399f63c950782aa3d8a1750b359ed7fe"></a>
+std::vector&lt; <a class="el" href="classis__mesh_1_1_face.html">Face</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>faces</b> () const </td></tr>
+<tr class="separator:a399f63c950782aa3d8a1750b359ed7fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0ddfcea91fefe852e1ea6c96ac86379"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae0ddfcea91fefe852e1ea6c96ac86379"></a>
+std::vector&lt; <a class="el" href="classis__mesh_1_1_tetrahedron.html">Tetrahedron</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>tets</b> () const </td></tr>
+<tr class="separator:ae0ddfcea91fefe852e1ea6c96ac86379"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa73b6594ec2dc7cbdbd09ad31f3fbb66"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa73b6594ec2dc7cbdbd09ad31f3fbb66"></a>
 const <a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_center</b> () const </td></tr>
 <tr class="separator:aa73b6594ec2dc7cbdbd09ad31f3fbb66"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -148,6 +163,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_interface</b> () c
 <tr class="memitem:aaa4305cdc85415a4729ee2e83f6661fa"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaa4305cdc85415a4729ee2e83f6661fa"></a>
 <a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><b>smart_laplacian</b> (double alpha=1.) const </td></tr>
 <tr class="separator:aaa4305cdc85415a4729ee2e83f6661fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bd37ff4dbbb1379f8c95b2124d704a5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8bd37ff4dbbb1379f8c95b2124d704a5"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>get_number_of_neighbour_tet_clusters</b> (int label)</td></tr>
+<tr class="separator:a8bd37ff4dbbb1379f8c95b2124d704a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a591c1cd720b94b30b4f581b2d0667f5a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a591c1cd720b94b30b4f581b2d0667f5a"></a>
 <a class="el" href="classis__mesh_1_1_node_key.html">NodeKey</a>&#160;</td><td class="memItemRight" valign="bottom"><b>key</b> () const noexcept</td></tr>
 <tr class="separator:a591c1cd720b94b30b4f581b2d0667f5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -203,7 +221,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Mar 6 2015 16:04:27 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Jun 23 2015 12:37:22 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

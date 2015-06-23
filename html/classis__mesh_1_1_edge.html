@@ -121,6 +121,18 @@ const <a class="el" href="classis__mesh_1_1_simplex_set.html">SimplexSet</a>&lt;
 <tr class="memitem:a9020e5b9b63d281ed6546d4fefa1142e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9020e5b9b63d281ed6546d4fefa1142e"></a>
 const <a class="el" href="classis__mesh_1_1_simplex_set.html">SimplexSet</a>&lt; <a class="el" href="classis__mesh_1_1_face_key.html">FaceKey</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>face_keys</b> () const noexcept</td></tr>
 <tr class="separator:a9020e5b9b63d281ed6546d4fefa1142e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04b45f9b7fe707e22f076a743f048bdd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a04b45f9b7fe707e22f076a743f048bdd"></a>
+<a class="el" href="classis__mesh_1_1_simplex_set.html">SimplexSet</a>&lt; <a class="el" href="classis__mesh_1_1_tetrahedron_key.html">TetrahedronKey</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>tet_keys</b> () const </td></tr>
+<tr class="separator:a04b45f9b7fe707e22f076a743f048bdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8595fb3026f8170681a996c4ed4dcd48"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8595fb3026f8170681a996c4ed4dcd48"></a>
+std::vector&lt; <a class="el" href="classis__mesh_1_1_face.html">Face</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>faces</b> () const </td></tr>
+<tr class="separator:a8595fb3026f8170681a996c4ed4dcd48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a104ea8cf007bbfc30a280e53d9c0b493"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a104ea8cf007bbfc30a280e53d9c0b493"></a>
+std::vector&lt; <a class="el" href="classis__mesh_1_1_tetrahedron.html">Tetrahedron</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>tets</b> () const </td></tr>
+<tr class="separator:a104ea8cf007bbfc30a280e53d9c0b493"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44862ee4ffeb96a7405ca15ca6b2c981"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a44862ee4ffeb96a7405ca15ca6b2c981"></a>
+std::vector&lt; <a class="el" href="classis__mesh_1_1_node.html">Node</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>nodes</b> () const </td></tr>
+<tr class="separator:a44862ee4ffeb96a7405ca15ca6b2c981"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0ecacba9ae7789b1401d360cbd641bf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa0ecacba9ae7789b1401d360cbd641bf"></a>
 <a class="el" href="class_c_g_l_a_1_1_vec3d.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_center</b> () const </td></tr>
 <tr class="separator:aa0ecacba9ae7789b1401d360cbd641bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -136,9 +148,15 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_interface</b> () n
 <tr class="memitem:a471f53460324588ee46ee048e4a795bf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a471f53460324588ee46ee048e4a795bf"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>length</b> () const </td></tr>
 <tr class="separator:a471f53460324588ee46ee048e4a795bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93d05533d4df6bcfedb75a31b9f2ba17"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a93d05533d4df6bcfedb75a31b9f2ba17"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>sqr_length</b> () const </td></tr>
+<tr class="separator:a93d05533d4df6bcfedb75a31b9f2ba17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85e7dcf61a8e1604a369c8108f135dd8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a85e7dcf61a8e1604a369c8108f135dd8"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>length_destination</b> () const </td></tr>
 <tr class="separator:a85e7dcf61a8e1604a369c8108f135dd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4eb48a54dfb754fb641b2f380205f1c0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4eb48a54dfb754fb641b2f380205f1c0"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>sqr_length_destination</b> () const </td></tr>
+<tr class="separator:a4eb48a54dfb754fb641b2f380205f1c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ba1f4cce658609b93ec7e386e1798e5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7ba1f4cce658609b93ec7e386e1798e5"></a>
 <a class="el" href="classis__mesh_1_1_edge_key.html">EdgeKey</a>&#160;</td><td class="memItemRight" valign="bottom"><b>key</b> () const noexcept</td></tr>
 <tr class="separator:a7ba1f4cce658609b93ec7e386e1798e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -194,7 +212,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Mar 6 2015 16:04:26 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Jun 23 2015 12:37:21 for DSC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
