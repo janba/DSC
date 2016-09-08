@@ -23,6 +23,7 @@
 #include <iomanip>
 #include <ctime>
 #include <chrono>
+#include "profile.h"
 
 using namespace DSC;
 
@@ -211,6 +212,9 @@ void UI::animate()
 
 void UI::keyboard(unsigned char key, int x, int y) {
     switch(key) {
+            case 'l':
+            profile::close();
+            break;
         case '\033':
             stop();
             exit(0);
@@ -231,7 +235,7 @@ void UI::keyboard(unsigned char key, int x, int y) {
             break;
         case '2':
             stop();
-            QUIT_ON_COMPLETION = true;
+            QUIT_ON_COMPLETION = false;
             RECORD = true;
             vel_fun = std::unique_ptr<VelocityFunc<>>(new AverageFunc(vel_fun->get_velocity(), vel_fun->get_accuracy()));
             start("smooth");

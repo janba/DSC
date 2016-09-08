@@ -115,6 +115,8 @@
 		7AF7E9BD176B412900F43714 /* draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF7E9BB176B412900F43714 /* draw.cpp */; };
 		7AF7E9BF176B4FE400F43714 /* DSC.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AF7E9BE176B4FE400F43714 /* DSC.h */; };
 		7AF7E9C1176B524700F43714 /* is_mesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AF7E9C0176B524700F43714 /* is_mesh.h */; };
+		A68CB59B1D8144720074F232 /* profile.h in Headers */ = {isa = PBXBuildFile; fileRef = A68CB5991D8144720074F232 /* profile.h */; };
+		A68CB59C1D8144720074F232 /* profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68CB59A1D8144720074F232 /* profile.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -259,6 +261,8 @@
 		7AF7E9BC176B412900F43714 /* draw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = draw.h; sourceTree = "<group>"; };
 		7AF7E9BE176B4FE400F43714 /* DSC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DSC.h; path = src/DSC.h; sourceTree = SOURCE_ROOT; };
 		7AF7E9C0176B524700F43714 /* is_mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh.h; path = is_mesh/is_mesh.h; sourceTree = "<group>"; };
+		A68CB5991D8144720074F232 /* profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = profile.h; path = src/profile.h; sourceTree = SOURCE_ROOT; };
+		A68CB59A1D8144720074F232 /* profile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = profile.cpp; path = src/profile.cpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -490,6 +494,8 @@
 		7AE27AB917675A1E000F8238 /* DSC */ = {
 			isa = PBXGroup;
 			children = (
+				A68CB5991D8144720074F232 /* profile.h */,
+				A68CB59A1D8144720074F232 /* profile.cpp */,
 				7AE27AE917675B04000F8238 /* velocity_function.h */,
 				7AF7E9BE176B4FE400F43714 /* DSC.h */,
 			);
@@ -601,6 +607,7 @@
 				7AF7E9C1176B524700F43714 /* is_mesh.h in Headers */,
 				7A3438C1183C6D2700829EEB /* attributes.h in Headers */,
 				7A45DB9C176E122100B9B388 /* key.h in Headers */,
+				A68CB59B1D8144720074F232 /* profile.h in Headers */,
 				7A45DB9D176E122100B9B388 /* simplex.h in Headers */,
 				7A7E67181849010800EFDF1E /* geometry.h in Headers */,
 				7A4AADFD1845A097005211B9 /* util.h in Headers */,
@@ -808,6 +815,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A3438C4183C75B100829EEB /* mesh_io.cpp in Sources */,
+				A68CB59C1D8144720074F232 /* profile.cpp in Sources */,
 				7A7E67171849010800EFDF1E /* geometry.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

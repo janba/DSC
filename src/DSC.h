@@ -20,6 +20,7 @@
 #include "attributes.h"
 #include "geometry.h"
 #include "mesh_io.h"
+#include "profile.h"
 
 struct parameters {
     
@@ -1397,6 +1398,7 @@ namespace DSC {
         
         void fix_complex()
         {
+            profile t();
             smooth();
             
             topological_edge_removal();
@@ -1433,6 +1435,7 @@ namespace DSC {
          */
         void deform(int num_steps = 10)
         {
+            profile t("Deform");
 #ifdef DEBUG
             validity_check();
             std::cout << std::endl << "********************************" << std::endl;
