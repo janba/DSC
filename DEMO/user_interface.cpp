@@ -236,7 +236,7 @@ void UI::keyboard(unsigned char key, int x, int y) {
         case '2':
             stop();
             QUIT_ON_COMPLETION = false;
-            RECORD = true;
+            RECORD = false;
             vel_fun = std::unique_ptr<VelocityFunc<>>(new AverageFunc(vel_fun->get_velocity(), vel_fun->get_accuracy()));
             start("smooth");
             break;

@@ -199,7 +199,7 @@ namespace DSC {
                 }
                 pos_old = dsc.get_interface_face_positions();
             }
-            return true;
+            return false;
         }
         
         /**
