@@ -145,7 +145,7 @@ void UI::load_model(const std::string& file_name, real discretization)
     }
     
     vec3 size = p_max - p_min;
-    real var = Util::max(Util::max(size[0], size[1]), size[2]);
+    real var = Util::max(Util::max(size[0], size[1]), size[2])*0.7;
     real dist = 1.2*var;
     eye_pos = {dist, var, dist};
     camera_pos = {var, var, -dist};
@@ -169,7 +169,7 @@ void UI::display()
     if (glutGet(GLUT_WINDOW_WIDTH) != WIN_SIZE_X || glutGet(GLUT_WINDOW_HEIGHT) != WIN_SIZE_Y) {
         return;
     }
-    GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.0002;
+    GLfloat timeValue = 0;//glutGet(GLUT_ELAPSED_TIME)*0.0002;
     vec3 ep( eye_pos[0] * sinf(timeValue), eye_pos[1] * cosf(timeValue) , eye_pos[2] * cosf(timeValue));
     painter->set_view_position(ep);
     painter->draw();

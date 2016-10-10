@@ -214,6 +214,7 @@ Painter::Painter(const vec3& light_pos)
     check_gl_error();
     
     interface = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.15f,0.4f,0.5f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}));
+    interface = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.2f, 0.2f, 0.2f, 1.0f}, {0.5f, 0.5f, 0.5f, 1.0f}, {0.5f, 0.5f, 0.5f, 1.0f}));
     wire_frame = std::unique_ptr<GLObject>(new GLObject(wire_shader, {0.15f,0.4f,0.5f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}));
     domain = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.1f, 0.1f, 0.3f, 1.f}, {0.2f, 0.2f, 0.3f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
     low_quality = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.3f, 0.1f, 0.1f, 0.1f}, {0.6f, 0.4f, 0.4f, 0.2f}, {0.f, 0.f, 0.f, 0.f}));

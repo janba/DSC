@@ -33,7 +33,7 @@ class UI
     
     std::string model_file_name = "armadillo";
     
-    vec3 eye_pos = {70., 30., 70.};
+    vec3 eye_pos = {50., 20., 50.};
     vec3 camera_pos = {30., 30., 70.};
     vec3 light_pos = {0., 0., 70.};
     
