@@ -1,5 +1,7 @@
 .DS_Store
 
+Build/
+
 DSC.xcodeproj/project.xcworkspace/xcuserdata/asny.xcuserdatad/UserInterfaceState.xcuserstate
 
 DSC.xcodeproj/xcuserdata/asny.xcuserdatad/xcdebugger/Breakpoints.xcbkptlist
