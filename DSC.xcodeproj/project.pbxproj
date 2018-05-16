@@ -115,6 +115,7 @@
 		7AF7E9BD176B412900F43714 /* draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF7E9BB176B412900F43714 /* draw.cpp */; };
 		7AF7E9BF176B4FE400F43714 /* DSC.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AF7E9BE176B4FE400F43714 /* DSC.h */; };
 		7AF7E9C1176B524700F43714 /* is_mesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AF7E9C0176B524700F43714 /* is_mesh.h */; };
+		A6D2BD1920AC507E00699B01 /* cache.h in Headers */ = {isa = PBXBuildFile; fileRef = A6D2BD1820AC507E00699B01 /* cache.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -259,6 +260,7 @@
 		7AF7E9BC176B412900F43714 /* draw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = draw.h; sourceTree = "<group>"; };
 		7AF7E9BE176B4FE400F43714 /* DSC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DSC.h; path = src/DSC.h; sourceTree = SOURCE_ROOT; };
 		7AF7E9C0176B524700F43714 /* is_mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = is_mesh.h; path = is_mesh/is_mesh.h; sourceTree = "<group>"; };
+		A6D2BD1820AC507E00699B01 /* cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cache.h; path = src/cache.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -490,6 +492,7 @@
 		7AE27AB917675A1E000F8238 /* DSC */ = {
 			isa = PBXGroup;
 			children = (
+				A6D2BD1820AC507E00699B01 /* cache.h */,
 				7AE27AE917675B04000F8238 /* velocity_function.h */,
 				7AF7E9BE176B4FE400F43714 /* DSC.h */,
 			);
@@ -600,6 +603,7 @@
 				7AF7E9BF176B4FE400F43714 /* DSC.h in Headers */,
 				7AF7E9C1176B524700F43714 /* is_mesh.h in Headers */,
 				7A3438C1183C6D2700829EEB /* attributes.h in Headers */,
+				A6D2BD1920AC507E00699B01 /* cache.h in Headers */,
 				7A45DB9C176E122100B9B388 /* key.h in Headers */,
 				7A45DB9D176E122100B9B388 /* simplex.h in Headers */,
 				7A7E67181849010800EFDF1E /* geometry.h in Headers */,

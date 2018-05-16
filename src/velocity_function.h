@@ -153,6 +153,9 @@ namespace DSC {
         void update_deform_time(const std::chrono::time_point<std::chrono::system_clock>& start_time)
         {
             std::chrono::duration<real> t = std::chrono::system_clock::now() - start_time;
+            
+            std::cout << "Deform in " << t.count() << std::endl;
+            
             deform_time += t.count();
             total_deform_time += t.count();
         }

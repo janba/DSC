@@ -213,7 +213,6 @@ void UI::animate()
 void UI::keyboard(unsigned char key, int x, int y) {
     switch(key) {
             case 'l':
-            profile::close();
             break;
         case '\033':
             stop();

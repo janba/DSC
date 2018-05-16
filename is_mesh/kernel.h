@@ -141,6 +141,11 @@ namespace is_mesh
          * The size of the kernel. That is the number of valid elements in the kernel.
          */
         size_t size() const     { return m_data.size() - m_data_freelist.size(); }
+
+        /**
+         * The size of the buffer memory
+         */
+        size_t size_buffer() const     { return m_data.size(); }
         
         /**
          * Returns a boolean value indicating if the size is zero.
