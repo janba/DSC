@@ -807,6 +807,7 @@ namespace is_mesh {
          */
         FaceKey get_face(const NodeKey& nid1, const NodeKey& nid2, const NodeKey& nid3)
         {
+#ifdef DSC_ORIGIN
             SimplexSet<FaceKey> fids1 = get_faces(nid1);
             SimplexSet<FaceKey> fids2 = get_faces(nid2);
             for (const FaceKey& f : get_faces(nid3)) {
@@ -816,6 +817,18 @@ namespace is_mesh {
                 }
             }
             return FaceKey();
+#else
+            auto fids = get_faces(get_edge(nid1, nid2));
+            for (auto f : fids)
+            {
+                auto nids = get_nodes(f);
+                if (nids.contains(nid3))
+                {
+                    return f;
+                }
+            }
+            return FaceKey();
+#endif
         }
         
         /**

@@ -541,6 +541,7 @@ namespace DSC {
          */
         real build_table(const edge_key& e, const is_mesh::SimplexSet<node_key>& polygon, std::vector<std::vector<int>>& K)
         {
+#ifdef DSC_ORIGIN
             is_mesh::SimplexSet<node_key> nids = get_nodes(e);
             
             const int m = (int) polygon.size();
@@ -581,6 +582,54 @@ namespace DSC {
             }
             
             return Q[0][m-1];
+#else
+            is_mesh::SimplexSet<node_key> nids = get_nodes(e);
+            
+            const int m = (int) polygon.size();
+            
+            auto Q = std::vector<std::vector<real>>(m-1, std::vector<real>(m, 0.));
+            K = std::vector<std::vector<int>>(m-1, std::vector<int>(m, 0) );
+            
+            for(int i = 0; i < m-1; i++)
+            {
+                Q[i][i+1] = INFINITY;
+            }
+            
+            // TUAN: Get pos first; It helps reduce 30% computation time of this function
+            auto pt = get_pos(polygon);
+            auto pte = get_pos(nids);
+            
+            for (int i = m-3; i >= 0; i--)
+            {
+                for (int j = i+2; j < m; j++)
+                {
+                    for (int k = i+1; k < j; k++)
+                    {
+                        real q2 = Util::quality<real>(pt[i], pt[k], pte[0], pt[j]);
+                        real q1 = Util::quality<real>(pt[k], pt[i], pte[1], pt[j]);
+                        
+                        real q = Util::min(q1, q2);
+                        
+                        if (k < j-1)
+                        {
+                            q = Util::min(q, Q[k][j]);
+                        }
+                        if (k > i+1)
+                        {
+                            q = Util::min(q, Q[i][k]);
+                        }
+                        
+                        if (k == i+1 || q > Q[i][j])
+                        {
+                            Q[i][j] = q;
+                            K[i][j] = k;
+                        }
+                    }
+                }
+            }
+            
+            return Q[0][m-1];
+#endif
         }
         
         
@@ -836,6 +885,7 @@ namespace DSC {
         
         is_mesh::SimplexSet<edge_key> test_neighbour(const face_key& f, const node_key& a, const node_key& b, const node_key& u, const node_key& w, real& q_old, real& q_new, is_mesh::SimplexSet<face_key> & face_to_rm)
         {
+#ifdef DSC_ORIGIN
             edge_key e = get_edge(u,w);
             is_mesh::SimplexSet<face_key> g_set = get_faces(e) - get_faces(get_tets(f));
             real q = Util::quality<real>(get_pos(a), get_pos(b), get_pos(w), get_pos(u));
@@ -875,6 +925,51 @@ namespace DSC {
             q_old = INFINITY;
             q_new = q;
             return {};
+#else
+            // Tuan: Keep these positions for later retrivals
+            vec3 pa = get_pos(a), pb = get_pos(b), pw = get_pos(w), pu = get_pos(u);
+            
+            edge_key e = get_edge(u,w);
+            is_mesh::SimplexSet<face_key> g_set = get_faces(e) - get_faces(get_tets(f));
+            real q = Util::quality<real>(pa, pb, pw, pu);
+            
+            if(g_set.size() == 1 && is_safe_editable(e))
+            {
+                face_key g = g_set.front();
+                node_key v = (get_nodes(g) - get_nodes(e)).front();
+                auto pv = get_pos(v);
+                real V_uv = Util::signed_volume<real>(pa, pb, pv, pu);
+                real V_vw = Util::signed_volume<real>(pa, pb, pw, pv);
+                real V_wu = Util::signed_volume<real>(pa, pb, pu, pw);
+                
+                if((V_uv >= EPSILON && V_vw >= EPSILON) || (V_vw >= EPSILON && V_wu >= EPSILON) || (V_wu >= EPSILON && V_uv >= EPSILON))
+                {
+                    q_old = Util::min(Util::quality<real>(pa, pu, pw, pv),
+                                      Util::quality<real>(pu, pv, pb, pw));
+                    
+                    real q_uv_old, q_uv_new, q_vw_old, q_vw_new;
+                    is_mesh::SimplexSet<edge_key> uv_edges = test_neighbour(g, a, b, u, v, q_uv_old, q_uv_new, face_to_rm);
+                    is_mesh::SimplexSet<edge_key> vw_edges = test_neighbour(g, a, b, v, w, q_vw_old, q_vw_new, face_to_rm);
+                    
+                    q_old = Util::min(Util::min(q_old, q_uv_old), q_vw_old);
+                    q_new = Util::min(q_uv_new, q_vw_new);
+                    
+                    if(q_new > q_old || q_new > q)
+                    {
+                        is_mesh::SimplexSet<edge_key> edges = {get_edge(f, g)};
+                        edges += uv_edges;
+                        edges += vw_edges;
+                        
+                        face_to_rm += g;
+                        return edges;
+                    }
+                }
+            }
+            
+            q_old = INFINITY;
+            q_new = q;
+            return {};
+#endif
         }
         
         /**
@@ -1755,6 +1850,7 @@ namespace DSC {
          */
         bool is_flat(const is_mesh::SimplexSet<face_key>& fids)
         {
+#ifdef DSC_ORIGIN
             for (const face_key& f1 : fids) {
                 if (get(f1).is_interface() || get(f1).is_boundary())
                 {
@@ -1772,6 +1868,30 @@ namespace DSC {
                 }
             }
             return true;
+
+#else
+            std::vector<vec3> normal(fids.size(), vec3());
+            for (int i = 0; i < fids.size(); i++) {
+                auto & f1 = fids[i];
+                if (get(f1).is_interface() || get(f1).is_boundary())
+                {
+                    normal.push_back(get_normal(fids[i]));
+                }
+            }
+            
+            for (int i = 0; i < normal.size(); i++) {
+                for (int j = 0; j < normal.size(); j++) {
+                    if (i!=j)
+                    {
+                        if(std::abs(dot(normal[i], normal[j])) < FLIP_EDGE_INTERFACE_FLATNESS)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+        return true;
+#endif
         }
         
         /**
@@ -2290,6 +2410,16 @@ namespace DSC {
             for(auto e : eids)
             {
                 real l = length(e);
+                // TUAN: avoid floating point error, when edge lengths are equal
+                if(std::abs(l-max_l) < EPSILON) // equal edges
+                {
+                    if(max_e < e)
+                    {
+                        max_e = e;
+                    }
+                    continue;
+                }
+                // TUAN end---------------------------------------------
                 if(l > max_l)
                 {
                     max_l = l;

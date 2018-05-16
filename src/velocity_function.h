@@ -154,10 +154,10 @@ namespace DSC {
         {
             std::chrono::duration<real> t = std::chrono::system_clock::now() - start_time;
             
-            std::cout << "Deform in " << t.count() << std::endl;
-            
             deform_time += t.count();
             total_deform_time += t.count();
+            
+            std::cout << "Deform /total " << deform_time << " / " << total_deform_time << std::endl;
         }
         
         /**

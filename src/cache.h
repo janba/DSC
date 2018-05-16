@@ -19,6 +19,10 @@
 
 #define DSC_CACHE
 
+#ifndef DSC_CACHE
+#define DSC_ORIGIN
+#endif
+
 enum key_type{
     key_vertex_type = 0,
     key_edge_type = 1,
