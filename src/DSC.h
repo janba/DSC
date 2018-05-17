@@ -23,8 +23,9 @@
 #include "profile.h"
 #include "cache.h"
 
-#define PARALLEL_MESHING
-
+#include <functional>
+#include <mutex>
+#include <thread>
 
 struct parameters {
     
@@ -1699,8 +1700,11 @@ namespace DSC {
         
         void fix_complex()
         {
+#ifdef DSC_PARALLEL
+            smooth_parallel();
+#else
             smooth();
-            
+#endif
             topological_edge_removal();
             topological_face_removal();
             
@@ -2974,7 +2978,107 @@ namespace DSC {
                 validity_check();
             }
         }
+      
+#ifdef DSC_PARALLEL
         
+#define FIND_MIN_COLOR \
+for (int i = 0; i < colors.size(); i++) \
+{   \
+if (fc < colors[i]) \
+{   \
+break; \
+}   \
+else if (fc == colors[i]) \
+{   \
+fc++;   \
+}   \
+}
+        
+        int get_color_node(node_key nk){
+            return * cache::get_instance()->get_cache<int, key_vertex_type>
+            (10, nk, [this](size_t nid_t)->int *{
+                int * color = new int;
+                
+                node_key nk(nid_t);
+                auto ring_nodes = get_nodes(*get_link(nk));
+                
+                // Cached colors of neighbors
+                std::vector<int> colors;
+                for(auto nn : ring_nodes)
+                {
+                    int * cached_color = cache::get_instance()->get_raw_cache<int>(10, nn);
+                    if (cached_color)
+                    {
+                        colors.push_back(*cached_color);
+                    }
+                }
+                
+                int fc = 0;
+                FIND_MIN_COLOR
+                
+                *color = fc;
+                
+                return color;
+            });
+        }
+        
+        static void smooth_worker(DeformableSimplicialComplex<> *dsc, is_mesh::SimplexSet<is_mesh::NodeKey> *node_list, int start_idx, int stop_idx){
+            
+            for (int i = start_idx; i < stop_idx; i++)
+            {
+                dsc->smart_laplacian((*node_list)[i]);
+            }
+            
+        }
+        void smooth_parallel()
+        {
+            
+            //Separate them into group
+            std::vector<is_mesh::SimplexSet<node_key>> colored_list;
+            for(auto n =nodes_begin(); n!=nodes_end(); n++)
+            {
+                if (is_safe_editable(n.key()))
+                {
+                    int c = get_color_node(n.key());
+                    
+                    if(c >= colored_list.size())
+                        colored_list.resize(c+1);
+                    
+                    colored_list[c].push_back(n.key());
+                }
+            }
+            
+            // Start thread
+            // Simple solution first
+            
+            for (auto cc : colored_list)
+            {
+                if (cc.size() > 0)
+                {
+                    int num_thread = NUM_THREADS;
+                    if (cc.size() < 100)
+                    {
+                        num_thread = 1;
+                    }
+                    
+                    std::thread th[NUM_THREADS];
+                    int stride = (cc.size())/num_thread + 1;
+                    for (int i = 0; i < num_thread; i++)
+                    {
+                        int start_idx = std::min(i*stride, (int)cc.size()-1);
+                        int stop_idx = std::min((int)(i+1)*stride-1, (int)cc.size()-1);
+                        
+                        th[i] = std::thread(smooth_worker, this, &cc, start_idx, stop_idx);
+                    }
+                    
+                    for (int i = 0; i < num_thread; i++)
+                    {
+                        th[i].join();
+                    }
+                    
+                }
+            }
+        }
+#endif
     };
-    
 }

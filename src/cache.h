@@ -17,8 +17,19 @@
 
 #define BUFFER_SIZE 1.2 // Buffer of cache preserved for adding entities
 
+// Using cache
 #define DSC_CACHE
 
+// Parallel
+#ifdef DSC_CACHE
+//#define DSC_PARALLEL
+#endif
+
+#ifdef DSC_PARALLEL
+#define NUM_THREADS 6
+#endif
+
+// Using function improvement
 #ifndef DSC_CACHE
 #define DSC_ORIGIN
 #endif
@@ -127,6 +138,12 @@ public:
         }
         
         return (type*)cached_array->get(item_id);
+    }
+    
+    template<typename type>
+    type * get_raw_cache(size_t cache_id, size_t item_id)
+    {
+        return (type*)_data[cache_id]->get(item_id);
     }
     
     // Update cache size
