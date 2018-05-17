@@ -54,36 +54,56 @@ namespace is_mesh
     }
 
     double Tetrahedron::volume() const {
-        SimplexSet<NodeKey> nids = node_keys();
+#ifdef DSC_CACHE
+        SimplexSet<NodeKey> nids = *m_mesh->get_nodes_cache(key());
+#else
+        auto nids = node_keys();
+#endif
         return Util::volume(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos(), m_mesh->get(nids[3]).get_pos());
     }
 
     SimplexSet<NodeKey> Tetrahedron::node_keys() const{
+        // TUAN should be caching here
         SimplexSet<NodeKey> resKey;
         for (auto & edge : edges()){
             resKey += edge->node_keys();
         }
         return resKey;
-
     }
 
     double Tetrahedron::volume_destination() const {
-        SimplexSet<NodeKey> nids = node_keys();
+#ifdef DSC_CACHE
+        SimplexSet<NodeKey> nids = *m_mesh->get_nodes_cache(key());
+#else
+        auto nids = node_keys();
+#endif
         return Util::volume(m_mesh->get(nids[0]).get_destination(), m_mesh->get(nids[1]).get_destination(), m_mesh->get(nids[2]).get_destination(), m_mesh->get(nids[3]).get_destination());
     }
 
     vec3 Tetrahedron::barycenter() const {
-        SimplexSet<NodeKey> nids = node_keys();
+#ifdef DSC_CACHE
+        SimplexSet<NodeKey> nids = *m_mesh->get_nodes_cache(key());
+#else
+        auto nids = node_keys();
+#endif
         return Util::barycenter(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos(), m_mesh->get(nids[3]).get_pos());
     }
 
     vec3 Tetrahedron::barycenter_destination() const {
-        SimplexSet<NodeKey> nids = node_keys();
+#ifdef DSC_CACHE
+        SimplexSet<NodeKey> nids = *m_mesh->get_nodes_cache(key());
+#else
+        auto nids = node_keys();
+#endif
         return Util::barycenter(m_mesh->get(nids[0]).get_destination(), m_mesh->get(nids[1]).get_destination(), m_mesh->get(nids[2]).get_destination(), m_mesh->get(nids[3]).get_destination());
     }
 
     double Tetrahedron::quality() const {
-        SimplexSet<NodeKey> nids = node_keys();
+#ifdef DSC_CACHE
+        SimplexSet<NodeKey> nids = *m_mesh->get_nodes_cache(key());
+#else
+        auto nids = node_keys();
+#endif
         return fabs(Util::quality(m_mesh->get(nids[0]).get_pos(), m_mesh->get(nids[1]).get_pos(), m_mesh->get(nids[2]).get_pos(), m_mesh->get(nids[3]).get_pos()));
     }
 
@@ -116,8 +136,13 @@ namespace is_mesh
     }
 
     std::vector<Node *> Tetrahedron::nodes() const {
+#ifdef DSC_CACHE
+        SimplexSet<NodeKey> nids = *m_mesh->get_nodes_cache(key());
+#else
+        auto nids = node_keys();
+#endif
         std::vector<Node *> res;
-        for (auto key : node_keys()){
+        for (auto key : nids){
             res.push_back(&m_mesh->get(key));
         }
         return res;

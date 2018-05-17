@@ -137,6 +137,7 @@
 		7AF7E9BA176B402200F43714 /* user_interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF7E9B8176B402200F43714 /* user_interface.cpp */; };
 		7AF7E9BD176B412900F43714 /* draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF7E9BB176B412900F43714 /* draw.cpp */; };
 		7AF7E9BF176B4FE400F43714 /* DSC.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AF7E9BE176B4FE400F43714 /* DSC.h */; };
+		A605C19720ADB28B00FA600D /* cache.h in Headers */ = {isa = PBXBuildFile; fileRef = A605C19620ADB28A00FA600D /* cache.h */; };
 		FE0E89561A23530F000E3B30 /* DSC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0E89551A23530F000E3B30 /* DSC.cpp */; };
 		FE0E89591A23531C000E3B30 /* is_mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0E89571A23531C000E3B30 /* is_mesh.cpp */; };
 /* End PBXBuildFile section */
@@ -311,6 +312,7 @@
 		7AF7E9BB176B412900F43714 /* draw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = draw.cpp; sourceTree = "<group>"; };
 		7AF7E9BC176B412900F43714 /* draw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = draw.h; sourceTree = "<group>"; };
 		7AF7E9BE176B4FE400F43714 /* DSC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DSC.h; path = src/DSC.h; sourceTree = SOURCE_ROOT; };
+		A605C19620ADB28A00FA600D /* cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cache.h; path = src/cache.h; sourceTree = SOURCE_ROOT; };
 		FE0E89551A23530F000E3B30 /* DSC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DSC.cpp; path = src/DSC.cpp; sourceTree = SOURCE_ROOT; };
 		FE0E89571A23531C000E3B30 /* is_mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = is_mesh.cpp; path = is_mesh/is_mesh.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -583,6 +585,7 @@
 		7AE27AB917675A1E000F8238 /* DSC */ = {
 			isa = PBXGroup;
 			children = (
+				A605C19620ADB28A00FA600D /* cache.h */,
 				FE0E89551A23530F000E3B30 /* DSC.cpp */,
 				7AE27AE917675B04000F8238 /* velocity_function.h */,
 				7AF7E9BE176B4FE400F43714 /* DSC.h */,
@@ -700,6 +703,7 @@
 				333AE2BE73A0EB768FDCB56B /* simplex.h in Headers */,
 				333AE157A5545C460FEE8947 /* simplex_set.h in Headers */,
 				333AE695D49555CA4972CBBB /* kernel_iterator.h in Headers */,
+				A605C19720ADB28B00FA600D /* cache.h in Headers */,
 				333AEDE396500E666E2A0A60 /* kernel.h in Headers */,
 				333AE9402FFA4B5BD244E818 /* is_mesh.h in Headers */,
 				333AEC3E9AFB5F24E30DA814 /* test.h in Headers */,
@@ -1263,6 +1267,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SYSTEM_HEADER_SEARCH_PATHS = .;
 			};
 			name = Debug;
 		};
@@ -1281,6 +1286,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SYSTEM_HEADER_SEARCH_PATHS = .;
 			};
 			name = Release;
 		};

@@ -62,6 +62,8 @@ void DSC::VelocityFunc::update_deform_time(const std::chrono::time_point<std::ch
     std::chrono::duration<double> t = std::chrono::system_clock::now() - start_time;
     deform_time += t.count();
     total_deform_time += t.count();
+    
+    std::cout << "Time / total: " << deform_time << " / " << total_deform_time << std::endl;
 }
 
 void DSC::VelocityFunc::deform(DeformableSimplicialComplex& dsc) {

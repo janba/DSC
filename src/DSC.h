@@ -20,6 +20,7 @@
 #include "geometry.h"
 #include "mesh_io.h"
 #include "util.h"
+#include "cache.h"
 
 
 struct parameters {
@@ -140,6 +141,7 @@ namespace DSC {
         // For debugging!
         void print(const is_mesh::NodeKey& n);
         
+
         /////////////////////////
         // ATTRIBUTE FUNCTIONS //
         /////////////////////////

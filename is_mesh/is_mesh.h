@@ -25,6 +25,7 @@
 #include "is_mesh_iterator.h"
 #include "geometry.h"
 #include "attribute_vector.h"
+#include "cache.h"
 
 namespace is_mesh {
 
@@ -52,6 +53,24 @@ namespace is_mesh {
         std::map<long,std::function<void(const NodeKey& nid, const NodeKey& nid_removed, double weight)>> m_collapse_listeners;
 
         unsigned int m_number_of_threads = std::thread::hardware_concurrency();
+        
+        //////////////////////
+        // Caching
+        //////////////////////
+#ifdef DSC_CACHE
+    public:
+        void invalidate_cache(SimplexSet<TetrahedronKey> tets);
+        void update_cache_size();
+        is_mesh::SimplexSet<is_mesh::TetrahedronKey> * get_tets_cache(is_mesh::NodeKey nid);
+        is_mesh::SimplexSet<is_mesh::TetrahedronKey>get_tets_cache(is_mesh::SimplexSet<is_mesh::NodeKey> nids);
+        is_mesh::SimplexSet<is_mesh::FaceKey> * get_faces_cache(is_mesh::NodeKey nid);
+        is_mesh::SimplexSet<is_mesh::FaceKey> * get_link(is_mesh::NodeKey nk);
+        is_mesh::SimplexSet<is_mesh::NodeKey> * get_nodes_cache(is_mesh::NodeKey nk);
+        is_mesh::SimplexSet<is_mesh::NodeKey> * get_nodes_cache(is_mesh::TetrahedronKey tk);
+        is_mesh::SimplexSet<is_mesh::NodeKey> * get_nodes_cache(is_mesh::FaceKey fk);
+        
+        is_mesh::SimplexSet<is_mesh::NodeKey> get_nodes_cache(const is_mesh::SimplexSet<TetrahedronKey> & keys);
+#endif //DSC_CACHE
     public:
         ISMesh(std::vector<vec3> & points, std::vector<int> & tets, const std::vector<int>& tet_labels);
 
@@ -317,6 +336,8 @@ namespace is_mesh {
         * Returns the positions of nodes nids.
         */
         std::vector<vec3> get_pos(const SimplexSet<NodeKey>& nids);
+        
+
         
         //////////////////////
         // EXISTS FUNCTIONS //

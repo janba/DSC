@@ -228,15 +228,15 @@ void UI::keyboard(unsigned char key, int x, int y) {
             break;
         case '1':
             stop();
-            QUIT_ON_COMPLETION = true;
+            QUIT_ON_COMPLETION = false;
             RECORD = true;
             vel_fun = std::unique_ptr<VelocityFunc>(new RotateFunc(vel_fun->get_velocity(), vel_fun->get_accuracy()));
             start("rotate");
             break;
         case '2':
             stop();
-            QUIT_ON_COMPLETION = true;
-            RECORD = true;
+            QUIT_ON_COMPLETION = false;
+            RECORD = false;
             vel_fun = std::unique_ptr<VelocityFunc>(new AverageFunc(vel_fun->get_velocity(), vel_fun->get_accuracy()));
             start("smooth");
             break;

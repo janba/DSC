@@ -8,6 +8,9 @@ using namespace std;
 namespace is_mesh{
     ISMesh::ISMesh(vector<vec3> & points, vector<int> & tets, const vector<int>& tet_labels) {
         create(points, tets);
+#ifdef DSC_CACHE
+        update_cache_size();
+#endif
         validity_check(true);
         init_flags(tet_labels);
         validity_check();
@@ -48,6 +51,9 @@ namespace is_mesh{
             tetKeys.push_back(tet.key());
             tetToNew[tet.key()] = k;
         }
+#ifdef DSC_CACHE
+        update_cache_size();
+#endif
 
         // copy connectivity
         for (auto & node : nodes()){
@@ -1030,6 +1036,180 @@ namespace is_mesh{
         flip(eid[0], fid1, fid2);
 
     }
+    
+#ifdef DSC_CACHE
+    // invalidate cache
+    void ISMesh::invalidate_cache(SimplexSet<TetrahedronKey> tets)
+    {
+        for (auto tkey : tets)
+            cache::get_instance()->mark_dirty(key_tet_type, tkey);
+        
+        auto faces = get_faces(tets);
+        for(auto fk : faces)
+            cache::get_instance()->mark_dirty(key_face_type, fk);
+        
+        
+        auto edges = get_edges(faces);
+        for(auto ek:edges)
+            cache::get_instance()->mark_dirty(key_edge_type, ek);
+        
+        auto nodesc = get_nodes(edges);
+        for(auto nk : nodesc)
+            cache::get_instance()->mark_dirty(key_vertex_type, nk);
+    }
+    
+    void ISMesh::update_cache_size()
+    {
+        cache::get_instance()->resize(key_vertex_type, get_max_node_key());
+        cache::get_instance()->resize(key_edge_type, get_max_edge_key());
+        cache::get_instance()->resize(key_face_type, get_max_face_key());
+        cache::get_instance()->resize(key_tet_type, get_max_tet_key());
+    }
+    
+    //////////////////////////////////////////////////////////////////////////////
+    // FOR CACHING
+    //       The wraper functions are not neccessary, but they make codes cleaner
+    
+    /*
+     Get neighbor tets of a node
+     */
+    is_mesh::SimplexSet<TetrahedronKey> * ISMesh::get_tets_cache(is_mesh::NodeKey nid)
+    {
+        return cache::get_instance()->get_cache<is_mesh::SimplexSet<TetrahedronKey>, key_vertex_type>
+        (0, nid, [this](size_t nid_t)->is_mesh::SimplexSet<TetrahedronKey> *{
+            NodeKey nid(nid_t);
+            is_mesh::SimplexSet<is_mesh::TetrahedronKey> * tids = new is_mesh::SimplexSet<is_mesh::TetrahedronKey>;
+            for(const is_mesh::EdgeKey& e : get(nid).edge_keys())
+            {
+                for(const is_mesh::FaceKey& f : get(e).face_keys())
+                {
+                    tids->operator+=(get(f).tet_keys());
+                }
+            }
+            return tids;
+        });
+    }
+    
+    is_mesh::SimplexSet<TetrahedronKey> ISMesh::get_tets_cache(is_mesh::SimplexSet<is_mesh::NodeKey> nids)
+    {
+        is_mesh::SimplexSet<TetrahedronKey> set;
+        for (auto n : nids)
+        {
+            set += *get_tets_cache(n);
+        }
+        return set;
+    }
+    
+    /*
+     Get faces neighboring to node
+     */
+    is_mesh::SimplexSet<FaceKey> * ISMesh::get_faces_cache(is_mesh::NodeKey nid)
+    {
+        return cache::get_instance()->get_cache<is_mesh::SimplexSet<FaceKey>, key_vertex_type>
+        (1, nid,
+         [this](size_t nid_t)->is_mesh::SimplexSet<FaceKey> *{
+             NodeKey nid(nid_t);
+             auto fids = new is_mesh::SimplexSet<FaceKey>;
+             for(const EdgeKey& e : get(nid).edge_keys())
+             {
+                 fids->operator+=(get(e).face_keys());
+             }
+             return fids;
+         });
+    }
+    
+    
+    
+    /*
+     Get faces in the link of a vertex
+     */
+    is_mesh::SimplexSet<FaceKey> * ISMesh::get_link(NodeKey nk)
+    {
+        return cache::get_instance()->get_cache<is_mesh::SimplexSet<FaceKey>, key_vertex_type>
+        (2, nk, [this](size_t nki)->is_mesh::SimplexSet<FaceKey> *{
+            NodeKey nk((unsigned long)nki);
+            
+            auto out_put = new is_mesh::SimplexSet<is_mesh::FaceKey>;
+            is_mesh::SimplexSet<TetrahedronKey> * tids = get_tets_cache(nk);
+            *out_put = get_faces(*tids) - *get_faces_cache(nk);
+            
+            return out_put;
+        });
+    }
+    
+    /*
+     Get nodes neighboring to node
+     */
+    is_mesh::SimplexSet<NodeKey> * ISMesh::get_nodes_cache(NodeKey nk)
+    {
+        return cache::get_instance()->get_cache<is_mesh::SimplexSet<NodeKey>, key_vertex_type>
+        (3, nk, [this](size_t ni)->is_mesh::SimplexSet<NodeKey>*{
+            auto output = new is_mesh::SimplexSet<is_mesh::NodeKey>;
+            
+            is_mesh::NodeKey nid(ni);
+            *output = get_nodes(get(nid).edge_keys()) - nid;
+            
+            return output;
+        });
+    }
+    
+    /*
+     Get nodes on tet
+     */
+    is_mesh::SimplexSet<NodeKey> * ISMesh::get_nodes_cache(is_mesh::TetrahedronKey tk)
+    {
+        return cache::get_instance()->get_cache<is_mesh::SimplexSet<NodeKey>, key_tet_type>
+        (4, tk, [this](size_t ti)->is_mesh::SimplexSet<NodeKey> *{
+            is_mesh::TetrahedronKey tk(ti);
+            auto output = new is_mesh::SimplexSet<NodeKey>;
+            
+            *output = get(tk).node_keys();
+            
+//            SimplexSet<NodeKey> resKey;
+//            for (auto & edge : get(tk).edges()){
+//                *output += edge->node_keys();
+//            }
+            
+            
+            return output;
+        });
+    }
+    
+    /*
+     Get nodes on face
+     */
+    
+    is_mesh::SimplexSet<is_mesh::NodeKey> * ISMesh::get_nodes_cache(is_mesh::FaceKey fk)
+    {
+        return cache::get_instance()->get_cache<is_mesh::SimplexSet<NodeKey>, key_face_type>
+        (5, fk, [this](size_t fi)->is_mesh::SimplexSet<is_mesh::NodeKey> *{
+            is_mesh::FaceKey fk(fi);
+            
+            auto output = new is_mesh::SimplexSet<is_mesh::NodeKey>;
+            *output = get(fk).node_keys();
+            
+            return output;
+        });
+    }
+    
+    /*
+     Get nodes from vector of entities
+     This function does not directly relate to caching
+     */
+    
+    is_mesh::SimplexSet<NodeKey> ISMesh::get_nodes_cache(const SimplexSet<TetrahedronKey> & keys)
+    {
+        is_mesh::SimplexSet<NodeKey> nids;
+        for(auto k : keys)
+        {
+            nids += *get_nodes_cache(k);
+        }
+        return nids;
+    }
+    
+    
+    
+#endif // DSC_CACHE
 
     double ISMesh::volume_destination(const SimplexSet<NodeKey>& nids) {
         return Util::volume(get(nids[0]).get_destination(), get(nids[1]).get_destination(), get(nids[2]).get_destination(), get(nids[3]).get_destination());
