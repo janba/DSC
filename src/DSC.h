@@ -112,6 +112,11 @@ namespace DSC {
 
     public:
 
+#ifdef DSC_PARALLEL
+        void smooth_parallel();
+        int get_color_node(is_mesh::NodeKey nk);
+        static void smooth_worker(DeformableSimplicialComplex *dsc, is_mesh::SimplexSet<is_mesh::NodeKey> *node_list, int start_idx, int stop_idx);
+#endif
         std::shared_ptr<is_mesh::ISMesh> get_shared_is_mesh();
 
         is_mesh::ISMesh & get_is_mesh();

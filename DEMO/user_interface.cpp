@@ -389,9 +389,9 @@ void UI::keyboard(unsigned char key, int x, int y) {
             }
             auto t4 = Clock::now();
 
-            std::cout << "For each "<<std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << "microsec"<< std::endl;
-            std::cout << "For each sp " << std::chrono::duration_cast<std::chrono::microseconds	>(t3 - t2).count() << "microsec"<< std::endl;
-            std::cout << "Sequential " << std::chrono::duration_cast<std::chrono::microseconds	>(t4 - t3).count() << "microsec"<< std::endl;
+            std::cout << "For each "<<std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << " microsec"<< std::endl;
+            std::cout << "For each sp " << std::chrono::duration_cast<std::chrono::microseconds	>(t3 - t2).count() << " microsec"<< std::endl;
+            std::cout << "Sequential " << std::chrono::duration_cast<std::chrono::microseconds	>(t4 - t3).count() << " microsec"<< std::endl;
         }
             break;
         case '9':
