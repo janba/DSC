@@ -18,7 +18,7 @@
 #define BUFFER_SIZE 1.2 // Buffer of cache preserved for adding entities
 
 // Using cache
-//#define DSC_CACHE
+#define DSC_CACHE
 
 // Parallel
 #ifdef DSC_CACHE

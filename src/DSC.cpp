@@ -231,6 +231,7 @@ namespace DSC {
         {
             Q[i][i+1] = INFINITY;
         }
+    
 
         auto polyn0 = is_mesh_ptr->get(nids[0]).get_pos();
         auto polyn1 = is_mesh_ptr->get(nids[1]).get_pos();
@@ -494,6 +495,7 @@ namespace DSC {
     }
 
     SimplexSet<EdgeKey> DeformableSimplicialComplex::test_neighbour(const FaceKey& f, const NodeKey& a, const NodeKey& b, const NodeKey& u, const NodeKey& w, double& q_old, double& q_new) {
+        
         // Tuan: Keep these positions for later retrivals
         vec3 pa = is_mesh_ptr->get(a).get_pos(), pb = is_mesh_ptr->get(b).get_pos(), pw = is_mesh_ptr->get(w).get_pos(), pu = is_mesh_ptr->get(u).get_pos();
         
@@ -1094,6 +1096,7 @@ namespace DSC {
     }
 
     bool DeformableSimplicialComplex::is_flat(const SimplexSet<FaceKey>& fids) {
+#ifdef DSC_ORIGIN
         for (const FaceKey& fk1 : fids) {
             Face& f1 = is_mesh_ptr->get(fk1);
             if (f1.is_interface() || f1.is_boundary())
@@ -1112,6 +1115,29 @@ namespace DSC {
             }
         }
         return true;
+#else
+        std::vector<vec3> normal(fids.size(), vec3());
+        for (int i = 0; i < fids.size(); i++) {
+            auto & f1 = fids[i];
+            if (is_mesh_ptr->get(f1).is_interface() || is_mesh_ptr->get(f1).is_boundary())
+            {
+                normal.push_back(get_normal(fids[i]));
+            }
+        }
+        
+        for (int i = 0; i < normal.size(); i++) {
+            for (int j = 0; j < normal.size(); j++) {
+                if (i!=j)
+                {
+                    if(std::abs(dot(normal[i], normal[j])) < FLIP_EDGE_INTERFACE_FLATNESS)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+#endif
     }
 
     bool DeformableSimplicialComplex::is_flippable(const EdgeKey & eid) {

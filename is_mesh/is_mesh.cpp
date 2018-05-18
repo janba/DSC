@@ -479,6 +479,7 @@ namespace is_mesh{
     }
 
     FaceKey ISMesh::get_face(const NodeKey& nid1, const NodeKey& nid2, const NodeKey& nid3) {
+#ifdef DSC_ORIGIN
         SimplexSet<FaceKey> fids1 = get(nid1).face_keys();
         SimplexSet<FaceKey> fids2 = get(nid2).face_keys();
         for (const FaceKey& f : get(nid3).face_keys()) {
@@ -488,6 +489,18 @@ namespace is_mesh{
             }
         }
         return FaceKey();
+#else
+        auto fids = get(get_edge(nid1, nid2)).face_keys();
+        for (auto f : fids)
+        {
+            auto nids = get(f).node_keys();
+            if (nids.contains(nid3))
+            {
+                return f;
+            }
+        }
+        return FaceKey();
+#endif
     }
 
     FaceKey ISMesh::get_face(const TetrahedronKey& tid1, const TetrahedronKey& tid2) {

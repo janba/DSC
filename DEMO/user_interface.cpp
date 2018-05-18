@@ -201,13 +201,14 @@ void UI::animate()
             painter->save_painting(basic_log->get_path(), vel_fun->get_time_step());
             basic_log->write_timestep(*vel_fun, *dsc);
         }
-        if (vel_fun->is_motion_finished(*dsc))
-        {
-            stop();
-            if (QUIT_ON_COMPLETION) {
-                exit(0);
-            }
-        }
+        // Just run it continuously
+//        if (vel_fun->is_motion_finished(*dsc))
+//        {
+//            stop();
+//            if (QUIT_ON_COMPLETION) {
+//                exit(0);
+//            }
+//        }
         std::cout << "\n***************TIME STEP " << vel_fun->get_time_step() <<  " STOP*************\n" << std::endl;
     }
     glutPostRedisplay();
